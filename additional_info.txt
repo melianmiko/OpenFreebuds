@@ -1,0 +1,12 @@
+--  Tap action codes:
+-1 = off
+0 = voice assistant
+1 = play/pause
+2 = next track
+3 = play name of current FF mode
+7 = prev track
+
+-- Noise control action codes:
+-1 = disable
+10 = off, cancel, awareness
+
