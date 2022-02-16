@@ -12,7 +12,7 @@ def main():
     print("-- Scan feature test:")
     man.scan(lock=True)
     for i, a in enumerate(man.scan_results):
-        print(i, a["name"], "(" + a["address"] + ")")
+        print(i, a["name"], "(" + a["address"] + ")", a["connected"])
     print()
 
     num = int(input("Enter device num to use: "))
