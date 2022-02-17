@@ -1,7 +1,10 @@
+import logging
 import socket
 import threading
 
 from openfreebuds import protocol_utils
+
+log = logging.getLogger("SPPDevice")
 
 uuid = "00001101-0000-1000-8000-00805f9b34fb"
 port = 16
@@ -25,7 +28,6 @@ class BaseSPPDevice:
         self.last_pkg = None
         self.address = address
         self.started = False
-        self.debug = False
         self.socket = None
 
         self._properties = {}
@@ -40,22 +42,28 @@ class BaseSPPDevice:
 
             threading.Thread(target=self._mainloop).start()
             self.on_init()
-        except ConnectionResetError:
+
+            return True
+        except (ConnectionResetError, ConnectionRefusedError):
             self.close()
-            return
+            return False
 
     def close(self):
         if not self.started:
             return
 
+        log.info("closing...")
         self.started = False
 
         self.on_close.wait()
         self.socket.close()
+        log.info("closed successfully")
 
     def _mainloop(self):
         self.started = True
         self.socket.settimeout(2)
+
+        log.info("starting recv...")
 
         while self.started:
             try:
@@ -66,8 +74,7 @@ class BaseSPPDevice:
                         self.socket.recv(length)
                     else:
                         pkg = self.socket.recv(length)
-                        if self.debug:
-                            print("<==", protocol_utils.bytes2array(pkg))
+                        log.debug("recv " + pkg.hex())
                         self.on_package(pkg)
             except (ConnectionResetError, ConnectionAbortedError):
                 self.close()
@@ -81,15 +88,13 @@ class BaseSPPDevice:
     def send_command(self, data, read=False):
         self.send(build_spp_bytes(data))
 
-        if self.debug:
-            print("==>", data)
-
         if read:
             self.on_event.wait()
             self.on_event.clear()
 
     def send(self, data):
         try:
+            log.debug("send " + data.hex())
             self.socket.send(data)
         except ConnectionResetError:
             self.close()

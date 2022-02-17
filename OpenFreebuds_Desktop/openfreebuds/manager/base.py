@@ -1,17 +1,21 @@
+import logging
 import threading
 import time
 
 from openfreebuds.spp.device import SPPDevice
 
+log = logging.getLogger("FreebudsManager")
+
 
 class FreebudsManager:
-    MAINLOOP_TIMEOUT = 2
+    MAINLOOP_TIMEOUT = 4
 
     STATE_NO_DEV = 0
     STATE_OFFLINE = 1
     STATE_DISCONNECTED = 2
     STATE_WAIT = 3
     STATE_CONNECTED = 4
+    STATE_FAILED = 5
 
     def __init__(self):
         self.device = None
@@ -29,6 +33,7 @@ class FreebudsManager:
         self.scan_complete.clear()
         self.scan_results = []
 
+        log.info("Scan thread starting...")
         threading.Thread(target=self._do_scan).start()
 
         if lock:
@@ -38,9 +43,12 @@ class FreebudsManager:
         self.address = address
 
         self.on_close.clear()
+
+        log.info("Manager thread starting...")
         threading.Thread(target=self._mainloop).start()
 
     def close(self):
+        log.info("closing...")
         self.started = False
         self.on_close.wait()
 
@@ -57,20 +65,26 @@ class FreebudsManager:
             return
 
         self.state = state
+        log.info("State changed to " + str(state))
         self.state_changed.set()
 
     def _mainloop(self):
         self.started = True
 
+        log.debug("Started")
+
         # Check that spp exists in paired
         if not self._device_exists():
+            log.warning("Device dont exist, bye...")
             self.set_state(self.STATE_NO_DEV)
             self.started = False
+            self._mainloop_exit()
             return
 
         while self.started:
             # If offline, update state and wait
             if not self._is_connected():
+                log.debug("Device isn't connected to OS, ignoring...")
                 self.set_state(self.STATE_OFFLINE)
                 self._close_device()
                 time.sleep(self.MAINLOOP_TIMEOUT)
@@ -78,12 +92,20 @@ class FreebudsManager:
 
             # Create dev and connect if not
             if not self.device:
+                log.info("Trying to create SPP device and connect...")
                 self.set_state(self.STATE_WAIT)
                 self.device = SPPDevice(self.address)
-                self.device.connect()
+                status = self.device.connect()
+
+                if not status:
+                    log.warning("Can't create SPP connection, exit...")
+                    self.set_state(self.STATE_FAILED)
+                    time.sleep(self.MAINLOOP_TIMEOUT)
+                    continue
 
             # If disconnected, wipe all and try again
             if not self.device.started:
+                log.warning("SPP connection closed")
                 self.set_state(self.STATE_DISCONNECTED)
                 self._close_device()
                 continue
@@ -93,6 +115,10 @@ class FreebudsManager:
             self.device.on_close.wait(timeout=self.MAINLOOP_TIMEOUT)
 
         # Exit main loop
+        self._mainloop_exit()
+
+    def _mainloop_exit(self):
+        log.info("leaving manager thread...")
         self._close_device()
         self.on_close.set()
 

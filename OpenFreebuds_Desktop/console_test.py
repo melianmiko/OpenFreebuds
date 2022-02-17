@@ -2,8 +2,12 @@ import traceback
 
 import openfreebuds.manager
 import openfreebuds.device_names
+import logging
 
 # TODO: Long tap settings
+
+logging.basicConfig(level=logging.DEBUG,
+                    format="%(levelname)s:%(name)s:%(threadName)s  %(message)s")
 
 
 def main():
