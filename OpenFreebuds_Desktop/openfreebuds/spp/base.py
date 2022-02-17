@@ -31,7 +31,8 @@ class BaseSPPDevice:
         self.socket = None
 
         self._properties = {}
-        self.on_event = threading.Event()
+        self.on_property_change = threading.Event()
+        self.on_recv = threading.Event()
         self.on_close = threading.Event()
 
     def connect(self):
@@ -44,7 +45,7 @@ class BaseSPPDevice:
             self.on_init()
 
             return True
-        except (ConnectionResetError, ConnectionRefusedError):
+        except (ConnectionResetError, ConnectionRefusedError, OSError):
             self.close()
             return False
 
@@ -82,15 +83,16 @@ class BaseSPPDevice:
             except (TimeoutError, socket.timeout):
                 pass
 
-        self.on_event.set()
+        self.on_property_change.set()
+        self.on_recv.set()
         self.on_close.set()
 
     def send_command(self, data, read=False):
         self.send(build_spp_bytes(data))
 
         if read:
-            self.on_event.wait()
-            self.on_event.clear()
+            self.on_recv.wait()
+            self.on_property_change.clear()
 
     def send(self, data):
         try:
@@ -111,6 +113,7 @@ class BaseSPPDevice:
 
     def put_property(self, prop, value):
         self._properties[prop] = value
+        self.on_property_change.set()
 
     def set_property(self, prop, value):
         raise "Must be override"

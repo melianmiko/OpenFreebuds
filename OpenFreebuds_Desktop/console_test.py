@@ -14,7 +14,7 @@ def main():
     man = openfreebuds.manager.create()
 
     print("-- Scan feature test:")
-    man.scan(lock=True)
+    man.list_paired(lock=True)
     for i, a in enumerate(man.scan_results):
         print(i, a["name"], "(" + a["address"] + ")", a["connected"])
     print()
@@ -58,10 +58,10 @@ def shell(manager):
                     print(a, dev.get_property(a))
             elif cmd[0] == "w":
                 print("Waiting for spp event...")
-                dev.on_event.wait()
+                dev.on_property_change.wait()
                 for a in dev.list_properties():
                     print(a, dev.get_property(a))
-                dev.on_event.clear()
+                dev.on_property_change.clear()
             elif cmd[0] == "set":
                 dev.set_property(cmd[1], int(cmd[2]))
                 print("OK")

@@ -29,17 +29,19 @@ class FreebudsManager:
         self.scan_complete = threading.Event()
         self.on_close = threading.Event()
 
-    def scan(self, lock=False, timeout=None):
+    def list_paired(self, lock=False, timeout=None):
         self.scan_complete.clear()
         self.scan_results = []
 
-        log.info("Scan thread starting...")
         threading.Thread(target=self._do_scan).start()
 
         if lock:
             self.scan_complete.wait(timeout=timeout)
 
     def set_device(self, address):
+        if self.address is not None:
+            self.unset_device()
+
         self.address = address
 
         self.on_close.clear()
@@ -47,7 +49,21 @@ class FreebudsManager:
         log.info("Manager thread starting...")
         threading.Thread(target=self._mainloop).start()
 
+    def unset_device(self):
+        if not self.started:
+            return
+
+        self.address = None
+        self.started = False
+
+        self.set_state(self.STATE_NO_DEV)
+
+        self.on_close.wait()
+
     def close(self):
+        if not self.started:
+            return
+
         log.info("closing...")
         self.started = False
         self.on_close.wait()
@@ -71,6 +87,7 @@ class FreebudsManager:
     def _mainloop(self):
         self.started = True
 
+        self.on_close.clear()
         log.debug("Started")
 
         # Check that spp exists in paired
@@ -84,7 +101,6 @@ class FreebudsManager:
         while self.started:
             # If offline, update state and wait
             if not self._is_connected():
-                log.debug("Device isn't connected to OS, ignoring...")
                 self.set_state(self.STATE_OFFLINE)
                 self._close_device()
                 time.sleep(self.MAINLOOP_TIMEOUT)
