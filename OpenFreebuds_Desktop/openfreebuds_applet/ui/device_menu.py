@@ -5,9 +5,9 @@ from openfreebuds_applet.l18n import t
 
 def loop(applet):
     while applet.manager.state == applet.manager.STATE_CONNECTED:
+        applet.manager.device.on_property_change.clear()
         update(applet)
 
-        applet.manager.device.on_property_change.clear()
         applet.manager.device.on_property_change.wait()
 
 

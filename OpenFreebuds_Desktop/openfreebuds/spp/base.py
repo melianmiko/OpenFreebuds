@@ -1,6 +1,7 @@
 import logging
 import socket
 import threading
+import traceback
 
 from openfreebuds import protocol_utils
 
@@ -34,8 +35,12 @@ class BaseSPPDevice:
         self.on_property_change = threading.Event()
         self.on_recv = threading.Event()
         self.on_close = threading.Event()
+        self._on_thread_exit = threading.Event()
 
     def connect(self):
+        if self.on_close.is_set():
+            raise Exception("Can't reuse exiting device object")
+
         try:
             self.socket = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM,
                                         socket.BTPROTO_RFCOMM)
@@ -50,15 +55,19 @@ class BaseSPPDevice:
             return False
 
     def close(self):
-        if not self.started:
-            return
+        # Raise all events to unlock all waiting threads
+        self.on_property_change.set()
+        self.on_recv.set()
 
-        log.info("closing...")
-        self.started = False
+        if self.started:
+            log.info("closing...")
+            self.started = False
+            self.socket.close()
+            self._on_thread_exit.wait()
 
-        self.on_close.wait()
-        self.socket.close()
-        log.info("closed successfully")
+            log.info("closed successfully")
+
+        self.on_close.set()
 
     def _mainloop(self):
         self.started = True
@@ -77,15 +86,16 @@ class BaseSPPDevice:
                         pkg = self.socket.recv(length)
                         log.debug("recv " + pkg.hex())
                         self.on_package(pkg)
-            except (ConnectionResetError, ConnectionAbortedError):
-                self.close()
-                break
             except (TimeoutError, socket.timeout):
+                # Socket timed out, do nothing
                 pass
+            except (ConnectionResetError, ConnectionAbortedError, OSError):
+                # Something bad happened, exiting...
+                break
 
-        self.on_property_change.set()
-        self.on_recv.set()
-        self.on_close.set()
+        self._on_thread_exit.set()
+        self.close()
+        log.info("Leaving recv...")
 
     def send_command(self, data, read=False):
         self.send(build_spp_bytes(data))
