@@ -1,12 +1,14 @@
 import logging
 import threading
 import time
+import webbrowser
 
 import pystray
 from PIL import Image, ImageDraw
 
 import openfreebuds.manager
 import openfreebuds_applet.settings
+from openfreebuds_applet.l18n import t
 from openfreebuds_applet.ui.base import get_header_menu_part, get_app_menu_part
 import openfreebuds_applet.ui.device_scan
 import openfreebuds_applet.ui.device_offline
@@ -51,10 +53,14 @@ class FreebudsApplet:
 
         self.settings = openfreebuds_applet.settings.SettingsStorage()
 
-        if not self.tray.HAS_MENU:
-            print("TODO: Show warning that menu won't work")
-
     def start(self):
+        if not self.tray.HAS_MENU:
+            result = pt.show_question(t("no_menu_error_info"),
+                                      t("no_menu_error_title"))
+            if result == pt.RESULT_YES:
+                webbrowser.open("https://melianmiko.ru/openfreebuds")
+            return
+
         threading.Thread(target=self._mainloop).start()
         self.tray.run()
 
@@ -81,13 +87,15 @@ class FreebudsApplet:
 
     # Main UI render loop
     def _mainloop(self):
-        pt.show_message("Hello!", "World!!!")
         self.started = True
         self.on_exit.clear()
 
         if self.settings.address != "":
             log.info("Using saved address: " + self.settings.address)
             self.manager.set_device(self.settings.address)
+        else:
+            pt.show_message(t("first_run_message"),
+                            t("first_run_title"))
 
         while self.started:
             log.debug("state=" + str(self.manager.state))
