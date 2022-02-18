@@ -1,9 +1,8 @@
 import logging
 import socket
 import threading
-import traceback
 
-from openfreebuds import protocol_utils
+from openfreebuds import protocol_utils, event_bus
 
 log = logging.getLogger("SPPDevice")
 
@@ -25,20 +24,20 @@ def build_spp_bytes(data):
 
 # noinspection PyMethodMayBeStatic
 class BaseSPPDevice:
+    EVENT_CLOSED = "spp_device_closed"
+    EVENT_RECV = "spp_device_package_recv"
+    EVENT_PROP_CHANGED = "spp_device_prop_changed"
+
     def __init__(self, address):
         self.last_pkg = None
         self.address = address
-        self.started = False
+        self.closed = False
         self.socket = None
 
         self._properties = {}
-        self.on_property_change = threading.Event()
-        self.on_recv = threading.Event()
-        self.on_close = threading.Event()
-        self._on_thread_exit = threading.Event()
 
     def connect(self):
-        if self.on_close.is_set():
+        if self.closed:
             raise Exception("Can't reuse exiting device object")
 
         try:
@@ -54,28 +53,19 @@ class BaseSPPDevice:
             self.close()
             return False
 
-    def close(self):
-        # Raise all events to unlock all waiting threads
-        self.on_property_change.set()
-        self.on_recv.set()
+    def close(self, lock=False):
+        if self.closed:
+            return
 
-        if self.started:
-            log.info("closing...")
-            self.started = False
-            self.socket.close()
-            self._on_thread_exit.wait()
-
-            log.info("closed successfully")
-
-        self.on_close.set()
+        self.closed = True
+        if lock:
+            event_bus.wait_for(self.EVENT_CLOSED)
 
     def _mainloop(self):
-        self.started = True
         self.socket.settimeout(2)
-
         log.info("starting recv...")
 
-        while self.started:
+        while not self.closed:
             try:
                 byte = self.socket.recv(4)
                 if byte[0:2] == b"Z\x00":
@@ -86,6 +76,7 @@ class BaseSPPDevice:
                         pkg = self.socket.recv(length)
                         log.debug("recv " + pkg.hex())
                         self.on_package(pkg)
+                        event_bus.invoke(self.EVENT_RECV)
             except (TimeoutError, socket.timeout):
                 # Socket timed out, do nothing
                 pass
@@ -93,16 +84,15 @@ class BaseSPPDevice:
                 # Something bad happened, exiting...
                 break
 
-        self._on_thread_exit.set()
-        self.close()
         log.info("Leaving recv...")
+        self.socket.close()
+        event_bus.invoke(self.EVENT_CLOSED)
 
     def send_command(self, data, read=False):
         self.send(build_spp_bytes(data))
 
         if read:
-            self.on_recv.wait()
-            self.on_property_change.clear()
+            event_bus.wait_for(self.EVENT_RECV)
 
     def send(self, data):
         try:
@@ -123,7 +113,7 @@ class BaseSPPDevice:
 
     def put_property(self, prop, value):
         self._properties[prop] = value
-        self.on_property_change.set()
+        event_bus.invoke(self.EVENT_PROP_CHANGED)
 
     def set_property(self, prop, value):
         raise "Must be override"

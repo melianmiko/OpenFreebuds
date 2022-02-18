@@ -2,7 +2,7 @@ from pystray import MenuItem
 from openfreebuds_applet.l18n import t
 
 
-def loop(applet):
+def process(applet):
     # TODO: Set icon...
 
     # Build new menu
@@ -11,6 +11,3 @@ def loop(applet):
                  action=None,
                  enabled=False)
     ], expand=True)
-
-    applet.manager.state_changed.clear()
-    applet.manager.state_changed.wait()

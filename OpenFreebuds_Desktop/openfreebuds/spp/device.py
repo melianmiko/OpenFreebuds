@@ -64,8 +64,6 @@ class SPPDevice(BaseSPPDevice):
             elif pkg[1] == 23:
                 self._parse_long_tap_action(pkg)
 
-        self.on_recv.set()
-
     def _parse_battery_pkg(self, pkg):
         parts = protocol_utils.parse_tlv(pkg[2:])
         for a in parts:

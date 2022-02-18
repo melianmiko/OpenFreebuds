@@ -2,12 +2,17 @@ import logging
 import threading
 import time
 
+from openfreebuds import event_bus
 from openfreebuds.spp.device import SPPDevice
 
 log = logging.getLogger("FreebudsManager")
 
 
 class FreebudsManager:
+    EVENT_STATE_CHANGED = "ofb_man_state_changed"
+    EVENT_SCAN_COMPLETE = "ofb_man_scan_complete"
+    EVENT_CLOSE = "ofb_man_close"
+
     MAINLOOP_TIMEOUT = 4
 
     STATE_NO_DEV = 0
@@ -25,31 +30,21 @@ class FreebudsManager:
         self.state = self.STATE_NO_DEV
 
         self.scan_results = []
-        self.state_changed = threading.Event()
-        self.scan_complete = threading.Event()
-        self.on_close = threading.Event()
 
     def list_paired(self, lock=False, timeout=None):
-        self.scan_complete.clear()
         self.scan_results = []
 
         threading.Thread(target=self._do_scan).start()
 
         if lock:
-            self.scan_complete.wait(timeout=timeout)
+            event_bus.wait_for(self.EVENT_SCAN_COMPLETE, timeout)
 
     def set_device(self, address):
         if self.address is not None:
             self.unset_device()
 
         self.address = address
-
-        self.on_close.clear()
-        self.state_changed.clear()
-
-        log.info("Manager thread starting...")
         threading.Thread(target=self._mainloop).start()
-        self.state_changed.wait()
 
     def unset_device(self, lock=True):
         if not self.started:
@@ -61,7 +56,7 @@ class FreebudsManager:
         self.set_state(self.STATE_NO_DEV)
 
         if lock:
-            self.on_close.wait()
+            event_bus.wait_for(self.EVENT_CLOSE)
 
     def close(self, lock=True):
         if not self.started:
@@ -71,7 +66,7 @@ class FreebudsManager:
         self.started = False
 
         if lock:
-            self.on_close.wait()
+            event_bus.wait_for(self.EVENT_CLOSE)
 
     def _close_device(self):
         # Close spp if it was started
@@ -87,12 +82,10 @@ class FreebudsManager:
 
         self.state = state
         log.info("State changed to " + str(state))
-        self.state_changed.set()
+        event_bus.invoke(self.EVENT_STATE_CHANGED)
 
     def _mainloop(self):
         self.started = True
-
-        self.on_close.clear()
         log.debug("Started")
 
         # Check that spp exists in paired
@@ -100,8 +93,6 @@ class FreebudsManager:
             log.warning("Device dont exist, bye...")
             self.set_state(self.STATE_NO_DEV)
             self.started = False
-            self._mainloop_exit()
-            return
 
         while self.started:
             # If offline, update state and wait
@@ -125,7 +116,7 @@ class FreebudsManager:
                     continue
 
             # If disconnected, wipe all and try again
-            if not self.device.started:
+            if self.device.closed:
                 log.warning("SPP connection closed")
                 self.set_state(self.STATE_DISCONNECTED)
                 self._close_device()
@@ -133,15 +124,13 @@ class FreebudsManager:
 
             # If all is OK, just chill
             self.set_state(self.STATE_CONNECTED)
-            self.device.on_close.wait(timeout=self.MAINLOOP_TIMEOUT)
+            event_bus.wait_for(self.device.EVENT_CLOSED,
+                               timeout=self.MAINLOOP_TIMEOUT)
 
         # Exit main loop
-        self._mainloop_exit()
-
-    def _mainloop_exit(self):
         log.info("leaving manager thread...")
         self._close_device()
-        self.on_close.set()
+        event_bus.invoke(self.EVENT_CLOSE)
 
     def _device_exists(self):
         raise Exception("Must be override")

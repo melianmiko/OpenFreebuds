@@ -2,8 +2,9 @@
 # For Windows build, use make_win32.cmd file
 
 all:
-	PYTHONPATH=${PWD} nuitka3 \
-		   --follow-imports \
-		   bin/openfreebuds
-	upx openfreebuds.bin
+	mkdir -p builddir
+	cd builddir && PYTHONPATH=${PWD} nuitka3 \
+		         --follow-imports \
+		         ../bin/openfreebuds
+	cd builddir && upx openfreebuds.bin
 

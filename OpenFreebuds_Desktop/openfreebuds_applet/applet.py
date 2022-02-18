@@ -7,6 +7,7 @@ from PIL import Image, ImageDraw
 
 import openfreebuds.manager
 import openfreebuds_applet.settings
+from openfreebuds import event_bus
 from openfreebuds_applet.l18n import t
 import openfreebuds_applet.ui.base
 import openfreebuds_applet.ui.device_scan
@@ -114,13 +115,13 @@ class FreebudsApplet:
                                         t("first_run_title"))
 
         while self.started:
-            log.debug("state=" + str(self.manager.state))
             if self.manager.state == self.manager.STATE_NO_DEV:
-                openfreebuds_applet.ui.device_scan.loop(self)
+                openfreebuds_applet.ui.device_scan.process(self)
             elif self.manager.state == self.manager.STATE_CONNECTED:
-                openfreebuds_applet.ui.device_menu.loop(self)
+                openfreebuds_applet.ui.device_menu.process(self)
             else:
-                openfreebuds_applet.ui.device_offline.loop(self)
+                openfreebuds_applet.ui.device_offline.process(self)
+            event_bus.wait_any()
 
         self.manager.close()
         self._tray.stop()

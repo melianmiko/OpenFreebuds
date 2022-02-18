@@ -47,8 +47,8 @@ def main():
 
 def shell(manager):
     dev = manager.device
-    while dev.started:
-        cmd = input("openfreebuds> ").split(" ")
+    while not dev.closed:
+        cmd = input("OpenFreebuds> ").split(" ")
 
         if cmd[0] == "":
             continue

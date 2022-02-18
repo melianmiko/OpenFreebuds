@@ -2,5 +2,10 @@
 
 set PYTHONPATH=%CD%
 
-pyinstaller .\bin\openfreebuds
+if not exist builddir mkdir builddir
+cd builddir
+
+pyinstaller ..\bin\openfreebuds
+
+cd ..
 

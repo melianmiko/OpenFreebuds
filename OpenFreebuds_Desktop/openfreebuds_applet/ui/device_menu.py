@@ -3,15 +3,7 @@ from pystray import MenuItem, Menu
 from openfreebuds_applet.l18n import t
 
 
-def loop(applet):
-    while applet.manager.state == applet.manager.STATE_CONNECTED:
-        applet.manager.device.on_property_change.clear()
-        update(applet)
-
-        applet.manager.device.on_property_change.wait()
-
-
-def update(applet):
+def process(applet):
     dev = applet.manager.device
 
     # TODO: Set icon...

@@ -1,6 +1,9 @@
+import time
+
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
 
+from openfreebuds import event_bus
 from openfreebuds.manager.base import FreebudsManager
 
 DBusGMainLoop(set_as_default=True)
@@ -43,6 +46,10 @@ class LinuxFreebudsManager(FreebudsManager):
                     device = dbus.Interface(system.get_object("org.bluez", path),
                                             "org.freedesktop.DBus.Properties")
                     props = dbus_to_python(device.GetAll("org.bluez.Device1"))
+
+                    if props.get("Name", "") == "":
+                        continue
+
                     self.scan_results.append({
                         "name": props.get("Name", ""),
                         "address": props.get("Address", "Unknown address"),
@@ -51,7 +58,8 @@ class LinuxFreebudsManager(FreebudsManager):
         except dbus.exceptions.DBusException:
             print("WARN: Scan failed due to dbus error")
 
-        self.scan_complete.set()
+        time.sleep(3)
+        event_bus.invoke(self.EVENT_SCAN_COMPLETE)
 
 
 # From https://stackoverflow.com/questions/11486443/dbus-python-how-to-get-response-with-native-types
