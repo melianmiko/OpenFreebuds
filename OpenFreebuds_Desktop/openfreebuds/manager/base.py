@@ -45,11 +45,13 @@ class FreebudsManager:
         self.address = address
 
         self.on_close.clear()
+        self.state_changed.clear()
 
         log.info("Manager thread starting...")
         threading.Thread(target=self._mainloop).start()
+        self.state_changed.wait()
 
-    def unset_device(self):
+    def unset_device(self, lock=True):
         if not self.started:
             return
 
@@ -58,15 +60,18 @@ class FreebudsManager:
 
         self.set_state(self.STATE_NO_DEV)
 
-        self.on_close.wait()
+        if lock:
+            self.on_close.wait()
 
-    def close(self):
+    def close(self, lock=True):
         if not self.started:
             return
 
         log.info("closing...")
         self.started = False
-        self.on_close.wait()
+
+        if lock:
+            self.on_close.wait()
 
     def _close_device(self):
         # Close spp if it was started
