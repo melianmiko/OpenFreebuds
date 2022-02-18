@@ -1,2 +1,3 @@
 @echo off
-pyinstaller bin/openfreebuds
+nuitka --standalone --include-module=PIL.IcoImagePlugin .\bin\openfreebuds
+

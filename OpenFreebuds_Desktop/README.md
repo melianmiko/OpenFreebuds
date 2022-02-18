@@ -8,10 +8,9 @@ Requirements
 ------------
 
 All listed in `requirements.txt`, and also:
-
- - (linux) libappindicator3, pytI finally solved my problem: I had to change the line - sudo pip install -r req.txt# in my mrjob.conf file to - sudo ...
-hon3-dbus, python3-gobject
- - (windows) UPX
+ 
+ - (linux) libappindicator3, python3-dbus, python3-gobject, nuitka compiler
+ - (optional) UPX for optimization
 
 Debian:
 ```bash
