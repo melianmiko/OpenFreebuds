@@ -11,6 +11,8 @@ STRINGS = {
     "select_device": "Select device to use:",
     "action_exit": "Exit",
     "action_unpair": "Forgot device",
+    "state_quiting": "Stopping...",
+    "action_kill_app": "Force exit",
     "mgr_state_0": "No device",
     "mgr_state_1": "Device don't connected",
     "mgr_state_2": "Device disconnected",

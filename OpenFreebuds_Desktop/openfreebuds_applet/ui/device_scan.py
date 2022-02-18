@@ -26,6 +26,10 @@ def loop(applet):
         if applet.started is False:
             return
 
+        # If state changed, leave
+        if applet.manager.state != applet.manager.STATE_NO_DEV:
+            return
+
         items = [pystray.MenuItem(text=t("select_device"),
                                   enabled=False,
                                   action=None)]
