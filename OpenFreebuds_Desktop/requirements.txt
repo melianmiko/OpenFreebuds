@@ -1,4 +1,4 @@
-pystray~=0.18.0
+pystray~=0.19.2
 
 PyGObject==3.42.0; sys_platform == "linux"
 dbus-python==1.2.18; sys_platform == "linux"
