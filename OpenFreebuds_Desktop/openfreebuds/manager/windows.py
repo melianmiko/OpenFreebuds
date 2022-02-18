@@ -1,30 +1,21 @@
 import logging
-import subprocess
-import os
+import asyncio
+
+from winsdk.windows.devices.enumeration import DeviceInformation, DeviceInformationKind
+from winsdk.windows.devices.bluetooth import BluetoothDevice
 
 from openfreebuds.manager.base import FreebudsManager
 
-TOOLS_PATH = os.path.dirname(os.path.realpath(__file__)) + "/tools"
 log = logging.getLogger("WindowsFreebudsManager")
 
 
 class WindowsFreebudsManager(FreebudsManager):
     def _is_connected(self):
-        command = ["powershell.exe",
-                   "-ExecutionPolicy", "RemoteSigned",
-                   "-file", TOOLS_PATH + "\\BluetoothDevices.ps1"]
-
-        log.debug("is_connected command=" + str(command))
-
-        out = subprocess.check_output(command)
-        out = str(out, "utf8").split("\r\n")
-
-        for line in out:
-            parts = line.split(";")
-            if parts[1] == self.address:
-                result = parts[2] == "True"
-                log.debug("is_connected line=" + line + " result=" + str(result))
-                return result
+        devices = self._async_do_scan()
+        
+        for a in self.devices:
+            if a["address"] == self.address:
+                return a["connected"]
 
         return None
 
@@ -32,23 +23,25 @@ class WindowsFreebudsManager(FreebudsManager):
         return self._is_connected() is not None
 
     def _do_scan(self):
-        command = ["powershell.exe",
-                   "-ExecutionPolicy", "RemoteSigned",
-                   "-file", TOOLS_PATH + "\\BluetoothDevices.ps1"]
-
-        log.debug("do_scan command=" + str(command))
-
-        out = subprocess.check_output(command)
-        out = str(out, "utf8").split("\r\n")
-
-        for line in out:
-            log.debug(line)
-            parts = line.split(";")
-            if len(parts) > 1:
-                self.scan_results.append({
-                    "name": parts[0],
-                    "address": parts[1],
-                    "connected": parts[2] == "True"
-                })
-
+        self.scan_results = asyncio.run(self._async_do_scan())
         self.scan_complete.set()
+
+    async def _async_do_scan(self):
+        out = []
+
+        selector = BluetoothDevice.get_device_selector_from_pairing_state(True)
+        devices = await DeviceInformation.find_all_async(selector, [], DeviceInformationKind.DEVICE)
+        for a in devices:
+            bt_device = await BluetoothDevice.from_id_async(a.id)
+            out.append({
+                "name": bt_device.name,
+                "address": bt_device.host_name.raw_name[1:-1],
+                "connected": bt_device.connection_status
+            })
+
+        return out
+
+
+if __name__ == "__main__":
+    a = WindowsFreebudsManager()
+    a._do_scan()

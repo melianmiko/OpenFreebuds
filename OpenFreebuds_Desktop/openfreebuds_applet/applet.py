@@ -39,7 +39,8 @@ class FreebudsApplet:
         self.manager = openfreebuds.manager.create()
         self.tray = pystray.Icon(name="OpenFreebuds",
                                  title="OpenFreebuds",
-                                 icon=create_image())
+                                 icon=create_image(),
+                                 menu=pystray.Menu())
 
         self.started = False
         self.on_exit = threading.Event()

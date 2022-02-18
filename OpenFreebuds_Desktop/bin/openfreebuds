@@ -1,15 +1,8 @@
+#!/usr/bin/env python3
 import logging
 
-from openfreebuds_applet.applet import FreebudsApplet
+import openfreebuds_applet
 
 logging.basicConfig(level=logging.DEBUG,
                     format="%(levelname)s:%(name)s:%(threadName)s  %(message)s")
-
-
-def main():
-    applet = FreebudsApplet()
-    applet.start()
-
-
-main()
-
+openfreebuds_applet.start()
