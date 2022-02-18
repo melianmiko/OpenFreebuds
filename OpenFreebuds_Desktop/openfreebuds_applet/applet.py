@@ -11,6 +11,7 @@ from openfreebuds_applet.ui.base import get_header_menu_part, get_app_menu_part
 import openfreebuds_applet.ui.device_scan
 import openfreebuds_applet.ui.device_offline
 import openfreebuds_applet.ui.device_menu
+import openfreebuds_applet.platform_tools as pt
 
 log = logging.getLogger("Applet")
 
@@ -80,6 +81,7 @@ class FreebudsApplet:
 
     # Main UI render loop
     def _mainloop(self):
+        pt.show_message("Hello!", "World!!!")
         self.started = True
         self.on_exit.clear()
 
