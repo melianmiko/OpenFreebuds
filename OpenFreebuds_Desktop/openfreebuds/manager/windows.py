@@ -11,9 +11,9 @@ log = logging.getLogger("WindowsFreebudsManager")
 
 class WindowsFreebudsManager(FreebudsManager):
     def _is_connected(self):
-        devices = self._async_do_scan()
+        devices = asyncio.run(self._async_do_scan())
         
-        for a in self.devices:
+        for a in devices:
             if a["address"] == self.address:
                 return a["connected"]
 
