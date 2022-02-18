@@ -1,6 +1,5 @@
 import logging
 import threading
-import time
 import webbrowser
 
 import pystray
@@ -49,6 +48,7 @@ class FreebudsApplet:
     def __init__(self):
         self.started = False
         self.allow_ui_update = False
+        self._current_menu_hash = ""
 
         self.manager = openfreebuds.manager.create()
         self._tray = pystray.Icon(name="OpenFreebuds",
@@ -84,10 +84,15 @@ class FreebudsApplet:
             items = openfreebuds_applet.ui.base.get_header_menu_part(self) + items
 
         items += openfreebuds_applet.ui.base.get_app_menu_part(self)
-        menu = pystray.Menu(*items)
+        items_hash = openfreebuds_applet.ui.base.items_hash_string(items)
 
-        log.debug("Menu updated")
-        self._tray.menu = menu
+        if self._current_menu_hash != items_hash:
+            menu = pystray.Menu(*items)
+
+            self._current_menu_hash = items_hash
+            self._tray.menu = menu
+
+            log.debug("Menu updated, hash=" + items_hash)
 
     def start(self):
         if not self._tray.HAS_MENU:
@@ -116,8 +121,6 @@ class FreebudsApplet:
                 openfreebuds_applet.ui.device_menu.loop(self)
             else:
                 openfreebuds_applet.ui.device_offline.loop(self)
-            time.sleep(0.5)
 
         self.manager.close()
         self._tray.stop()
-
