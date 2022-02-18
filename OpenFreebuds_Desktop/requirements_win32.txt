@@ -1,2 +1,0 @@
-pyinstaller==4.9
-winsdk==1.0.0b2
