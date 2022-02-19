@@ -3,7 +3,6 @@ import threading
 import webbrowser
 
 import pystray
-from PIL import Image, ImageDraw
 
 import openfreebuds.manager
 import openfreebuds_applet.platform_tools as platform_tools
@@ -13,28 +12,10 @@ import openfreebuds_applet.ui.device_menu
 import openfreebuds_applet.ui.device_offline
 import openfreebuds_applet.ui.device_scan
 from openfreebuds import event_bus
+from openfreebuds_applet import icons
 from openfreebuds_applet.l18n import t
 
 log = logging.getLogger("Applet")
-
-
-def create_image():
-    width = 24
-    height = 24
-    color1 = "#FFFFFF"
-    color2 = "#0099FF"
-
-    # Generate an image and draw a pattern
-    image = Image.new('RGB', (width, height), color1)
-    dc = ImageDraw.Draw(image)
-    dc.rectangle(
-        (width // 2, 0, width, height // 2),
-        fill=color2)
-    dc.rectangle(
-        (0, height // 2, width // 2, height),
-        fill=color2)
-
-    return image
 
 
 def _show_no_tray_warn():
@@ -49,12 +30,13 @@ class FreebudsApplet:
     def __init__(self):
         self.started = False
         self.allow_ui_update = False
-        self._current_menu_hash = ""
+        self.current_menu_hash = ""
+        self.current_icon_hash = ""
 
         self.manager = openfreebuds.manager.create()
         self._tray = pystray.Icon(name="OpenFreebuds",
                                   title="OpenFreebuds",
-                                  icon=create_image(),
+                                  icon=icons.get_icon_offline(),
                                   menu=pystray.Menu())
 
         self.settings = openfreebuds_applet.settings.SettingsStorage()
@@ -77,6 +59,17 @@ class FreebudsApplet:
         self.started = False
         self.manager.unset_device(lock=False)
 
+    def set_tray_icon(self, icon, hashsum):
+        if not self.allow_ui_update:
+            return
+
+        if self.current_icon_hash == hashsum:
+            return
+
+        log.debug("icon changed, new hash=" + hashsum)
+        self.current_icon_hash = hashsum
+        self._tray.icon = icon
+
     def set_menu_items(self, items, expand=False):
         if not self.allow_ui_update:
             return
@@ -87,10 +80,10 @@ class FreebudsApplet:
         items += openfreebuds_applet.ui.base.get_app_menu_part(self)
         items_hash = openfreebuds_applet.ui.base.items_hash_string(items)
 
-        if self._current_menu_hash != items_hash:
+        if self.current_menu_hash != items_hash:
             menu = pystray.Menu(*items)
 
-            self._current_menu_hash = items_hash
+            self.current_menu_hash = items_hash
             self._tray.menu = menu
 
             log.debug("Menu updated, hash=" + items_hash)

@@ -3,12 +3,21 @@ import logging
 import pystray
 
 from openfreebuds import system_io, event_bus
+from openfreebuds_applet import icons
 from openfreebuds_applet.l18n import t
 
 log = logging.getLogger("DeviceScanUI")
 
 
 def process(applet):
+    # Set icon if required
+    hashsum = "icon_offline"
+
+    if applet.current_icon_hash != hashsum:
+        icon = icons.get_icon_offline()
+        applet.set_tray_icon(icon, hashsum)
+
+    # Build menu
     devices = system_io.list_paired()
     items = [
         pystray.MenuItem(text=t("select_device"),
