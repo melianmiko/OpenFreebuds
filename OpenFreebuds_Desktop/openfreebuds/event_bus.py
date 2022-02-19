@@ -2,29 +2,28 @@ import logging
 import threading
 
 log = logging.getLogger("EventBus")
-root_condition = threading.Condition()
-conditions = {}
+
+
+class Data:
+    cv = threading.Condition()
+    event_name = ""
 
 
 def invoke(event_name: str):
     # Send root notification
-    with root_condition:
-        root_condition.notify_all()
-
-    # Send specific notification
-    if event_name in conditions:
-        with conditions[event_name]:
-            conditions[event_name].notify_all()
+    with Data.cv:
+        Data.event_name = event_name
+        Data.cv.notify_all()
 
 
 def wait_any(timeout=None):
-    with root_condition:
-        root_condition.wait(timeout=timeout)
+    with Data.cv:
+        Data.cv.wait(timeout)
+        return Data.event_name
 
 
 def wait_for(event_name, timeout=None):
-    if event_name not in conditions:
-        conditions[event_name] = threading.Condition()
-
-    with conditions[event_name]:
-        conditions[event_name].wait(timeout=timeout)
+    with Data.cv:
+        Data.cv.wait(timeout)
+        if Data.event_name == event_name:
+            return Data.event_name
