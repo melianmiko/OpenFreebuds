@@ -2,10 +2,14 @@ import logging
 import threading
 import time
 
-from openfreebuds import event_bus
+from openfreebuds import event_bus, system_io
 from openfreebuds.spp.device import SPPDevice
 
 log = logging.getLogger("FreebudsManager")
+
+
+def create():
+    return FreebudsManager()
 
 
 class FreebudsManager:
@@ -30,14 +34,6 @@ class FreebudsManager:
         self.state = self.STATE_NO_DEV
 
         self.scan_results = []
-
-    def list_paired(self, lock=False, timeout=None):
-        self.scan_results = []
-
-        threading.Thread(target=self._do_scan).start()
-
-        if lock:
-            event_bus.wait_for(self.EVENT_SCAN_COMPLETE, timeout)
 
     def set_device(self, address):
         if self.address is not None:
@@ -86,17 +82,18 @@ class FreebudsManager:
 
     def _mainloop(self):
         self.started = True
+
         log.debug("Started")
 
         # Check that spp exists in paired
-        if not self._device_exists():
+        if not system_io.device_exists(self.address):
             log.warning("Device dont exist, bye...")
             self.set_state(self.STATE_NO_DEV)
             self.started = False
 
         while self.started:
             # If offline, update state and wait
-            if not self._is_connected():
+            if not system_io.is_device_connected(self.address):
                 self.set_state(self.STATE_OFFLINE)
                 self._close_device()
                 time.sleep(self.MAINLOOP_TIMEOUT)
@@ -131,12 +128,3 @@ class FreebudsManager:
         log.info("leaving manager thread...")
         self._close_device()
         event_bus.invoke(self.EVENT_CLOSE)
-
-    def _device_exists(self):
-        raise Exception("Must be override")
-
-    def _do_scan(self):
-        raise Exception("Must be override")
-
-    def _is_connected(self):
-        raise Exception("Must be override")

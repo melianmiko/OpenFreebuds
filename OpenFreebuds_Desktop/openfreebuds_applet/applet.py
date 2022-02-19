@@ -6,14 +6,14 @@ import pystray
 from PIL import Image, ImageDraw
 
 import openfreebuds.manager
+import openfreebuds_applet.platform_tools as platform_tools
 import openfreebuds_applet.settings
+import openfreebuds_applet.ui.base
+import openfreebuds_applet.ui.device_menu
+import openfreebuds_applet.ui.device_offline
+import openfreebuds_applet.ui.device_scan
 from openfreebuds import event_bus
 from openfreebuds_applet.l18n import t
-import openfreebuds_applet.ui.base
-import openfreebuds_applet.ui.device_scan
-import openfreebuds_applet.ui.device_offline
-import openfreebuds_applet.ui.device_menu
-import openfreebuds_applet.platform_tools as platform_tools
 
 log = logging.getLogger("Applet")
 

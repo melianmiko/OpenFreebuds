@@ -2,21 +2,34 @@ import logging
 
 import pystray
 
+from openfreebuds import system_io, event_bus
 from openfreebuds_applet.l18n import t
 
 log = logging.getLogger("DeviceScanUI")
 
 
 def process(applet):
-    items = [pystray.MenuItem(text=t("select_device"),
-                              enabled=False,
-                              action=None)]
+    devices = system_io.list_paired()
+    items = [
+        pystray.MenuItem(text=t("select_device"),
+                         enabled=False,
+                         action=None)
+    ]
 
-    for a in applet.manager.scan_results:
+    for a in devices:
         items.append(_create_device_menu_item(a, applet))
 
+    items += [
+        pystray.Menu.SEPARATOR,
+        pystray.MenuItem(text=t("action_refresh_list"),
+                         action=send_update_request)
+    ]
+
     applet.set_menu_items(items)
-    applet.manager.list_paired()
+
+
+def send_update_request():
+    event_bus.invoke("ui_update")
 
 
 def _create_device_menu_item(data, applet):

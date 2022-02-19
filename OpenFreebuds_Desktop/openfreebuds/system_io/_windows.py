@@ -1,19 +1,15 @@
 import logging
 import asyncio
-import time
 
 # noinspection PyUnresolvedReferences,PyPackageRequirements
 from winsdk.windows.devices.enumeration import DeviceInformation, DeviceInformationKind
 # noinspection PyUnresolvedReferences,PyPackageRequirements
 from winsdk.windows.devices.bluetooth import BluetoothDevice
 
-from openfreebuds import event_bus
-from openfreebuds.manager.base import FreebudsManager
-
 log = logging.getLogger("WindowsFreebudsManager")
 
 
-async def _async_do_scan():
+async def _list_paired():
     out = []
 
     selector = BluetoothDevice.get_device_selector_from_pairing_state(True)
@@ -29,20 +25,19 @@ async def _async_do_scan():
     return out
 
 
-class WindowsFreebudsManager(FreebudsManager):
-    def _is_connected(self):
-        devices = asyncio.run(_async_do_scan())
-        
-        for a in devices:
-            if a["address"] == self.address:
-                return a["connected"]
+def is_device_connected(address):
+    devices = asyncio.run(_list_paired())
 
-        return None
+    for a in devices:
+        if a["address"] == address:
+            return a["connected"]
 
-    def _device_exists(self):
-        return self._is_connected() is not None
+    return None
 
-    def _do_scan(self):
-        self.scan_results = asyncio.run(_async_do_scan())
-        time.sleep(3)
-        event_bus.invoke(self.EVENT_SCAN_COMPLETE)
+
+def device_exists(address):
+    return is_device_connected(address) is not None
+
+
+def list_paired():
+    return asyncio.run(_list_paired())

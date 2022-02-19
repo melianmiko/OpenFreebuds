@@ -8,11 +8,12 @@ STRINGS = {
                           "If you're using Linux, please check that libappindicator "
                           "and other dependencies are installed.\n\n"
                           "Open OpenFreebuds webpage for more information?",
-    "select_device": "Select device to use:",
+    "select_device": "Select one of paired devices:",
     "action_exit": "Exit",
     "action_unpair": "Forgot device",
     "state_quiting": "Stopping...",
     "action_kill_app": "Force exit",
+    "action_refresh_list": "Refresh list",
     "mgr_state_0": "No device",
     "mgr_state_1": "Device don't connected",
     "mgr_state_2": "Device disconnected",
