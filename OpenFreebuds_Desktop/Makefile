@@ -1,4 +1,4 @@
-# This Makefile shuld be used only for Linux building
+# This Makefile should be used only for Linux building
 # For Windows build, use make_win32.cmd file
 
 all:
