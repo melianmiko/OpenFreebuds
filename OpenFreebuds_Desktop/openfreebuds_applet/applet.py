@@ -54,6 +54,7 @@ class FreebudsApplet:
         self.allow_ui_update = False
         self.started = False
         self.manager.unset_device(lock=False)
+        event_bus.invoke("ui_bye")
 
     def set_theme(self, name):
         icons.set_theme(name)
