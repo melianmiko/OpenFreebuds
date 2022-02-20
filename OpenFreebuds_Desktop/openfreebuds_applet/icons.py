@@ -1,5 +1,10 @@
+import logging
+
 import PIL.Image
 from PIL import Image, ImageDraw
+
+from openfreebuds import event_bus
+from openfreebuds_applet.settings import SettingsStorage
 
 ICON_SIZE = (24, 24)
 
@@ -10,13 +15,38 @@ def spawn_color_image(size, color):
 
 class BaseImages:
     transparent = Image.new("RGBA", ICON_SIZE, color="#00000000")
+
     light_missing = Image.new("RGBA", ICON_SIZE, color="#FFFFFF22")
     light_empty = Image.new("RGBA", ICON_SIZE, color="#FFFFFF44")
     light_full = Image.new("RGBA", ICON_SIZE, color="#FFFFFFFF")
 
+    dark_missing = Image.new("RGBA", ICON_SIZE, color="#00000022")
+    dark_empty = Image.new("RGBA", ICON_SIZE, color="#00000044")
+    dark_full = Image.new("RGBA", ICON_SIZE, color="#000000FF")
+
     theme_missing = light_missing
     theme_full = light_full
     theme_empty = light_empty
+
+
+def set_theme(theme_name="auto"):
+    value = theme_name
+    if theme_name == "auto":
+        from openfreebuds_applet.platform_tools import is_dark_theme
+        value = "dark" if is_dark_theme() else "light"
+
+    if value == "dark":
+        BaseImages.theme_missing = BaseImages.light_missing
+        BaseImages.theme_full = BaseImages.light_full
+        BaseImages.theme_empty = BaseImages.light_empty
+    elif value == "light":
+        BaseImages.theme_missing = BaseImages.dark_missing
+        BaseImages.theme_full = BaseImages.dark_full
+        BaseImages.theme_empty = BaseImages.dark_empty
+    else:
+        raise Exception("Unknown theme value: " + value)
+
+    logging.getLogger("AppletIcons").debug("set theme=" + value)
 
 
 def spawn_power_bg_mask(level: float):

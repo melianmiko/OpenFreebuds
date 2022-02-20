@@ -17,6 +17,7 @@ class SettingsStorage:
     def __init__(self):
         self.address = ""
         self.device_name = ""
+        self.theme = "auto"
 
         self._read()
 

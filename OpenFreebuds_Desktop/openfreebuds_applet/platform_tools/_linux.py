@@ -26,3 +26,8 @@ def show_question(message, window_title=""):
 
     return result
 
+
+def is_dark_theme():
+    settings = Gtk.Settings.get_default()
+    theme_name = settings.get_property("gtk-theme-name")
+    return "Dark" in theme_name
