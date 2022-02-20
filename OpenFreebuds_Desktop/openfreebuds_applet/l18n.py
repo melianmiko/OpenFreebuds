@@ -9,7 +9,11 @@ STRINGS = {
                           "and other dependencies are installed.\n\n"
                           "Open OpenFreebuds webpage for more information?",
     "select_device": "Select one of paired devices:",
-    "action_exit": "Exit",
+    "action_exit": "Exit application",
+    "submenu_theme": "Icon style",
+    "theme_auto": "Auto-detect",
+    "theme_light": "Light icon",
+    "theme_dark": "Dark icon",
     "action_unpair": "Forgot device",
     "state_quiting": "Stopping...",
     "action_kill_app": "Force exit",

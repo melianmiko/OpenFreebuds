@@ -61,6 +61,9 @@ class FreebudsApplet:
         self.settings.theme = name
         self.settings.write()
 
+        # Wipe hash for icon reload
+        self.current_icon_hash = ""
+
         event_bus.invoke("ui_theme_changed")
 
     def set_tray_icon(self, icon, hashsum):

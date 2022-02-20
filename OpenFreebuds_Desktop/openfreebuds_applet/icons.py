@@ -33,13 +33,13 @@ def set_theme(theme_name="auto"):
     value = theme_name
     if theme_name == "auto":
         from openfreebuds_applet.platform_tools import is_dark_theme
-        value = "dark" if is_dark_theme() else "light"
+        value = "light" if is_dark_theme() else "dark"
 
-    if value == "dark":
+    if value == "light":
         BaseImages.theme_missing = BaseImages.light_missing
         BaseImages.theme_full = BaseImages.light_full
         BaseImages.theme_empty = BaseImages.light_empty
-    elif value == "light":
+    elif value == "dark":
         BaseImages.theme_missing = BaseImages.dark_missing
         BaseImages.theme_full = BaseImages.dark_full
         BaseImages.theme_empty = BaseImages.dark_empty
