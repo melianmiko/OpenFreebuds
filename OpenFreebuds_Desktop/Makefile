@@ -8,3 +8,6 @@ all:
 		         ../bin/openfreebuds
 	cd builddir && upx openfreebuds.bin
 
+install:
+	cp builddir/openfreebuds.bin /usr/bin/openfreebuds
+	cp -r openfreebuds_assets /usr/share/openfreebuds

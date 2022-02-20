@@ -1,12 +1,11 @@
 import logging
 
-import PIL.Image
 from PIL import Image, ImageDraw
 
-from openfreebuds import event_bus
-from openfreebuds_applet.settings import SettingsStorage
+from openfreebuds_applet import tools
 
-ICON_SIZE = (24, 24)
+ICON_SIZE = (32, 32)
+ASSETS_PATH = tools.get_assets_path()
 
 
 def spawn_color_image(size, color):
@@ -14,14 +13,20 @@ def spawn_color_image(size, color):
 
 
 class BaseImages:
+    # Icons
+    base = Image.open(ASSETS_PATH + "/base.png")
+    mode_1 = Image.open(ASSETS_PATH + "/mode_1.png")
+    mode_2 = Image.open(ASSETS_PATH + "/mode_2.png")
+
+    # Color presets
     transparent = Image.new("RGBA", ICON_SIZE, color="#00000000")
 
-    light_missing = Image.new("RGBA", ICON_SIZE, color="#FFFFFF22")
-    light_empty = Image.new("RGBA", ICON_SIZE, color="#FFFFFF44")
+    light_missing = Image.new("RGBA", ICON_SIZE, color="#FFFFFF33")
+    light_empty = Image.new("RGBA", ICON_SIZE, color="#FFFFFF77")
     light_full = Image.new("RGBA", ICON_SIZE, color="#FFFFFFFF")
 
-    dark_missing = Image.new("RGBA", ICON_SIZE, color="#00000022")
-    dark_empty = Image.new("RGBA", ICON_SIZE, color="#00000044")
+    dark_missing = Image.new("RGBA", ICON_SIZE, color="#00000033")
+    dark_empty = Image.new("RGBA", ICON_SIZE, color="#00000077")
     dark_full = Image.new("RGBA", ICON_SIZE, color="#000000FF")
 
     theme_missing = light_missing
@@ -78,27 +83,23 @@ def combine_mask(mask, foreground=None, background=None):
     return out
 
 
-def _get_base_device():
-    # Generate an image and draw a pattern
-    image = Image.new('RGBA', ICON_SIZE, "#000000")
-    dc = ImageDraw.Draw(image)
-    dc.rectangle((0, 0, ICON_SIZE[0], ICON_SIZE[1]), fill="#FFFFFF")
-
-    return image
-
-
 def get_icon_offline():
-    return combine_mask(_get_base_device(),
+    return combine_mask(BaseImages.base,
                         foreground=BaseImages.theme_missing,
                         background=BaseImages.transparent)
 
 
 def get_icon_device(battery, noise_mode):
-    icon = _get_base_device()
-
+    icon = BaseImages.base
     power_bg = combine_mask(spawn_power_bg_mask(battery / 100),
                             foreground=BaseImages.theme_full,
                             background=BaseImages.theme_empty)
+
+    if noise_mode == 1:
+        icon = BaseImages.mode_1
+    elif noise_mode == 2:
+        icon = BaseImages.mode_2
+
     return combine_mask(icon,
                         foreground=power_bg,
                         background=BaseImages.transparent)
