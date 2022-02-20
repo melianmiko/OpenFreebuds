@@ -3,14 +3,7 @@ import logging
 import os
 import platform
 
-
-def _get_file_path():
-    if platform.system() == "Windows":
-        appdata = os.getenv("APPDATA")
-        return appdata + "\\openfreebuds.json"
-    else:
-        home = os.getenv("HOME")
-        return home + "/.config/openfreebuds.json"
+from openfreebuds_applet import tools
 
 
 class SettingsStorage:
@@ -22,7 +15,7 @@ class SettingsStorage:
         self._read()
 
     def _read(self):
-        path = _get_file_path()
+        path = tools.get_settings_path()
         logging.debug("Using config path: " + path)
         if not os.path.isfile(path):
             return
@@ -36,7 +29,7 @@ class SettingsStorage:
             logging.warning("Can't load saved config")
 
     def write(self):
-        path = _get_file_path()
+        path = tools.get_settings_path()
 
         with open(path, "w") as f:
             f.write(json.dumps(self.__dict__))

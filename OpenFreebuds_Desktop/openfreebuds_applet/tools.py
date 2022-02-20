@@ -1,5 +1,9 @@
+import datetime
 import hashlib
 import os
+import pathlib
+import platform
+import subprocess
 
 
 def items_hash_string(items):
@@ -27,3 +31,41 @@ def get_assets_path():
         return "/usr/share/openfreebuds"
 
     raise Exception("assets dir not found")
+
+
+def open_app_storage_dir():
+    path = str(get_app_storage_dir())
+
+    if platform.system() == "Windows":
+        os.startfile(path)
+    elif platform.system() == "Linux":
+        subprocess.Popen(["xdg-open", path])
+    else:
+        raise Exception("Unknown platform name")
+
+
+def get_app_storage_dir():
+    home = pathlib.Path.home()
+
+    if platform.system() == "Windows":
+        path = home / "AppData/Roaming/openfreebuds"
+    elif platform.system() == "Linux":
+        path = home / ".config/openfreebuds"
+    else:
+        raise Exception("Unknown platform name")
+
+    if not path.is_dir():
+        path.mkdir()
+
+    return path
+
+
+def get_settings_path():
+    path = get_app_storage_dir()
+    return str(path / "settings.json")
+
+
+def get_log_filename():
+    path = get_app_storage_dir()
+    time_tag = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M")
+    return str(path / (time_tag + ".log"))

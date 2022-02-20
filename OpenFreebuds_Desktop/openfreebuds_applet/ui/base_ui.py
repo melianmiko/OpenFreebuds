@@ -2,6 +2,7 @@ import os
 
 from pystray import MenuItem, Menu
 
+from openfreebuds_applet import tools
 from openfreebuds_applet.l18n import t
 
 
@@ -39,6 +40,9 @@ def get_settings_submenu(applet):
     items = [
         MenuItem(t("submenu_theme"),
                  action=get_theme_submenu(applet)),
+        MenuItem(t("action_open_appdata"),
+                 action=tools.open_app_storage_dir),
+        Menu.SEPARATOR,
         MenuItem(t("action_exit"),
                  action=lambda: applet.exit())
     ]

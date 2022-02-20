@@ -1,8 +1,34 @@
 #!/usr/bin/env python3
+import argparse
 import logging
 
 import openfreebuds_applet
+from openfreebuds_applet import tools
 
-logging.basicConfig(level=logging.DEBUG,
-                    format="%(levelname)s:%(name)s:%(threadName)s  %(message)s")
+description = "Unofficial application to manage HUAWEI FreeBuds device"
+log_format = "%(levelname)s:%(name)s:%(threadName)s  %(message)s"
+
+# Parse arguments
+parser = argparse.ArgumentParser(description=description)
+parser.add_argument("--verbose",
+                    default=False, action="store_true",
+                    help="Print debug log to console")
+args = parser.parse_args()
+
+# Setup logging
+if args.verbose:
+    logging.basicConfig(level=logging.DEBUG,
+                        format=log_format)
+else:
+    # For pre-releases, log to file in any way
+    logfile = tools.get_log_filename()
+
+    print("Log redirected to file " + logfile +
+          ". Set --verbose flag to see logs here.")
+
+    logging.basicConfig(level=logging.DEBUG,
+                        format=log_format,
+                        filename=logfile)
+
+# Start app
 openfreebuds_applet.start()
