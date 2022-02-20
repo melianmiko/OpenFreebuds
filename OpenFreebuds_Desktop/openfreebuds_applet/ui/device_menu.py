@@ -37,11 +37,22 @@ def add_power_info(dev, items):
 
 
 def add_noise_control(dev, items):
-    for n in [1, 0, 2]:
-        items.append(mk_noise_action(dev, n))
+    current = dev.get_property("noise_mode", -1)
 
+    if current == -1:
+        return
 
-def mk_noise_action(dev, n):
-    return MenuItem(t("noise_mode_" + str(n)),
-                    checked=lambda item: (dev.get_property("noise_mode", -1) == n),
-                    action=lambda: dev.set_property("noise_mode", n))
+    next_mode = (current + 1) % 3
+
+    items.append(MenuItem(t("noise_mode_0"),
+                          action=lambda: dev.set_property("noise_mode", 0),
+                          checked=lambda _: current == 0,
+                          default=lambda _: next_mode == 0))
+    items.append(MenuItem(t("noise_mode_1"),
+                          action=lambda: dev.set_property("noise_mode", 1),
+                          checked=lambda _: current == 1,
+                          default=lambda _: next_mode == 1))
+    items.append(MenuItem(t("noise_mode_2"),
+                          action=lambda: dev.set_property("noise_mode", 2),
+                          checked=lambda _: current == 2,
+                          default=lambda _: next_mode == 2))
