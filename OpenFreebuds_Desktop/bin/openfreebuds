@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 import argparse
 import logging
+import sys
 
 import openfreebuds_applet
-from openfreebuds_applet import tools
+from openfreebuds_applet import tools, platform_tools
+from openfreebuds_applet.l18n import t
 
-description = "Unofficial application to manage HUAWEI FreeBuds device"
 log_format = "%(levelname)s:%(name)s:%(threadName)s  %(message)s"
+description = "Unofficial application to manage HUAWEI FreeBuds device"
 
 # Parse arguments
 parser = argparse.ArgumentParser(description=description)
@@ -14,6 +16,14 @@ parser.add_argument("--verbose",
                     default=False, action="store_true",
                     help="Print debug log to console")
 args = parser.parse_args()
+
+# Check that no other instances are running
+if tools.is_running():
+    platform_tools.show_message(t("application_running_message"),
+                                window_title="OpenFreebuds")
+    sys.exit(1)
+else:
+    tools.update_lock_file()
 
 # Setup logging
 if args.verbose:

@@ -19,6 +19,22 @@ def items_hash_string(items):
     return hashlib.sha1(hs.encode("utf8")).hexdigest()
 
 
+def is_running():
+    # noinspection PyBroadException
+    try:
+        with open(get_pid_file_path(), "r") as f:
+            pid = int(next(f))
+        os.kill(pid, 0)
+        return True
+    except Exception:
+        return False
+
+
+def update_lock_file():
+    with open(get_pid_file_path(), "w") as f:
+        f.write(f'{os.getpid()}\n')
+
+
 def get_assets_path():
     assets_dir_name = "openfreebuds_assets"
     path = os.path.dirname(os.path.realpath(__file__))
@@ -58,6 +74,11 @@ def get_app_storage_dir():
         path.mkdir()
 
     return path
+
+
+def get_pid_file_path():
+    path = get_app_storage_dir()
+    return str(path / "lock.pid")
 
 
 def get_settings_path():

@@ -8,6 +8,9 @@ STRINGS = {
                           "If you're using Linux, please check that libappindicator "
                           "and other dependencies are installed.\n\n"
                           "Open OpenFreebuds webpage for more information?",
+    "application_running_message": "Application already running, check your taskbar status area.\n\n "
+                                   "If them don't response, stop it from system task manager, \n"
+                                   "and then try to launch again.",
     "select_device": "Select one of paired devices:",
     "action_open_appdata": "Open app data directory",
     "action_exit": "Exit application",
