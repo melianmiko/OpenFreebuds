@@ -56,7 +56,4 @@ def t(prop):
     else:
         log.warning("missing in base i18n: " + prop)
 
-    if Data.charset != "utf8":
-        value = value.encode(Data.charset)
-
     return value
