@@ -5,6 +5,8 @@ import pathlib
 import platform
 import subprocess
 
+import psutil as psutil
+
 
 def items_hash_string(items):
     hs = ""
@@ -20,19 +22,14 @@ def items_hash_string(items):
 
 
 def is_running():
-    # noinspection PyBroadException
-    try:
-        with open(get_pid_file_path(), "r") as f:
-            pid = int(next(f))
-        os.kill(pid, 0)
-        return True
-    except Exception:
-        return False
+    for a in psutil.process_iter():
+        if "openfreebuds" in a.name():
+            return True
+        for b in a.cmdline():
+            if "openfreebuds" in b:
+                return True
 
-
-def update_lock_file():
-    with open(get_pid_file_path(), "w") as f:
-        f.write(f'{os.getpid()}\n')
+    return False
 
 
 def get_assets_path():
@@ -76,7 +73,7 @@ def get_app_storage_dir():
     return path
 
 
-def get_pid_file_path():
+def get_lock_file_path():
     path = get_app_storage_dir()
     return str(path / "lock.pid")
 

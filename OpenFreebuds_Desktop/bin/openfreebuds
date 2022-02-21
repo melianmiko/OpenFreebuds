@@ -22,8 +22,6 @@ if tools.is_running():
     platform_tools.show_message(t("application_running_message"),
                                 window_title="OpenFreebuds")
     sys.exit(1)
-else:
-    tools.update_lock_file()
 
 # Setup logging
 if args.verbose:
