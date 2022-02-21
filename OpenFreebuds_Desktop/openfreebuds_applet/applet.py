@@ -1,4 +1,5 @@
 import logging
+import os
 import threading
 import webbrowser
 
@@ -65,7 +66,6 @@ class FreebudsApplet:
         self.allow_ui_update = False
         self.started = False
         event_bus.invoke("ui_bye")
-        log.info("main finished")
 
     def set_theme(self, name):
         icons.set_theme(name)
@@ -129,4 +129,7 @@ class FreebudsApplet:
 
         self.manager.close()
         self._tray.stop()
-        log.info("Tray stopped")
+        log.info("Tray stopped, exiting...")
+
+        # noinspection PyProtectedMember,PyUnresolvedReferences
+        os._exit(0)
