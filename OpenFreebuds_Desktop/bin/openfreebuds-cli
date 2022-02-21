@@ -6,6 +6,7 @@ import openfreebuds.device_names
 import logging
 
 # TODO: Long tap settings
+from openfreebuds import system_io, event_bus
 
 logging.basicConfig(level=logging.DEBUG,
                     format="%(levelname)s:%(name)s:%(threadName)s  %(message)s")
@@ -15,14 +16,14 @@ def main():
     man = openfreebuds.manager.create()
 
     print("-- Scan feature test:")
-    man.list_paired(lock=True)
-    for i, a in enumerate(man.scan_results):
+    devices = system_io.list_paired()
+    for i, a in enumerate(devices):
         print(i, a["name"], "(" + a["address"] + ")", a["connected"])
     print()
 
     num = int(input("Enter device num to use: "))
-    name = man.scan_results[num]["name"]
-    address = man.scan_results[num]["address"]
+    name = devices[num]["name"]
+    address = devices[num]["address"]
 
     if not openfreebuds.device_names.is_supported(name):
         print("!! Device with this name isn't tested.")
@@ -38,8 +39,7 @@ def main():
     while True:
         print("-- Waiting for spp connect...")
         while man.state != man.STATE_CONNECTED:
-            man.state_changed.wait()
-            man.state_changed.clear()
+            event_bus.wait_any()
 
         shell(man)
         print("-- Device disconnected")

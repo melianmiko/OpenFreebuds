@@ -50,6 +50,7 @@ class BaseSPPDevice:
 
             return True
         except (ConnectionResetError, ConnectionRefusedError, OSError):
+            log.exception("Can't create socket connection")
             self.close()
             return False
 

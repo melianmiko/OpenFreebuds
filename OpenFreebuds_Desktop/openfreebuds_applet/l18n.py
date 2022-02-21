@@ -15,6 +15,7 @@ STRINGS = {
     "action_open_appdata": "Open app data directory",
     "action_exit": "Exit application",
     "submenu_theme": "Icon style",
+    "submenu_device_info": "Device info",
     "theme_auto": "Auto-detect",
     "theme_light": "Light icon",
     "theme_dark": "Dark icon",
