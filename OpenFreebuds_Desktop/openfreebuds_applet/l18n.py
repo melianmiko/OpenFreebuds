@@ -22,7 +22,7 @@ def _init():
     if saved_language != "" and os.path.isfile(lc_path.format(saved_language)):
         return _init_with(saved_language)
 
-    user_language = locale.getlocale()[0]
+    user_language = locale.getdefaultlocale()[0]
     if os.path.isfile(lc_path.format(user_language)):
         return _init_with(user_language)
 
