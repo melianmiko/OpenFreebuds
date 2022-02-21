@@ -41,7 +41,7 @@ class SPPDevice(BaseSPPDevice):
         elif prop == "action_double_tap_right":
             self.send_command([1, 31, 2, 1, value])
             self.send_command(SPPCommands.GET_SHORT_TAP_ACTION)
-        elif prop == "action_long_tap":
+        elif prop == "action_long_tap_enabled":
             raise "TODO: Implement me!"
         else:
             raise "Can't set this prop: " + prop
@@ -62,7 +62,7 @@ class SPPDevice(BaseSPPDevice):
             elif pkg[1] == 17:
                 self._parse_auto_pause_mode(pkg)
             elif pkg[1] == 23:
-                self._parse_long_tap_action(pkg)
+                self._parse_long_tap_enabled(pkg)
 
     def _parse_battery_pkg(self, pkg):
         parts = protocol_utils.parse_tlv(pkg[2:])
@@ -97,12 +97,12 @@ class SPPDevice(BaseSPPDevice):
                 self.put_property("auto_pause", a[1][0])
                 return
 
-    def _parse_long_tap_action(self, pkg):
+    def _parse_long_tap_enabled(self, pkg):
         parts = protocol_utils.parse_tlv(pkg[2:])
 
         for a in parts:
             if a[0] == 1 and len(a[1]) == 1:
-                self.put_property("action_long_tap", a[1][0])
+                self.put_property("action_long_tap_enabled", a[1][0] == 10)
                 return
 
     def _parse_double_tap_action(self, pkg):

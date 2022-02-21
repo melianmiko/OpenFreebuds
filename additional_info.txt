@@ -7,6 +7,5 @@
 7 = prev track
 
 -- Noise control action codes:
--1 = disable
-10 = off, cancel, awareness
+10 10 = all modes
 
