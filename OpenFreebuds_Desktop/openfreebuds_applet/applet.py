@@ -45,6 +45,17 @@ class FreebudsApplet:
 
         self.manager.unset_device(lock=False)
 
+    def start(self):
+        if not self._tray.HAS_MENU:
+            _show_no_tray_warn()
+            return
+
+        tool_hotkeys.start(self)
+        tool_server.start(self)
+
+        threading.Thread(target=self._mainloop).start()
+        self._tray.run()
+
     def exit(self):
         log.info("Exiting this app...")
         items = base_ui.get_quiting_menu()
@@ -53,8 +64,8 @@ class FreebudsApplet:
 
         self.allow_ui_update = False
         self.started = False
-        self.manager.unset_device(lock=False)
         event_bus.invoke("ui_bye")
+        log.info("main finished")
 
     def set_theme(self, name):
         icons.set_theme(name)
@@ -96,17 +107,6 @@ class FreebudsApplet:
 
             log.debug("Menu updated, hash=" + items_hash)
 
-    def start(self):
-        if not self._tray.HAS_MENU:
-            _show_no_tray_warn()
-            return
-
-        tool_hotkeys.start(self)
-        tool_server.start(self)
-
-        threading.Thread(target=self._mainloop).start()
-        self._tray.run()
-
     def _mainloop(self):
         self.started = True
         self.allow_ui_update = True
@@ -129,3 +129,4 @@ class FreebudsApplet:
 
         self.manager.close()
         self._tray.stop()
+        log.info("Tray stopped")

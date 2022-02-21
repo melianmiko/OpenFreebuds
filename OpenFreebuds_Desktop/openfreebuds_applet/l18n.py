@@ -1,61 +1,56 @@
-STRINGS = {
-    "first_run_title": "Welcome to OpenFreebuds",
-    "first_run_message": "This app don't have any window, it "
-                         "displays only in system tray.\n\n"
-                         "Right click on headset icon in tray to set up.",
-    "no_menu_error_title": "App don't work",
-    "no_menu_error_info": "We can't create tray icon and/or menu on your OS. "
-                          "If you're using Linux, please check that libappindicator "
-                          "and other dependencies are installed.\n\n"
-                          "Open OpenFreebuds webpage for more information?",
-    "application_running_message": "Application already running, check your taskbar status area.\n\n "
-                                   "If them don't response, stop it from system task manager, \n"
-                                   "and then try to launch again.",
-    "select_device": "Select one of paired devices:",
-    "action_open_appdata": "Open app data directory",
-    "action_exit": "Exit application",
-    "submenu_theme": "Icon style",
-    "submenu_device_info": "Device info",
-    "submenu_gestures": "Gestures",
-    "submenu_hotkeys": "Global hotkeys",
-    "submenu_server": "Web-server",
-    "gesture_auto_pause": "Pause on remove",
-    "double_tap_left": "Double-tap on left",
-    "double_tap_right": "Double-tap on right",
-    "tap_action_off": "Disabled",
-    "tap_action_pause": "Play/pause",
-    "tap_action_next": "Next track",
-    "tap_action_prev": "Prev track",
-    "tap_action_assistant": "Voice assistant",
-    "theme_auto": "Auto-detect",
-    "theme_light": "Light icon",
-    "theme_dark": "Dark icon",
-    "action_unpair": "Forgot device",
-    "state_quiting": "Stopping...",
-    "action_kill_app": "Force exit",
-    "action_refresh_list": "Refresh list",
-    "mgr_state_0": "No device",
-    "mgr_state_1": "Device don't connected",
-    "mgr_state_2": "Device disconnected",
-    "mgr_state_3": "Connecting...",
-    "mgr_state_4": "Connected",
-    "mgr_state_5": "Failed to connect",
-    "battery_left": "Left headphone: {}%",
-    "battery_right": "Right headphone: {}%",
-    "battery_case": "Case headphone: {}%",
-    "noise_mode_0": 'Off',
-    "noise_mode_1": "Noise cancellation",
-    "noise_mode_2": "Awareness",
-    "hotkeys_wayland": "Global hotkeys won't work correctly under Wayland.\n\n"
-                       "We can't fix it for now. But you can use HTTP-controller to "
-                       "create this hotkeys by yourself, more info about this will be "
-                       "available later",
-    "notice_restart": "Restart app to apply this settings",
-    "prop_enabled": "Enabled",
-    "hotkey_next_mode": "Switch noise mode",
-    "webserver_port": "HTTP port is"
-}
+import json
+import locale
+import logging
+import os.path
+
+from openfreebuds_applet import tools
+from openfreebuds_applet.settings import SettingsStorage
+
+lc_path = tools.get_assets_path() + "/locale/{}.json"
+log = logging.getLogger("FreebudsLocale")
+
+
+class Data:
+    loaded = False
+    current_language = "none"
+    lang_strings = {}
+    base_strings = {}
+
+
+def _init():
+    saved_language = SettingsStorage().language
+    if saved_language != "" and os.path.isfile(lc_path.format(saved_language)):
+        return _init_with(saved_language)
+
+    user_language = locale.getlocale()[0]
+    if os.path.isfile(lc_path.format(user_language)):
+        return _init_with(user_language)
+
+    return _init_with("none")
+
+
+def _init_with(langauge):
+    log.debug("Using language " + langauge)
+    Data.current_language = langauge
+    Data.loaded = True
+
+    with open(lc_path.format("base"), "r") as f:
+        Data.base_strings = json.loads(f.read())
+
+    if langauge != "none":
+        with open(lc_path.format(langauge), "r") as f:
+            Data.lang_strings = json.loads(f.read())
 
 
 def t(prop):
-    return STRINGS[prop]
+    if not Data.loaded:
+        _init()
+
+    if prop in Data.lang_strings:
+        return Data.lang_strings[prop]
+
+    if prop in Data.base_strings:
+        return Data.base_strings[prop]
+
+    log.warning("missing in base i18n: " + prop)
+    return prop

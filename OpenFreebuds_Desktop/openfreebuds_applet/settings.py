@@ -10,6 +10,7 @@ class SettingsStorage:
         self.address = ""
         self.device_name = ""
         self.theme = "auto"
+        self.language = ""
 
         self.enable_hotkeys = False
         self.hotkey_next_mode = "<ctrl>+<alt>+q"

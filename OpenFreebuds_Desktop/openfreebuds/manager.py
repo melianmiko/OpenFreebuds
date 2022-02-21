@@ -69,7 +69,7 @@ class FreebudsManager:
         if self.device is None:
             return
 
-        self.device.close()
+        self.device.close(lock=True)
         self.device = None
 
     def set_state(self, state):

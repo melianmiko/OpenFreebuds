@@ -32,7 +32,7 @@ def get_header_menu_part(applet):
 def get_app_menu_part(applet):
     return [
         Menu.SEPARATOR,
-        MenuItem("Settings...",
+        MenuItem(t("submenu_app"),
                  action=get_settings_submenu(applet))
     ]
 
