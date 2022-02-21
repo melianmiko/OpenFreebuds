@@ -37,23 +37,27 @@ def get_app_menu_part(applet):
 
 
 def get_settings_submenu(applet):
-    items = [
-        MenuItem(t("submenu_theme"),
-                 action=get_theme_submenu(applet)),
+    items = []
+
+    add_theme_select(applet, items)
+    items.append(Menu.SEPARATOR)
+
+    items.extend([
         MenuItem(t("action_open_appdata"),
                  action=tools.open_app_storage_dir),
         Menu.SEPARATOR,
         MenuItem(t("action_exit"),
                  action=lambda: applet.exit())
-    ]
+    ])
 
     return Menu(*items)
 
 
-def get_theme_submenu(applet):
+def add_theme_select(applet, items):
     current = applet.settings.theme
 
-    items = [
+    theme_picker = [
+        MenuItem(t("submenu_theme"), None, enabled=False),
         MenuItem(t("theme_auto"),
                  action=lambda: applet.set_theme("auto"),
                  checked=lambda _: current == "auto"),
@@ -65,4 +69,4 @@ def get_theme_submenu(applet):
                  checked=lambda _: current == "dark")
     ]
 
-    return Menu(*items)
+    items.extend(theme_picker)

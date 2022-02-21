@@ -24,6 +24,7 @@ def process(applet):
     add_noise_control(dev, items)
     items.append(Menu.SEPARATOR)
     add_device_info(dev, items)
+    add_gestures_menu(dev, items)
 
     applet.set_menu_items(items, expand=True)
 
@@ -36,6 +37,64 @@ def add_power_info(dev, items):
                               enabled=False))
 
     items.append(Menu.SEPARATOR)
+
+
+def add_gestures_menu(dev, items):
+    submenu_items = []
+
+    auto_pause_value = dev.get_property("auto_pause", -1)
+    left_2tap = dev.get_property("action_double_tap_left", -99)
+    right_2tap = dev.get_property("action_double_tap_right", -99)
+
+    if auto_pause_value != -1:
+        submenu_items.extend([
+            MenuItem(t("gesture_auto_pause"),
+                     action=lambda: dev.set_property("auto_pause", not auto_pause_value),
+                     checked=lambda _: auto_pause_value),
+            Menu.SEPARATOR
+        ])
+
+    if left_2tap != -99:
+        subitems = [
+            MenuItem(t("tap_action_off"),
+                     action=lambda: dev.set_property("action_double_tap_left", -1),
+                     checked=lambda _: left_2tap == -1),
+            MenuItem(t("tap_action_pause"),
+                     action=lambda: dev.set_property("action_double_tap_left", 1),
+                     checked=lambda _: left_2tap == 1),
+            MenuItem(t("tap_action_next"),
+                     action=lambda: dev.set_property("action_double_tap_left", 2),
+                     checked=lambda _: left_2tap == 2),
+            MenuItem(t("tap_action_prev"),
+                     action=lambda: dev.set_property("action_double_tap_left", 7),
+                     checked=lambda _: left_2tap == 7),
+            MenuItem(t("tap_action_assistant"),
+                     action=lambda: dev.set_property("action_double_tap_left", 0),
+                     checked=lambda _: left_2tap == 0)
+        ]
+        submenu_items.append(MenuItem(t("double_tap_left"), Menu(*subitems)))
+
+    if right_2tap != -99:
+        subitems = [
+            MenuItem(t("tap_action_off"),
+                     action=lambda: dev.set_property("action_double_tap_right", -1),
+                     checked=lambda _: right_2tap == -1),
+            MenuItem(t("tap_action_pause"),
+                     action=lambda: dev.set_property("action_double_tap_right", 1),
+                     checked=lambda _: right_2tap == 1),
+            MenuItem(t("tap_action_next"),
+                     action=lambda: dev.set_property("action_double_tap_right", 2),
+                     checked=lambda _: right_2tap == 2),
+            MenuItem(t("tap_action_prev"),
+                     action=lambda: dev.set_property("action_double_tap_right", 7),
+                     checked=lambda _: right_2tap == 7),
+            MenuItem(t("tap_action_assistant"),
+                     action=lambda: dev.set_property("action_double_tap_right", 0),
+                     checked=lambda _: right_2tap == 0)
+        ]
+        submenu_items.append(MenuItem(t("double_tap_right"), Menu(*subitems)))
+
+    items.append(MenuItem(t("submenu_gestures"), action=Menu(*submenu_items)))
 
 
 def add_device_info(dev, items):
