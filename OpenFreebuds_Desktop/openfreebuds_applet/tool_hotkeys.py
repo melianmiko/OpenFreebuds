@@ -9,6 +9,10 @@ from openfreebuds_applet.l18n import t
 log = logging.getLogger("HotkeysTool")
 
 
+def start(applet):
+    OpenFreebudsHotkeyTool(applet).start()
+
+
 class OpenFreebudsHotkeyTool:
     def __init__(self, applet):
         self._applet = applet

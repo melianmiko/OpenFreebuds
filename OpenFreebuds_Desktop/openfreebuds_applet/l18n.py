@@ -18,6 +18,7 @@ STRINGS = {
     "submenu_device_info": "Device info",
     "submenu_gestures": "Gestures",
     "submenu_hotkeys": "Global hotkeys",
+    "submenu_server": "Web-server",
     "gesture_auto_pause": "Pause on remove",
     "double_tap_left": "Double-tap on left",
     "double_tap_right": "Double-tap on right",
@@ -51,7 +52,8 @@ STRINGS = {
                        "available later",
     "notice_restart": "Restart app to apply this settings",
     "prop_enabled": "Enabled",
-    "hotkey_next_mode": "Switch noise mode"
+    "hotkey_next_mode": "Switch noise mode",
+    "webserver_port": "HTTP port is"
 }
 
 

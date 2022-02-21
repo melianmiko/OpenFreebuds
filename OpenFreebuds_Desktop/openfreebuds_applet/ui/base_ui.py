@@ -3,7 +3,7 @@ import os
 from pystray import MenuItem, Menu
 
 from openfreebuds import event_bus
-from openfreebuds_applet import tools
+from openfreebuds_applet import tools, tool_server
 from openfreebuds_applet.l18n import t
 
 
@@ -43,6 +43,7 @@ def get_settings_submenu(applet):
     add_theme_select(applet, items)
     items.append(Menu.SEPARATOR)
     add_hotkeys_settings(applet, items)
+    add_server_settings(applet, items)
 
     items.extend([
         MenuItem(t("action_open_appdata"),
@@ -57,6 +58,13 @@ def get_settings_submenu(applet):
 
 def toggle_hotkeys(applet):
     applet.settings.enable_hotkeys = not applet.settings.enable_hotkeys
+    applet.settings.write()
+
+    event_bus.invoke("settings_changed")
+
+
+def toggle_flask(applet):
+    applet.settings.enable_flask = not applet.settings.enable_flask
     applet.settings.write()
 
     event_bus.invoke("settings_changed")
@@ -78,6 +86,23 @@ def add_hotkeys_settings(applet, items):
     ]
 
     items.append(MenuItem(t("submenu_hotkeys"), Menu(*hotkey_items)))
+
+
+def add_server_settings(applet, items):
+    settings = applet.settings
+
+    server_items = [
+        MenuItem(t("prop_enabled"),
+                 action=lambda: toggle_flask(applet),
+                 checked=lambda _: settings.enable_flask),
+        Menu.SEPARATOR,
+        MenuItem(t("webserver_port") + " " + str(tool_server.port),
+                 action=None,
+                 enabled=False),
+        MenuItem(t("notice_restart"), None, enabled=False)
+    ]
+
+    items.append(MenuItem(t("submenu_server"), Menu(*server_items)))
 
 
 def add_theme_select(applet, items):

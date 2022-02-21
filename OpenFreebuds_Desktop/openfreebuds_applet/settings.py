@@ -11,8 +11,10 @@ class SettingsStorage:
         self.device_name = ""
         self.theme = "auto"
 
-        self.enable_hotkeys = True
+        self.enable_hotkeys = False
         self.hotkey_next_mode = "<ctrl>+<alt>+q"
+
+        self.enable_flask = False
 
         self._read()
 

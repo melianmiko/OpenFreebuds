@@ -8,3 +8,4 @@ pyinstaller==4.9; sys_platform == "win32"
 winsdk==1.0.0b2; sys_platform == "win32"
 
 pynput~=1.7.6
+Flask~=2.0.3
