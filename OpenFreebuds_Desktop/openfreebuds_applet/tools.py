@@ -22,18 +22,21 @@ def items_hash_string(items):
 
 
 def is_running():
-    for a in psutil.process_iter():
-        # Check base name
-        if "openfreebuds" in a.name():
-            return True
+    our_pid = os.getpid()
 
-        # Check cmdline, eg 'python -m openfreebuds'
-        try:
-            for b in a.cmdline():
-                if "openfreebuds" in b:
-                    return True
-        except psutil.AccessDenied:
-            pass
+    for a in psutil.process_iter():
+        if a.pid != our_pid:
+            # Check base name
+            if "openfreebuds" in a.name():
+                return True
+
+            # Check cmdline, eg 'python -m openfreebuds'
+            try:
+                for b in a.cmdline():
+                    if "openfreebuds" in b:
+                        return True
+            except psutil.AccessDenied:
+                pass
 
     return False
 
