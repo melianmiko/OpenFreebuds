@@ -17,6 +17,7 @@ STRINGS = {
     "submenu_theme": "Icon style",
     "submenu_device_info": "Device info",
     "submenu_gestures": "Gestures",
+    "submenu_hotkeys": "Global hotkeys",
     "gesture_auto_pause": "Pause on remove",
     "double_tap_left": "Double-tap on left",
     "double_tap_right": "Double-tap on right",
@@ -43,7 +44,14 @@ STRINGS = {
     "battery_case": "Case headphone: {}%",
     "noise_mode_0": 'Off',
     "noise_mode_1": "Noise cancellation",
-    "noise_mode_2": "Awareness"
+    "noise_mode_2": "Awareness",
+    "hotkeys_wayland": "Global hotkeys won't work correctly under Wayland.\n\n"
+                       "We can't fix it for now. But you can use HTTP-controller to "
+                       "create this hotkeys by yourself, more info about this will be "
+                       "available later",
+    "notice_restart": "Restart app to apply this settings",
+    "prop_enabled": "Enabled",
+    "hotkey_next_mode": "Switch noise mode"
 }
 
 

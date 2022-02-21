@@ -2,6 +2,7 @@ import os
 
 from pystray import MenuItem, Menu
 
+from openfreebuds import event_bus
 from openfreebuds_applet import tools
 from openfreebuds_applet.l18n import t
 
@@ -41,6 +42,7 @@ def get_settings_submenu(applet):
 
     add_theme_select(applet, items)
     items.append(Menu.SEPARATOR)
+    add_hotkeys_settings(applet, items)
 
     items.extend([
         MenuItem(t("action_open_appdata"),
@@ -51,6 +53,31 @@ def get_settings_submenu(applet):
     ])
 
     return Menu(*items)
+
+
+def toggle_hotkeys(applet):
+    applet.settings.enable_hotkeys = not applet.settings.enable_hotkeys
+    applet.settings.write()
+
+    event_bus.invoke("settings_changed")
+
+
+def add_hotkeys_settings(applet, items):
+    settings = applet.settings
+
+    hotkey_items = [
+        MenuItem(t("prop_enabled"),
+                 action=lambda: toggle_hotkeys(applet),
+                 checked=lambda _: settings.enable_hotkeys),
+        Menu.SEPARATOR,
+        MenuItem(t("hotkey_next_mode") + ": " + settings.hotkey_next_mode,
+                 action=None,
+                 enabled=False),
+        Menu.SEPARATOR,
+        MenuItem(t("notice_restart"), None, enabled=False)
+    ]
+
+    items.append(MenuItem(t("submenu_hotkeys"), Menu(*hotkey_items)))
 
 
 def add_theme_select(applet, items):

@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-import platform
 
 from openfreebuds_applet import tools
 
@@ -11,6 +10,9 @@ class SettingsStorage:
         self.address = ""
         self.device_name = ""
         self.theme = "auto"
+
+        self.enable_hotkeys = True
+        self.hotkey_next_mode = "<ctrl>+<alt>+q"
 
         self._read()
 

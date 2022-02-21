@@ -7,6 +7,7 @@ import pystray
 import openfreebuds.manager
 from openfreebuds import event_bus
 from openfreebuds_applet import tools, platform_tools, settings, icons
+from openfreebuds_applet.hotkeys import OpenFreebudsHotkeyTool
 from openfreebuds_applet.ui import base_ui, device_menu, device_scan_menu, device_offline_menu
 from openfreebuds_applet.l18n import t
 
@@ -100,6 +101,8 @@ class FreebudsApplet:
         if not self._tray.HAS_MENU:
             _show_no_tray_warn()
             return
+
+        OpenFreebudsHotkeyTool(self).start()
 
         threading.Thread(target=self._mainloop).start()
         self._tray.run()
