@@ -10,8 +10,15 @@ def process(applet):
     # Set icon if required
     battery_left = dev.get_property("battery_left")
     battery_right = dev.get_property("battery_right")
-    battery_min = min(battery_right, battery_left)
     noise_mode = dev.get_property("noise_mode")
+
+    # Prevent zero-value icon
+    if battery_right == 0:
+        battery_right = 100
+    if battery_left == 0:
+        battery_left = 100
+
+    battery_min = min(battery_right, battery_left)
     hashsum = "device_" + str(battery_min) + "_" + str(noise_mode)
 
     if applet.current_icon_hash != hashsum:
@@ -31,7 +38,10 @@ def process(applet):
 
 def add_power_info(dev, items):
     for n in ["left", "right", "case"]:
-        value = t("battery_" + n).format(dev.get_property("battery_" + n, "--"))
+        battery = dev.get_property("battery_" + n, 0)
+        if battery == 0:
+            battery = "--"
+        value = t("battery_" + n).format(battery)
         items.append(MenuItem(value,
                               action=None,
                               enabled=False))
@@ -55,7 +65,7 @@ def add_gestures_menu(dev, items):
         ])
 
     if left_2tap != -99:
-        subitems = [
+        section_items = [
             MenuItem(t("tap_action_off"),
                      action=lambda: dev.set_property("action_double_tap_left", -1),
                      checked=lambda _: left_2tap == -1),
@@ -72,10 +82,10 @@ def add_gestures_menu(dev, items):
                      action=lambda: dev.set_property("action_double_tap_left", 0),
                      checked=lambda _: left_2tap == 0)
         ]
-        submenu_items.append(MenuItem(t("double_tap_left"), Menu(*subitems)))
+        submenu_items.append(MenuItem(t("double_tap_left"), Menu(*section_items)))
 
     if right_2tap != -99:
-        subitems = [
+        section_items = [
             MenuItem(t("tap_action_off"),
                      action=lambda: dev.set_property("action_double_tap_right", -1),
                      checked=lambda _: right_2tap == -1),
@@ -92,7 +102,7 @@ def add_gestures_menu(dev, items):
                      action=lambda: dev.set_property("action_double_tap_right", 0),
                      checked=lambda _: right_2tap == 0)
         ]
-        submenu_items.append(MenuItem(t("double_tap_right"), Menu(*subitems)))
+        submenu_items.append(MenuItem(t("double_tap_right"), Menu(*section_items)))
 
     items.append(MenuItem(t("submenu_gestures"), action=Menu(*submenu_items)))
 
