@@ -13,6 +13,7 @@ log = logging.getLogger("FreebudsLocale")
 class Data:
     loaded = False
     current_language = "none"
+    charset = "utf8"
     lang_strings = {}
     base_strings = {}
 
@@ -33,12 +34,13 @@ def _init_with(langauge):
     log.debug("Using language " + langauge)
     Data.current_language = langauge
     Data.loaded = True
+    Data.charset = locale.getdefaultlocale()[1]
 
-    with open(lc_path.format("base"), "r") as f:
+    with open(lc_path.format("base", encoding="utf-8"), "r") as f:
         Data.base_strings = json.loads(f.read())
 
     if langauge != "none":
-        with open(lc_path.format(langauge), "r") as f:
+        with open(lc_path.format(langauge), "r", encoding="utf-8") as f:
             Data.lang_strings = json.loads(f.read())
 
 
@@ -46,11 +48,15 @@ def t(prop):
     if not Data.loaded:
         _init()
 
+    value = prop
     if prop in Data.lang_strings:
-        return Data.lang_strings[prop]
+        value = Data.lang_strings[prop]
+    elif prop in Data.base_strings:
+        value = Data.base_strings[prop]
+    else:
+        log.warning("missing in base i18n: " + prop)
 
-    if prop in Data.base_strings:
-        return Data.base_strings[prop]
+    if Data.charset != "utf8":
+        value = value.encode(Data.charset)
 
-    log.warning("missing in base i18n: " + prop)
-    return prop
+    return value
