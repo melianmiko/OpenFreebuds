@@ -25,18 +25,8 @@ def is_running():
     our_pid = os.getpid()
 
     for a in psutil.process_iter():
-        if a.pid != our_pid:
-            # Check base name
-            if "openfreebuds" in a.name():
-                return True
-
-            # Check cmdline, eg 'python -m openfreebuds'
-            try:
-                for b in a.cmdline():
-                    if "openfreebuds" in b:
-                        return True
-            except psutil.AccessDenied:
-                pass
+        if "openfreebuds" in a.name() and a.pid != our_pid:
+            return True
 
     return False
 
