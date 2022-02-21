@@ -49,9 +49,10 @@ class OpenFreebudsHotkeyTool:
     def start(self):
         if len(self.hotkeys) == 0:
             return
-
-        if os.environ["XDG_SESSION_TYPE"] == "wayland":
-            platform_tools.show_message(t("hotkeys_wayland"), "OpenFreebuds")
+        
+        if "XDG_SESSION_TYPE" in os.environ:
+            if os.environ["XDG_SESSION_TYPE"] == "wayland":
+                platform_tools.show_message(t("hotkeys_wayland"), "OpenFreebuds")
 
         log.debug("Starting hotkey tool...")
         l = keyboard.GlobalHotKeys(self.hotkeys)
