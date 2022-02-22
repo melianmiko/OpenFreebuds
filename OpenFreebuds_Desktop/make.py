@@ -32,7 +32,6 @@ WINDOWS_PYINSTALLER_ARGS = {
 
 
 def make_linux():
-    # Prepare props
     mk_run(["nuitka3"], LINUX_NUITKA_ARGS, os.getcwd() + "/bin/openfreebuds")
 
     # Run UPX
@@ -41,6 +40,9 @@ def make_linux():
 
 
 def make_win32():
+    if os.path.isdir("builddir/dist"):
+        shutil.rmtree("builddir/dist")
+
     mk_run(["pyinstaller"], WINDOWS_PYINSTALLER_ARGS, os.getcwd() + "\\bin\\openfreebuds")
 
     # Copy assets to bundle
