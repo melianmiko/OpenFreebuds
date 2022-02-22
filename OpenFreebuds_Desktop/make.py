@@ -11,11 +11,12 @@ NUITKA_ARGS = {
         # Unused psutil backends
         "psutil._psosx",
         "psutil._psbsd",
+        "psutil._pssunos",
+        "psutil._psaix",
         # Huge Pillow plugins
         "PIL.TiffImagePlugin",
         "PIL.GifImagePlugin",
-        "PIL.JpegImagePlugin",
-        "PIL.BmpImagePlugin",
+        "PIL.JpegImagePlugin"
     ]
 }
 
@@ -26,7 +27,8 @@ NUITKA_ARGS_WINDOWS = {
         "gi"
     ],
     "include-module": [
-        "PIL.IcoImagePlugin"
+        "PIL.IcoImagePlugin",
+        "PIL.BmpImagePlugin"
     ]
 }
 
@@ -34,6 +36,8 @@ NUITKA_ARGS_LINUX = {
     "follow-imports": True,
     "nofollow-import-to": [
         "psutil._pswindows",
+        "PIL.IcoImagePlugin",
+        "PIL.BmpImagePlugin",
         "winsdk"
     ]
 }
@@ -47,7 +51,6 @@ def make():
 
     if sys.platform == "win32":
         path = path.replace("/", "\\")
-        mode = "--standalone"
         args += mk_args(NUITKA_ARGS_WINDOWS)
     elif sys.platform == "linux":
         args += mk_args(NUITKA_ARGS_LINUX)
