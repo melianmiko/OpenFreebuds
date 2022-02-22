@@ -19,6 +19,17 @@ UI_RESULT_NO = -9
 log = logging.getLogger("LinuxBackend")
 
 
+def bind_hotkeys(keys):
+    import gi
+    gi.require_version('Keybinder', '3.0')
+    from gi.repository import Keybinder
+    Keybinder.init()
+    for a in keys:
+        key_string = "<Ctrl><Alt>" + a
+        Keybinder.bind(key_string, keys[a])
+        log.debug("Added hotkey " + key_string)
+
+
 def bt_is_connected(address):
     try:
         system = dbus.SystemBus()

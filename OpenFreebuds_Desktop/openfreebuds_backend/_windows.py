@@ -26,6 +26,15 @@ UI_RESULT_YES = 7
 log = logging.getLogger("WindowsBackend")
 
 
+def bind_hotkeys(keys):
+    x_keys = {}
+    for a in keys:
+        x_keys["<ctrl>+<alt>+" + a] = keys[a]
+
+    from pynput.keyboard import GlobalHotKeys
+    GlobalHotKeys(x_keys).start()
+
+
 def bt_is_connected(address):
     return asyncio.run(_is_device_connected(address))
 
