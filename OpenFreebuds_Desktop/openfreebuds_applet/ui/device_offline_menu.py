@@ -1,4 +1,4 @@
-from pystray import MenuItem
+from openfreebuds_backend import MenuItem
 
 from openfreebuds_applet import icons
 from openfreebuds_applet.l18n import t

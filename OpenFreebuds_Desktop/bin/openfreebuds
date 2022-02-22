@@ -4,7 +4,8 @@ import logging
 import sys
 
 import openfreebuds_applet
-from openfreebuds_applet import tools, platform_tools
+import openfreebuds_backend
+from openfreebuds_applet import tools
 from openfreebuds_applet.l18n import t
 
 log_format = "%(levelname)s:%(name)s:%(threadName)s  %(message)s"
@@ -19,8 +20,8 @@ args = parser.parse_args()
 
 # Check that no other instances are running
 if tools.is_running():
-    platform_tools.show_message(t("application_running_message"),
-                                window_title="OpenFreebuds")
+    openfreebuds_backend.show_message(t("application_running_message"),
+                                      window_title="OpenFreebuds")
     sys.exit(1)
 
 # Setup logging

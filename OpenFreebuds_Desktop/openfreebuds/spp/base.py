@@ -58,6 +58,7 @@ class BaseSPPDevice:
         if self.closed:
             return
 
+        log.debug("Closing device...")
         self.closed = True
         if lock:
             event_bus.wait_for(self.EVENT_CLOSED)
@@ -87,6 +88,7 @@ class BaseSPPDevice:
 
         log.info("Leaving recv...")
         self.socket.close()
+        self.closed = True
         event_bus.invoke(self.EVENT_CLOSED)
 
     def send_command(self, data, read=False):

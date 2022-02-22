@@ -1,10 +1,25 @@
+import logging
+
 import dbus
+import pystray._appindicator
+import pystray._base
 from dbus.mainloop.glib import DBusGMainLoop
 
 DBusGMainLoop(set_as_default=True)
 
+# Yes, this isn't good practise, but this reduces count
+# of imported package and force set backend to app indicator
+Menu = pystray._base.Menu
+MenuItem = pystray._base.MenuItem
+TrayIcon = pystray._appindicator.Icon
 
-def is_device_connected(address):
+UI_RESULT_YES = -8
+UI_RESULT_NO = -9
+
+log = logging.getLogger("LinuxBackend")
+
+
+def bt_is_connected(address):
     try:
         system = dbus.SystemBus()
         bluez = dbus.Interface(system.get_object("org.bluez", "/"),
@@ -16,20 +31,20 @@ def is_device_connected(address):
             if "org.bluez.Device1" in all_objects[path]:
                 device = dbus.Interface(system.get_object("org.bluez", path),
                                         "org.freedesktop.DBus.Properties")
-                props = dbus_to_python(device.GetAll("org.bluez.Device1"))
+                props = _dbus_to_python(device.GetAll("org.bluez.Device1"))
                 if props.get("Address", "") == address:
                     return props.get("Connected", False)
     except dbus.exceptions.DBusException:
-        pass
+        log.exception("Failed to check connection state")
 
     return None
 
 
-def device_exists(address):
-    return is_device_connected(address) is not None
+def bt_device_exists(address):
+    return bt_is_connected(address) is not None
 
 
-def list_paired():
+def bt_list_devices():
     scan_results = []
 
     try:
@@ -43,7 +58,7 @@ def list_paired():
             if "org.bluez.Device1" in all_objects[path]:
                 device = dbus.Interface(system.get_object("org.bluez", path),
                                         "org.freedesktop.DBus.Properties")
-                props = dbus_to_python(device.GetAll("org.bluez.Device1"))
+                props = _dbus_to_python(device.GetAll("org.bluez.Device1"))
 
                 if props.get("Name", "") == "":
                     continue
@@ -54,15 +69,51 @@ def list_paired():
                     "connected": props.get("Connected", False)
                 })
     except dbus.exceptions.DBusException:
-        print("WARN: Scan failed due to dbus error")
+        log.exception("Failed to list devies")
 
     return scan_results
 
 
-# From https://stackoverflow.com/questions/11486443/dbus-python-how-to-get-response-with-native-types
-def dbus_to_python(data):
-    import dbus
+# noinspection PyArgumentList
+def show_message(message, window_title=""):
+    import gi
+    gi.require_version("Gtk", "3.0")
+    from gi.repository import Gtk
 
+    msg = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                            Gtk.ButtonsType.OK, window_title)
+    msg.format_secondary_text(message)
+    msg.run()
+    msg.close()
+
+
+# noinspection PyArgumentList
+def ask_question(message, window_title=""):
+    import gi
+    gi.require_version("Gtk", "3.0")
+    from gi.repository import Gtk
+
+    msg = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                            Gtk.ButtonsType.YES_NO, window_title)
+    msg.format_secondary_text(message)
+    result = msg.run()
+    msg.close()
+
+    return result
+
+
+def is_dark_theme():
+    import gi
+    gi.require_version("Gtk", "3.0")
+    from gi.repository import Gtk
+
+    settings = Gtk.Settings.get_default()
+    theme_name = settings.get_property("gtk-theme-name")
+    return "Dark" in theme_name
+
+
+# From https://stackoverflow.com/questions/11486443/dbus-python-how-to-get-response-with-native-types
+def _dbus_to_python(data):
     """convert dbus data types to python native data types"""
     if isinstance(data, dbus.String):
         data = str(data)
@@ -73,11 +124,11 @@ def dbus_to_python(data):
     elif isinstance(data, dbus.Double):
         data = float(data)
     elif isinstance(data, dbus.Array):
-        data = [dbus_to_python(value) for value in data]
+        data = [_dbus_to_python(value) for value in data]
     elif isinstance(data, dbus.Dictionary):
         new_data = dict()
         for key in data.keys():
-            new_key = dbus_to_python(key)
-            new_data[new_key] = dbus_to_python(data[key])
+            new_key = _dbus_to_python(key)
+            new_data[new_key] = _dbus_to_python(data[key])
         data = new_data
     return data

@@ -3,10 +3,11 @@ import traceback
 
 import openfreebuds.manager
 import openfreebuds.device_names
+import openfreebuds_backend
 import logging
 
 # TODO: Long tap settings
-from openfreebuds import system_io, event_bus
+from openfreebuds import event_bus
 
 logging.basicConfig(level=logging.DEBUG,
                     format="%(levelname)s:%(name)s:%(threadName)s  %(message)s")
@@ -16,7 +17,7 @@ def main():
     man = openfreebuds.manager.create()
 
     print("-- Scan feature test:")
-    devices = system_io.list_paired()
+    devices = openfreebuds_backend.bt_list_devices()
     for i, a in enumerate(devices):
         print(i, a["name"], "(" + a["address"] + ")", a["connected"])
     print()

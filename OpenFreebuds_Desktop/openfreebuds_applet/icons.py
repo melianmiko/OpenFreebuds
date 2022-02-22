@@ -37,8 +37,8 @@ class BaseImages:
 def set_theme(theme_name="auto"):
     value = theme_name
     if theme_name == "auto":
-        from openfreebuds_applet.platform_tools import is_dark_theme
-        value = "light" if is_dark_theme() else "dark"
+        import openfreebuds_backend
+        value = "light" if openfreebuds_backend.is_dark_theme() else "dark"
 
     if value == "light":
         BaseImages.theme_missing = BaseImages.light_missing

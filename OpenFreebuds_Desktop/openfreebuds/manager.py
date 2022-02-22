@@ -2,8 +2,10 @@ import logging
 import threading
 import time
 
-from openfreebuds import event_bus, system_io
+import openfreebuds_backend
+from openfreebuds import event_bus
 from openfreebuds.spp.device import SPPDevice
+
 
 log = logging.getLogger("FreebudsManager")
 
@@ -86,14 +88,14 @@ class FreebudsManager:
         log.debug("Started")
 
         # Check that spp exists in paired
-        if not system_io.device_exists(self.address):
+        if not openfreebuds_backend.bt_device_exists(self.address):
             log.warning("Device dont exist, bye...")
             self.set_state(self.STATE_NO_DEV)
             self.started = False
 
         while self.started:
             # If offline, update state and wait
-            if not system_io.is_device_connected(self.address):
+            if not openfreebuds_backend.bt_is_connected(self.address):
                 self.set_state(self.STATE_OFFLINE)
                 self._close_device()
                 time.sleep(self.MAINLOOP_TIMEOUT)

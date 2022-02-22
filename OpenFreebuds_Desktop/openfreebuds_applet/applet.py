@@ -1,25 +1,15 @@
 import logging
 import os
 import threading
-import webbrowser
-
-import pystray
 
 import openfreebuds.manager
+import openfreebuds_backend
 from openfreebuds import event_bus
-from openfreebuds_applet import tools, platform_tools, settings, icons, tool_server, tool_hotkeys
-from openfreebuds_applet.ui import base_ui, device_menu, device_scan_menu, device_offline_menu
+from openfreebuds_applet import tools, settings, icons, tool_server, tool_hotkeys
 from openfreebuds_applet.l18n import t
+from openfreebuds_applet.ui import base_ui, device_menu, device_scan_menu, device_offline_menu
 
 log = logging.getLogger("Applet")
-
-
-def _show_no_tray_warn():
-    result = platform_tools.show_question(t("no_menu_error_info"),
-                                          t("no_menu_error_title"))
-
-    if result == platform_tools.RESULT_YES:
-        webbrowser.open("https://melianmiko.ru/openfreebuds")
 
 
 class FreebudsApplet:
@@ -33,10 +23,10 @@ class FreebudsApplet:
         icons.set_theme(self.settings.theme)
 
         self.manager = openfreebuds.manager.create()
-        self._tray = pystray.Icon(name="OpenFreebuds",
-                                  title="OpenFreebuds",
-                                  icon=icons.get_icon_offline(),
-                                  menu=pystray.Menu())
+        self._tray = openfreebuds_backend.TrayIcon(name="OpenFreebuds",
+                                                   title="OpenFreebuds",
+                                                   icon=icons.get_icon_offline(),
+                                                   menu=openfreebuds_backend.Menu())
 
     def drop_device(self):
         self.settings.address = ""
@@ -47,10 +37,6 @@ class FreebudsApplet:
         self.manager.unset_device(lock=False)
 
     def start(self):
-        if not self._tray.HAS_MENU:
-            _show_no_tray_warn()
-            return
-
         tool_hotkeys.start(self)
         tool_server.start(self)
 
@@ -60,7 +46,7 @@ class FreebudsApplet:
     def exit(self):
         log.info("Exiting this app...")
         items = base_ui.get_quiting_menu()
-        menu = pystray.Menu(*items)
+        menu = openfreebuds_backend.Menu(*items)
         self._tray.menu = menu
 
         self.allow_ui_update = False
@@ -100,7 +86,7 @@ class FreebudsApplet:
         items_hash = tools.items_hash_string(items)
 
         if self.current_menu_hash != items_hash:
-            menu = pystray.Menu(*items)
+            menu = openfreebuds_backend.Menu(*items)
 
             self.current_menu_hash = items_hash
             self._tray.menu = menu
@@ -115,8 +101,8 @@ class FreebudsApplet:
             log.info("Using saved address: " + self.settings.address)
             self.manager.set_device(self.settings.address)
         else:
-            platform_tools.show_message(t("first_run_message"),
-                                        t("first_run_title"))
+            openfreebuds_backend.show_message(t("first_run_message"),
+                                              t("first_run_title"))
 
         while self.started:
             if self.manager.state == self.manager.STATE_NO_DEV:

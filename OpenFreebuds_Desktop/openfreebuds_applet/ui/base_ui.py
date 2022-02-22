@@ -1,6 +1,6 @@
 import os
 
-from pystray import MenuItem, Menu
+from openfreebuds_backend import MenuItem, Menu
 
 from openfreebuds import event_bus
 from openfreebuds_applet import tools, tool_server

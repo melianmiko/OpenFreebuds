@@ -5,6 +5,7 @@
       <excludeFolder url="file://$MODULE_DIR$/venv" />
       <excludeFolder url="file://$MODULE_DIR$/openfreebuds.build" />
       <excludeFolder url="file://$MODULE_DIR$/openfreebuds.dist" />
+      <excludeFolder url="file://$MODULE_DIR$/builddir" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.10 (OpenFreebuds_Desktop)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

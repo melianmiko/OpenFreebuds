@@ -3,7 +3,7 @@ import os
 
 from pynput import keyboard
 
-from openfreebuds_applet import platform_tools
+import openfreebuds_backend
 from openfreebuds_applet.l18n import t
 
 log = logging.getLogger("HotkeysTool")
@@ -52,7 +52,7 @@ class OpenFreebudsHotkeyTool:
         
         if "XDG_SESSION_TYPE" in os.environ:
             if os.environ["XDG_SESSION_TYPE"] == "wayland":
-                platform_tools.show_message(t("hotkeys_wayland"), "OpenFreebuds")
+                openfreebuds_backend.show_message(t("hotkeys_wayland"), "OpenFreebuds")
 
         log.debug("Starting hotkey tool...")
         l = keyboard.GlobalHotKeys(self.hotkeys)
