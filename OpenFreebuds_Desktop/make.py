@@ -1,9 +1,12 @@
 import os
+import shutil
 import subprocess
 import sys
 
-NUITKA_ARGS = {
+LINUX_NUITKA_ARGS = {
+    "follow-imports": True,
     "nofollow-import-to": [
+        "winsdk",
         # Unused backends
         "evdev",
         "Xlib",
@@ -13,50 +16,42 @@ NUITKA_ARGS = {
         "psutil._psbsd",
         "psutil._pssunos",
         "psutil._psaix",
+        "psutil._pswindows",
         # Huge Pillow plugins
         "PIL.TiffImagePlugin",
         "PIL.GifImagePlugin",
-        "PIL.JpegImagePlugin"
-    ]
-}
-
-NUITKA_ARGS_WINDOWS = {
-    "standalone": True,
-    "nofollow-import-to": [
-        "psutil._pslinux",
-        "gi"
-    ],
-    "include-module": [
+        "PIL.JpegImagePlugin",
         "PIL.IcoImagePlugin",
         "PIL.BmpImagePlugin"
     ]
 }
 
-NUITKA_ARGS_LINUX = {
-    "follow-imports": True,
-    "nofollow-import-to": [
-        "psutil._pswindows",
-        "PIL.IcoImagePlugin",
-        "PIL.BmpImagePlugin",
-        "winsdk"
-    ]
+WINDOWS_PYINSTALLER_ARGS = {
+    "windowed": True
 }
 
 
-def make():
+def make_linux():
     # Prepare props
-    base_command = ["python", "-m", "nuitka"]
-    path = os.getcwd() + "/bin/openfreebuds"
-    args = mk_args(NUITKA_ARGS)
+    mk_run(["nuitka3"], LINUX_NUITKA_ARGS, os.getcwd() + "/bin/openfreebuds")
 
-    if sys.platform == "win32":
-        path = path.replace("/", "\\")
-        args += mk_args(NUITKA_ARGS_WINDOWS)
-    elif sys.platform == "linux":
-        args += mk_args(NUITKA_ARGS_LINUX)
+    # Run UPX
+    print("-- run UPX for bin file")
+    subprocess.Popen(["upx", "builddir/openfreebuds.bin"]).wait()
 
-    # Add current dir to $ENV
-    os.environ["PYTHONPATH"] = os.getcwd()
+
+def make_win32():
+    mk_run(["pyinstaller"], WINDOWS_PYINSTALLER_ARGS, os.getcwd() + "\\bin\\openfreebuds")
+
+    # Copy assets to bundle
+    print("-- copy assets to dest dir")
+    shutil.copytree("openfreebuds_assets", "builddir/dist/openfreebuds/openfreebuds_assets")
+
+
+def mk_run(base_command, arg_set, path):
+    base_wd = os.getcwd()
+    args = mk_args(arg_set)
+    os.environ["PYTHONPATH"] = base_wd
 
     # Go to builddir
     if not os.path.isdir(os.getcwd() + "/builddir"):
@@ -65,15 +60,10 @@ def make():
 
     # Build command and run
     command = base_command + args + [path]
-    print("-- starting nuitka")
+    print("-- starting " + base_command[0])
     subprocess.Popen(command).wait()
 
-    # Run UPX
-    if sys.platform == "linux":
-        print("-- run UPX for bin file")
-        subprocess.Popen(["upx", "openfreebuds.bin"]).wait()
-    elif sys.platform == "win32":
-        print("-- todo: list files for UPX in win32")
+    os.chdir(base_wd)
 
 
 def mk_args(args):
@@ -91,4 +81,7 @@ def mk_args(args):
 
 
 if __name__ == "__main__":
-    make()
+    if sys.platform == "linux":
+        make_linux()
+    elif sys.platform == "win32":
+        make_win32()
