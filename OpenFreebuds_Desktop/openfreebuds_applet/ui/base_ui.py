@@ -96,7 +96,7 @@ def add_server_settings(applet, items):
                  action=lambda: toggle_flask(applet),
                  checked=lambda _: settings.enable_flask),
         Menu.SEPARATOR,
-        MenuItem(t("webserver_port") + " " + str(tool_server.port),
+        MenuItem(t("webserver_port") + " " + str(tool_server.get_port()),
                  action=None,
                  enabled=False),
         MenuItem(t("notice_restart"), None, enabled=False)
