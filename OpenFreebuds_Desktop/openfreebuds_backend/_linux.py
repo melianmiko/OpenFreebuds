@@ -1,9 +1,12 @@
 import logging
+import os
 
 import dbus
 import pystray._appindicator
 import pystray._base
 from dbus.mainloop.glib import DBusGMainLoop
+
+from openfreebuds_applet.l18n import t
 
 DBusGMainLoop(set_as_default=True)
 
@@ -20,6 +23,10 @@ log = logging.getLogger("LinuxBackend")
 
 
 def bind_hotkeys(keys):
+    if "XDG_SESSION_TYPE" in os.environ:
+        if os.environ["XDG_SESSION_TYPE"] == "wayland":
+            show_message(t("hotkeys_wayland"), "OpenFreebuds")
+
     import gi
     gi.require_version('Keybinder', '3.0')
     from gi.repository import Keybinder
@@ -80,7 +87,7 @@ def bt_list_devices():
                     "connected": props.get("Connected", False)
                 })
     except dbus.exceptions.DBusException:
-        log.exception("Failed to list devies")
+        log.exception("Failed to list devices")
 
     return scan_results
 

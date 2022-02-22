@@ -1,8 +1,6 @@
 import logging
-import os
 
 import openfreebuds_backend
-from openfreebuds_applet.l18n import t
 
 log = logging.getLogger("HotkeysTool")
 
@@ -14,9 +12,8 @@ class Data:
 def start(applet):
     Data.applet = applet
 
-    if "XDG_SESSION_TYPE" in os.environ:
-        if os.environ["XDG_SESSION_TYPE"] == "wayland":
-            openfreebuds_backend.show_message(t("hotkeys_wayland"), "OpenFreebuds")
+    if not applet.settings.enable_hotkeys:
+        return
 
     log.debug("Starting hotkey tool...")
     openfreebuds_backend.bind_hotkeys({
