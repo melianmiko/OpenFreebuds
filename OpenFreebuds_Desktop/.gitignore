@@ -1,14 +1,3 @@
 **/__pycache__
 *.bak
 builddir
-
-# PyInstaller
-dist
-build
-openfreebuds.spec
-
-# Nuitka
-openfreebuds.bin
-openfreebuds.dist
-openfreebuds.build
-
