@@ -3,14 +3,7 @@
 DESTDIR=/
 
 all:
-	mkdir -p builddir
-	cd builddir && PYTHONPATH=${PWD} nuitka3 \
-		         --follow-imports \
-		         --nofollow-import-to=Xlib \
-		         --nofollow-import-to=evdev \
-		         --nofollow-import-to=winsdk \
-		         ../bin/openfreebuds
-	cd builddir && upx openfreebuds.bin
+	python make.py
 
 install:
 	cp builddir/openfreebuds.bin ${DESTDIR}/usr/bin/openfreebuds

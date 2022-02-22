@@ -2,43 +2,55 @@ import os
 import subprocess
 import sys
 
-NOFOLLOW_GLOBAL = [
-    # Unused backends
-    "evdev",
-    "Xlib",
-    # Huge Pillow plugins
-    "PIL.TiffImagePlugin",
-    "PIL.GifImagePlugin",
-    "PIL.JpegImagePlugin",
-    "PIL.BmpImagePlugin"
-]
+NUITKA_ARGS = {
+    "nofollow-import-to": [
+        # Unused backends
+        "evdev",
+        "Xlib",
+        "tkinter",
+        # Unused psutil backends
+        "psutil._psosx",
+        "psutil._psbsd",
+        # Huge Pillow plugins
+        "PIL.TiffImagePlugin",
+        "PIL.GifImagePlugin",
+        "PIL.JpegImagePlugin",
+        "PIL.BmpImagePlugin",
+    ]
+}
 
-NOFOLLOW_WINDOWS = [
-    "psutil._pslinux",
-    "psutil._psosx",
-    "gi"
-]
+NUITKA_ARGS_WINDOWS = {
+    "standalone": True,
+    "nofollow-import-to": [
+        "psutil._pslinux",
+        "gi"
+    ],
+    "include-module": [
+        "PIL.IcoImagePlugin"
+    ]
+}
 
-NOFOLLOW_LINUX = [
-    "psutil._pswindows",
-    "psutil._psosx",
-    "winsdk"
-]
+NUITKA_ARGS_LINUX = {
+    "follow-imports": True,
+    "nofollow-import-to": [
+        "psutil._pswindows",
+        "winsdk"
+    ]
+}
 
 
 def make():
     # Prepare props
     base_command = ["python", "-m", "nuitka"]
     path = os.getcwd() + "/bin/openfreebuds"
-    mode = "--follow-imports"
-    args = mk_nofollow(NOFOLLOW_GLOBAL)
+    args = mk_args(NUITKA_ARGS)
 
     if sys.platform == "win32":
         path = path.replace("/", "\\")
         mode = "--standalone"
-        args += mk_nofollow(NOFOLLOW_WINDOWS)
+        args += mk_args(NUITKA_ARGS_WINDOWS)
     elif sys.platform == "linux":
-        args += mk_nofollow(NOFOLLOW_LINUX)
+        args += mk_args(NUITKA_ARGS_LINUX)
 
     # Add current dir to $ENV
     os.environ["PYTHONPATH"] = os.getcwd()
@@ -49,15 +61,29 @@ def make():
     os.chdir(os.getcwd() + "/builddir")
 
     # Build command and run
-    command = base_command + [mode] + args + [path]
-    print("Running", command)
+    command = base_command + args + [path]
+    print("-- starting nuitka")
     subprocess.Popen(command).wait()
 
+    # Run UPX
+    if sys.platform == "linux":
+        print("-- run UPX for bin file")
+        subprocess.Popen(["upx", "openfreebuds.bin"]).wait()
+    elif sys.platform == "win32":
+        print("-- todo: list files for UPX in win32")
 
-def mk_nofollow(excludes):
+
+def mk_args(args):
     out = []
-    for a in excludes:
-        out.append("--nofollow-import-to=" + a)
+    for prop in args:
+        value = args[prop]
+        if isinstance(value, bool) and value:
+            out.append("--" + prop)
+        elif isinstance(value, list):
+            for b in value:
+                out.append("--" + prop + "=" + b)
+        else:
+            out.append("--" + prop + "=" + str(value))
     return out
 
 
