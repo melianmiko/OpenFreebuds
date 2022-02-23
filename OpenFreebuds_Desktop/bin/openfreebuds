@@ -37,15 +37,12 @@ def start_applet():
 
 def setup_logging():
     if args.verbose:
-        logging.basicConfig(level=logging.DEBUG,
-                            format=log_format)
+        print("Enabled verbose mode")
+        logging.basicConfig(level=logging.DEBUG, format=log_format, force=True)
     else:
-        # For pre-releases, log to file in any way
         logfile = tools.get_log_filename()
-
         print("Log redirected to file " + logfile +
               ". Set --verbose flag to see logs here.")
-
         logging.basicConfig(level=logging.DEBUG,
                             format=log_format,
                             filename=logfile)
