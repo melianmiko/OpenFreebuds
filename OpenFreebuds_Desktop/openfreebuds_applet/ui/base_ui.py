@@ -6,7 +6,7 @@ from openfreebuds_backend import MenuItem, Menu
 
 from openfreebuds import event_bus
 from openfreebuds_applet import tools, tool_server, tool_hotkeys
-from openfreebuds_applet.l18n import t
+from openfreebuds_applet.l18n import t, setup_language, setup_auto
 
 
 def force_exit():
@@ -47,6 +47,7 @@ def get_settings_submenu(applet):
     ]
 
     add_theme_select(applet, items)
+    add_language_select(applet, items)
     items.append(Menu.SEPARATOR)
     add_hotkeys_settings(applet, items)
     add_server_settings(applet, items)
@@ -162,3 +163,41 @@ def add_theme_select(applet, items):
     ]
 
     items.append(MenuItem(t("submenu_theme"), Menu(*theme_picker)))
+
+
+def add_language_select(applet, items):
+    current = applet.settings.language
+    variants = os.listdir(tools.get_assets_path() + "/locale")
+
+    languages = [
+        MenuItem("System",
+                 action=lambda: set_language("", applet),
+                 checked=lambda _: current == ""),
+        Menu.SEPARATOR
+    ]
+
+    for a in variants:
+        languages.append(create_lang_menu_item(a, applet))
+
+    items.append(MenuItem(t("submenu_language"), Menu(*languages)))
+
+
+def create_lang_menu_item(value, applet):
+    current = applet.settings.language
+    value = value.replace(".json", "")
+
+    return MenuItem(value,
+                    action=lambda: set_language(value, applet),
+                    checked=lambda _: current == value)
+
+
+def set_language(value, applet):
+    applet.settings.language = value
+    applet.settings.write()
+
+    if value == "":
+        setup_auto()
+    else:
+        setup_language(value)
+
+    event_bus.invoke("ui_update")

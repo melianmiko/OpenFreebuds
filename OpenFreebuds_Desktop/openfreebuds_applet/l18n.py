@@ -18,19 +18,19 @@ class Data:
     base_strings = {}
 
 
-def _init():
+def setup_auto():
     saved_language = SettingsStorage().language
     if saved_language != "" and os.path.isfile(lc_path.format(saved_language)):
-        return _init_with(saved_language)
+        return setup_language(saved_language)
 
     user_language = locale.getdefaultlocale()[0]
     if os.path.isfile(lc_path.format(user_language)):
-        return _init_with(user_language)
+        return setup_language(user_language)
 
-    return _init_with("none")
+    return setup_language("none")
 
 
-def _init_with(langauge):
+def setup_language(langauge):
     log.debug("Using language " + langauge)
     Data.current_language = langauge
     Data.loaded = True
@@ -46,7 +46,7 @@ def _init_with(langauge):
 
 def t(prop):
     if not Data.loaded:
-        _init()
+        setup_auto()
 
     value = prop
     if prop in Data.lang_strings:
