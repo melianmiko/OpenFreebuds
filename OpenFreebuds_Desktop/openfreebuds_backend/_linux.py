@@ -102,7 +102,7 @@ def show_message(message, window_title=""):
                             Gtk.ButtonsType.OK, window_title)
     msg.format_secondary_text(message)
     msg.run()
-    msg.close()
+    msg.destroy()
 
 
 # noinspection PyArgumentList
@@ -115,9 +115,36 @@ def ask_question(message, window_title=""):
                             Gtk.ButtonsType.YES_NO, window_title)
     msg.format_secondary_text(message)
     result = msg.run()
-    msg.close()
+    msg.destroy()
 
     return result
+
+
+# noinspection PyArgumentList
+def ask_string(message, window_title="", current_value=""):
+    import gi
+    gi.require_version("Gtk", "3.0")
+    from gi.repository import Gtk
+
+    dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK_CANCEL, window_title)
+    dialog.format_secondary_text(message)
+
+    area = dialog.get_content_area()
+    entry = Gtk.Entry()
+    entry.set_margin_start(16)
+    entry.set_margin_end(16)
+    entry.set_text(current_value)
+    area.pack_end(entry, False, False, 0)
+    dialog.show_all()
+
+    response = dialog.run()
+    text = entry.get_text()
+    dialog.destroy()
+
+    if response == Gtk.ResponseType.OK:
+        return text
+
+    return None
 
 
 def is_dark_theme():

@@ -3,6 +3,7 @@ import logging
 import asyncio
 import pystray._win32
 import pystray._base
+import tkinter.simpledialog
 
 # noinspection PyUnresolvedReferences,PyPackageRequirements
 from winsdk.windows.devices.enumeration import DeviceInformation, DeviceInformationKind
@@ -59,6 +60,11 @@ def show_message(message, window_title=""):
 
 def ask_question(message, window_title=""):
     return ctypes.windll.user32.MessageBoxW(None, message, window_title, 4)
+
+
+# noinspection PyUnusedLocal
+def ask_string(message, window_title="", current_value=""):
+    return tkinter.simpledialog.askstring(window_title, prompt=message)
 
 
 def is_dark_theme():

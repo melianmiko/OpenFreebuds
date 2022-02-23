@@ -1,5 +1,7 @@
+import logging
 import os
 
+import openfreebuds_backend
 from openfreebuds_backend import MenuItem, Menu
 
 from openfreebuds import event_bus
@@ -87,11 +89,10 @@ def add_hotkeys_settings(applet, items):
     ]
 
     for a in all_hotkeys:
-        if a in config and a != "":
-            val = t("hotkey_name_" + a) + " (Ctrl+Alt+" + config[a].upper() + ")"
+        if a in config:
+            add_hotkey_item(hotkey_items, a, config[a], applet)
         else:
-            val = t("hotkey_name_" + a) + " (" + t("hotkey_disabled") + ")"
-        hotkey_items.append(MenuItem(val, None, enabled=False))
+            add_hotkey_item(hotkey_items, a, "", applet)
 
     hotkey_items += [
         Menu.SEPARATOR,
@@ -99,6 +100,32 @@ def add_hotkeys_settings(applet, items):
     ]
 
     items.append(MenuItem(t("submenu_hotkeys"), Menu(*hotkey_items)))
+
+
+def add_hotkey_item(items, basename, current_value, applet):
+    pretty_name = t("hotkey_name_" + basename)
+    if current_value != "":
+        value = "Ctrl-Alt-" + current_value.upper()
+    else:
+        value = t("hotkey_disabled")
+
+    text = pretty_name + " (" + value + ")"
+    items.append(MenuItem(text, lambda: change_hotkey(basename, current_value, applet)))
+
+
+def change_hotkey(basename, current_value, applet):
+    new_value = openfreebuds_backend.ask_string(t("change_hotkey_message"),
+                                                window_title=basename,
+                                                current_value=current_value)
+    if new_value is None:
+        return
+
+    new_value = new_value.lower()
+    logging.debug("Set new hotkey for " + basename + " to value " + new_value)
+    applet.settings.hotkeys_config[basename] = new_value
+    applet.settings.write()
+
+    event_bus.invoke("ui_update")
 
 
 def add_server_settings(applet, items):
