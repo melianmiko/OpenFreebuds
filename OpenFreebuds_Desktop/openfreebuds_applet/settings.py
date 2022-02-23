@@ -13,9 +13,11 @@ class SettingsStorage:
         self.language = ""
 
         self.enable_hotkeys = False
-        self.hotkey_next_mode = "<ctrl>+<alt>+q"
+        self.enable_server = False
 
-        self.enable_flask = False
+        self.hotkeys_config = {
+            "next_mode": "q"
+        }
 
         self._read()
 

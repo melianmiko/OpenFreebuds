@@ -11,15 +11,30 @@ class Data:
 
 def start(applet):
     Data.applet = applet
-
     if not applet.settings.enable_hotkeys:
         return
 
     log.debug("Starting hotkey tool...")
-    openfreebuds_backend.bind_hotkeys({
-        "q": lambda _: do_next_mode()
-    })
+
+    handlers = get_all_hotkeys()
+    config = Data.applet.settings.hotkeys_config
+    merged = {}
+
+    for a in handlers:
+        if a in config and config[a] != "":
+            merged[config[a]] = handlers[a]
+
+    openfreebuds_backend.bind_hotkeys(merged)
     log.debug("Started hotkey tool.")
+
+
+def get_all_hotkeys():
+    return {
+        "next_mode": lambda _: do_next_mode(),
+        "mode_0": lambda _: do_mode(0),
+        "mode_1": lambda _: do_mode(1),
+        "mode_2": lambda _: do_mode(2)
+    }
 
 
 def do_next_mode():
@@ -31,6 +46,13 @@ def do_next_mode():
         next_mode = (current + 1) % 3
         dev.set_property("noise_mode", next_mode)
         log.debug("Switched to mode " + str(next_mode))
+
+
+def do_mode(mode):
+    dev = _get_device()
+    if dev is not None:
+        dev.set_property("noise_mode", mode)
+        log.debug("Switched to mode " + str(mode))
 
 
 def _get_device():

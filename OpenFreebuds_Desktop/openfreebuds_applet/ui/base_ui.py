@@ -3,7 +3,7 @@ import os
 from openfreebuds_backend import MenuItem, Menu
 
 from openfreebuds import event_bus
-from openfreebuds_applet import tools, tool_server
+from openfreebuds_applet import tools, tool_server, tool_hotkeys
 from openfreebuds_applet.l18n import t
 
 
@@ -76,15 +76,24 @@ def toggle_flask(applet):
 
 def add_hotkeys_settings(applet, items):
     settings = applet.settings
+    config = settings.hotkeys_config
+    all_hotkeys = tool_hotkeys.get_all_hotkeys()
 
     hotkey_items = [
         MenuItem(t("prop_enabled"),
                  action=lambda: toggle_hotkeys(applet),
                  checked=lambda _: settings.enable_hotkeys),
-        Menu.SEPARATOR,
-        MenuItem(t("hotkey_next_mode") + ": " + settings.hotkey_next_mode,
-                 action=None,
-                 enabled=False),
+        Menu.SEPARATOR
+    ]
+
+    for a in all_hotkeys:
+        if a in config and a != "":
+            val = t("hotkey_name_" + a) + " (Ctrl+Alt+" + config[a].upper() + ")"
+        else:
+            val = t("hotkey_name_" + a) + " (" + t("hotkey_disabled") + ")"
+        hotkey_items.append(MenuItem(val, None, enabled=False))
+
+    hotkey_items += [
         Menu.SEPARATOR,
         MenuItem(t("notice_restart"), None, enabled=False)
     ]

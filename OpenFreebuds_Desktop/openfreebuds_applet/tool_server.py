@@ -21,6 +21,12 @@ class AppHandler(SimpleHTTPRequestHandler):
             return self.get_props()
         elif path.startswith("/next_mode"):
             return self.next_mode()
+        elif path.startswith("/mode_0"):
+            return self.set_mode(0)
+        elif path.startswith("/mode_1"):
+            return self.set_mode(1)
+        elif path.startswith("/mode_2"):
+            return self.set_mode(2)
         else:
             return self.info()
 
@@ -61,6 +67,16 @@ class AppHandler(SimpleHTTPRequestHandler):
         new_mode = (current + 1) % 3
         dev.set_property("noise_mode", new_mode)
         log.debug("Switched to mode " + str(new_mode))
+
+        return self._answer_json(True, 200)
+
+    def set_mode(self, mode):
+        man = Config.applet.manager
+        if not man.state == man.STATE_CONNECTED:
+            return self._answer_json({"error": "No device"}, 501)
+
+        man.device.set_property("noise_mode", mode)
+        log.debug("Switched to mode " + str(mode))
 
         return self._answer_json(True, 200)
 
