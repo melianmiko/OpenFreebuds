@@ -38,7 +38,11 @@ def get_app_menu_part(applet):
 
 
 def get_settings_submenu(applet):
-    items = []
+    items = [
+        MenuItem("OpenFreebuds", None, enabled=False),
+        MenuItem(tools.get_version(), None, enabled=False),
+        Menu.SEPARATOR
+    ]
 
     add_theme_select(applet, items)
     items.append(Menu.SEPARATOR)
@@ -109,7 +113,7 @@ def add_theme_select(applet, items):
     current = applet.settings.theme
 
     theme_picker = [
-        MenuItem(t("submenu_theme"), None, enabled=False),
+        # MenuItem(t("submenu_theme"), None, enabled=False),
         MenuItem(t("theme_auto"),
                  action=lambda: applet.set_theme("auto"),
                  checked=lambda _: current == "auto"),
@@ -121,4 +125,4 @@ def add_theme_select(applet, items):
                  checked=lambda _: current == "dark")
     ]
 
-    items.extend(theme_picker)
+    items.append(MenuItem(t("submenu_theme"), Menu(*theme_picker)))

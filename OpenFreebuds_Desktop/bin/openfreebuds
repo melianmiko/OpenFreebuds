@@ -11,33 +11,44 @@ from openfreebuds_applet.l18n import t
 log_format = "%(levelname)s:%(name)s:%(threadName)s  %(message)s"
 description = "Unofficial application to manage HUAWEI FreeBuds device"
 
-# Parse arguments
 parser = argparse.ArgumentParser(description=description)
 parser.add_argument("--verbose",
                     default=False, action="store_true",
                     help="Print debug log to console")
 args = parser.parse_args()
 
-# Check that no other instances are running
-if tools.is_running():
-    openfreebuds_backend.show_message(t("application_running_message"),
-                                      window_title="OpenFreebuds")
-    sys.exit(1)
 
-# Setup logging
-if args.verbose:
-    logging.basicConfig(level=logging.DEBUG,
-                        format=log_format)
-else:
-    # For pre-releases, log to file in any way
-    logfile = tools.get_log_filename()
+def main():
+    version = tools.get_version()
+    print("openfreebuds version=" + version)
 
-    print("Log redirected to file " + logfile +
-          ". Set --verbose flag to see logs here.")
+    setup_logging()
+    start_applet()
 
-    logging.basicConfig(level=logging.DEBUG,
-                        format=log_format,
-                        filename=logfile)
 
-# Start app
-openfreebuds_applet.start()
+def start_applet():
+    if tools.is_running():
+        openfreebuds_backend.show_message(t("application_running_message"),
+                                          window_title="OpenFreebuds")
+        sys.exit(1)
+
+    openfreebuds_applet.start()
+
+
+def setup_logging():
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG,
+                            format=log_format)
+    else:
+        # For pre-releases, log to file in any way
+        logfile = tools.get_log_filename()
+
+        print("Log redirected to file " + logfile +
+              ". Set --verbose flag to see logs here.")
+
+        logging.basicConfig(level=logging.DEBUG,
+                            format=log_format,
+                            filename=logfile)
+
+
+main()

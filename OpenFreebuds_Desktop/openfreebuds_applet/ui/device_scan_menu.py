@@ -6,6 +6,7 @@ from openfreebuds_applet import icons
 from openfreebuds_applet.l18n import t
 
 log = logging.getLogger("DeviceScanUI")
+devices = bt_list_devices()
 
 
 def process(applet):
@@ -17,7 +18,6 @@ def process(applet):
         applet.set_tray_icon(icon, hashsum)
 
     # Build menu
-    devices = bt_list_devices()
     items = [
         MenuItem(text=t("select_device"),
                  enabled=False,
@@ -37,6 +37,8 @@ def process(applet):
 
 
 def send_update_request():
+    global devices
+    devices = bt_list_devices()
     event_bus.invoke("ui_update")
 
 

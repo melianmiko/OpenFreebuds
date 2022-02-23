@@ -8,6 +8,31 @@ import subprocess
 import psutil as psutil
 
 
+def get_version():
+    # If compiled, use auto-generated version info module
+    if is_compiled():
+        from openfreebuds_applet.version_info import VERSION
+        return VERSION
+
+    # Try to read Git info
+    try:
+        version = subprocess.check_output(["git", "describe", "--tags"])\
+            .decode("utf8").replace("\n", "")
+        return version
+    except subprocess.CalledProcessError:
+        return "n/a"
+
+
+# noinspection PyUnresolvedReferences
+def is_compiled():
+    try:
+        __compiled__
+    except NameError:
+        return False
+
+    return True
+
+
 def items_hash_string(items):
     hs = ""
 

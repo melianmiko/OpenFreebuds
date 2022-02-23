@@ -3,6 +3,8 @@ import shutil
 import subprocess
 import sys
 
+VERSION_CODE = "v0.1"
+
 LINUX_NUITKA_ARGS = {
     "follow-imports": True,
     "nofollow-import-to": [
@@ -32,6 +34,7 @@ WINDOWS_PYINSTALLER_ARGS = {
 
 
 def make_linux():
+    mk_version_info()
     mk_run(["nuitka3"], LINUX_NUITKA_ARGS, os.getcwd() + "/bin/openfreebuds")
 
     # Run UPX
@@ -43,11 +46,25 @@ def make_win32():
     if os.path.isdir("builddir/dist"):
         shutil.rmtree("builddir/dist")
 
+    mk_version_info()
     mk_run(["pyinstaller"], WINDOWS_PYINSTALLER_ARGS, os.getcwd() + "\\bin\\openfreebuds")
 
     # Copy assets to bundle
     print("-- copy assets to dest dir")
     shutil.copytree("openfreebuds_assets", "builddir/dist/openfreebuds/openfreebuds_assets")
+
+
+def mk_version_info():
+    try:
+        version = subprocess.check_output(["git", "describe", "--tags"])\
+            .decode("utf8").replace("\n", "")
+    except subprocess.CalledProcessError:
+        version = VERSION_CODE
+        print("-- warn: can't read git version info, fallback to make.py ver code")
+
+    text = "VERSION = \"{}\"\n".format(version)
+    with open("openfreebuds_applet/version_info.py", "w") as f:
+        f.write(text)
 
 
 def mk_run(base_command, arg_set, path):
