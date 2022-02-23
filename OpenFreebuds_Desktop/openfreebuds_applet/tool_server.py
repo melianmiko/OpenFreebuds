@@ -84,7 +84,7 @@ class AppHandler(SimpleHTTPRequestHandler):
 def start(applet):
     Config.applet = applet
 
-    if not applet.settings.enable_flask:
+    if not applet.settings.enable_server:
         return
 
     httpd = HTTPServer(("localhost", Config.port), AppHandler)

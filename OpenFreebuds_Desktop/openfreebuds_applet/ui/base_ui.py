@@ -71,7 +71,7 @@ def toggle_hotkeys(applet):
 
 
 def toggle_flask(applet):
-    applet.settings.enable_flask = not applet.settings.enable_flask
+    applet.settings.enable_server = not applet.settings.enable_server
     applet.settings.write()
 
     event_bus.invoke("settings_changed")
@@ -135,7 +135,7 @@ def add_server_settings(applet, items):
     server_items = [
         MenuItem(t("prop_enabled"),
                  action=lambda: toggle_flask(applet),
-                 checked=lambda _: settings.enable_flask),
+                 checked=lambda _: settings.enable_server),
         Menu.SEPARATOR,
         MenuItem(t("webserver_port") + " " + str(tool_server.get_port()),
                  action=None,
