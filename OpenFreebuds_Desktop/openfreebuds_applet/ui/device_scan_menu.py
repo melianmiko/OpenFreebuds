@@ -1,9 +1,10 @@
 import logging
 
-from openfreebuds_backend import Menu, MenuItem, bt_list_devices
 from openfreebuds import event_bus
+from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds_applet import icons
 from openfreebuds_applet.l18n import t
+from openfreebuds_backend import Menu, MenuItem, bt_list_devices
 
 log = logging.getLogger("DeviceScanUI")
 devices = bt_list_devices()
@@ -39,7 +40,7 @@ def process(applet):
 def send_update_request():
     global devices
     devices = bt_list_devices()
-    event_bus.invoke("ui_update")
+    event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
 
 def _create_device_menu_item(data, applet):

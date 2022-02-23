@@ -5,6 +5,7 @@ import threading
 import openfreebuds.manager
 import openfreebuds_backend
 from openfreebuds import event_bus
+from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE_PROP_CHANGED, EVENT_MANAGER_STATE_CHANGED
 from openfreebuds_applet import tools, settings, icons, tool_server, tool_hotkeys
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.ui import base_ui, device_menu, device_scan_menu, device_offline_menu
@@ -51,7 +52,7 @@ class FreebudsApplet:
 
         self.allow_ui_update = False
         self.started = False
-        event_bus.invoke("ui_bye")
+        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
     def set_theme(self, name):
         icons.set_theme(name)
@@ -62,7 +63,7 @@ class FreebudsApplet:
         # Wipe hash for icon reload
         self.current_icon_hash = ""
 
-        event_bus.invoke("ui_theme_changed")
+        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
     def set_tray_icon(self, icon, hashsum):
         if not self.allow_ui_update:
@@ -97,6 +98,12 @@ class FreebudsApplet:
         self.started = True
         self.allow_ui_update = True
 
+        event_queue = event_bus.register([
+            EVENT_UI_UPDATE_REQUIRED,
+            EVENT_DEVICE_PROP_CHANGED,
+            EVENT_MANAGER_STATE_CHANGED
+        ])
+
         if self.settings.address != "":
             log.info("Using saved address: " + self.settings.address)
             self.manager.set_device(self.settings.address)
@@ -111,7 +118,7 @@ class FreebudsApplet:
                 device_menu.process(self)
             else:
                 device_offline_menu.process(self)
-            event_bus.wait_any()
+            event_queue.wait()
 
         self.manager.close()
         self._tray.stop()

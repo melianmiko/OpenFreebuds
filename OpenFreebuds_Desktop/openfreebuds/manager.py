@@ -4,6 +4,7 @@ import time
 
 import openfreebuds_backend
 from openfreebuds import event_bus
+from openfreebuds.events import EVENT_MANAGER_STATE_CHANGED, EVENT_MANAGER_CLOSE, EVENT_SPP_CLOSED
 from openfreebuds.spp.device import SPPDevice
 
 
@@ -15,9 +16,6 @@ def create():
 
 
 class FreebudsManager:
-    EVENT_STATE_CHANGED = "ofb_man_state_changed"
-    EVENT_SCAN_COMPLETE = "ofb_man_scan_complete"
-    EVENT_CLOSE = "ofb_man_close"
 
     MAINLOOP_TIMEOUT = 4
 
@@ -54,7 +52,7 @@ class FreebudsManager:
         self.set_state(self.STATE_NO_DEV)
 
         if lock:
-            event_bus.wait_for(self.EVENT_CLOSE)
+            event_bus.wait_for(EVENT_MANAGER_CLOSE)
 
     def close(self, lock=True):
         if not self.started:
@@ -64,7 +62,7 @@ class FreebudsManager:
         self.started = False
 
         if lock:
-            event_bus.wait_for(self.EVENT_CLOSE)
+            event_bus.wait_for(EVENT_MANAGER_CLOSE)
 
     def _close_device(self):
         # Close spp if it was started
@@ -80,12 +78,16 @@ class FreebudsManager:
 
         self.state = state
         log.info("State changed to " + str(state))
-        event_bus.invoke(self.EVENT_STATE_CHANGED)
+        event_bus.invoke(EVENT_MANAGER_STATE_CHANGED)
 
     def _mainloop(self):
         self.started = True
 
         log.debug("Started")
+
+        event_queue = event_bus.register([
+            EVENT_SPP_CLOSED
+        ])
 
         # Check that spp exists in paired
         if not openfreebuds_backend.bt_device_exists(self.address):
@@ -123,10 +125,11 @@ class FreebudsManager:
 
             # If all is OK, just chill
             self.set_state(self.STATE_CONNECTED)
-            event_bus.wait_for(self.device.EVENT_CLOSED,
-                               timeout=self.MAINLOOP_TIMEOUT)
+            event_queue.wait(timeout=self.MAINLOOP_TIMEOUT)
 
         # Exit main loop
         log.info("leaving manager thread...")
         self._close_device()
-        event_bus.invoke(self.EVENT_CLOSE)
+
+        event_queue.close()
+        event_bus.invoke(EVENT_MANAGER_CLOSE)

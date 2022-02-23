@@ -5,6 +5,7 @@ import openfreebuds_backend
 from openfreebuds_backend import MenuItem, Menu
 
 from openfreebuds import event_bus
+from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds_applet import tools, tool_server, tool_hotkeys
 from openfreebuds_applet.l18n import t, setup_language, setup_auto
 
@@ -67,14 +68,14 @@ def toggle_hotkeys(applet):
     applet.settings.enable_hotkeys = not applet.settings.enable_hotkeys
     applet.settings.write()
 
-    event_bus.invoke("settings_changed")
+    event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
 
 def toggle_flask(applet):
     applet.settings.enable_server = not applet.settings.enable_server
     applet.settings.write()
 
-    event_bus.invoke("settings_changed")
+    event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
 
 def add_hotkeys_settings(applet, items):
@@ -126,7 +127,7 @@ def change_hotkey(basename, current_value, applet):
     applet.settings.hotkeys_config[basename] = new_value
     applet.settings.write()
 
-    event_bus.invoke("ui_update")
+    event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
 
 def add_server_settings(applet, items):
@@ -200,4 +201,4 @@ def set_language(value, applet):
     else:
         setup_language(value)
 
-    event_bus.invoke("ui_update")
+    event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)

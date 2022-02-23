@@ -8,6 +8,7 @@ import logging
 
 # TODO: Long tap settings
 from openfreebuds import event_bus
+from openfreebuds.events import EVENT_MANAGER_STATE_CHANGED
 
 logging.basicConfig(level=logging.DEBUG,
                     format="%(levelname)s:%(name)s:%(threadName)s  %(message)s")
@@ -40,7 +41,7 @@ def main():
     while True:
         print("-- Waiting for spp connect...")
         while man.state != man.STATE_CONNECTED:
-            event_bus.wait_any()
+            event_bus.wait_for(EVENT_MANAGER_STATE_CHANGED)
 
         shell(man)
         print("-- Device disconnected")

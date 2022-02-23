@@ -3,6 +3,7 @@ import socket
 import threading
 
 from openfreebuds import protocol_utils, event_bus
+from openfreebuds.events import EVENT_SPP_CLOSED, EVENT_SPP_RECV, EVENT_DEVICE_PROP_CHANGED
 
 log = logging.getLogger("SPPDevice")
 
@@ -24,9 +25,6 @@ def build_spp_bytes(data):
 
 # noinspection PyMethodMayBeStatic
 class BaseSPPDevice:
-    EVENT_CLOSED = "spp_device_closed"
-    EVENT_RECV = "spp_device_package_recv"
-    EVENT_PROP_CHANGED = "spp_device_prop_changed"
 
     def __init__(self, address):
         self.last_pkg = None
@@ -61,7 +59,7 @@ class BaseSPPDevice:
         log.debug("Closing device...")
         self.closed = True
         if lock:
-            event_bus.wait_for(self.EVENT_CLOSED)
+            event_bus.wait_for(EVENT_SPP_CLOSED)
 
     def _mainloop(self):
         self.socket.settimeout(2)
@@ -76,9 +74,8 @@ class BaseSPPDevice:
                         self.socket.recv(length)
                     else:
                         pkg = self.socket.recv(length)
-                        log.debug("recv " + pkg.hex())
                         self.on_package(pkg)
-                        event_bus.invoke(self.EVENT_RECV)
+                        event_bus.invoke(EVENT_SPP_RECV)
             except (TimeoutError, socket.timeout):
                 # Socket timed out, do nothing
                 pass
@@ -89,13 +86,13 @@ class BaseSPPDevice:
         log.info("Leaving recv...")
         self.socket.close()
         self.closed = True
-        event_bus.invoke(self.EVENT_CLOSED)
+        event_bus.invoke(EVENT_SPP_CLOSED)
 
     def send_command(self, data, read=False):
         self.send(build_spp_bytes(data))
 
         if read:
-            event_bus.wait_for(self.EVENT_RECV)
+            event_bus.wait_for(EVENT_SPP_RECV, timeout=1)
 
     def send(self, data):
         try:
@@ -116,7 +113,8 @@ class BaseSPPDevice:
 
     def put_property(self, prop, value):
         self._properties[prop] = value
-        event_bus.invoke(self.EVENT_PROP_CHANGED)
+        log.debug("Put property " + prop + " = " + str(value))
+        event_bus.invoke(EVENT_DEVICE_PROP_CHANGED)
 
     def set_property(self, prop, value):
         raise "Must be override"

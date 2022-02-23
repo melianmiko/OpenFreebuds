@@ -8,9 +8,9 @@ def process(applet):
     dev = applet.manager.device
 
     # Set icon if required
-    battery_left = dev.get_property("battery_left")
-    battery_right = dev.get_property("battery_right")
-    noise_mode = dev.get_property("noise_mode")
+    battery_left = dev.get_property("battery_left", 0)
+    battery_right = dev.get_property("battery_right", 0)
+    noise_mode = dev.get_property("noise_mode", 0)
 
     # Prevent zero-value icon
     if battery_right == 0:
