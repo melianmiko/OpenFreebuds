@@ -30,10 +30,10 @@ def start(applet):
 
 def get_all_hotkeys():
     return {
-        "next_mode": lambda _: do_next_mode(),
-        "mode_0": lambda _: do_mode(0),
-        "mode_1": lambda _: do_mode(1),
-        "mode_2": lambda _: do_mode(2)
+        "next_mode": lambda *args: do_next_mode(),
+        "mode_0": lambda *args: do_mode(0),
+        "mode_1": lambda *args: do_mode(1),
+        "mode_2": lambda *args: do_mode(2)
     }
 
 
