@@ -41,9 +41,12 @@ def get_app_menu_part(applet):
 
 
 def get_settings_submenu(applet):
+    version, debug = tools.get_version()
+    ver_line = version + (" (DEBUG)" if debug else "")
+
     items = [
         MenuItem("OpenFreebuds", None, enabled=False),
-        MenuItem(tools.get_version(), None, enabled=False),
+        MenuItem(ver_line, None, enabled=False),
         Menu.SEPARATOR
     ]
 

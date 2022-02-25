@@ -28,6 +28,8 @@ LINUX_NUITKA_ARGS = {
     ]
 }
 
+WINDOWS_PYINSTALLER_ARGS_DEBUG = []
+
 WINDOWS_PYINSTALLER_ARGS = {
     "windowed": True
 }
@@ -54,7 +56,21 @@ def make_win32():
     shutil.copytree("openfreebuds_assets", "builddir/dist/openfreebuds/openfreebuds_assets")
 
 
+def make_win32_debug():
+    if os.path.isdir("builddir/dist"):
+        shutil.rmtree("builddir/dist")
+
+    mk_version_info()
+    mk_run(["pyinstaller"], WINDOWS_PYINSTALLER_ARGS_DEBUG, os.getcwd() + "\\bin\\openfreebuds")
+
+    # Copy assets to bundle
+    print("-- copy assets to dest dir")
+    shutil.copytree("openfreebuds_assets", "builddir/dist/openfreebuds/openfreebuds_assets")
+
+
 def mk_version_info():
+    is_debug = "debug" in sys.argv
+
     try:
         version = subprocess.check_output(["git", "describe", "--tags"])\
             .decode("utf8").replace("\n", "")
@@ -62,7 +78,7 @@ def mk_version_info():
         version = VERSION_CODE
         print("-- warn: can't read git version info, fallback to make.py ver code")
 
-    text = "VERSION = \"{}\"\n".format(version)
+    text = "VERSION = \"{}\"\nDEBUG_MODE = {}".format(version, is_debug)
     with open("openfreebuds_applet/version_info.py", "w") as f:
         f.write(text)
 
@@ -102,5 +118,7 @@ def mk_args(args):
 if __name__ == "__main__":
     if sys.platform == "linux":
         make_linux()
+    elif sys.platform == "win32" and "debug" in sys.argv:
+        make_win32_debug()
     elif sys.platform == "win32":
         make_win32()

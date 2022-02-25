@@ -4,6 +4,7 @@ import os
 import pathlib
 import platform
 import subprocess
+import sys
 
 import psutil as psutil
 
@@ -11,20 +12,23 @@ import psutil as psutil
 def get_version():
     # If compiled, use auto-generated version info module
     if is_compiled():
-        from openfreebuds_applet.version_info import VERSION
-        return VERSION
+        from openfreebuds_applet.version_info import VERSION, DEBUG_MODE
+        return VERSION, DEBUG_MODE
 
     # Try to read Git info
     try:
         version = subprocess.check_output(["git", "describe", "--tags"])\
             .decode("utf8").replace("\n", "")
-        return version
-    except subprocess.CalledProcessError:
-        return "n/a"
+        return version, True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return "n/a", False
 
 
 # noinspection PyUnresolvedReferences
 def is_compiled():
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        return True
+
     try:
         __compiled__
     except NameError:

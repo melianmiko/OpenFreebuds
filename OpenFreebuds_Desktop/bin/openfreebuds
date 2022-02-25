@@ -19,10 +19,10 @@ args = parser.parse_args()
 
 
 def main():
-    version = tools.get_version()
-    print("openfreebuds version=" + version)
+    version, debug = tools.get_version()
+    print("openfreebuds version=" + version + " is_debug=" + str(debug))
 
-    setup_logging()
+    setup_logging(debug)
     start_applet()
 
 
@@ -35,8 +35,8 @@ def start_applet():
     openfreebuds_applet.start()
 
 
-def setup_logging():
-    if args.verbose:
+def setup_logging(debug):
+    if args.verbose or debug:
         print("Enabled verbose mode")
         logging.basicConfig(level=logging.DEBUG, format=log_format, force=True)
     else:
