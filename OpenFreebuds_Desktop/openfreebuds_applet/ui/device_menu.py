@@ -30,7 +30,6 @@ def process(applet):
     add_power_info(dev, items)
     add_noise_control(dev, items)
     items.append(Menu.SEPARATOR)
-    add_device_info(dev, items)
     add_gestures_menu(dev, items)
 
     applet.set_menu_items(items, expand=True)
@@ -105,19 +104,6 @@ def add_gestures_menu(dev, items):
         submenu_items.append(MenuItem(t("double_tap_right"), Menu(*section_items)))
 
     items.append(MenuItem(t("submenu_gestures"), action=Menu(*submenu_items)))
-
-
-def add_device_info(dev, items):
-    submenu_items = [
-        MenuItem("Model " + dev.get_property("device_model", "---"), None, enabled=False),
-        MenuItem("HW ver " + dev.get_property("device_ver", "---"), None, enabled=False),
-        MenuItem("FW ver " + dev.get_property("software_ver", "---"), None, enabled=False),
-        MenuItem("OTA ver " + dev.get_property("ota_version", "---"), None, enabled=False),
-        MenuItem("S/N " + dev.get_property("serial_number", "---"), None, enabled=False),
-        MenuItem("Headphone in " + str(dev.get_property("is_headphone_in", "---")), None, enabled=False)
-    ]
-
-    items.append(MenuItem(t("submenu_device_info"), action=Menu(*submenu_items)))
 
 
 def add_noise_control(dev, items):

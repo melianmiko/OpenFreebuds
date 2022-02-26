@@ -24,23 +24,21 @@ def get_quiting_menu():
 
 
 def get_header_menu_part(applet):
-    return [
-        MenuItem(applet.settings.device_name, None, enabled=False),
+    device_items = [
+        MenuItem(t("submenu_device_info"),
+                 action=lambda: show_device_info(applet)),
         MenuItem(t("action_unpair"),
-                 action=applet.drop_device),
+                 action=applet.drop_device)
+    ]
+
+    return [
+        MenuItem(applet.settings.device_name,
+                 action=Menu(*device_items)),
         Menu.SEPARATOR
     ]
 
 
 def get_app_menu_part(applet):
-    return [
-        Menu.SEPARATOR,
-        MenuItem(t("submenu_app"),
-                 action=get_settings_submenu(applet))
-    ]
-
-
-def get_settings_submenu(applet):
     version, debug = tools.get_version()
     ver_line = version + (" (DEBUG)" if debug else "")
 
@@ -64,7 +62,28 @@ def get_settings_submenu(applet):
                  action=lambda: applet.exit())
     ])
 
-    return Menu(*items)
+    return [
+        MenuItem(t("submenu_app"),
+                 action=Menu(*items))
+    ]
+
+
+def show_device_info(applet):
+    if applet.manager.state != applet.manager.STATE_CONNECTED:
+        openfreebuds_backend.show_message(t("mgr_state_2"), t("submenu_device_info"))
+        return
+
+    dev = applet.manager.device
+
+    message = "{} ({})\n\n".format(applet.settings.device_name, applet.settings.address)
+    message += "Model: {}\n".format(dev.get_property("device_model", "---"))
+    message += "HW ver: {}\n".format(dev.get_property("device_ver", "---"))
+    message += "FW ver: {}\n".format(dev.get_property("software_ver", "---"))
+    message += "OTA ver: {}\n".format(dev.get_property("ota_version", "---"))
+    message += "S/N: {}\n".format(dev.get_property("serial_number", "---"))
+    message += "Headphone in: {}\n".format(dev.get_property("is_headphone_in", "---"))
+
+    openfreebuds_backend.show_message(message, t("submenu_device_info"))
 
 
 def toggle_hotkeys(applet):
