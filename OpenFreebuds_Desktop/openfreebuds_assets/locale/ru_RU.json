@@ -4,6 +4,8 @@
   "action_open_appdata": "Открыть папку настроек...",
   "action_refresh_list": "Обновить список",
   "action_unpair": "Забыть",
+  "action_connect": "Подключить",
+  "action_disconnect": "Отключить",
   "application_running_message": "Приложение уже запущено, см. в системном трее.\n\n Если оно не отвечает, остановите его ч-з диспетчер задач, \nпосле чего запустите снова.",
   "battery_case": "Зарядный кейс: {}%",
   "battery_left": "Левый наушник: {}%",
@@ -14,6 +16,7 @@
   "first_run_title": "Добро пожаловать (OpenFreebuds)",
   "gesture_auto_pause": "Пауза если не надето",
   "hotkey_disabled": "Отключено",
+  "change_hotkey_message": "Введите букву для этого сочетания клавиш.\nВы можете только изменить букву, вам по-прежнему нужно будет\nиспользовать Ctrl-Alt с ней:",
   "hotkey_name_next_mode": "Сменить режим шумоподавления",
   "hotkey_name_mode_0": "Отключить шумоподавление",
   "hotkey_name_mode_1": "Включить шумоподавление",
@@ -40,6 +43,7 @@
   "submenu_hotkeys": "Сочетания клавиш...",
   "submenu_server": "Веб-сервер...",
   "submenu_theme": "Стиль значка...",
+  "submenu_language": "Сменить язык...",
   "tap_action_assistant": "Голосовой помощник",
   "tap_action_next": "Следующий трек",
   "tap_action_off": "Отключено",
@@ -48,5 +52,8 @@
   "theme_auto": "Авто-обнаружение",
   "theme_dark": "Тёмный значок",
   "theme_light": "Светлый значок",
-  "webserver_port": "HTTP-порт:"
+  "webserver_port": "HTTP-порт:",
+  "error_in_work": "Ошибка: операция уже выполняется.",
+  "error_force_action_fail": "Ошибка: ОС отказалась подключать это устройство.",
+  "win_tools_message": "Для использования этой функции требуется установить \"Bluetooth Command Line Tools\"\nc bluetoothinstaller.com. Без этой программы функция подключения\\отключения\nустройств будет недоступна на ОС Windows. Учтите, что программа предоставляется\nкак есть, без каких-либо гарантий.\n\nБольше информации тут: http://bluetoothinstaller.com\n\nУчтите, эта функция может не работать на новых версиях MS Windows, например 11.\nОткрыть браузер и скачать установщик?"
 }

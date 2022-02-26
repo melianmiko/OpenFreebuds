@@ -55,5 +55,5 @@
   "webserver_port": "HTTP port is",
   "error_in_work": "Error: operation already started.",
   "error_force_action_fail": "Error: OS can't connect this device.",
-  "win_tools_message": "To use this feature, you must install \"Bluetooth Command Line Tools\"\nfrom bluetoothinstaller.com. Without this, you can't use connect/disconnect\nfeatures on Windows. Notice that this software is provided \"as is\" and don't\ngive any warranty of any kind.\n\nFor more information, visit http://bluetoothinstaller.com\n\nAlso note, that this tools may not work on newer versions of MS Windows, like ver. 11.\nOpen browser to download installer?\n"
+  "win_tools_message": "To use this feature, you must install \"Bluetooth Command Line Tools\"\nfrom bluetoothinstaller.com. Without this, you can't use connect/disconnect\nfeatures on Windows. Notice that this software is provided \"as is\" and don't\ngive any warranty of any kind.\n\nFor more information, visit http://bluetoothinstaller.com\n\nAlso note, that this tools may not work on newer versions of MS Windows, like ver. 11.\nOpen browser to download installer?"
 }

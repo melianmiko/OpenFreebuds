@@ -51,11 +51,14 @@ def bt_connect(address):
 
     base_args = [extra_tools_dir + "\\btcom.exe",  "-b\"{}\"".format(address)]
 
-    subprocess.check_output(base_args + ["-r", "-s111e"])
-    subprocess.check_output(base_args + ["-c", "-s111e"])
-    subprocess.check_output(base_args + ["-r", "-s110b"])
-    subprocess.check_output(base_args + ["-c", "-s110b"])
-    return True
+    try:
+        subprocess.check_output(base_args + ["-r", "-s111e"])
+        subprocess.check_output(base_args + ["-c", "-s111e"])
+        subprocess.check_output(base_args + ["-r", "-s110b"])
+        subprocess.check_output(base_args + ["-c", "-s110b"])
+        return True
+    except Exception:
+        return False
 
 
 def bt_disconnect(address):
@@ -64,9 +67,12 @@ def bt_disconnect(address):
 
     base_args = [extra_tools_dir + "\\btcom.exe",  "-b\"{}\"".format(address)]
 
-    subprocess.check_output(base_args + ["-r", "-s111e"])
-    subprocess.check_output(base_args + ["-r", "-s110b"])
-    return True
+    try:
+        subprocess.check_output(base_args + ["-r", "-s111e"])
+        subprocess.check_output(base_args + ["-r", "-s110b"])
+        return True
+    except Exception:
+        return False
 
 
 def bt_device_exists(address):
