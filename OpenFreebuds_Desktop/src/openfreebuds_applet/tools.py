@@ -14,11 +14,8 @@ import openfreebuds_backend
 
 
 def get_version():
-    try:
-        from version_info import VERSION, DEBUG_MODE
-        return VERSION, DEBUG_MODE
-    except ImportError:
-        return "n/a", True
+    from version_info import VERSION, DEBUG_MODE
+    return VERSION, DEBUG_MODE
 
 
 def items_hash_string(items):

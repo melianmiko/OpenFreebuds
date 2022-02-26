@@ -3,7 +3,6 @@ DESTDIR="/"
 PYSTRAY_VERSION="0.19.2"
 
 all: builddir/openfreebuds/pystray
-	python tools/mk_version_info.py
 	cp -r src/* builddir/openfreebuds
 
 builddir/openfreebuds/pystray:

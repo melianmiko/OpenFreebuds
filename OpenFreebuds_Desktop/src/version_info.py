@@ -1,0 +1,2 @@
+VERSION = "v0.8"
+DEBUG_MODE = False
