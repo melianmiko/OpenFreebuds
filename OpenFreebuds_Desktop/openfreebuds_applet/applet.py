@@ -41,14 +41,17 @@ class FreebudsApplet:
 
     # noinspection PyBroadException
     def force_connect(self):
-        if self.manager.paused:
-            openfreebuds_backend.show_message(t("error_in_work"), "Openfreebuds", is_error=True)
+        if self.manager.state == self.manager.STATE_CONNECTED:
             return False
 
         tools.run_thread_safe(self._do_force_connect, "ForceConnect", False)
         return True
 
     def _do_force_connect(self):
+        if self.manager.paused:
+            openfreebuds_backend.show_message(t("error_in_work"), "Openfreebuds", is_error=True)
+            return
+
         self.manager.paused = True
 
         log.debug("Trying to force connect device...")
@@ -64,14 +67,17 @@ class FreebudsApplet:
 
     # noinspection PyBroadException
     def force_disconnect(self):
-        if self.manager.paused:
-            openfreebuds_backend.show_message(t("error_in_work"), "Openfreebuds", is_error=True)
+        if self.manager.state != self.manager.STATE_CONNECTED:
             return False
 
         tools.run_thread_safe(self._do_force_disconnect, "ForceDisconnect", False)
         return True
 
     def _do_force_disconnect(self):
+        if self.manager.paused:
+            openfreebuds_backend.show_message(t("error_in_work"), "Openfreebuds", is_error=True)
+            return
+
         self.manager.paused = True
         log.debug("Trying to force disconnect device...")
 
