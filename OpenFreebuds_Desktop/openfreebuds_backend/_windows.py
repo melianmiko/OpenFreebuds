@@ -26,8 +26,8 @@ Menu = pystray._base.Menu
 MenuItem = pystray._base.MenuItem
 TrayIcon = pystray._win32.Icon
 
-UI_RESULT_NO = 6
-UI_RESULT_YES = 7
+UI_RESULT_NO = 7
+UI_RESULT_YES = 6
 
 log = logging.getLogger("WindowsBackend")
 
