@@ -40,7 +40,7 @@ def get_header_menu_part(applet):
         MenuItem(t("action_unpair"),
                  action=applet.drop_device)
     ]
-    head.extend(device_items)
+    head.append(MenuItem(applet.settings.device_name, action=Menu(*device_items)))
 
     # Build connect/disconnect action
     if applet.manager.state == applet.manager.STATE_CONNECTED:
