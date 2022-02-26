@@ -49,9 +49,11 @@ def bt_connect(address):
     if not _prepare_tools():
         return False
 
-    base_args = [extra_tools_dir + "\\btcom.exe",  "-b", "\"({})\"".format(address)]
+    base_args = [extra_tools_dir + "\\btcom.exe",  "-b\"{}\"".format(address)]
 
+    subprocess.check_output(base_args + ["-r", "-s111e"])
     subprocess.check_output(base_args + ["-c", "-s111e"])
+    subprocess.check_output(base_args + ["-r", "-s110b"])
     subprocess.check_output(base_args + ["-c", "-s110b"])
     return True
 
@@ -60,7 +62,7 @@ def bt_disconnect(address):
     if not _prepare_tools():
         return False
 
-    base_args = [extra_tools_dir + "\\btcom.exe",  "-b", "({})".format(address)]
+    base_args = [extra_tools_dir + "\\btcom.exe",  "-b\"{}\"".format(address)]
 
     subprocess.check_output(base_args + ["-r", "-s111e"])
     subprocess.check_output(base_args + ["-r", "-s110b"])
