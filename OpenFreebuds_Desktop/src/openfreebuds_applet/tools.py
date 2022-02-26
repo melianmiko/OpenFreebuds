@@ -5,7 +5,6 @@ import os
 import pathlib
 import platform
 import subprocess
-import sys
 import threading
 import traceback
 
@@ -15,31 +14,11 @@ import openfreebuds_backend
 
 
 def get_version():
-    # If compiled, use auto-generated version info module
-    if is_compiled():
-        from openfreebuds_applet.version_info import VERSION, DEBUG_MODE
+    try:
+        from version_info import VERSION, DEBUG_MODE
         return VERSION, DEBUG_MODE
-
-    # Try to read Git info
-    try:
-        version = subprocess.check_output(["git", "describe", "--tags"])\
-            .decode("utf8").replace("\n", "")
-        return version, True
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        return "n/a", False
-
-
-# noinspection PyUnresolvedReferences
-def is_compiled():
-    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-        return True
-
-    try:
-        __compiled__
-    except NameError:
-        return False
-
-    return True
+    except ImportError:
+        return "n/a", True
 
 
 def items_hash_string(items):
@@ -59,10 +38,20 @@ def is_running():
     our_pid = os.getpid()
 
     for a in psutil.process_iter():
-        if "openfreebuds" in a.name() and a.pid != our_pid:
+        name = _get_process_name_part(a)
+        if "openfreebuds" in name and a.pid != our_pid:
+            logging.debug("Found running instance PID=" + str(a.pid))
             return True
 
     return False
+
+
+def _get_process_name_part(pr):
+    if "python" in pr.name():
+        cmd = pr.cmdline()
+        return cmd[1]
+
+    return pr.name()
 
 
 def get_assets_path():
@@ -73,8 +62,8 @@ def get_assets_path():
         return path + "/" + assets_dir_name
     elif os.path.isdir(path + "/../" + assets_dir_name):
         return path + "/../" + assets_dir_name
-    elif os.path.isdir("/usr/share/openfreebuds"):
-        return "/usr/share/openfreebuds"
+    elif os.path.isdir("/opt/openfreebuds/openfreebuds_assets"):
+        return "/opt/openfreebuds/openfreebuds_assets"
 
     raise Exception("assets dir not found")
 

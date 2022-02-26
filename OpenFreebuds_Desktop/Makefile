@@ -1,14 +1,18 @@
-# This Makefile should be used only for Linux building
-# For Windows build, use make_win32.cmd file
 DESTDIR=/
 
-all:
-	python make.py
+all: builddir/openfreebuds/pystray
+	python tools/mk_version_info.py
+	cp -r src/* builddir/openfreebuds
+
+builddir/openfreebuds/pystray:
+	mkdir -p builddir/openfreebuds/openfreebuds
+	pip install --target=builddir/openfreebuds --no-deps pystray==0.19.2
 
 install:
-	cp builddir/openfreebuds.bin ${DESTDIR}/usr/bin/openfreebuds
-	cp -r openfreebuds_assets ${DESTDIR}/usr/share/openfreebuds
+	rm -rf /opt/openfreebuds
+	cp -r builddir/openfreebuds /opt/openfreebuds
+	cp tools/linux_entrypoint.py /usr/bin/openfreebuds
 
 start:
 	# Start app without compilation
-	PYTHONPATH=${PWD} python3 bin/openfreebuds --verbose
+	PYTHONPATH=""${PWD}/src"" python3 src/main.py --verbose

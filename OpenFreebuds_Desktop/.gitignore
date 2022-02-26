@@ -1,4 +1,4 @@
 **/__pycache__
 *.bak
 builddir
-openfreebuds_applet/version_info.py
+src/version_info.py
