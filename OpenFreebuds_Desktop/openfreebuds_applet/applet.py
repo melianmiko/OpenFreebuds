@@ -43,9 +43,10 @@ class FreebudsApplet:
     def force_connect(self):
         if self.manager.paused:
             openfreebuds_backend.show_message(t("error_in_work"), "Openfreebuds", is_error=True)
-            return
+            return False
 
         tools.run_thread_safe(self._do_force_connect, "ForceConnect", False)
+        return True
 
     def _do_force_connect(self):
         self.manager.paused = True
@@ -65,9 +66,10 @@ class FreebudsApplet:
     def force_disconnect(self):
         if self.manager.paused:
             openfreebuds_backend.show_message(t("error_in_work"), "Openfreebuds", is_error=True)
-            return
+            return False
 
         tools.run_thread_safe(self._do_force_disconnect, "ForceDisconnect", False)
+        return True
 
     def _do_force_disconnect(self):
         self.manager.paused = True

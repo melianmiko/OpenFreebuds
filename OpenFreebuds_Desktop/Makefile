@@ -7,7 +7,6 @@ all:
 
 install:
 	cp builddir/openfreebuds.bin ${DESTDIR}/usr/bin/openfreebuds
-	cp bin/openfreebuds-command ${DESTDIR}/usr/bin
 	cp -r openfreebuds_assets ${DESTDIR}/usr/share/openfreebuds
 
 start:
