@@ -63,11 +63,8 @@ def setup_logging(debug):
         logging.basicConfig(level=logging.DEBUG, format=log_format, force=True)
     else:
         logfile = tools.get_log_filename()
-        print("Log redirected to file " + logfile +
-              ". Set --verbose flag to see logs here.")
-        logging.basicConfig(level=logging.DEBUG,
-                            format=log_format,
-                            filename=logfile)
+        print("Log redirected to file " + logfile + ". Set --verbose flag to see logs here.")
+        logging.basicConfig(level=logging.DEBUG, format=log_format, filename=logfile)
 
 
 tools.run_safe(main, "MainThread", True)

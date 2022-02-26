@@ -4,8 +4,8 @@
   "action_open_appdata": "Open config directory...",
   "action_refresh_list": "Refresh list",
   "action_unpair": "Forgot",
-  "action_connect": "Connect",
-  "action_disconnect": "Disconnect",
+  "action_connect": "Connect device",
+  "action_disconnect": "Disconnect device",
   "application_running_message": "Application already running, check status area.\n\n If app don't response, stop it from system task manager, \nand then try again.",
   "battery_case": "Battery case: {}%",
   "battery_left": "Left headphone: {}%",
@@ -52,5 +52,6 @@
   "webserver_port": "HTTP port is",
   "error_in_work": "Error: operation already started.",
   "error_force_action_fail": "Error: OS can't connect this device.",
-  "win_tools_message": "To use this feature, you must install \"Bluetooth Command Line Tools\"\nfrom bluetoothinstaller.com. Without this, you can't use connect/disconnect\nfeatures on Windows. Notice that this software is provided \"as is\" and don't\ngive any warranty of any kind.\n\nFor more information, visit http://bluetoothinstaller.com\n\nAlso note, that this tools may not work on newer versions of MS Windows, like ver. 11.\nOpen browser to download installer?"
+  "win_tools_message": "To use this feature, you must install \"Bluetooth Command Line Tools\"\nfrom bluetoothinstaller.com. Without this, you can't use connect/disconnect\nfeatures on Windows. Notice that this software is provided \"as is\" and don't\ngive any warranty of any kind.\n\nFor more information, visit http://bluetoothinstaller.com\n\nAlso note, that this tools may not work on newer versions of MS Windows, like ver. 11.\nOpen browser to download installer?",
+  "question_not_supported": "Compatability with this device isn't tested yet. \nApp may work incorrectly.\n\nDo you really want to use this device?"
 }

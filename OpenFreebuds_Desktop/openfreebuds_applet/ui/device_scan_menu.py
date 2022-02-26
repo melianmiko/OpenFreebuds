@@ -1,6 +1,7 @@
 import logging
 
-from openfreebuds import event_bus
+import openfreebuds_backend
+from openfreebuds import event_bus, device_names
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds_applet import icons
 from openfreebuds_applet.l18n import t
@@ -48,6 +49,11 @@ def _create_device_menu_item(data, applet):
     name = data["name"]
 
     def apply_device():
+        if not device_names.is_supported(name):
+            ui_response = openfreebuds_backend.ask_question(t("question_not_supported"), "Openfreebuds")
+            if ui_response == openfreebuds_backend.UI_RESULT_NO:
+                return
+
         applet.manager.set_device(address)
 
         applet.settings.device_name = name
