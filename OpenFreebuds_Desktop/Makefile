@@ -1,4 +1,6 @@
-DESTDIR=/
+DESTDIR="/"
+
+PYSTRAY_VERSION="0.19.2"
 
 all: builddir/openfreebuds/pystray
 	python tools/mk_version_info.py
@@ -6,12 +8,12 @@ all: builddir/openfreebuds/pystray
 
 builddir/openfreebuds/pystray:
 	mkdir -p builddir/openfreebuds/openfreebuds
-	pip install --target=builddir/openfreebuds --no-deps pystray==0.19.2
+	pip install --target=builddir/openfreebuds --no-deps pystray==${PYSTRAY_VERSION}
 
 install:
 	rm -rf /opt/openfreebuds
-	cp -r builddir/openfreebuds /opt/openfreebuds
-	cp tools/linux_entrypoint.py /usr/bin/openfreebuds
+	cp -r builddir/openfreebuds ${DESTDIR}/opt/openfreebuds
+	cp tools/linux_entrypoint.py ${DESTDIR}/usr/bin/openfreebuds
 
 start:
 	# Start app without compilation
