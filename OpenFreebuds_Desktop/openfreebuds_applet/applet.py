@@ -6,7 +6,7 @@ import openfreebuds_backend
 from openfreebuds import event_bus
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE_PROP_CHANGED, EVENT_MANAGER_STATE_CHANGED
 from openfreebuds.spp.device import SPPDevice
-from openfreebuds_applet import tools, settings, icons, tool_server, tool_hotkeys
+from openfreebuds_applet import tools, settings, icons, tool_server, tool_hotkeys, tool_update
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.ui import base_ui, device_menu, device_scan_menu, device_offline_menu
 
@@ -90,6 +90,7 @@ class FreebudsApplet:
     def start(self):
         tool_hotkeys.start(self)
         tool_server.start(self)
+        tool_update.start(self)
 
         tools.run_thread_safe(self._ui_update_loop, "Applet", True)
 

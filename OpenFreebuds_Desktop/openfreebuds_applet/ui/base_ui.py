@@ -6,7 +6,7 @@ from openfreebuds_backend import MenuItem, Menu
 
 from openfreebuds import event_bus
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
-from openfreebuds_applet import tools, tool_server, tool_actions
+from openfreebuds_applet import tools, tool_server, tool_actions, tool_update
 from openfreebuds_applet.l18n import t, setup_language, setup_auto
 
 
@@ -24,6 +24,15 @@ def get_quiting_menu():
 
 
 def get_header_menu_part(applet):
+    head = []
+
+    # Build update menu item
+    has_update, new_version = tool_update.get_result()
+    if has_update:
+        head.append(MenuItem(t("action_update").format(new_version),
+                             action=tool_update.show_update_message))
+        head.append(Menu.SEPARATOR)
+
     # Build device submenu
     device_items = [
         MenuItem(t("submenu_device_info"),
@@ -31,21 +40,18 @@ def get_header_menu_part(applet):
         MenuItem(t("action_unpair"),
                  action=applet.drop_device)
     ]
+    head.extend(device_items)
 
     # Build connect/disconnect action
     if applet.manager.state == applet.manager.STATE_CONNECTED:
-        action_connection_mgmt = MenuItem(t("action_disconnect"),
-                                          action=applet.force_disconnect)
+        action_connection_mgmt = MenuItem(t("action_disconnect"), action=applet.force_disconnect)
     else:
-        action_connection_mgmt = MenuItem(t("action_connect"),
-                                          action=applet.force_connect)
+        action_connection_mgmt = MenuItem(t("action_connect"), action=applet.force_connect)
+    head.append(action_connection_mgmt)
 
-    return [
-        MenuItem(applet.settings.device_name,
-                 action=Menu(*device_items)),
-        action_connection_mgmt,
-        Menu.SEPARATOR
-    ]
+    # Ready
+    head.append(Menu.SEPARATOR)
+    return head
 
 
 def get_app_menu_part(applet):

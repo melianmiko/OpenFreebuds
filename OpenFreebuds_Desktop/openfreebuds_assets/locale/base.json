@@ -52,6 +52,9 @@
   "webserver_port": "HTTP port is",
   "error_in_work": "Error: operation already started.",
   "error_force_action_fail": "Error: OS can't connect this device.",
-  "win_tools_message": "To use this feature, you must install \"Bluetooth Command Line Tools\"\nfrom bluetoothinstaller.com. Without this, you can't use connect/disconnect\nfeatures on Windows. Notice that this software is provided \"as is\" and don't\ngive any warranty of any kind.\n\nFor more information, visit http://bluetoothinstaller.com\n\nAlso note, that this tools may not work on newer versions of MS Windows, like ver. 11.\nOpen browser to download installer?",
-  "question_not_supported": "Compatability with this device isn't tested yet. \nApp may work incorrectly.\n\nDo you really want to use this device?"
+  "win_tools_message": "To use this feature, you must install \"Bluetooth Command Line Tools\"\nfrom bluetoothinstaller.com. Without this, you can't use connect/disconnect\nfeatures on Windows. Notice that this software is provided \"as is\" and don't\ngive any warranty of any kind.\n\nFor more information, visit https://bluetoothinstaller.com\n\nAlso note, that this tools may not work on newer versions of MS Windows, like ver. 11.\nOpen browser to download installer?",
+  "question_not_supported": "Compatability with this device isn't tested yet. \nApp may work incorrectly.\n\nDo you really want to use this device?",
+  "action_update": "Update OpenFreebuds ({})",
+  "update_message": "New version is available.\n\n{}\n\nDownload it now?",
+  "update_message_auto": "New version is available. Use your system package manager to install it.\n\n{}"
 }
