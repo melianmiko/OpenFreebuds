@@ -4,6 +4,8 @@
   "action_open_appdata": "Open config directory...",
   "action_refresh_list": "Refresh list",
   "action_unpair": "Forgot",
+  "action_connect": "Connect",
+  "action_disconnect": "Disconnect",
   "application_running_message": "Application already running, check status area.\n\n If app don't response, stop it from system task manager, \nand then try again.",
   "battery_case": "Battery case: {}%",
   "battery_left": "Left headphone: {}%",
@@ -50,5 +52,7 @@
   "theme_auto": "Auto-detect",
   "theme_dark": "Dark icon",
   "theme_light": "Light icon",
-  "webserver_port": "HTTP port is"
+  "webserver_port": "HTTP port is",
+  "error_in_work": "Error: operation already started.",
+  "error_force_action_fail": "Error: OS can't connect this device."
 }

@@ -39,19 +39,15 @@ def bind_hotkeys(keys):
 
 def bt_is_connected(address):
     try:
+        path = _dbus_find_device(address)
+        if path is None:
+            return None
+
         system = dbus.SystemBus()
-        bluez = dbus.Interface(system.get_object("org.bluez", "/"),
-                               "org.freedesktop.DBus.ObjectManager")
-
-        all_objects = bluez.GetManagedObjects()
-
-        for path in all_objects:
-            if "org.bluez.Device1" in all_objects[path]:
-                device = dbus.Interface(system.get_object("org.bluez", path),
-                                        "org.freedesktop.DBus.Properties")
-                props = _dbus_to_python(device.GetAll("org.bluez.Device1"))
-                if props.get("Address", "") == address:
-                    return props.get("Connected", False)
+        device = dbus.Interface(system.get_object("org.bluez", path),
+                                "org.freedesktop.DBus.Properties")
+        props = _dbus_to_python(device.GetAll("org.bluez.Device1"))
+        return props.get("Connected", False)
     except dbus.exceptions.DBusException:
         log.exception("Failed to check connection state")
 
@@ -61,6 +57,56 @@ def bt_is_connected(address):
 def bt_device_exists(address):
     return bt_is_connected(address) is not None
 
+
+def bt_connect(address):
+    try:
+        path = _dbus_find_device(address)
+        if path is None:
+            return False
+
+        system = dbus.SystemBus()
+        device = dbus.Interface(system.get_object("org.bluez", path),
+                                "org.bluez.Device1")
+        device.Connect()
+        return True
+    except dbus.exceptions.DBusException:
+        log.exception("Failed to check connection state")
+        return False
+
+
+def bt_disconnect(address):
+    try:
+        path = _dbus_find_device(address)
+        if path is None:
+            return False
+
+        system = dbus.SystemBus()
+        device = dbus.Interface(system.get_object("org.bluez", path),
+                                "org.bluez.Device1")
+        device.Disconnect()
+        return True
+    except dbus.exceptions.DBusException:
+        log.exception("Failed to check connection state")
+        return False
+
+
+def _dbus_find_device(address):
+    try:
+        system = dbus.SystemBus()
+        bluez = dbus.Interface(system.get_object("org.bluez", "/"),
+                               "org.freedesktop.DBus.ObjectManager")
+
+        all_objects = bluez.GetManagedObjects()
+
+        for path in all_objects:
+            if "org.bluez.Device1" in all_objects[path]:
+                device_props = dbus.Interface(system.get_object("org.bluez", path),
+                                              "org.freedesktop.DBus.Properties")
+                props = _dbus_to_python(device_props.GetAll("org.bluez.Device1"))
+                if props.get("Address", "") == address:
+                    return path
+    except dbus.exceptions.DBusException:
+        return None
 
 def bt_list_devices():
     scan_results = []

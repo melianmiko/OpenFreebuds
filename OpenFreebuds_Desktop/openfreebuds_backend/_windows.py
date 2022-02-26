@@ -40,6 +40,14 @@ def bt_is_connected(address):
     return asyncio.run(_is_device_connected(address))
 
 
+def bt_connect(address):
+    pass
+
+
+def bt_disconnect(address):
+    pass
+
+
 def bt_device_exists(address):
     devices = bt_list_devices()
 

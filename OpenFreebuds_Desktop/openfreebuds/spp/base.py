@@ -1,6 +1,7 @@
 import logging
 import socket
 import threading
+import time
 
 from openfreebuds import protocol_utils, event_bus
 from openfreebuds.events import EVENT_SPP_CLOSED, EVENT_SPP_RECV, EVENT_DEVICE_PROP_CHANGED
@@ -56,6 +57,18 @@ class BaseSPPDevice:
         except (ConnectionResetError, ConnectionRefusedError, OSError):
             log.exception("Can't create socket connection")
             self.close()
+            return False
+
+    def request_interaction(self):
+        try:
+            self.socket = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM,
+                                        socket.BTPROTO_RFCOMM)
+            self.socket.connect((self.address, port))
+            time.sleep(1)
+
+            self.socket.close()
+            return True
+        except (ConnectionResetError, ConnectionRefusedError, OSError):
             return False
 
     def close(self, lock=False):

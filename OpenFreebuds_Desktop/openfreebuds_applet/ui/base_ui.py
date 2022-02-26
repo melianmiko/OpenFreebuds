@@ -24,6 +24,7 @@ def get_quiting_menu():
 
 
 def get_header_menu_part(applet):
+    # Build device submenu
     device_items = [
         MenuItem(t("submenu_device_info"),
                  action=lambda: show_device_info(applet)),
@@ -31,9 +32,18 @@ def get_header_menu_part(applet):
                  action=applet.drop_device)
     ]
 
+    # Build connect/disconnect action
+    if applet.manager.state == applet.manager.STATE_CONNECTED:
+        action_connection_mgmt = MenuItem(t("action_disconnect"),
+                                          action=applet.force_disconnect)
+    else:
+        action_connection_mgmt = MenuItem(t("action_connect"),
+                                          action=applet.force_connect)
+
     return [
         MenuItem(applet.settings.device_name,
                  action=Menu(*device_items)),
+        action_connection_mgmt,
         Menu.SEPARATOR
     ]
 

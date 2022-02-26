@@ -32,6 +32,7 @@ class FreebudsManager:
         self.safe_run_wrapper = None
 
         self.started = False
+        self.paused = False
         self.state = self.STATE_NO_DEV
 
         self.scan_results = []
@@ -101,6 +102,11 @@ class FreebudsManager:
             self.started = False
 
         while self.started:
+            if self.paused:
+                log.debug("Manager thread paused")
+                time.sleep(self.MAINLOOP_TIMEOUT)
+                continue
+
             # If offline, update state and wait
             if not openfreebuds_backend.bt_is_connected(self.address):
                 self.set_state(self.STATE_OFFLINE)

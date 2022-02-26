@@ -5,6 +5,7 @@ import openfreebuds.manager
 import openfreebuds_backend
 from openfreebuds import event_bus
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE_PROP_CHANGED, EVENT_MANAGER_STATE_CHANGED
+from openfreebuds.spp.device import SPPDevice
 from openfreebuds_applet import tools, settings, icons, tool_server, tool_hotkeys
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.ui import base_ui, device_menu, device_scan_menu, device_offline_menu
@@ -37,6 +38,46 @@ class FreebudsApplet:
         self.settings.write()
 
         self.manager.unset_device(lock=False)
+
+    # noinspection PyBroadException
+    def force_connect(self):
+        if self.manager.paused:
+            openfreebuds_backend.show_message(t("error_in_work"), "Openfreebuds", is_error=True)
+            return
+
+        tools.run_thread_safe(self._do_force_connect, "ForceConnect", False)
+
+    def _do_force_connect(self):
+        self.manager.paused = True
+
+        log.debug("Trying to force connect device...")
+        spp = SPPDevice(self.settings.address)
+        if not spp.request_interaction():
+            log.debug("Can't interact via SPP, try to connect anyway...")
+
+        if not openfreebuds_backend.bt_connect(self.settings.address):
+            openfreebuds_backend.show_message(t("error_force_action_fail"), is_error=True)
+
+        log.debug("Finish force connecting")
+        self.manager.paused = False
+
+    # noinspection PyBroadException
+    def force_disconnect(self):
+        if self.manager.paused:
+            openfreebuds_backend.show_message(t("error_in_work"), "Openfreebuds", is_error=True)
+            return
+
+        tools.run_thread_safe(self._do_force_disconnect, "ForceDisconnect", False)
+
+    def _do_force_disconnect(self):
+        self.manager.paused = True
+        log.debug("Trying to force disconnect device...")
+
+        if not openfreebuds_backend.bt_disconnect(self.settings.address):
+            openfreebuds_backend.show_message(t("error_force_action_fail"), is_error=True)
+
+        log.debug("Finish force disconnecting")
+        self.manager.paused = False
 
     def start(self):
         tool_hotkeys.start(self)
