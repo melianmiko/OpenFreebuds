@@ -1,25 +1,30 @@
 import ctypes
 import logging
 import asyncio
+import os.path
+import subprocess
+import webbrowser
+
 import pystray._win32
 import pystray._base
 import tkinter.simpledialog
 
-# noinspection PyUnresolvedReferences,PyPackageRequirements
 from winsdk.windows.devices.enumeration import DeviceInformation, DeviceInformationKind
-# noinspection PyUnresolvedReferences,PyPackageRequirements
 from winsdk.windows.devices.bluetooth import BluetoothDevice
-# noinspection PyUnresolvedReferences,PyPackageRequirements
 from winsdk.windows.networking import HostName
-# noinspection PyUnresolvedReferences,PyPackageRequirements
 from winsdk.windows.ui.viewmanagement import UISettings, UIColorType
+
+import openfreebuds_backend
+from openfreebuds_applet.l18n import t
+
+extra_tools_dir = 'C:\\Program Files (x86)\\Bluetooth Command Line Tools\\bin'
+extra_tools_url = "https://bluetoothinstaller.com/bluetooth-command-line-tools/BluetoothCLTools-1.2.0.56.exe"
 
 # Yes, this isn't good practise, but this reduces count
 # of imported package and force set backend to app indicator
 Menu = pystray._base.Menu
 MenuItem = pystray._base.MenuItem
 TrayIcon = pystray._win32.Icon
-
 
 UI_RESULT_NO = 6
 UI_RESULT_YES = 7
@@ -41,11 +46,25 @@ def bt_is_connected(address):
 
 
 def bt_connect(address):
-    pass
+    if not _prepare_tools():
+        return False
+
+    base_args = [extra_tools_dir + "\\btcom.exe",  "-b", "({})".format(address)]
+
+    subprocess.check_output(base_args + ["-c", "-s111e"])
+    subprocess.check_output(base_args + ["-c", "-s110b"])
+    return True
 
 
 def bt_disconnect(address):
-    pass
+    if not _prepare_tools():
+        return False
+
+    base_args = [extra_tools_dir + "\\btcom.exe",  "-b", "({})".format(address)]
+
+    subprocess.check_output(base_args + ["-r", "-s111e"])
+    subprocess.check_output(base_args + ["-r", "-s110b"])
+    return True
 
 
 def bt_device_exists(address):
@@ -84,6 +103,17 @@ def is_dark_theme():
     color_type = UIColorType.BACKGROUND
     color_value = theme.get_color_value(color_type)
     return color_value.r == 0
+
+
+def _prepare_tools():
+    if os.path.isdir(extra_tools_dir):
+        return True
+
+    response = openfreebuds_backend.ask_question(t("win_tools_message"), "Openfreebuds")
+    if response:
+        webbrowser.open(extra_tools_url)
+
+    return response
 
 
 async def _list_paired():
