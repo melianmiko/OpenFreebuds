@@ -48,4 +48,4 @@ def setup_logging(debug):
                             filename=logfile)
 
 
-main()
+tools.run_safe(main, "MainThread", True)

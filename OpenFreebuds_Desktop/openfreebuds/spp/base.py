@@ -31,6 +31,7 @@ class BaseSPPDevice:
         self.address = address
         self.closed = False
         self.socket = None
+        self.safe_run_wrapper = None
 
         self._properties = {}
 
@@ -43,7 +44,12 @@ class BaseSPPDevice:
                                         socket.BTPROTO_RFCOMM)
             self.socket.connect((self.address, port))
 
-            threading.Thread(target=self._mainloop).start()
+            if self.safe_run_wrapper is None:
+                threading.Thread(target=self._mainloop).start()
+            else:
+                log.debug("Starting via safe wrapper")
+                self.safe_run_wrapper(self._mainloop, "SPPDevice", False)
+
             self.on_init()
 
             return True

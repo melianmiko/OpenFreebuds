@@ -1,12 +1,17 @@
 import datetime
 import hashlib
+import logging
 import os
 import pathlib
 import platform
 import subprocess
 import sys
+import threading
+import traceback
 
 import psutil as psutil
+
+import openfreebuds_backend
 
 
 def get_version():
@@ -115,3 +120,30 @@ def get_log_filename():
     path = get_app_storage_dir()
     time_tag = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M")
     return str(path / (time_tag + ".log"))
+
+
+# noinspection PyBroadException,PyUnresolvedReferences
+def run_safe(f, display_name, critical, args=None):
+    message = "An unhandled exception was caught in thread {}.\n\n{}"
+    if critical:
+        message += "\nThis exception is critical. App will be closed."
+    if args is None:
+        args = []
+
+    try:
+        f(*args)
+    except Exception:
+        exc_text = traceback.format_exc()
+        logging.getLogger("RunSafe").exception("Action {} failed.".format(display_name))
+        openfreebuds_backend.show_message(message.format(display_name, exc_text),
+                                          window_title="Openfreebuds ERROR")
+
+        if critical:
+            os._exit(99)
+
+
+def run_thread_safe(f, display_name, critical):
+    t = threading.Thread(target=run_safe, args=(f, display_name, critical))
+    t.start()
+
+    return t

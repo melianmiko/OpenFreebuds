@@ -93,13 +93,16 @@ def bt_list_devices():
 
 
 # noinspection PyArgumentList
-def show_message(message, window_title=""):
+def show_message(message, window_title="", is_error=False):
     import gi
     gi.require_version("Gtk", "3.0")
     from gi.repository import Gtk
 
-    msg = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                            Gtk.ButtonsType.OK, window_title)
+    msg_type = Gtk.MessageType.INFO
+    if is_error:
+        msg_type = Gtk.MessageType.ERROR
+
+    msg = Gtk.MessageDialog(None, 0, msg_type, Gtk.ButtonsType.OK, window_title)
     msg.format_secondary_text(message)
     msg.run()
     msg.destroy()

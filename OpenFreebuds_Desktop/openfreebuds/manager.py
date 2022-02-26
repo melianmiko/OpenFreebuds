@@ -29,6 +29,7 @@ class FreebudsManager:
     def __init__(self):
         self.device = None
         self.address = None
+        self.safe_run_wrapper = None
 
         self.started = False
         self.state = self.STATE_NO_DEV
@@ -40,7 +41,11 @@ class FreebudsManager:
             self.unset_device()
 
         self.address = address
-        threading.Thread(target=self._mainloop).start()
+        if self.safe_run_wrapper is None:
+            threading.Thread(target=self._mainloop).start()
+        else:
+            log.debug("Running mainloop via safe wrapper")
+            self.safe_run_wrapper(self._mainloop, "ManagerThread", False)
 
     def unset_device(self, lock=True):
         if not self.started:
@@ -108,6 +113,7 @@ class FreebudsManager:
                 log.info("Trying to create SPP device and connect...")
                 self.set_state(self.STATE_WAIT)
                 self.device = SPPDevice(self.address)
+                self.device.safe_run_wrapper = self.safe_run_wrapper
                 status = self.device.connect()
 
                 if not status:

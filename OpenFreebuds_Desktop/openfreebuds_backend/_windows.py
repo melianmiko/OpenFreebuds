@@ -54,8 +54,12 @@ def bt_list_devices():
     return asyncio.run(_list_paired())
 
 
-def show_message(message, window_title=""):
-    ctypes.windll.user32.MessageBoxW(None, message, window_title, 0)
+def show_message(message, window_title="", is_error=False):
+    msg_type = 0
+    if is_error:
+        msg_type = 16
+
+    ctypes.windll.user32.MessageBoxW(None, message, window_title, msg_type)
 
 
 def ask_question(message, window_title=""):

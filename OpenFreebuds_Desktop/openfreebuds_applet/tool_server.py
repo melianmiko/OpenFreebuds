@@ -88,7 +88,7 @@ def start(applet):
         return
 
     httpd = HTTPServer(("localhost", Config.port), AppHandler)
-    threading.Thread(target=httpd.serve_forever).start()
+    tools.run_thread_safe(httpd.serve_forever, "HTTPServer", False)
     log.info("Running webserver for localhost, port is " + str(Config.port))
 
 

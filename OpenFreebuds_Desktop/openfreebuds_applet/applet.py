@@ -1,6 +1,5 @@
 import logging
 import os
-import threading
 
 import openfreebuds.manager
 import openfreebuds_backend
@@ -24,6 +23,8 @@ class FreebudsApplet:
         icons.set_theme(self.settings.theme)
 
         self.manager = openfreebuds.manager.create()
+        self.manager.safe_run_wrapper = tools.run_thread_safe
+
         self._tray = openfreebuds_backend.TrayIcon(name="OpenFreebuds",
                                                    title="OpenFreebuds",
                                                    icon=icons.get_icon_offline(),
@@ -41,7 +42,8 @@ class FreebudsApplet:
         tool_hotkeys.start(self)
         tool_server.start(self)
 
-        threading.Thread(target=self._mainloop).start()
+        tools.run_thread_safe(self._ui_update_loop, "Applet", True)
+
         self._tray.run()
 
     def exit(self):
@@ -94,7 +96,7 @@ class FreebudsApplet:
 
             log.debug("Menu updated, hash=" + items_hash)
 
-    def _mainloop(self):
+    def _ui_update_loop(self):
         self.started = True
         self.allow_ui_update = True
 
