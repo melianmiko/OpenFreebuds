@@ -1,3 +1,4 @@
+import glob
 import logging
 import os.path
 import platform
@@ -81,6 +82,11 @@ def show_update_message():
 
 
 def is_repo_installed():
+    ppa = glob.glob("/etc/apt/sources.list.d/melianmiko-ubuntu-software-*")
+
+    if len(ppa) > 0:
+        return True
+
     return False
 
 
