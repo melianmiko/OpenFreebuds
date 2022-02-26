@@ -6,7 +6,7 @@ from openfreebuds_backend import MenuItem, Menu
 
 from openfreebuds import event_bus
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
-from openfreebuds_applet import tools, tool_server, tool_hotkeys
+from openfreebuds_applet import tools, tool_server, tool_actions
 from openfreebuds_applet.l18n import t, setup_language, setup_auto
 
 
@@ -113,7 +113,7 @@ def toggle_flask(applet):
 def add_hotkeys_settings(applet, items):
     settings = applet.settings
     config = settings.hotkeys_config
-    all_hotkeys = tool_hotkeys.get_all_hotkeys()
+    all_actions = tool_actions.get_action_names()
 
     hotkey_items = [
         MenuItem(t("prop_enabled"),
@@ -122,11 +122,11 @@ def add_hotkeys_settings(applet, items):
         Menu.SEPARATOR
     ]
 
-    for a in all_hotkeys:
+    for a in all_actions:
         if a in config:
-            add_hotkey_item(hotkey_items, a, config[a], applet)
+            add_hotkey_item(hotkey_items, applet, a, all_actions[a], config[a])
         else:
-            add_hotkey_item(hotkey_items, a, "", applet)
+            add_hotkey_item(hotkey_items, applet, a, all_actions[a], "")
 
     hotkey_items += [
         Menu.SEPARATOR,
@@ -136,8 +136,7 @@ def add_hotkeys_settings(applet, items):
     items.append(MenuItem(t("submenu_hotkeys"), Menu(*hotkey_items)))
 
 
-def add_hotkey_item(items, basename, current_value, applet):
-    pretty_name = t("hotkey_name_" + basename)
+def add_hotkey_item(items, applet, basename, pretty_name, current_value):
     if current_value != "":
         value = "Ctrl-Alt-" + current_value.upper()
     else:
