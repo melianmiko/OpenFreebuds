@@ -66,5 +66,7 @@ def setup_logging(debug):
         print("Log redirected to file " + logfile + ". Set --verbose flag to see logs here.")
         logging.basicConfig(level=logging.DEBUG, format=log_format, filename=logfile)
 
+    logging.getLogger("asyncio").disabled = True
+
 
 tools.run_safe(main, "MainThread", True)
