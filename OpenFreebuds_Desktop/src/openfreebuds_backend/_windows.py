@@ -8,6 +8,8 @@ import sys
 import winreg
 import tkinter.simpledialog
 
+from openfreebuds import event_bus
+from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds_backend.utils import windows_utils
 
 UI_RESULT_NO = 7
@@ -65,8 +67,9 @@ def set_run_at_boot(val):
             else:
                 winreg.DeleteValue(key, "openfreebuds")
         except OSError:
-            return False
-    return True
+            return
+
+    event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
 
 def bt_is_connected(address):
