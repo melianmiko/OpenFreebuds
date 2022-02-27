@@ -6,7 +6,7 @@ WINDOWS_PYINSTALLER_ARGS = {
     "name": "openfreebuds",
     "windowed": True,
     "add-data": [
-        "openfreebuds-assets:openfreebuds-assets"
+        "openfreebuds-assets;openfreebuds-assets"
     ]
 }
 
@@ -40,7 +40,7 @@ def mk_args(args):
         elif isinstance(value, list):
             for b in value:
                 out.append("--" + prop)
-                out.append(b)
+                out.append(f'"{b}"')
         else:
             out.append("--" + prop + "=" + str(value))
     return out
