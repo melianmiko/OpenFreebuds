@@ -5,6 +5,8 @@ import subprocess
 
 import dbus
 
+from openfreebuds import event_bus
+from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds_backend.utils import linux_utils
 from openfreebuds_applet.l18n import t
 
@@ -35,6 +37,28 @@ def bind_hotkeys(keys):
         key_string = "<Ctrl><Alt>" + a
         Keybinder.bind(key_string, keys[a])
         log.debug("Added hotkey " + key_string)
+
+
+def is_run_at_boot():
+    return os.path.isfile(linux_utils.get_autostart_file_path())
+
+
+def set_run_at_boot(val):
+    path = linux_utils.get_autostart_file_path()
+    data = linux_utils.mk_autostart_file_content()
+
+    if val:
+        # Install
+        with open(path, "w") as f:
+            f.write(data)
+        log.debug("Created autostart file: " + path)
+    else:
+        # Remove
+        if os.path.isfile(path):
+            os.unlink(path)
+        log.debug("Removed autostart file: " + path)
+        
+    event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
 
 def bt_is_connected(address):

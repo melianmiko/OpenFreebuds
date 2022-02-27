@@ -1,4 +1,7 @@
 import logging
+import os
+import pathlib
+import sys
 
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
@@ -6,6 +9,24 @@ from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
 
 log = logging.getLogger("LinuxBackend")
+
+
+def get_autostart_file_path():
+    autostart_dir = pathlib.Path.home() / ".config/autostart"
+    if not autostart_dir.exists():
+        autostart_dir.mkdir()
+    return str(autostart_dir / "openfreebuds.desktop")
+
+
+def mk_autostart_file_content():
+    return (f"[Desktop Entry]\n"
+            f"Name=Openfreebuds\n"
+            f"Categories=GNOME;GTK;Utility;\n"
+            f"Exec=/usr/bin/openfreebuds\n"
+            f"Icon=/opt/openfreebuds/openfreebuds_assets/icon.png\n"
+            f"Terminal=false\n"
+            f"Type=Application\n"
+            f"X-GNOME-Autostart-enabled=true\n")
 
 
 def dbus_list_bt_devices():

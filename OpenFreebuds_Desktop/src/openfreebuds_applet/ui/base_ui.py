@@ -64,6 +64,7 @@ def get_app_menu_part(applet):
         Menu.SEPARATOR
     ]
 
+    add_startup_settings(applet, items)
     add_theme_select(applet, items)
     add_language_select(applet, items)
     items.append(Menu.SEPARATOR)
@@ -109,11 +110,31 @@ def toggle_hotkeys(applet):
     event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
 
+def toggle_show_update_dialog(applet):
+    applet.settings.enable_update_dialog = not applet.settings.enable_update_dialog
+    applet.settings.write()
+
+    event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
+
+
 def toggle_flask(applet):
     applet.settings.enable_server = not applet.settings.enable_server
     applet.settings.write()
 
     event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
+
+
+def add_startup_settings(applet, items):
+    run_at_boot = openfreebuds_backend.is_run_at_boot()
+    show_update_dialog = applet.settings.enable_update_dialog
+
+    items.append(MenuItem(t("option_show_update_dialog"),
+                          action=lambda: toggle_show_update_dialog(applet),
+                          checked=lambda _: show_update_dialog))
+
+    items.append(MenuItem(t("option_run_at_boot"),
+                          action=lambda: openfreebuds_backend.set_run_at_boot(not run_at_boot),
+                          checked=lambda _: run_at_boot))
 
 
 def add_hotkeys_settings(applet, items):
