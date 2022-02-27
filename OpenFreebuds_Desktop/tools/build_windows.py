@@ -42,7 +42,7 @@ def mk_args(args):
         elif isinstance(value, list):
             for b in value:
                 out.append("--" + prop)
-                out.append(f'"{b}"')
+                out.append(b)
         else:
             out.append("--" + prop + "=" + str(value))
     return out
