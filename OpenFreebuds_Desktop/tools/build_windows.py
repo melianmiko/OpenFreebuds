@@ -4,6 +4,7 @@ import subprocess
 
 WINDOWS_PYINSTALLER_ARGS = {
     "name": "openfreebuds",
+    "icon": "..\\src\\openfreebuds_assets\\icon.ico",
     "windowed": True,
     "add-data": [
         "..\\src\\openfreebuds_assets;openfreebuds_assets"
