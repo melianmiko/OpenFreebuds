@@ -4,15 +4,20 @@ PYSTRAY_VERSION="0.19.2"
 
 all: builddir/openfreebuds/pystray
 	cp -r src/* builddir/openfreebuds
+	find builddir/openfreebuds -type d -name "__pycache__" -exec rm -rf {} +
 
 builddir/openfreebuds/pystray:
 	mkdir -p builddir/openfreebuds/openfreebuds
 	pip install --target=builddir/openfreebuds --no-deps pystray==${PYSTRAY_VERSION}
 
 install:
-	rm -rf /opt/openfreebuds
+	rm -rf ${DESTDIR}/opt/openfreebuds
+	mkdir -p ${DESTDIR}/opt
 	cp -r builddir/openfreebuds ${DESTDIR}/opt/openfreebuds
+	mkdir -p ${DESTDIR}/usr/bin
+	mkdir -p ${DESTDIR}/usr/share/applications
 	cp tools/linux_entrypoint.py ${DESTDIR}/usr/bin/openfreebuds
+	cp tools/openfreebuds.desktop ${DESTDIR}/usr/share/applications
 
 start:
 	# Start app without compilation

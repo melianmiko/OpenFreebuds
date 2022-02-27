@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.1
+Type=Application
+Name=Openfreebuds
+Comment=HUAWEI Freebuds manager
+Icon=/opt/openfreebuds/openfreebuds_assets/icon.png
+Exec=/usr/bin/openfreebuds
+Actions=
+Categories=Utility;
