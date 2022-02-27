@@ -14,6 +14,8 @@ WINDOWS_PYINSTALLER_ARGS = {
 def make_win32():
     base_wd = os.getcwd()
     args = mk_args(WINDOWS_PYINSTALLER_ARGS)
+    path = base_wd + "\\src\\ofb_launcher.py"
+
     os.environ["PYTHONPATH"] = base_wd + "/src"
 
     # Go to builddir
@@ -24,7 +26,7 @@ def make_win32():
     os.chdir(os.getcwd() + "/builddir")
 
     # Build command and run
-    command = ["pyinstaller"] + args + [os.getcwd() + "\\src\\ofb_launcher.py"]
+    command = ["pyinstaller"] + args + [path]
     print("-- starting", command)
     subprocess.Popen(command).wait()
 
