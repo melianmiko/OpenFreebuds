@@ -2,9 +2,6 @@ import datetime
 import hashlib
 import logging
 import os
-import pathlib
-import platform
-import subprocess
 import threading
 import traceback
 
@@ -45,8 +42,12 @@ def is_running():
 
 def _get_process_name_part(pr):
     if "python" in pr.name():
-        cmd = pr.cmdline()
-        return cmd[1]
+        try:
+            cmd = pr.cmdline()
+            if len(cmd) > 1:
+                return cmd[1]
+        except psutil.Error:
+            pass
 
     return pr.name()
 
@@ -67,28 +68,13 @@ def get_assets_path():
 
 def open_app_storage_dir():
     path = str(get_app_storage_dir())
-
-    if platform.system() == "Windows":
-        os.startfile(path)
-    elif platform.system() == "Linux":
-        subprocess.Popen(["xdg-open", path])
-    else:
-        raise Exception("Unknown platform name")
+    openfreebuds_backend.open_in_file_manager(path)
 
 
 def get_app_storage_dir():
-    home = pathlib.Path.home()
-
-    if platform.system() == "Windows":
-        path = home / "AppData/Roaming/openfreebuds"
-    elif platform.system() == "Linux":
-        path = home / ".config/openfreebuds"
-    else:
-        raise Exception("Unknown platform name")
-
+    path = openfreebuds_backend.get_app_storage_path() / "openfreebuds"
     if not path.is_dir():
         path.mkdir()
-
     return path
 
 

@@ -2,7 +2,7 @@ import logging
 import os
 
 import openfreebuds_backend
-from openfreebuds_backend import MenuItem, Menu
+from pystray import MenuItem, Menu
 
 from openfreebuds import event_bus
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED

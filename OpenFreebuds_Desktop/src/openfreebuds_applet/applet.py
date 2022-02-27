@@ -1,6 +1,8 @@
 import logging
 import os
 
+import pystray
+
 import openfreebuds.manager
 import openfreebuds_backend
 from openfreebuds import event_bus
@@ -26,10 +28,10 @@ class FreebudsApplet:
         self.manager = openfreebuds.manager.create()
         self.manager.safe_run_wrapper = tools.run_thread_safe
 
-        self._tray = openfreebuds_backend.TrayIcon(name="OpenFreebuds",
-                                                   title="OpenFreebuds",
-                                                   icon=icons.get_icon_offline(),
-                                                   menu=openfreebuds_backend.Menu())
+        self._tray = pystray.Icon(name="OpenFreebuds",
+                                  title="OpenFreebuds",
+                                  icon=icons.get_icon_offline(),
+                                  menu=pystray.Menu())
 
     def drop_device(self):
         self.settings.address = ""
@@ -99,7 +101,7 @@ class FreebudsApplet:
     def exit(self):
         log.info("Exiting this app...")
         items = base_ui.get_quiting_menu()
-        menu = openfreebuds_backend.Menu(*items)
+        menu = pystray.Menu(*items)
         self._tray.menu = menu
 
         self.allow_ui_update = False
@@ -139,7 +141,7 @@ class FreebudsApplet:
         items_hash = tools.items_hash_string(items)
 
         if self.current_menu_hash != items_hash:
-            menu = openfreebuds_backend.Menu(*items)
+            menu = pystray.Menu(*items)
 
             self.current_menu_hash = items_hash
             self._tray.menu = menu

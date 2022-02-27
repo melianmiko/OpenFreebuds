@@ -1,7 +1,5 @@
 import glob
 import logging
-import os.path
-import platform
 import urllib.request
 import webbrowser
 from configparser import ConfigParser
@@ -92,12 +90,11 @@ def is_repo_installed():
 
 def get_platform_data():
     d = Data.release_data
-    if platform.system() == "Windows" and "windows" in d:
-        return d["windows"]
-    elif os.path.isfile("/usr/bin/dpkg") and "debian" in d:
-        return d["debian"]
-    elif platform.system() == "Linux" and "linux" in d:
-        return d["linux"]
+    sys_ids = openfreebuds_backend.get_system_id()
+
+    for a in sys_ids:
+        if a in d:
+            return d[a]
 
     return None
 

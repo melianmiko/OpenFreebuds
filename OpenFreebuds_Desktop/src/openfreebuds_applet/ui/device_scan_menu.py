@@ -1,11 +1,13 @@
 import logging
 
+from pystray import Menu, MenuItem
+
 import openfreebuds_backend
 from openfreebuds import event_bus, device_names
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds_applet import icons
 from openfreebuds_applet.l18n import t
-from openfreebuds_backend import Menu, MenuItem, bt_list_devices
+from openfreebuds_backend import bt_list_devices
 
 log = logging.getLogger("DeviceScanUI")
 devices = bt_list_devices()

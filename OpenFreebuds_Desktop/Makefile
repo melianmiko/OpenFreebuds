@@ -16,4 +16,4 @@ install:
 
 start:
 	# Start app without compilation
-	PYTHONPATH=""${PWD}/src"" python3 src/main.py --verbose
+	PYTHONPATH=""${PWD}/src"" python3 src/ofb_launcher.py --verbose

@@ -1,25 +1,25 @@
 import logging
 import os
+import pathlib
+import subprocess
 
 import dbus
-import pystray._appindicator
-import pystray._base
-from dbus.mainloop.glib import DBusGMainLoop
 
+from openfreebuds_backend.utils import linux_utils
 from openfreebuds_applet.l18n import t
-
-DBusGMainLoop(set_as_default=True)
-
-# Yes, this isn't good practise, but this reduces count
-# of imported package and force set backend to app indicator
-Menu = pystray._base.Menu
-MenuItem = pystray._base.MenuItem
-TrayIcon = pystray._appindicator.Icon
 
 UI_RESULT_YES = -8
 UI_RESULT_NO = -9
 
 log = logging.getLogger("LinuxBackend")
+
+
+def get_app_storage_path():
+    return pathlib.Path.home() / ".config"
+
+
+def open_in_file_manager(path):
+    subprocess.Popen(["xdg-open", path])
 
 
 def bind_hotkeys(keys):
@@ -39,14 +39,14 @@ def bind_hotkeys(keys):
 
 def bt_is_connected(address):
     try:
-        path = _dbus_find_device(address)
+        path = linux_utils.dbus_find_bt_device(address)
         if path is None:
             return None
 
         system = dbus.SystemBus()
         device = dbus.Interface(system.get_object("org.bluez", path),
                                 "org.freedesktop.DBus.Properties")
-        props = _dbus_to_python(device.GetAll("org.bluez.Device1"))
+        props = linux_utils.dbus_to_python(device.GetAll("org.bluez.Device1"))
         return props.get("Connected", False)
     except dbus.exceptions.DBusException:
         log.exception("Failed to check connection state")
@@ -60,7 +60,7 @@ def bt_device_exists(address):
 
 def bt_connect(address):
     try:
-        path = _dbus_find_device(address)
+        path = linux_utils.dbus_find_bt_device(address)
         if path is None:
             return False
 
@@ -76,7 +76,7 @@ def bt_connect(address):
 
 def bt_disconnect(address):
     try:
-        path = _dbus_find_device(address)
+        path = linux_utils.dbus_find_bt_device(address)
         if path is None:
             return False
 
@@ -90,52 +90,15 @@ def bt_disconnect(address):
         return False
 
 
-def _dbus_find_device(address):
-    try:
-        system = dbus.SystemBus()
-        bluez = dbus.Interface(system.get_object("org.bluez", "/"),
-                               "org.freedesktop.DBus.ObjectManager")
-
-        all_objects = bluez.GetManagedObjects()
-
-        for path in all_objects:
-            if "org.bluez.Device1" in all_objects[path]:
-                device_props = dbus.Interface(system.get_object("org.bluez", path),
-                                              "org.freedesktop.DBus.Properties")
-                props = _dbus_to_python(device_props.GetAll("org.bluez.Device1"))
-                if props.get("Address", "") == address:
-                    return path
-    except dbus.exceptions.DBusException:
-        return None
-
 def bt_list_devices():
-    scan_results = []
+    return linux_utils.dbus_list_bt_devices()
 
-    try:
-        system = dbus.SystemBus()
-        bluez = dbus.Interface(system.get_object("org.bluez", "/"),
-                               "org.freedesktop.DBus.ObjectManager")
 
-        all_objects = bluez.GetManagedObjects()
-
-        for path in all_objects:
-            if "org.bluez.Device1" in all_objects[path]:
-                device = dbus.Interface(system.get_object("org.bluez", path),
-                                        "org.freedesktop.DBus.Properties")
-                props = _dbus_to_python(device.GetAll("org.bluez.Device1"))
-
-                if props.get("Name", "") == "":
-                    continue
-
-                scan_results.append({
-                    "name": props.get("Name", ""),
-                    "address": props.get("Address", "Unknown address"),
-                    "connected": props.get("Connected", False)
-                })
-    except dbus.exceptions.DBusException:
-        log.exception("Failed to list devices")
-
-    return scan_results
+def get_system_id():
+    if os.path.isfile("/usr/bin/dpkg"):
+        return ["debian", "linux"]
+    else:
+        return ["linux"]
 
 
 # noinspection PyArgumentList
@@ -201,28 +164,7 @@ def is_dark_theme():
     gi.require_version("Gtk", "3.0")
     from gi.repository import Gtk
 
-    settings = Gtk.Settings.get_default()
-    theme_name = settings.get_property("gtk-theme-name")
+    settings = Gtk.Settings()
+    defaults = settings.get_default()
+    theme_name = defaults.get_property("gtk-theme-name")
     return "Dark" in theme_name
-
-
-# From https://stackoverflow.com/questions/11486443/dbus-python-how-to-get-response-with-native-types
-def _dbus_to_python(data):
-    """convert dbus data types to python native data types"""
-    if isinstance(data, dbus.String):
-        data = str(data)
-    elif isinstance(data, dbus.Boolean):
-        data = bool(data)
-    elif isinstance(data, dbus.Int64):
-        data = int(data)
-    elif isinstance(data, dbus.Double):
-        data = float(data)
-    elif isinstance(data, dbus.Array):
-        data = [_dbus_to_python(value) for value in data]
-    elif isinstance(data, dbus.Dictionary):
-        new_data = dict()
-        for key in data.keys():
-            new_key = _dbus_to_python(key)
-            new_data[new_key] = _dbus_to_python(data[key])
-        data = new_data
-    return data

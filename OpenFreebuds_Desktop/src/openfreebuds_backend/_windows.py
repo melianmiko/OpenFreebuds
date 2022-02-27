@@ -1,35 +1,25 @@
+import asyncio
 import ctypes
 import logging
-import asyncio
-import os.path
+import os
+import pathlib
 import subprocess
-import webbrowser
-
-import pystray._win32
-import pystray._base
 import tkinter.simpledialog
 
-from winsdk.windows.devices.enumeration import DeviceInformation, DeviceInformationKind
-from winsdk.windows.devices.bluetooth import BluetoothDevice
-from winsdk.windows.networking import HostName
-from winsdk.windows.ui.viewmanagement import UISettings, UIColorType
-
-import openfreebuds_backend
-from openfreebuds_applet.l18n import t
-
-extra_tools_dir = 'C:\\Program Files (x86)\\Bluetooth Command Line Tools\\bin'
-extra_tools_url = "https://bluetoothinstaller.com/bluetooth-command-line-tools/BluetoothCLTools-1.2.0.56.exe"
-
-# Yes, this isn't good practise, but this reduces count
-# of imported package and force set backend to app indicator
-Menu = pystray._base.Menu
-MenuItem = pystray._base.MenuItem
-TrayIcon = pystray._win32.Icon
+from openfreebuds_backend.utils import windows_utils
 
 UI_RESULT_NO = 7
 UI_RESULT_YES = 6
 
 log = logging.getLogger("WindowsBackend")
+
+
+def get_app_storage_path():
+    return pathlib.Path.home() / "AppData/Roaming"
+
+
+def open_in_file_manager(path):
+    os.startfile(path)
 
 
 def bind_hotkeys(keys):
@@ -42,14 +32,14 @@ def bind_hotkeys(keys):
 
 
 def bt_is_connected(address):
-    return asyncio.run(_is_device_connected(address))
+    return asyncio.run(windows_utils.win_is_bt_device_connected(address))
 
 
 def bt_connect(address):
-    if not _prepare_tools():
+    if not windows_utils.tools_ready():
         return False
 
-    base_args = [extra_tools_dir + "\\btcom.exe",  "-b\"{}\"".format(address)]
+    base_args = [windows_utils.extra_tools_dir + "\\btcom.exe",  "-b\"{}\"".format(address)]
 
     try:
         subprocess.check_output(base_args + ["-r", "-s111e"])
@@ -57,21 +47,21 @@ def bt_connect(address):
         subprocess.check_output(base_args + ["-r", "-s110b"])
         subprocess.check_output(base_args + ["-c", "-s110b"])
         return True
-    except Exception:
+    except subprocess.CalledProcessError:
         return False
 
 
 def bt_disconnect(address):
-    if not _prepare_tools():
+    if not windows_utils.tools_ready():
         return False
 
-    base_args = [extra_tools_dir + "\\btcom.exe",  "-b\"{}\"".format(address)]
+    base_args = [windows_utils.extra_tools_dir + "\\btcom.exe",  "-b\"{}\"".format(address)]
 
     try:
         subprocess.check_output(base_args + ["-r", "-s111e"])
         subprocess.check_output(base_args + ["-r", "-s110b"])
         return True
-    except Exception:
+    except subprocess.CalledProcessError:
         return False
 
 
@@ -86,7 +76,11 @@ def bt_device_exists(address):
 
 
 def bt_list_devices():
-    return asyncio.run(_list_paired())
+    return asyncio.run(windows_utils.win_list_bt_devices())
+
+
+def get_system_id():
+    return ["windows"]
 
 
 def show_message(message, window_title="", is_error=False):
@@ -107,43 +101,4 @@ def ask_string(message, window_title="", current_value=""):
 
 
 def is_dark_theme():
-    theme = UISettings()
-    color_type = UIColorType.BACKGROUND
-    color_value = theme.get_color_value(color_type)
-    return color_value.r == 0
-
-
-def _prepare_tools():
-    if os.path.isdir(extra_tools_dir):
-        return True
-
-    response = openfreebuds_backend.ask_question(t("win_tools_message"), "Openfreebuds")
-    if response:
-        webbrowser.open(extra_tools_url)
-
-    return response
-
-
-async def _list_paired():
-    out = []
-
-    try:
-        selector = BluetoothDevice.get_device_selector_from_pairing_state(True)
-        devices = await DeviceInformation.find_all_async(selector, [], DeviceInformationKind.DEVICE)
-        for a in devices:
-            bt_device = await BluetoothDevice.from_id_async(a.id)
-            out.append({
-                "name": bt_device.name,
-                "address": bt_device.host_name.raw_name[1:-1],
-                "connected": bt_device.connection_status
-            })
-    except OSError:
-        logging.exception("got OSError when listing windows devices")
-
-    return out
-
-
-async def _is_device_connected(address):
-    host_name = HostName(address)
-    bt_device = await BluetoothDevice.from_host_name_async(host_name)
-    return bt_device.connection_status
+    return windows_utils.win_is_dark()
