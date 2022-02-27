@@ -27,6 +27,7 @@
   "mgr_state_3": "Connecting...",
   "mgr_state_4": "Connected",
   "mgr_state_5": "Failed to connect",
+  "mgr_state_6": "Waiting for OS operation...",
   "no_menu_error_info": "We can't create tray icon and/or menu on your OS. If you're using Linux, please check that libappindicator and other dependencies are installed.\n\nOpen OpenFreebuds webpage for more information?",
   "no_menu_error_title": "App won't work",
   "noise_mode_0": "Disable noise control",

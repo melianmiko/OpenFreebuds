@@ -25,6 +25,7 @@ class FreebudsManager:
     STATE_WAIT = 3
     STATE_CONNECTED = 4
     STATE_FAILED = 5
+    STATE_PAUSED = 6
 
     def __init__(self):
         self.device = None
@@ -105,6 +106,7 @@ class FreebudsManager:
             if self.paused:
                 log.debug("Manager thread paused")
                 time.sleep(self.MAINLOOP_TIMEOUT)
+                self.set_state(self.STATE_PAUSED)
                 continue
 
             # If offline, update state and wait

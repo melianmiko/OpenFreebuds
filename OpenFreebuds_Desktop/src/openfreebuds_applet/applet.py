@@ -30,7 +30,7 @@ class FreebudsApplet:
 
         self._tray = pystray.Icon(name="OpenFreebuds",
                                   title="OpenFreebuds",
-                                  icon=icons.get_icon_offline(),
+                                  icon=icons.generate_icon(1),
                                   menu=pystray.Menu())
 
     def drop_device(self):
@@ -119,16 +119,28 @@ class FreebudsApplet:
 
         event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
-    def set_tray_icon(self, icon, hashsum):
+    def update_icon(self):
         if not self.allow_ui_update:
             return
 
-        if self.current_icon_hash == hashsum:
+        mgr_state = self.manager.state
+        battery = 0
+        noise_mode = 0
+
+        if mgr_state == self.manager.STATE_CONNECTED:
+            dev = self.manager.device
+
+            battery_left = dev.get_property("battery_left", 0)
+            battery_right = dev.get_property("battery_right", 0)
+            noise_mode = dev.get_property("noise_mode", 0)
+            battery = min(battery_right, battery_left)
+
+        new_hash = icons.get_hash(mgr_state, battery, noise_mode)
+        if self.current_icon_hash == new_hash:
             return
 
-        log.debug("icon changed, new hash=" + hashsum)
-        self.current_icon_hash = hashsum
-        self._tray.icon = icon
+        self._tray.icon = icons.generate_icon(mgr_state, battery, noise_mode)
+        self.current_icon_hash = new_hash
 
     def set_menu_items(self, items, expand=False):
         if not self.allow_ui_update:
@@ -166,6 +178,7 @@ class FreebudsApplet:
                                               t("first_run_title"))
 
         while self.started:
+            self.update_icon()
             if self.manager.state == self.manager.STATE_NO_DEV:
                 device_scan_menu.process(self)
             elif self.manager.state == self.manager.STATE_CONNECTED:

@@ -2,9 +2,10 @@ import logging
 
 from PIL import Image, ImageDraw
 
+from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet import tools
 
-ICON_SIZE = (32, 32)
+ICON_SIZE = (64, 64)
 ASSETS_PATH = tools.get_assets_path()
 
 
@@ -14,9 +15,12 @@ def spawn_color_image(size, color):
 
 class BaseImages:
     # Icons
-    base = Image.open(ASSETS_PATH + "/base.png")
-    mode_1 = Image.open(ASSETS_PATH + "/mode_1.png")
-    mode_2 = Image.open(ASSETS_PATH + "/mode_2.png")
+    loading = Image.open(ASSETS_PATH + "/base_loading.png")
+    base = Image.open(ASSETS_PATH + "/base_headset.png")
+    mode_1 = Image.open(ASSETS_PATH + "/base_headset_1.png")
+    mode_2 = Image.open(ASSETS_PATH + "/base_headset_2.png")
+    overlay_error = Image.open(ASSETS_PATH + "/overlay_error.png")
+    overlay_setup = Image.open(ASSETS_PATH + "/overlay_setup.png")
 
     # Color presets
     transparent = Image.new("RGBA", ICON_SIZE, color="#00000000")
@@ -83,13 +87,44 @@ def combine_mask(mask, foreground=None, background=None):
     return out
 
 
-def get_icon_offline():
-    return combine_mask(BaseImages.base,
-                        foreground=BaseImages.theme_missing,
-                        background=BaseImages.transparent)
+def get_hash(state, battery=0, noise_mode=0):
+    if state == FreebudsManager.STATE_WAIT or state == FreebudsManager.STATE_PAUSED:
+        return "state_wait"
+    elif state == FreebudsManager.STATE_OFFLINE:
+        return "state_offline"
+    elif state == FreebudsManager.STATE_FAILED or state == FreebudsManager.STATE_DISCONNECTED:
+        return "state_fail"
+    elif state == FreebudsManager.STATE_NO_DEV:
+        return "state_no_dev"
+
+    return "connected_{}_{}".format(noise_mode, battery)
 
 
-def get_icon_device(battery, noise_mode):
+def generate_icon(state, battery=0, noise_mode=0):
+    if state == FreebudsManager.STATE_WAIT or state == FreebudsManager.STATE_PAUSED:
+        icon = combine_mask(BaseImages.loading,
+                            foreground=BaseImages.theme_full,
+                            background=BaseImages.transparent)
+        return icon
+    elif state == FreebudsManager.STATE_OFFLINE:
+        icon = combine_mask(BaseImages.base,
+                            foreground=BaseImages.theme_missing,
+                            background=BaseImages.transparent)
+        return icon
+    elif state == FreebudsManager.STATE_FAILED or state == FreebudsManager.STATE_DISCONNECTED:
+        icon = combine_mask(BaseImages.base,
+                            foreground=BaseImages.theme_missing,
+                            background=BaseImages.transparent)
+        icon.alpha_composite(BaseImages.overlay_error)
+        return icon
+    elif state == FreebudsManager.STATE_NO_DEV:
+        icon = combine_mask(BaseImages.base,
+                            foreground=BaseImages.theme_missing,
+                            background=BaseImages.transparent)
+        icon.alpha_composite(BaseImages.overlay_setup)
+        return icon
+
+    # Connected
     icon = BaseImages.base
     power_bg = combine_mask(spawn_power_bg_mask(battery / 100),
                             foreground=BaseImages.theme_full,
@@ -100,6 +135,8 @@ def get_icon_device(battery, noise_mode):
     elif noise_mode == 2:
         icon = BaseImages.mode_2
 
-    return combine_mask(icon,
-                        foreground=power_bg,
-                        background=BaseImages.transparent)
+    result = combine_mask(icon,
+                          foreground=power_bg,
+                          background=BaseImages.transparent)
+
+    return result
