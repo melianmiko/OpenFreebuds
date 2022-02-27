@@ -6,7 +6,7 @@ WINDOWS_PYINSTALLER_ARGS = {
     "name": "openfreebuds",
     "windowed": True,
     "add-data": [
-        "..\\openfreebuds-assets;openfreebuds-assets"
+        "..\\src\\openfreebuds-assets;openfreebuds-assets"
     ]
 }
 
