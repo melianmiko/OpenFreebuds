@@ -24,12 +24,18 @@ def make_win32():
         os.mkdir(os.getcwd() + "/builddir")
     if os.path.isdir("builddir/dist"):
         shutil.rmtree("builddir/dist")
-    os.chdir(os.getcwd() + "/builddir")
 
     # Build command and run
     command = ["pyinstaller"] + args + [path]
     print("-- starting", command)
+    os.chdir(base_wd + "/builddir")
     subprocess.Popen(command).wait()
+
+    # Run nsis
+    shutil.copy(base_wd + "/tools/installer.nsi", base_wd + "/builddir/dist/installer.nsi")
+    print("-- makensis...")
+    os.chdir(base_wd + "/builddir/dist")
+    subprocess.Popen(["makensis", "installer.nsi"]).wait()
 
     os.chdir(base_wd)
 

@@ -8,5 +8,5 @@ Homepage: https://github.com/melianmiko/OpenFreebuds
 
 Package: openfreebuds
 Architecture: all
-Depends: ${misc:Depends}, python3, python3-gi, python3-dbus, libgtk-3-0, libappindicator3-1, libkeybinder0, python3-psutil, python3-pil
+Depends: ${misc:Depends}, python3, python3-gi, python3-dbus, libgtk-3-0, python3-psutil, python3-pil, gir1.2-keybinder-3.0, gir1.2-appindicator3-0.1
 Description: HUAWEI Freebuds manager
