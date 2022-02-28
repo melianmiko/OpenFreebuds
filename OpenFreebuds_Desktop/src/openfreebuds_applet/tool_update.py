@@ -1,8 +1,8 @@
 import glob
+import json
 import logging
 import urllib.request
 import webbrowser
-from configparser import ConfigParser
 
 import openfreebuds_backend
 from openfreebuds import event_bus
@@ -10,7 +10,7 @@ from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds_applet import tools
 from openfreebuds_applet.l18n import t
 
-release_url = "https://st.melianmiko.ru/openfreebuds/release.ini"
+release_url = "https://st.melianmiko.ru/openfreebuds/release.json"
 log = logging.getLogger("UpdateChecker")
 
 
@@ -37,19 +37,17 @@ def _check_updates():
         log.debug("Can't get release info, skip update check...")
         return
 
-    release_data = ConfigParser()
-    release_data.read_string(release_info)
-
+    release_data = json.loads(release_info)
     Data.release_data = release_data
 
-    if release_data["release"]["version"] == current_version:
+    if release_data["version"] == current_version:
         return
     if get_platform_data() is None:
         return
 
-    log.debug("Has new version: " + release_data["release"]["version"])
+    log.debug("Has new version: " + release_data["version"])
 
-    Data.new_version = release_data["release"]["version"]
+    Data.new_version = release_data["version"]
     Data.has_update = True
 
     if Data.show_messages and not is_repo_installed():
@@ -59,13 +57,13 @@ def _check_updates():
 
 
 def show_update_message():
-    release = Data.release_data["release"]
+    release = Data.release_data
     platform_rel = get_platform_data()
 
-    msg_base = "{}{}\n\nURL: {}\nFile size: {}".format(release["title"],
-                                                       release["changelog"],
-                                                       platform_rel["url"],
-                                                       sizeof_fmt(int(platform_rel["size"])))
+    msg_base = "{}\n\n{}\n\nURL: {}\nFile size: {}".format(release["title"],
+                                                           "\n".join(release["changelog"]),
+                                                           platform_rel["url"],
+                                                           sizeof_fmt(int(platform_rel["size"])))
 
     log.debug(msg_base)
 
@@ -94,7 +92,7 @@ def get_platform_data():
 
     for a in sys_ids:
         if a in d:
-            return d[a]
+            return d[a][0]
 
     return None
 
