@@ -4,3 +4,5 @@
 !copyright
 !rules
 !.gitignore
+!source/options
+

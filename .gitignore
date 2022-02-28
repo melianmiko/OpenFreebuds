@@ -1,4 +1,7 @@
 openfreebuds_*.deb
 openfreebuds_*.buildinfo
 openfreebuds_*.changes
+openfreebuds_*.tar.gz
+openfreebuds_*.upload
+openfreebuds_*.dsc
 

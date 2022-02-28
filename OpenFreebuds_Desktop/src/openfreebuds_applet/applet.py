@@ -132,6 +132,10 @@ class FreebudsApplet:
 
             battery_left = dev.get_property("battery_left", 0)
             battery_right = dev.get_property("battery_right", 0)
+            if battery_left == 0:
+                battery_left = 100
+            if battery_right == 0:
+                battery_right = 100
             noise_mode = dev.get_property("noise_mode", 0)
             battery = min(battery_right, battery_left)
 
