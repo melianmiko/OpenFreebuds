@@ -6,6 +6,9 @@ WINDOWS_PYINSTALLER_ARGS = {
     "name": "openfreebuds",
     "icon": "..\\src\\openfreebuds_assets\\icon.ico",
     "windowed": True,
+    "exclude-module": [
+        "PIL.ImageTk"
+    ],
     "add-data": [
         "..\\src\\openfreebuds_assets;openfreebuds_assets"
     ]
@@ -35,7 +38,7 @@ def make_win32():
     shutil.copy(base_wd + "/tools/installer.nsi", base_wd + "/builddir/dist/installer.nsi")
     print("-- makensis...")
     os.chdir(base_wd + "/builddir/dist")
-    subprocess.Popen(["makensis", "installer.nsi"]).wait()
+    subprocess.Popen([r"C:\Program Files (x86)\NSIS\Bin\makensis", "installer.nsi"]).wait()
 
     os.chdir(base_wd)
 
