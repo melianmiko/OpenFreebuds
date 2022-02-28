@@ -69,11 +69,13 @@ def show_update_message():
 
     if is_repo_installed():
         openfreebuds_backend.show_message(t("update_message_auto").format(msg_base))
-        result = -1
     else:
-        result = openfreebuds_backend.ask_question(t("update_message").format(msg_base))
+        openfreebuds_backend.ask_question(t("update_message").format(msg_base), on_ui_result)
 
-    if result == openfreebuds_backend.UI_RESULT_YES:
+
+def on_ui_result(result):
+    platform_rel = get_platform_data()
+    if result:
         webbrowser.open(platform_rel["url"])
 
 

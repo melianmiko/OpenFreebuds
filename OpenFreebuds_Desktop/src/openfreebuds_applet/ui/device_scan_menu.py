@@ -45,9 +45,14 @@ def _create_device_menu_item(data, applet):
 
     def apply_device():
         if not device_names.is_supported(name):
-            ui_response = openfreebuds_backend.ask_question(t("question_not_supported"), "Openfreebuds")
-            if ui_response == openfreebuds_backend.UI_RESULT_NO:
-                return
+            openfreebuds_backend.ask_question(t("question_not_supported"), do_apply_device, "Openfreebuds")
+            return
+
+        do_apply_device(True)
+
+    def do_apply_device(result):
+        if not result:
+            return
 
         applet.manager.set_device(address)
 

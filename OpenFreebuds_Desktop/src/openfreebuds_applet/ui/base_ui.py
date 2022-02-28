@@ -174,9 +174,13 @@ def add_hotkey_item(items, applet, basename, pretty_name, current_value):
 
 
 def change_hotkey(basename, current_value, applet):
-    new_value = openfreebuds_backend.ask_string(t("change_hotkey_message"),
-                                                window_title=basename,
-                                                current_value=current_value)
+    openfreebuds_backend.ask_string(t("change_hotkey_message"),
+                                    callback=lambda v: do_change_button(v, applet, basename),
+                                    window_title=basename,
+                                    current_value=current_value)
+
+
+def do_change_button(new_value, applet, basename):
     if new_value is None:
         return
 

@@ -10,9 +10,6 @@ from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds_backend.utils import linux_utils
 from openfreebuds_applet.l18n import t
 
-UI_RESULT_YES = -8
-UI_RESULT_NO = -9
-
 log = logging.getLogger("LinuxBackend")
 
 
@@ -125,62 +122,21 @@ def get_system_id():
         return ["linux"]
 
 
-# noinspection PyArgumentList
 def show_message(message, window_title="", is_error=False):
-    import gi
-    gi.require_version("Gtk", "3.0")
-    from gi.repository import Gtk
-
-    msg_type = Gtk.MessageType.INFO
-    if is_error:
-        msg_type = Gtk.MessageType.ERROR
-
-    msg = Gtk.MessageDialog(None, 0, msg_type, Gtk.ButtonsType.OK, window_title)
-    msg.format_secondary_text(message)
-    msg.run()
-    msg.destroy()
+    from gi.repository import GLib
+    GLib.idle_add(lambda: linux_utils.gtk_show_message(message, window_title, is_error))
 
 
 # noinspection PyArgumentList
-def ask_question(message, window_title=""):
-    import gi
-    gi.require_version("Gtk", "3.0")
-    from gi.repository import Gtk
-
-    msg = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
-                            Gtk.ButtonsType.YES_NO, window_title)
-    msg.format_secondary_text(message)
-    result = msg.run()
-    msg.destroy()
-
-    return result
+def ask_question(message, callback, window_title=""):
+    from gi.repository import GLib
+    GLib.idle_add(lambda: linux_utils.gtk_ask_question(message, callback, window_title))
 
 
 # noinspection PyArgumentList
-def ask_string(message, window_title="", current_value=""):
-    import gi
-    gi.require_version("Gtk", "3.0")
-    from gi.repository import Gtk
-
-    dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK_CANCEL, window_title)
-    dialog.format_secondary_text(message)
-
-    area = dialog.get_content_area()
-    entry = Gtk.Entry()
-    entry.set_margin_start(16)
-    entry.set_margin_end(16)
-    entry.set_text(current_value)
-    area.pack_end(entry, False, False, 0)
-    dialog.show_all()
-
-    response = dialog.run()
-    text = entry.get_text()
-    dialog.destroy()
-
-    if response == Gtk.ResponseType.OK:
-        return text
-
-    return None
+def ask_string(message, callback, window_title="", current_value=""):
+    from gi.repository import GLib
+    GLib.idle_add(lambda: linux_utils.gtk_ask_string(message, callback, window_title, current_value))
 
 
 def is_dark_theme():

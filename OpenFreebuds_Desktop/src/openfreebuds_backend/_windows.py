@@ -12,9 +12,6 @@ from openfreebuds import event_bus
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds_backend.utils import windows_utils
 
-UI_RESULT_NO = 7
-UI_RESULT_YES = 6
-
 log = logging.getLogger("WindowsBackend")
 
 
@@ -132,13 +129,15 @@ def show_message(message, window_title="", is_error=False):
     ctypes.windll.user32.MessageBoxW(None, message, window_title, msg_type)
 
 
-def ask_question(message, window_title=""):
-    return ctypes.windll.user32.MessageBoxW(None, message, window_title, 4)
+def ask_question(message, callback, window_title=""):
+    result = ctypes.windll.user32.MessageBoxW(None, message, window_title, 4)
+    callback(result == 6)
 
 
 # noinspection PyUnusedLocal
-def ask_string(message, window_title="", current_value=""):
-    return tkinter.simpledialog.askstring(window_title, prompt=message)
+def ask_string(message, callback, window_title="", current_value=""):
+    result = tkinter.simpledialog.askstring(window_title, prompt=message)
+    callback(result)
 
 
 def is_dark_theme():

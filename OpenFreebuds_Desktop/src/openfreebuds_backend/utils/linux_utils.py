@@ -1,7 +1,5 @@
 import logging
-import os
 import pathlib
-import sys
 
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
@@ -78,6 +76,35 @@ def dbus_find_bt_device(address):
         return None
 
 
+def gtk_show_message(message, window_title="", is_error=False):
+    import gi
+    gi.require_version("Gtk", "3.0")
+    from gi.repository import Gtk
+
+    msg_type = Gtk.MessageType.INFO
+    if is_error:
+        msg_type = Gtk.MessageType.ERROR
+
+    msg = Gtk.MessageDialog(None, 0, msg_type, Gtk.ButtonsType.OK, window_title)
+    msg.format_secondary_text(message)
+    msg.run()
+    msg.destroy()
+
+
+def gtk_ask_question(message, callback, window_title=""):
+    import gi
+    gi.require_version("Gtk", "3.0")
+    from gi.repository import Gtk
+
+    msg = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO,
+                            Gtk.ButtonsType.YES_NO, window_title)
+    msg.format_secondary_text(message)
+    result = msg.run() == -8
+    msg.destroy()
+
+    callback(result)
+
+
 # From https://stackoverflow.com/questions/11486443/dbus-python-how-to-get-response-with-native-types
 def dbus_to_python(data):
     """convert dbus data types to python native data types"""
@@ -98,3 +125,29 @@ def dbus_to_python(data):
             new_data[new_key] = dbus_to_python(data[key])
         data = new_data
     return data
+
+
+def gtk_ask_string(message, callback, window_title, current_value):
+    import gi
+    gi.require_version("Gtk", "3.0")
+    from gi.repository import Gtk
+
+    dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK_CANCEL, window_title)
+    dialog.format_secondary_text(message)
+
+    area = dialog.get_content_area()
+    entry = Gtk.Entry()
+    entry.set_margin_start(16)
+    entry.set_margin_end(16)
+    entry.set_text(current_value)
+    area.pack_end(entry, False, False, 0)
+    dialog.show_all()
+
+    response = dialog.run()
+    text = entry.get_text()
+    dialog.destroy()
+
+    if response != Gtk.ResponseType.OK:
+        text = None
+
+    callback(text)
