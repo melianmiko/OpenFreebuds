@@ -8,19 +8,15 @@ from pystray import MenuItem, Menu
 from openfreebuds import event_bus
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds_applet import tools, tool_server, tool_actions, tool_update, tool_hotkeys
-from openfreebuds_applet.l18n import t, setup_language, setup_auto
+from openfreebuds_applet.l18n import t, setup_language, setup_auto, ln
 
 
-def force_exit():
-    # noinspection PyProtectedMember,PyUnresolvedReferences
-    os._exit(0)
-
-
+# noinspection PyUnresolvedReferences
 def get_quiting_menu():
     return [
         MenuItem(t("state_quiting"), None, enabled=False),
         MenuItem(t("action_kill_app"),
-                 action=force_exit)
+                 action=lambda: os._exit(0))
     ]
 
 
@@ -227,13 +223,11 @@ def add_theme_select(applet, items):
 
 
 def add_language_select(applet, items):
-    current = applet.settings.language
     variants = os.listdir(tools.get_assets_path() + "/locale")
+    variants.sort()
 
     languages = [
-        MenuItem("System",
-                 action=lambda: set_language("", applet),
-                 checked=lambda _: current == ""),
+        create_lang_menu_item("", applet),
         Menu.SEPARATOR
     ]
 
@@ -247,18 +241,17 @@ def create_lang_menu_item(value, applet):
     current = applet.settings.language
     value = value.replace(".json", "")
 
-    return MenuItem(value,
-                    action=lambda: set_language(value, applet),
+    def on_select():
+        applet.settings.language = value
+        applet.settings.write()
+
+        if value == "":
+            setup_auto()
+        else:
+            setup_language(value)
+
+        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
+
+    return MenuItem("System" if value == "" else ln(value),
+                    action=on_select,
                     checked=lambda _: current == value)
-
-
-def set_language(value, applet):
-    applet.settings.language = value
-    applet.settings.write()
-
-    if value == "":
-        setup_auto()
-    else:
-        setup_language(value)
-
-    event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)

@@ -9,6 +9,13 @@ from openfreebuds_applet.settings import SettingsStorage
 lc_path = tools.get_assets_path() + "/locale/{}.json"
 log = logging.getLogger("FreebudsLocale")
 
+lang_names = {
+    "en_US": "English",
+    "en_GB": "English (Britain)",
+    "ru_RU": "Русский",
+    "zh_CN": "Chinese"
+}
+
 
 class Data:
     loaded = False
@@ -36,12 +43,20 @@ def setup_language(langauge):
     Data.loaded = True
     Data.charset = locale.getdefaultlocale()[1]
 
-    with open(lc_path.format("base", encoding="utf-8"), "r") as f:
+    with open(lc_path.format("en_US", encoding="utf-8"), "r") as f:
         Data.base_strings = json.loads(f.read())
 
     if langauge != "none":
         with open(lc_path.format(langauge), "r", encoding="utf-8") as f:
             Data.lang_strings = json.loads(f.read())
+
+
+def ln(prop):
+    prop = prop.replace("-", "_")
+    if prop in lang_names:
+        return lang_names[prop]
+
+    return prop
 
 
 def t(prop):

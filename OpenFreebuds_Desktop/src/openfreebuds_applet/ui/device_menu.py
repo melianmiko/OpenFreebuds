@@ -1,6 +1,6 @@
 from pystray import MenuItem, Menu
 
-from openfreebuds_applet.l18n import t
+from openfreebuds_applet.l18n import t, ln
 
 
 def process(applet):
@@ -27,7 +27,7 @@ def add_device_language_menu(dev, items):
         return
 
     def get_menu_item(lang):
-        return MenuItem(lang, lambda: dev.set_property("language", lang))
+        return MenuItem(ln(lang), lambda: dev.set_property("language", lang))
 
     sub_items = []
     for a in langs:
