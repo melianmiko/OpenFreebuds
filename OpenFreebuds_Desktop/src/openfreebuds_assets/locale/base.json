@@ -21,7 +21,7 @@
   "hotkey_disabled": "Disabled",
   "change_hotkey_message": "Enter key that you want to use for this action.\nNote: you must enter just one litter, for example.\nAnd then you will be able to run this action with Ctrl-Alt and your litter.",
   "action_next_mode": "Change noise control mode",
-  "hotkeys_wayland": "Global hotkeys won't work correctly under Wayland.\n\nWe can't fix it for now. But you can use HTTP-controller to create this hotkeys by yourself, more info about this will be available later",
+  "hotkeys_wayland": "Global hotkeys won't work correctly under Wayland.\n\nWe can't fix it for now, this is limitation of Wayland. But you can use \nweb-server to create hotkeys manually.\n\nOpen website for more information?\n",
   "mgr_state_0": "Device don't exist",
   "mgr_state_1": "Device don't connected",
   "mgr_state_2": "Waiting for connect...",

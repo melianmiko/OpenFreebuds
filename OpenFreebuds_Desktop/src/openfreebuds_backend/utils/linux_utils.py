@@ -1,5 +1,6 @@
 import logging
 import pathlib
+import webbrowser
 
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
@@ -7,6 +8,11 @@ from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
 
 log = logging.getLogger("LinuxBackend")
+
+
+def wayland_warn_callback(result):
+    if result:
+        webbrowser.open("https://melianmiko.ru/posts/openfreebuds-wayland/")
 
 
 def get_autostart_file_path():

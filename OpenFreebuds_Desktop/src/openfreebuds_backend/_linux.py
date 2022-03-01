@@ -24,7 +24,9 @@ def open_in_file_manager(path):
 def bind_hotkeys(keys):
     if "XDG_SESSION_TYPE" in os.environ:
         if os.environ["XDG_SESSION_TYPE"] == "wayland":
-            show_message(t("hotkeys_wayland"), "OpenFreebuds")
+            ask_question(t("hotkeys_wayland"),
+                         callback=linux_utils.wayland_warn_callback,
+                         window_title="OpenFreebuds")
 
     import gi
     gi.require_version('Keybinder', '3.0')
