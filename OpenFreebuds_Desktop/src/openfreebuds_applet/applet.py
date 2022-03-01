@@ -51,7 +51,9 @@ class FreebudsApplet:
 
     def _do_force_connect(self):
         if self.manager.paused:
-            openfreebuds_backend.show_message(t("error_in_work"), "Openfreebuds", is_error=True)
+            openfreebuds_backend.show_message(t("error_in_work"),
+                                              window_title="Openfreebuds",
+                                              is_error=True)
             return
 
         self.manager.paused = True
@@ -77,7 +79,8 @@ class FreebudsApplet:
 
     def _do_force_disconnect(self):
         if self.manager.paused:
-            openfreebuds_backend.show_message(t("error_in_work"), "Openfreebuds", is_error=True)
+            openfreebuds_backend.show_message(t("error_in_work"),
+                                              window_title="Openfreebuds", is_error=True)
             return
 
         self.manager.paused = True
@@ -179,7 +182,7 @@ class FreebudsApplet:
             self.manager.set_device(self.settings.address)
         else:
             openfreebuds_backend.show_message(t("first_run_message"),
-                                              t("first_run_title"))
+                                              window_title=t("first_run_title"))
 
         while self.started:
             self.update_icon()

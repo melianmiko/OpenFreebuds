@@ -90,7 +90,7 @@ def get_app_menu_part(applet):
 
 def show_device_info(applet):
     if applet.manager.state != applet.manager.STATE_CONNECTED:
-        openfreebuds_backend.show_message(t("mgr_state_2"), t("submenu_device_info"))
+        openfreebuds_backend.show_message(t("mgr_state_2"), window_title=t("submenu_device_info"))
         return
 
     dev = applet.manager.device
@@ -103,7 +103,7 @@ def show_device_info(applet):
     message += "S/N: {}\n".format(dev.get_property("serial_number", "---"))
     message += "Headphone in: {}\n".format(dev.get_property("is_headphone_in", "---"))
 
-    openfreebuds_backend.show_message(message, t("submenu_device_info"))
+    openfreebuds_backend.show_message(message, window_title=t("submenu_device_info"))
 
 
 def toggle_hotkeys(applet):
