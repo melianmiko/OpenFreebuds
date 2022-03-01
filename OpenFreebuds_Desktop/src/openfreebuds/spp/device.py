@@ -1,3 +1,5 @@
+import logging
+
 from openfreebuds import protocol_utils
 from openfreebuds.spp.base import BaseSPPDevice
 
@@ -15,6 +17,7 @@ class SPPCommands:
     GET_AUTO_PAUSE = [43, 17, 1, 0]
     GET_LONG_TAP_ACTION = [43, 23, 1, 0, 2, 0]
     GET_SHORT_TAP_ACTION = [1, 32, 1, 0, 2, 0]
+    GET_LANGUAGE = [12, 2, 1, 0, 3, 0]
 
 
 class SPPDevice(BaseSPPDevice):
@@ -28,6 +31,7 @@ class SPPDevice(BaseSPPDevice):
         self.send_command(SPPCommands.GET_AUTO_PAUSE, True)
         self.send_command(SPPCommands.GET_LONG_TAP_ACTION, True)
         self.send_command(SPPCommands.GET_SHORT_TAP_ACTION, True)
+        self.send_command(SPPCommands.GET_LANGUAGE, True)
 
     def set_property(self, prop, value):
         if prop == "noise_mode" and value in [0, 1, 2]:
@@ -43,6 +47,10 @@ class SPPDevice(BaseSPPDevice):
             self.send_command(SPPCommands.GET_SHORT_TAP_ACTION)
         elif prop == "action_long_tap_enabled":
             raise "TODO: Implement me!"
+        elif prop == "language":
+            data = value.encode("utf8")
+            data = protocol_utils.bytes2array(data)
+            self.send_command([12, 1, 1, len(data)] + data + [2, 1, 1])
         else:
             raise "Can't set this prop: " + prop
 
@@ -63,6 +71,19 @@ class SPPDevice(BaseSPPDevice):
                 self._parse_auto_pause_mode(pkg)
             elif pkg[1] == 23:
                 self._parse_long_tap_enabled(pkg)
+        elif pkg[0] == 12:
+            if pkg[1] == 2:
+                self._parse_language(pkg)
+        else:
+            logging.debug("Got undefined pacakge: " + str(protocol_utils.bytes2array(pkg)))
+
+    def _parse_language(self, pkg):
+        parts = protocol_utils.parse_tlv(pkg[2:])
+        for a in parts:
+            if a[0] == 3:
+                self.put_property("supported_languages", a[2].decode("utf8"))
+            elif a[0] == 4:
+                self.put_property("current_language", a[1][0])
 
     def _parse_battery_pkg(self, pkg):
         parts = protocol_utils.parse_tlv(pkg[2:])

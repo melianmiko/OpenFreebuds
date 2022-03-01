@@ -45,6 +45,7 @@
   "submenu_server": "Web-server...",
   "submenu_theme": "Icon style...",
   "submenu_language": "Language...",
+  "submenu_device_language": "Device language...",
   "tap_action_assistant": "Voice assistant",
   "tap_action_next": "Next track",
   "tap_action_off": "Disabled",

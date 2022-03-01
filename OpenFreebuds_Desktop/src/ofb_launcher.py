@@ -82,6 +82,10 @@ def setup_logging(debug):
 def run_shell():
     man = manager.create()
 
+    if args.verbose:
+        print("Enabled verbose mode")
+        logging.basicConfig(level=logging.DEBUG, format=log_format, force=True)
+
     print("-- Scan feature test:")
     devices = openfreebuds_backend.bt_list_devices()
     for i, a in enumerate(devices):
@@ -132,6 +136,9 @@ def shell(man):
                 dev.on_property_change.clear()
             elif cmd[0] == "set":
                 dev.set_property(cmd[1], int(cmd[2]))
+                print("OK")
+            elif cmd[0] == "set_str":
+                dev.set_property(cmd[1], cmd[2])
                 print("OK")
             elif cmd[0] == "d":
                 dev.debug = True

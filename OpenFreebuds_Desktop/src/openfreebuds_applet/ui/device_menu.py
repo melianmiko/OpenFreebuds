@@ -12,8 +12,24 @@ def process(applet):
     add_noise_control(dev, items)
     items.append(Menu.SEPARATOR)
     add_gestures_menu(dev, items)
+    add_device_language_menu(dev, items)
 
     applet.set_menu_items(items, expand=True)
+
+
+def add_device_language_menu(dev, items):
+    langs = dev.get_property("supported_languages", "").split(",")
+    if len(langs) == 0:
+        return
+
+    def get_menu_item(lang):
+        return MenuItem(lang, lambda: dev.set_property("language", lang))
+
+    sub_items = []
+    for a in langs:
+        sub_items.append(get_menu_item(a))
+
+    items.append(MenuItem(t("submenu_device_language"), Menu(*sub_items)))
 
 
 def add_power_info(dev, items):
