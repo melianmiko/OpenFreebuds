@@ -1,2 +1,2 @@
-VERSION = "v0.8"
+VERSION = "0.9"
 DEBUG_MODE = False
