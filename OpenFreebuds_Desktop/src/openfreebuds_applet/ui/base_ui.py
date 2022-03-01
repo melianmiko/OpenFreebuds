@@ -90,7 +90,7 @@ def get_app_menu_part(applet):
 
 def show_device_info(applet):
     if applet.manager.state != applet.manager.STATE_CONNECTED:
-        openfreebuds_backend.show_message(t("mgr_state_2"), window_title=t("submenu_device_info"))
+        openfreebuds_backend.show_message(t("mgr_state_2"))
         return
 
     dev = applet.manager.device
@@ -103,7 +103,7 @@ def show_device_info(applet):
     message += "S/N: {}\n".format(dev.get_property("serial_number", "---"))
     message += "Headphone in: {}\n".format(dev.get_property("is_headphone_in", "---"))
 
-    openfreebuds_backend.show_message(message, window_title=t("submenu_device_info"))
+    openfreebuds_backend.show_message(message)
 
 
 def toggle_hotkeys(applet):
@@ -173,14 +173,12 @@ def add_hotkey_item(items, applet, basename, pretty_name, current_value):
         value = t("hotkey_disabled")
 
     text = pretty_name + " (" + value + ")"
-    items.append(MenuItem(text, lambda: change_hotkey(basename, current_value, applet)))
+    items.append(MenuItem(text, lambda: change_hotkey(basename, applet)))
 
 
-def change_hotkey(basename, current_value, applet):
+def change_hotkey(basename, applet):
     openfreebuds_backend.ask_string(t("change_hotkey_message"),
-                                    callback=lambda v: do_change_button(v, applet, basename),
-                                    window_title=basename,
-                                    current_value=current_value)
+                                    callback=lambda v: do_change_button(v, applet, basename))
 
 
 def do_change_button(new_value, applet, basename):
