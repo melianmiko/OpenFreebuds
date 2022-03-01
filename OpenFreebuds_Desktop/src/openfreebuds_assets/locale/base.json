@@ -39,6 +39,7 @@
   "select_device": "Select your device:",
   "state_quiting": "Exiting...",
   "submenu_device_info": "Device info",
+  "submenu_device_config": "Device...",
   "submenu_app": "Application...",
   "submenu_gestures": "Gestures...",
   "submenu_hotkeys": "Hotkeys...",

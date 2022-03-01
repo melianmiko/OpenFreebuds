@@ -6,13 +6,17 @@ from openfreebuds_applet.l18n import t
 def process(applet):
     dev = applet.manager.device
 
+    # Build device config menu
+    settings = []
+    add_gestures_menu(dev, settings)
+    add_device_language_menu(dev, settings)
+
     # Build new menu
     items = []
     add_power_info(dev, items)
     add_noise_control(dev, items)
     items.append(Menu.SEPARATOR)
-    add_gestures_menu(dev, items)
-    add_device_language_menu(dev, items)
+    items.append(MenuItem(t("submenu_device_config"), Menu(*settings)))
 
     applet.set_menu_items(items, expand=True)
 
@@ -100,7 +104,8 @@ def add_gestures_menu(dev, items):
         ]
         submenu_items.append(MenuItem(t("double_tap_right"), Menu(*section_items)))
 
-    items.append(MenuItem(t("submenu_gestures"), action=Menu(*submenu_items)))
+    # items.append(MenuItem(t("submenu_gestures"), action=Menu(*submenu_items)))
+    items.extend(submenu_items)
 
 
 def add_noise_control(dev, items):
