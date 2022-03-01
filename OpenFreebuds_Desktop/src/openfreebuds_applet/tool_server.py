@@ -8,6 +8,7 @@ log = logging.getLogger("Webserver")
 
 
 class Config:
+    current = None
     applet = None
     actions = {}
     port = 21201
@@ -61,11 +62,17 @@ def start(applet):
     Config.applet = applet
     Config.actions = tool_actions.get_actions(applet)
 
+    if Config.current is not None:
+        Config.current.server_close()
+        log.info("Server closed")
+
     if not applet.settings.enable_server:
         return
 
     httpd = HTTPServer(("localhost", Config.port), AppHandler)
     tools.run_thread_safe(httpd.serve_forever, "HTTPServer", False)
+    Config.current = httpd
+
     log.info("Running webserver for localhost, port is " + str(Config.port))
 
 

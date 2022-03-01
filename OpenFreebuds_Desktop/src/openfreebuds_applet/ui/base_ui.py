@@ -106,30 +106,25 @@ def show_device_info(applet):
     openfreebuds_backend.show_message(message)
 
 
-def toggle_show_update_dialog(applet):
-    applet.settings.enable_update_dialog = not applet.settings.enable_update_dialog
-    applet.settings.write()
-
-    event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
-
-
-def toggle_flask(applet):
-    applet.settings.enable_server = not applet.settings.enable_server
-    applet.settings.write()
-
-    event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
-
-
 def add_startup_settings(applet, items):
     run_at_boot = openfreebuds_backend.is_run_at_boot()
     show_update_dialog = applet.settings.enable_update_dialog
 
+    def on_update_dialog():
+        applet.settings.enable_update_dialog = not applet.settings.enable_update_dialog
+        applet.settings.write()
+        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
+
+    def on_run_at_boot():
+        openfreebuds_backend.set_run_at_boot(not run_at_boot)
+        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
+
     items.append(MenuItem(t("option_show_update_dialog"),
-                          action=lambda: toggle_show_update_dialog(applet),
+                          action=on_update_dialog,
                           checked=lambda _: show_update_dialog))
 
     items.append(MenuItem(t("option_run_at_boot"),
-                          action=lambda: openfreebuds_backend.set_run_at_boot(not run_at_boot),
+                          action=on_run_at_boot,
                           checked=lambda _: run_at_boot))
 
 
@@ -192,15 +187,21 @@ def add_hotkey_item(items, applet, basename, pretty_name, current_value):
 def add_server_settings(applet, items):
     settings = applet.settings
 
+    def toggle():
+        applet.settings.enable_server = not applet.settings.enable_server
+        applet.settings.write()
+        tool_server.start(applet)
+
+        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
+
     server_items = [
         MenuItem(t("prop_enabled"),
-                 action=lambda: toggle_flask(applet),
+                 action=toggle,
                  checked=lambda _: settings.enable_server),
         Menu.SEPARATOR,
         MenuItem(t("webserver_port") + " " + str(tool_server.get_port()),
                  action=None,
-                 enabled=False),
-        MenuItem(t("notice_restart"), None, enabled=False)
+                 enabled=False)
     ]
 
     items.append(MenuItem(t("submenu_server"), Menu(*server_items)))
