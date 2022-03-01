@@ -1,5 +1,6 @@
 import logging
 import os
+import webbrowser
 
 import openfreebuds_backend
 from pystray import MenuItem, Menu
@@ -55,12 +56,14 @@ def get_header_menu_part(applet):
 
 
 def get_app_menu_part(applet):
-    version, debug = tools.get_version()
-    ver_line = version + (" (DEBUG)" if debug else "")
+    version, _ = tools.get_version()
 
     items = [
-        MenuItem("OpenFreebuds", None, enabled=False),
-        MenuItem(ver_line, None, enabled=False),
+        MenuItem("OpenFreebuds ({})".format(version),
+                 action=lambda: webbrowser.open("https://melianmiko.ru/openfreebuds")),
+        MenuItem(t("action_donate"),
+                 action=lambda: webbrowser.open("https://melianmiko.ru/donate")),
+        MenuItem("by MelianMiko", None, enabled=False),
         Menu.SEPARATOR
     ]
 

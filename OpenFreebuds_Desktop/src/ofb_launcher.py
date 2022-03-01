@@ -1,6 +1,7 @@
 import argparse
 import logging
 import sys
+import threading
 import traceback
 import urllib.error
 import urllib.request
@@ -60,9 +61,9 @@ def do_command(command):
 def start_applet():
     if tools.is_running():
         openfreebuds_backend.show_message(t("application_running_message"),
+                                          callback=lambda: sys.exit(1),
                                           window_title="OpenFreebuds")
-        sys.exit(1)
-
+        openfreebuds_backend.ui_lock()
     openfreebuds_applet.start()
 
 

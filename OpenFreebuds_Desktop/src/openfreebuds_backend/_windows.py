@@ -5,6 +5,7 @@ import os
 import pathlib
 import subprocess
 import sys
+import time
 import winreg
 import tkinter.simpledialog
 
@@ -121,12 +122,14 @@ def get_system_id():
     return ["windows"]
 
 
-def show_message(message, window_title="", is_error=False):
+def show_message(message, callback=None, window_title="", is_error=False):
     msg_type = 0
     if is_error:
         msg_type = 16
 
     ctypes.windll.user32.MessageBoxW(None, message, window_title, msg_type)
+    if callback:
+        callback()
 
 
 def ask_question(message, callback, window_title=""):
@@ -138,6 +141,11 @@ def ask_question(message, callback, window_title=""):
 def ask_string(message, callback, window_title="", current_value=""):
     result = tkinter.simpledialog.askstring(window_title, prompt=message)
     callback(result)
+
+
+def ui_lock():
+    while True:
+        time.sleep(10)
 
 
 def is_dark_theme():

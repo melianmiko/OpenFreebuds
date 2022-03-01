@@ -122,9 +122,9 @@ def get_system_id():
         return ["linux"]
 
 
-def show_message(message, window_title="", is_error=False):
+def show_message(message, callback=None, window_title="", is_error=False):
     from gi.repository import GLib
-    GLib.idle_add(lambda: linux_utils.gtk_show_message(message, window_title, is_error))
+    GLib.idle_add(lambda: linux_utils.gtk_show_message(message, callback, window_title, is_error))
 
 
 # noinspection PyArgumentList
@@ -137,6 +137,13 @@ def ask_question(message, callback, window_title=""):
 def ask_string(message, callback, window_title="", current_value=""):
     from gi.repository import GLib
     GLib.idle_add(lambda: linux_utils.gtk_ask_string(message, callback, window_title, current_value))
+
+
+def ui_lock():
+    import gi
+    gi.require_version("Gtk", "3.0")
+    from gi.repository import Gtk
+    Gtk.main()
 
 
 def is_dark_theme():

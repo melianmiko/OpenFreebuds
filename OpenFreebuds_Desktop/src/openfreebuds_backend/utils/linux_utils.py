@@ -76,7 +76,7 @@ def dbus_find_bt_device(address):
         return None
 
 
-def gtk_show_message(message, window_title="", is_error=False):
+def gtk_show_message(message, callback=None, window_title="", is_error=False):
     import gi
     gi.require_version("Gtk", "3.0")
     from gi.repository import Gtk
@@ -89,6 +89,9 @@ def gtk_show_message(message, window_title="", is_error=False):
     msg.format_secondary_text(message)
     msg.run()
     msg.destroy()
+
+    if callback is not None:
+        callback()
 
 
 def gtk_ask_question(message, callback, window_title=""):
