@@ -19,20 +19,26 @@ class KeybinderState:
 def bind_hotkeys(keys):
     from gi.repository import Keybinder
     _init_keybinder()
+    stop_hotkeys()
+
+    # Add new key bindings
+    for a in keys:
+        key_string = "<Ctrl><Alt>" + a
+        Keybinder.bind(key_string, keys[a])
+
+        KeybinderState.current_hotkeys.append(key_string)
+        log.debug("Added hotkey " + key_string)
+
+
+def stop_hotkeys():
+    from gi.repository import Keybinder
 
     # Remove all exiting key bindings
     for a in KeybinderState.current_hotkeys:
         Keybinder.unbind(a)
         log.debug("Removed hotkey " + a)
 
-    # Add new key bindings
     KeybinderState.current_hotkeys = []
-    for a in keys:
-        key_string = "<Ctrl><Alt>" + a
-        Keybinder.bind(key_string, keys[a])
-
-        KeybinderState.current_hotkeys.append(a)
-        log.debug("Added hotkey " + key_string)
 
 
 def _init_keybinder():

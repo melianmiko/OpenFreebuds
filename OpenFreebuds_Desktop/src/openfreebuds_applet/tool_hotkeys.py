@@ -7,6 +7,8 @@ log = logging.getLogger("HotkeysTool")
 
 
 def start(applet):
+    openfreebuds_backend.stop_hotkeys()
+
     if not applet.settings.enable_hotkeys:
         return
 

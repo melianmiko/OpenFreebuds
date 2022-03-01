@@ -11,8 +11,7 @@ class _PynputState:
 
 
 def bind_hotkeys(keys):
-    if _PynputState.current is not None:
-        _PynputState.current.stop()
+    stop_hotkeys()
 
     # Add prefix to all keys
     x_keys = {}
@@ -21,6 +20,11 @@ def bind_hotkeys(keys):
 
     _PynputState.current = GlobalHotKeys(x_keys)
     _PynputState.current.start()
+
+
+def stop_hotkeys():
+    if _PynputState.current is not None:
+        _PynputState.current.stop()
 
 
 def get_app_storage_path():
