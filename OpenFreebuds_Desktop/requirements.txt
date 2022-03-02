@@ -1,9 +1,10 @@
 pystray~=0.19.2
 Pillow~=9.0.1
 psutil~=5.9.0
-PyGObject==3.42.0
-dbus-python==1.2.18
 pynput~=1.7.6
+
+PyGObject==3.42.0; sys_platform == "linux"
+dbus-python==1.2.18; sys_platform == "linux"
 
 pyinstaller==4.9; sys_platform == "win32"
 winsdk==1.0.0b2; sys_platform == "win32"
