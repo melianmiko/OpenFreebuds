@@ -56,13 +56,17 @@ class FreebudsApplet:
             return
 
         self.manager.paused = True
-
         log.debug("Trying to force connect device...")
-        spp = SPPDevice(self.settings.address)
-        if not spp.request_interaction():
-            log.debug("Can't interact via SPP, try to connect anyway...")
+        # noinspection PyBroadException
+        try:
+            spp = SPPDevice(self.settings.address)
+            if not spp.request_interaction():
+                log.debug("Can't interact via SPP, try to connect anyway...")
 
-        if not openfreebuds_backend.bt_connect(self.settings.address):
+            if not openfreebuds_backend.bt_connect(self.settings.address):
+                raise Exception("fail")
+        except Exception:
+            log.exception("Can't force connect device")
             openfreebuds_backend.show_message(t("error_force_action_fail"), is_error=True)
 
         log.debug("Finish force connecting")
@@ -83,8 +87,12 @@ class FreebudsApplet:
 
         self.manager.paused = True
         log.debug("Trying to force disconnect device...")
-
-        if not openfreebuds_backend.bt_disconnect(self.settings.address):
+        # noinspection PyBroadException
+        try:
+            if not openfreebuds_backend.bt_disconnect(self.settings.address):
+                raise Exception("fail")
+        except Exception:
+            log.exception("Can't disconnect device")
             openfreebuds_backend.show_message(t("error_force_action_fail"), is_error=True)
 
         log.debug("Finish force disconnecting")
