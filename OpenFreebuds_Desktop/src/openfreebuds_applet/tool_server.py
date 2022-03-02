@@ -1,5 +1,8 @@
 import json
 import logging
+import time
+import urllib.request
+import urllib.error
 
 from openfreebuds_applet import tools, tool_actions
 from http.server import HTTPServer, SimpleHTTPRequestHandler
@@ -8,7 +11,8 @@ log = logging.getLogger("Webserver")
 
 
 class Config:
-    current = None
+    started = False
+    httpd = None
     applet = None
     actions = {}
     port = 21201
@@ -62,18 +66,38 @@ def start(applet):
     Config.applet = applet
     Config.actions = tool_actions.get_actions(applet)
 
-    if Config.current is not None:
-        Config.current.server_close()
-        log.info("Server closed")
+    if Config.started:
+        try:
+            Config.started = False
+            urllib.request.urlopen("http://localhost:{}".format(Config.port))
+        except urllib.error.URLError:
+            pass
 
-    if not applet.settings.enable_server:
-        return
+    if applet.settings.enable_server:
+        tools.run_thread_safe(_httpd_thread, "HTTPServer", False)
 
-    httpd = HTTPServer(("localhost", Config.port), AppHandler)
-    tools.run_thread_safe(httpd.serve_forever, "HTTPServer", False)
-    Config.current = httpd
+
+def _httpd_thread():
+    while Config.httpd is not None:
+        log.debug("waiting for stop")
+        time.sleep(1)
+
+    host = "localhost"
+    if Config.applet.settings.server_access:
+        log.warning("Enable global access")
+        host = "0.0.0.0"
+
+    Config.httpd = HTTPServer((host, Config.port), AppHandler)
+    Config.started = True
 
     log.info("Running webserver for localhost, port is " + str(Config.port))
+
+    while Config.started:
+        Config.httpd.handle_request()
+
+    Config.httpd.server_close()
+    Config.httpd = None
+    log.info("Closed webserver")
 
 
 def get_port():

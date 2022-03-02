@@ -56,6 +56,8 @@
   "theme_dark": "Dark icon",
   "theme_light": "Light icon",
   "webserver_port": "HTTP port is",
+  "prop_server_access": "Allow external connections",
+  "server_global_warn": "ATTENTION!\n\nThis feature will allow anyone from your local network to control\nyour FreeBuds device, and also can create a security violence.\nEnable this feature only if you know what you do.\n\nEnable external access to web server?",
   "error_in_work": "Error: operation already started.",
   "error_force_action_fail": "Error: OS can't connect this device.",
   "win_tools_message": "To use this feature, you must install \"Bluetooth Command Line Tools\"\nfrom bluetoothinstaller.com. Without this, you can't use connect/disconnect\nfeatures on Windows. Notice that this software is provided \"as is\" and don't\ngive any warranty of any kind.\n\nFor more information, visit https://bluetoothinstaller.com\n\nAlso note, that this tools may not work on newer versions of MS Windows, like ver. 11.\nOpen browser to download installer?",

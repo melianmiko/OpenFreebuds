@@ -184,16 +184,35 @@ def add_server_settings(applet, items):
     settings = applet.settings
 
     def toggle():
-        applet.settings.enable_server = not applet.settings.enable_server
-        applet.settings.write()
+        settings.enable_server = not settings.enable_server
+        settings.write()
         tool_server.start(applet)
 
         event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
+
+    def do_toggle_access(result):
+        if not result:
+            return
+
+        settings.server_access = not settings.server_access
+        settings.write()
+        tool_server.start(applet)
+
+        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
+
+    def toggle_access():
+        if not applet.settings.server_access:
+            openfreebuds_backend.ask_question(t("server_global_warn"), do_toggle_access)
+        else:
+            do_toggle_access(True)
 
     server_items = [
         MenuItem(t("prop_enabled"),
                  action=toggle,
                  checked=lambda _: settings.enable_server),
+        MenuItem(t("prop_server_access"),
+                 action=toggle_access,
+                 checked=lambda _: settings.server_access),
         Menu.SEPARATOR,
         MenuItem(t("webserver_port") + " " + str(tool_server.get_port()),
                  action=None,

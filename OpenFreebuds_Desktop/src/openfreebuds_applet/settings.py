@@ -14,6 +14,7 @@ class SettingsStorage:
 
         self.enable_hotkeys = False
         self.enable_server = False
+        self.server_access = False
         self.enable_update_dialog = True
 
         self.hotkeys_config = {
