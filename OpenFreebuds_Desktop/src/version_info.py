@@ -1,2 +1,2 @@
-VERSION = "0.9.1-dev"
+VERSION = "0.9.1"
 DEBUG_MODE = False
