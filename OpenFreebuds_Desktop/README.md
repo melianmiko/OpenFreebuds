@@ -4,6 +4,43 @@ OpenFreebuds Desktop
 
 Desktop client.
 
+Compiling
+---------
+
+First, clone this repo (git required)
+```bash
+git clone https://github.com/melianmiko/OpenFreebuds.git
+cd OpenFreebuds/OpenFreebuds_Desktop
+```
+
+### Windows
+
+Requirements:
+- Python 3.10
+- NSIS (for installer)
+- UPX (optional)
+
+Install requirements above before continue.
+
+Open PowerShell or Windows Terminal in this directory.
+First, install python dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Then, run build script:
+
+```
+python .\tools\build_windows.py
+```
+
+Artifacts will be in `builddir\dist`.
+
+### Linux
+
+To do.
+
 Requirements
 ------------
 
