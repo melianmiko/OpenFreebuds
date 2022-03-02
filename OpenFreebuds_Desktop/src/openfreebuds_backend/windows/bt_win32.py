@@ -37,10 +37,14 @@ def bt_connect(address):
     base_args = [extra_tools_dir + "\\btcom.exe",  "-b\"{}\"".format(address)]
 
     try:
-        subprocess.check_output(base_args + ["-r", "-s111e"], startupinfo=no_console)
-        subprocess.check_output(base_args + ["-c", "-s111e"], startupinfo=no_console)
-        subprocess.check_output(base_args + ["-r", "-s110b"], startupinfo=no_console)
-        subprocess.check_output(base_args + ["-c", "-s110b"], startupinfo=no_console)
+        _run_commands([
+            base_args + ["-r", "-s111e"],
+            base_args + ["-r", "-s110b"]
+        ])
+        _run_commands([
+            base_args + ["-c", "-s111e"],
+            base_args + ["-c", "-s110b"]
+        ])
         return True
     except subprocess.CalledProcessError:
         return False
@@ -53,8 +57,10 @@ def bt_disconnect(address):
     base_args = [extra_tools_dir + "\\btcom.exe",  "-b\"{}\"".format(address)]
 
     try:
-        subprocess.check_output(base_args + ["-r", "-s111e"], startupinfo=no_console)
-        subprocess.check_output(base_args + ["-r", "-s110b"], startupinfo=no_console)
+        _run_commands([
+            base_args + ["-r", "-s111e"],
+            base_args + ["-r", "-s110b"]
+        ])
         return True
     except subprocess.CalledProcessError:
         return False
@@ -89,6 +95,15 @@ def bt_list_devices():
 
         return out
     return asyncio.run(run())
+
+
+def _run_commands(commands):
+    processes = []
+    for cmd in commands:
+        r = subprocess.Popen(cmd, startupinfo=no_console)
+        processes.append(r)
+    for a in processes:
+        a.wait()
 
 
 def _tools_ready():
