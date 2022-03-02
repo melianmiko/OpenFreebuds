@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 import sys
 import threading
 import traceback
@@ -58,10 +59,11 @@ def do_command(command):
         print("Failed. Check that app started and web-server is active.")
 
 
+# noinspection PyUnresolvedReferences,PyProtectedMember
 def start_applet():
     if tools.is_running():
         openfreebuds_backend.show_message(t("application_running_message"),
-                                          callback=lambda: sys.exit(1))
+                                          callback=lambda: os._exit(0))
         openfreebuds_backend.ui_lock()
     openfreebuds_applet.start()
 
