@@ -18,6 +18,9 @@ extra_tools_dir = 'C:\\Program Files (x86)\\Bluetooth Command Line Tools\\bin'
 extra_tools_url = "https://bluetoothinstaller.com/bluetooth-command-line-tools/BluetoothCLTools-1.2.0.56.exe"
 log = logging.getLogger("WindowsBackend")
 
+no_console = subprocess.STARTUPINFO()
+no_console.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
 
 def bt_is_connected(address):
     async def run():
@@ -34,10 +37,10 @@ def bt_connect(address):
     base_args = [extra_tools_dir + "\\btcom.exe",  "-b\"{}\"".format(address)]
 
     try:
-        subprocess.check_output(base_args + ["-r", "-s111e"])
-        subprocess.check_output(base_args + ["-c", "-s111e"])
-        subprocess.check_output(base_args + ["-r", "-s110b"])
-        subprocess.check_output(base_args + ["-c", "-s110b"])
+        subprocess.check_output(base_args + ["-r", "-s111e"], startupinfo=no_console)
+        subprocess.check_output(base_args + ["-c", "-s111e"], startupinfo=no_console)
+        subprocess.check_output(base_args + ["-r", "-s110b"], startupinfo=no_console)
+        subprocess.check_output(base_args + ["-c", "-s110b"], startupinfo=no_console)
         return True
     except subprocess.CalledProcessError:
         return False
@@ -50,8 +53,8 @@ def bt_disconnect(address):
     base_args = [extra_tools_dir + "\\btcom.exe",  "-b\"{}\"".format(address)]
 
     try:
-        subprocess.check_output(base_args + ["-r", "-s111e"])
-        subprocess.check_output(base_args + ["-r", "-s110b"])
+        subprocess.check_output(base_args + ["-r", "-s111e"], startupinfo=no_console)
+        subprocess.check_output(base_args + ["-r", "-s110b"], startupinfo=no_console)
         return True
     except subprocess.CalledProcessError:
         return False
