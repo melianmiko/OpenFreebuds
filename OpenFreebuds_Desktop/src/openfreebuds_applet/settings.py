@@ -9,8 +9,10 @@ class SettingsStorage:
     def __init__(self):
         self.address = ""
         self.device_name = ""
-        self.theme = "auto"
+
         self.language = ""
+        self.theme = "auto"
+        self.compact_menu = True
 
         self.enable_hotkeys = False
         self.enable_server = False

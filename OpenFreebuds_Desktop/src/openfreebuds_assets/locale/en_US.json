@@ -7,6 +7,7 @@
   "action_connect": "Connect device",
   "action_disconnect": "Disconnect device",
   "option_run_at_boot": "Run at boot",
+  "option_compact": "Compact menu",
   "action_donate": "Make a donation",
   "option_show_update_dialog": "Show update dialog on start",
   "application_running_message": "Application already running, check status area.\n\n If app don't response, stop it from system task manager, \nand then try again.",
