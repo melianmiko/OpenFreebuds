@@ -21,6 +21,7 @@ class SPPCommands:
     GET_SHORT_TAP_ACTION = [1, 32, 1, 0, 2, 0]
     GET_LANGUAGE = [12, 2, 1, 0, 3, 0]
     GET_NOISE_CONTROL_ACTION = [43, 25, 1, 0, 2, 0]
+    TEST = [43, 56, 1, 0]
 
 
 class SPPDevice(BaseSPPDevice):
@@ -36,6 +37,7 @@ class SPPDevice(BaseSPPDevice):
         self.send_command(SPPCommands.GET_SHORT_TAP_ACTION, True)
         self.send_command(SPPCommands.GET_LANGUAGE, True)
         self.send_command(SPPCommands.GET_NOISE_CONTROL_ACTION, True)
+        self.send_command(SPPCommands.TEST, True)
 
     def set_property(self, prop, value):
         if prop == "noise_mode" and value in [0, 1, 2]:
@@ -90,6 +92,13 @@ class SPPDevice(BaseSPPDevice):
             self._parse_language(pkg)
         else:
             log.debug("Got undefined package, header={}, pkg={}".format(header, pkg))
+
+            try:
+                tlv = protocol_utils.parse_tlv(pkg[2:])
+                for a in tlv:
+                    logging.debug("tlv type={}, data={}".format(a.type, a.data))
+            except (protocol_utils.TLVException, ValueError):
+                log.debug("Can't read as TLV pkg")
 
     def _parse_language(self, pkg):
         contents = protocol_utils.parse_tlv(pkg[2:])

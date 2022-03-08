@@ -9,6 +9,7 @@
   "option_server": "Enable HTTP-server",
   "option_run_at_boot": "Run at boot",
   "option_compact": "Compact menu",
+  "option_debug_features": "Developer mode (danger)",
   "action_about": "About OpenFreebuds...",
   "message_open_website": "Visit website for more information?",
   "option_show_update_dialog": "Show update dialog on start",

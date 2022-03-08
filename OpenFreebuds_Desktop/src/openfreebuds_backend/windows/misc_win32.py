@@ -1,5 +1,6 @@
 import os
 import pathlib
+import subprocess
 import sys
 import winreg
 
@@ -33,6 +34,10 @@ def get_app_storage_path():
 
 def open_in_file_manager(path):
     os.startfile(path)
+
+
+def open_file(path):
+    subprocess.Popen(["notepad.exe", path])
 
 
 def is_run_at_boot():

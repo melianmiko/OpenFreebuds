@@ -1,6 +1,8 @@
 import logging
+import os
 
 import openfreebuds_backend
+from openfreebuds import cli_io
 from openfreebuds.spp.device import SPPDevice
 from openfreebuds_applet import tools, tool_update
 from openfreebuds_applet.l18n import t
@@ -127,6 +129,29 @@ class DeviceInfoMenu(TrayMenu):
     def on_build(self):
         self.add_item(t("submenu_device_info"), self.show_device_info)
         self.add_item(t("action_unpair"), self.do_unpair)
+
+        if self.applet.settings.enable_debug_features:
+            self.add_item("DEV: Run command", self.do_command)
+            self.add_item("DEV: Show logs", self.show_log)
+
+    def show_log(self):
+        value = self.applet.log.getvalue()
+        path = str(tools.get_app_storage_dir()) + "/last_log.txt"
+        with open(path, "w") as f:
+            f.write(value)
+
+        openfreebuds_backend.open_file(path)
+
+    def do_command(self):
+        openfreebuds_backend.ask_string("openfreebuds>", self.on_command)
+
+    def on_command(self, result):
+        if result is None or result == "":
+            return
+
+        command = result.split(" ")
+        result = cli_io.dev_command(self.applet.manager, command)
+        openfreebuds_backend.show_message(result)
 
     def show_device_info(self):
         if self.applet.manager.state != self.applet.manager.STATE_CONNECTED:

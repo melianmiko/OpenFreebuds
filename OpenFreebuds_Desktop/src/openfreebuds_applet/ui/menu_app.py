@@ -196,6 +196,8 @@ class SettingsMenu(TrayMenu):
                       checked=self.settings.enable_update_dialog)
         self.add_item(t("option_compact"), self.toggle_compact,
                       checked=self.settings.compact_menu)
+        self.add_item(t("option_debug_features"), self.toggle_debug,
+                      checked=self.settings.enable_debug_features)
         self.add_separator()
         self.add_item(t("option_server"), self.toggle_server,
                       checked=self.settings.enable_server)
@@ -203,6 +205,11 @@ class SettingsMenu(TrayMenu):
                       checked=self.settings.server_access)
         self.add_item(t("webserver_port") + " " + str(tool_server.get_port()),
                       enabled=False)
+
+    def toggle_debug(self):
+        self.settings.enable_debug_features = not self.settings.enable_debug_features
+        self.settings.write()
+        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
     def toggle_compact(self):
         self.settings.compact_menu = not self.settings.compact_menu

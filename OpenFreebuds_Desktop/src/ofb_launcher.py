@@ -1,15 +1,12 @@
 import argparse
 import logging
 import os
-import sys
-import threading
-import traceback
 import urllib.error
 import urllib.request
 
 import openfreebuds_applet
 import openfreebuds_backend
-from openfreebuds import event_bus, device_names, manager
+from openfreebuds import event_bus, device_names, manager, cli_io
 from openfreebuds.events import EVENT_MANAGER_STATE_CHANGED
 from openfreebuds_applet import tools, tool_server
 from openfreebuds_applet.l18n import t
@@ -113,48 +110,24 @@ def run_shell():
         while man.state != man.STATE_CONNECTED:
             event_bus.wait_for(EVENT_MANAGER_STATE_CHANGED)
 
+        logging.getLogger("CLI-IO").disabled = True
         shell(man)
         print("-- Device disconnected")
 
 
-def shell(man):
-    dev = man.device
-    while not dev.closed:
-        cmd = input("OpenFreebuds> ").split(" ")
+def shell(mgr):
+    while not mgr.device.closed:
+        command = input("OpenFreebuds> ").split(" ")
 
-        if cmd[0] == "":
+        if command[0] == "":
             continue
 
-        try:
-            if cmd[0] == "l":
-                for a in dev.list_properties():
-                    print(a, dev.get_property(a))
-            elif cmd[0] == "w":
-                print("Waiting for spp event...")
-                dev.on_property_change.wait()
-                for a in dev.list_properties():
-                    print(a, dev.get_property(a))
-                dev.on_property_change.clear()
-            elif cmd[0] == "set":
-                dev.set_property(cmd[1], int(cmd[2]))
-                print("OK")
-            elif cmd[0] == "set_str":
-                dev.set_property(cmd[1], cmd[2])
-                print("OK")
-            elif cmd[0] == "d":
-                dev.debug = True
-                print("Enabled debug mode")
-            elif cmd[0] == "q":
-                man.close()
-                print("bye")
-                raise SystemExit
-            else:
-                print("Unknown command")
-        except Exception as e:
-            # noinspection PyTypeChecker
-            traceback.print_exception(e)
+        if command[0] == "q":
+            mgr.close()
+            print('bye')
+            raise SystemExit
 
-        print()
+        print(cli_io.dev_command(mgr, command))
 
 
 tools.run_safe(main, "MainThread", True)

@@ -1,5 +1,6 @@
 import logging
 import os
+from io import StringIO
 
 import pystray
 
@@ -26,6 +27,7 @@ class FreebudsApplet:
         self.current_icon_hash = ""
 
         self.settings = settings.SettingsStorage()
+        self.log = StringIO()
 
         self.manager = openfreebuds.manager.create()
         self.manager.safe_run_wrapper = tools.run_thread_safe
@@ -48,8 +50,19 @@ class FreebudsApplet:
         tool_server.start(self)
         tool_update.start(self)
 
+        if self.settings.enable_debug_features:
+            self.start_debug()
+
         tools.run_thread_safe(self._ui_update_loop, "Applet", True)
         self._tray.run()
+
+    def start_debug(self):
+        log.debug("Setup log stram")
+        handler = logging.StreamHandler(self.log)
+        handler.setLevel(logging.DEBUG)
+        handler.setFormatter(logging.Formatter("%(levelname)s:%(name)s:%(threadName)s  %(message)s"))
+        for a in ["SPPDevice", "FreebudsManager"]:
+            logging.getLogger(a).addHandler(handler)
 
     def exit(self):
         log.info("Exiting this app...")

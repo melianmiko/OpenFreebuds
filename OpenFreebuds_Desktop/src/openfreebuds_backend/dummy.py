@@ -13,6 +13,10 @@ def open_in_file_manager(path):
     logging.info("open_dir " + path)
 
 
+def open_file(path):
+    logging.info("open_file " + path)
+
+
 def bind_hotkeys(keys):
     logging.info(keys)
 

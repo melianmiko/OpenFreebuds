@@ -14,6 +14,10 @@ def open_in_file_manager(path):
     subprocess.Popen(["xdg-open", path])
 
 
+def open_file(path):
+    subprocess.Popen(["xdg-open", path])
+
+
 def is_run_at_boot():
     return os.path.isfile(_get_autostart_file_path())
 
