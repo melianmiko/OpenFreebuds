@@ -3,6 +3,8 @@ import logging
 from openfreebuds import protocol_utils
 from openfreebuds.spp.base import BaseSPPDevice
 
+log = logging.getLogger("SPPDevice")
+
 
 def create(address):
     return SPPDevice(address)
@@ -67,115 +69,109 @@ class SPPDevice(BaseSPPDevice):
             raise Exception("Can't set this prop: " + prop)
 
     def on_package(self, pkg):
-        if pkg[0] == 1:
-            if pkg[1] == 8 or pkg[1] == 39:
-                self._parse_battery_pkg(pkg)
-            elif pkg[1] == 32:
-                self._parse_double_tap_action(pkg)
-            elif pkg[1] == 7:
-                self._parse_device_info(pkg)
-            else:
-                logging.debug("Got undefined package: " + str(protocol_utils.bytes2array(pkg)))
-        elif pkg[0] == 43:
-            if pkg[1] == 3:
-                self._parse_in_ear_state(pkg)
-            elif pkg[1] == 42:
-                self._parse_noise_mode(pkg)
-            elif pkg[1] == 17:
-                self._parse_auto_pause_mode(pkg)
-            elif pkg[1] == 23:
-                self._parse_long_tap_action(pkg)
-            elif pkg[1] == 25:
-                self._parse_noise_control_function(pkg)
-            else:
-                logging.debug("Got undefined package: " + str(protocol_utils.bytes2array(pkg)))
-        elif pkg[0] == 12:
-            if pkg[1] == 2:
-                self._parse_language(pkg)
-            else:
-                logging.debug("Got undefined package: " + str(protocol_utils.bytes2array(pkg)))
+        header = protocol_utils.bytes2array(pkg[0:2])
+        if header == [1, 8] or header == [1, 39]:
+            self._parse_battery_pkg(pkg)
+        elif header == [1, 32]:
+            self._parse_double_tap_action(pkg)
+        elif header == [1, 7]:
+            self._parse_device_info(pkg)
+        elif header == [43, 3]:
+            self._parse_in_ear_state(pkg)
+        elif header == [43, 42]:
+            self._parse_noise_mode(pkg)
+        elif header == [43, 17]:
+            self._parse_auto_pause_mode(pkg)
+        elif header == [43, 23]:
+            self._parse_long_tap_action(pkg)
+        elif header == [43, 25]:
+            self._parse_noise_control_function(pkg)
+        elif header == [12, 2]:
+            self._parse_language(pkg)
         else:
-            logging.debug("Got undefined package: " + str(protocol_utils.bytes2array(pkg)))
+            log.debug("Got undefined package, header={}, pkg={}".format(header, pkg))
 
     def _parse_language(self, pkg):
-        parts = protocol_utils.parse_tlv_legacy(pkg[2:])
-        for a in parts:
-            if a[0] == 3:
-                self.put_property("supported_languages", a[2].decode("utf8"))
-            elif a[0] == 4:
-                self.put_property("current_language", a[1][0])
+        contents = protocol_utils.parse_tlv(pkg[2:])
+
+        supported = contents.find_by_type(3)
+        if supported.length > 1:
+            self.put_property("supported_languages", supported.get_string())
 
     def _parse_battery_pkg(self, pkg):
-        parts = protocol_utils.parse_tlv_legacy(pkg[2:])
-        for a in parts:
-            if a[0] == 2:
-                data = a[1]
-                self.put_property("battery_left", data[0])
-                self.put_property("battery_right", data[1])
-                self.put_property("battery_case", data[2])
+        contents = protocol_utils.parse_tlv(pkg[2:])
+
+        level = contents.find_by_type(2)
+        if level.length > 0:
+            self.put_property("battery_left", level.data[0])
+            self.put_property("battery_right", level.data[1])
+            self.put_property("battery_case", level.data[2])
 
     def _parse_in_ear_state(self, pkg):
-        parts = protocol_utils.parse_tlv_legacy(pkg[2:])
+        contents = protocol_utils.parse_tlv(pkg[2:])
 
-        for data in parts:
-            if data[0] == 8 or data[0] == 9:
-                self.put_property("is_headphone_in", data[1][0] == 1)
-                return
+        row = contents.find_by_types([8, 9])
+        if row.length == 1:
+            self.put_property("is_headphone_in", row.data[0] == 1)
 
     def _parse_noise_mode(self, pkg):
-        parts = protocol_utils.parse_tlv_legacy(pkg[2:])
+        contents = protocol_utils.parse_tlv(pkg[2:])
 
-        for a in parts:
-            if a[0] == 1 and len(a[1]) == 2:
-                self.put_property("noise_mode", a[1][1])
-                return
+        row = contents.find_by_type(1)
+        if row.length == 2:
+            self.put_property("noise_mode", row.data[1])
 
     def _parse_noise_control_function(self, pkg):
         contents = protocol_utils.parse_tlv(pkg[2:])
 
-        for row in contents:
-            if row.type == 1 and row.length == 1:
-                self.put_property("action_noise_control_left", row.data[0])
-            elif row.type == 2 and row.length == 1:
-                self.put_property("action_noise_control_right", row.data[0])
+        left = contents.find_by_type(1)
+        if left.length == 1:
+            self.put_property("action_noise_control_left", left.data[0])
+
+        right = contents.find_by_type(2)
+        if right.length == 1:
+            self.put_property("action_noise_control_right", right.data[0])
 
     def _parse_auto_pause_mode(self, pkg):
-        parts = protocol_utils.parse_tlv_legacy(pkg[2:])
+        contents = protocol_utils.parse_tlv(pkg[2:])
 
-        for a in parts:
-            if a[0] == 1 and len(a[1]) == 1:
-                self.put_property("auto_pause", a[1][0])
-                return
+        row = contents.find_by_type(1)
+        if row.length == 1:
+            self.put_property("auto_pause", row.data[0])
 
     def _parse_long_tap_action(self, pkg):
         contents = protocol_utils.parse_tlv(pkg[2:])
 
-        for row in contents:
-            if row.type == 1 and row.length == 1:
-                self.put_property("action_long_tap_left", row.data[0])
-            elif row.type == 2 and row.length == 1:
-                self.put_property("action_long_tap_right", row.data[0])
+        left = contents.find_by_type(1)
+        if left.length == 1:
+            self.put_property("action_long_tap_left", left.data[0])
+
+        right = contents.find_by_type(2)
+        if right.length == 1:
+            self.put_property("action_long_tap_right", right.data[0])
 
     def _parse_double_tap_action(self, pkg):
-        parts = protocol_utils.parse_tlv_legacy(pkg[2:])
+        contents = protocol_utils.parse_tlv(pkg[2:])
 
-        for a in parts:
-            if a[0] == 1 and len(a[1]) == 1:
-                self.put_property("action_double_tap_left", a[1][0])
-            elif a[0] == 2 and len(a[1]) == 1:
-                self.put_property("action_double_tap_right", a[1][0])
+        left = contents.find_by_type(1)
+        if left.length == 1:
+            self.put_property("action_double_tap_left", left.data[0])
+
+        right = contents.find_by_type(2)
+        if right.length == 1:
+            self.put_property("action_double_tap_right", right.data[0])
 
     def _parse_device_info(self, pkg):
-        parts = protocol_utils.parse_tlv_legacy(pkg[2:])
+        contents = protocol_utils.parse_tlv(pkg[2:])
+        descriptor = {
+            "device_ver": 3,
+            "software_ver": 7,
+            "serial_number": 9,
+            "device_model": 10,
+            "ota_version": 15
+        }
 
-        for a in parts:
-            if a[0] == 3:
-                self.put_property("device_ver", str(a[2], "utf8"))
-            elif a[0] == 7:
-                self.put_property("software_ver", str(a[2], "utf8"))
-            elif a[0] == 9:
-                self.put_property("serial_number", str(a[2], "utf8"))
-            elif a[0] == 10:
-                self.put_property("device_model", str(a[2], "utf8"))
-            elif a[0] == 15:
-                self.put_property("ota_version", str(a[2], "utf8"))
+        for key in descriptor:
+            row = contents.find_by_type(descriptor[key])
+            if row.length > 0:
+                self.put_property(key, row.get_string())

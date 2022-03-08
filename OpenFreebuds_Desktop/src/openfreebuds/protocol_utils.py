@@ -54,10 +54,40 @@ class TLVPackage:
     def get_bytes(self):
         return array2bytes(self.data)
 
+    def get_string(self):
+        return self.get_bytes().decode("utf8")
 
-def parse_tlv(data: bytes) -> list[TLVPackage]:
+
+class TLVResponse:
+    def __init__(self):
+        self.contents: list[TLVPackage] = []
+
+    def __iter__(self):
+        return self.contents.__iter__()
+
+    def append(self, item):
+        self.contents.append(item)
+
+    def find_by_type(self, type_key):
+        for a in self.contents:
+            if a.type == type_key:
+                return a
+        return TLVPackage(type_key, [])
+
+    def find_by_types(self, types_list):
+        for a in self.contents:
+            if a.type in types_list:
+                return a
+        return TLVPackage(types_list[0], [])
+
+
+class TLVException(Exception):
+    pass
+
+
+def parse_tlv(data: bytes) -> TLVResponse:
     data = bytes2array(data)
-    values = []
+    response = TLVResponse()
     i = 0
 
     while i <= len(data) - 2:
@@ -73,22 +103,10 @@ def parse_tlv(data: bytes) -> list[TLVPackage]:
         i = pos + length
         if length != 0:
             if i > len(data):
-                print("ERR overflow")
-                length -= i - len(data)
-                i = len(data)
+                raise TLVException("TLV Package overflow")
             arr = data[pos:pos + length]
-            values.append(TLVPackage(b_cur, arr))
+            response.append(TLVPackage(b_cur, arr))
         else:
-            values.append(TLVPackage(b_cur, []))
+            response.append(TLVPackage(b_cur, []))
 
-    return values
-
-
-def parse_tlv_legacy(data):
-    d = parse_tlv(data)
-    r = []
-
-    for a in d:
-        r.append([a.type, a.data, a.get_bytes()])
-
-    return r
+    return response

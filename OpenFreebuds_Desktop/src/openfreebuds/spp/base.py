@@ -24,9 +24,8 @@ def build_spp_bytes(data):
     return out
 
 
-# noinspection PyMethodMayBeStatic
+# noinspection PyMethodMayBeStatic,PyUnresolvedReferences
 class BaseSPPDevice:
-
     def __init__(self, address):
         self.last_pkg = None
         self.address = address
