@@ -5,7 +5,9 @@ import webbrowser
 import openfreebuds_backend
 from openfreebuds import event_bus
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
-from openfreebuds_applet import tools, tool_server, tool_actions, tool_hotkeys, icons
+from openfreebuds_applet import utils
+from openfreebuds_applet.modules import hotkeys, http_server, actions
+from openfreebuds_applet.ui import icons
 from openfreebuds_applet.l18n import t, setup_language, setup_auto, ln
 from openfreebuds_applet.wrapper.tray import TrayMenu
 
@@ -34,7 +36,7 @@ class ApplicationMenuPart(TrayMenu):
         self.add_separator()
 
         self.add_item(t("action_about"), self.about_dialog)
-        self.add_item(t("action_open_appdata"), tools.open_app_storage_dir)
+        self.add_item(t("action_open_appdata"), utils.open_app_storage_dir)
         self.add_separator()
 
         self.add_item(t("action_exit"), self.applet.exit)
@@ -43,7 +45,7 @@ class ApplicationMenuPart(TrayMenu):
             self.wrap(t("submenu_app"))
 
     def about_dialog(self):
-        version, debug = tools.get_version()
+        version, debug = utils.get_version()
 
         message = "OpenFreebuds v{}\nBy MelianMiko\nLicensed under GPLv3\n".format(version)
         if debug:
@@ -99,7 +101,7 @@ class LanguageMenu(TrayMenu):
     def on_build(self):
         current = self.applet.settings.language
 
-        variants = os.listdir(tools.get_assets_path() + "/locale")
+        variants = os.listdir(utils.get_assets_path() + "/locale")
         variants.sort()
 
         self.add_item("System", self.on_auto, checked=current == "")
@@ -136,7 +138,7 @@ class HotkeysMenu(TrayMenu):
     def on_build(self):
         settings = self.applet.settings
         config = settings.hotkeys_config
-        all_actions = tool_actions.get_action_names()
+        all_actions = actions.get_action_names()
 
         self.add_item(t("prop_enabled"),
                       action=self.do_enable_toggle,
@@ -167,7 +169,7 @@ class HotkeysMenu(TrayMenu):
 
         self.applet.settings.hotkeys_config[basename] = new_value
         self.applet.settings.write()
-        tool_hotkeys.start(self.applet)
+        hotkeys.start(self.applet)
 
         event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
@@ -175,7 +177,7 @@ class HotkeysMenu(TrayMenu):
         self.applet.settings.enable_hotkeys = not self.applet.settings.enable_hotkeys
         self.applet.settings.write()
 
-        tool_hotkeys.start(self.applet)
+        hotkeys.start(self.applet)
         event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
 
@@ -203,7 +205,7 @@ class SettingsMenu(TrayMenu):
                       checked=self.settings.enable_server)
         self.add_item(t("prop_server_access"), self.toggle_server_access,
                       checked=self.settings.server_access)
-        self.add_item(t("webserver_port") + " " + str(tool_server.get_port()),
+        self.add_item(t("webserver_port") + " " + str(http_server.get_port()),
                       enabled=False)
 
     def toggle_debug(self):
@@ -230,7 +232,7 @@ class SettingsMenu(TrayMenu):
     def toggle_server(self):
         self.settings.enable_server = not self.settings.enable_server
         self.settings.write()
-        tool_server.start(self.applet)
+        http_server.start(self.applet)
         event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
     def toggle_server_access(self):
@@ -245,5 +247,5 @@ class SettingsMenu(TrayMenu):
 
         self.settings.server_access = not self.settings.server_access
         self.settings.write()
-        tool_server.start(self.applet)
+        http_server.start(self.applet)
         event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)

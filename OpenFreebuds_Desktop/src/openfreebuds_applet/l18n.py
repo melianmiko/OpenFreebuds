@@ -3,10 +3,10 @@ import locale
 import logging
 import os.path
 
-from openfreebuds_applet import tools
+from openfreebuds_applet import utils
 from openfreebuds_applet.settings import SettingsStorage
 
-lc_path = tools.get_assets_path() + "/locale/{}.json"
+lc_path = utils.get_assets_path() + "/locale/{}.json"
 log = logging.getLogger("FreebudsLocale")
 
 lang_names = {

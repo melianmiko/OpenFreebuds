@@ -1,15 +1,16 @@
 import argparse
 import logging
-import os
+import sys
 import urllib.error
 import urllib.request
 
 import openfreebuds_applet
 import openfreebuds_backend
-from openfreebuds import event_bus, device_names, manager, cli_io
+from openfreebuds import event_bus, manager, cli_io
 from openfreebuds.events import EVENT_MANAGER_STATE_CHANGED
-from openfreebuds_applet import tools, tool_server
+from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
+from openfreebuds_applet.modules import http_server
 
 log_format = "%(levelname)s:%(name)s:%(threadName)s  %(message)s"
 description = "Unofficial application to manage HUAWEI FreeBuds device"
@@ -28,23 +29,28 @@ args = parser.parse_args()
 
 
 def main():
-    if args.command != "":
-        do_command(args.command)
-        return
-
-    if args.shell:
-        run_shell()
-        return
-
-    version, debug = tools.get_version()
+    version, debug = utils.get_version()
     print("openfreebuds version=" + version + " is_debug=" + str(debug))
 
-    setup_logging(debug)
-    start_applet()
+    # Setup logging
+    logging.getLogger("asyncio").disabled = True
+    logging.getLogger("CLI-IO").disabled = True
+    if args.verbose or debug:
+        logging.basicConfig(level=logging.DEBUG, format=log_format, force=True)
+
+    if args.command != "":
+        do_command(args.command)
+    elif args.shell:
+        run_shell()
+    elif utils.is_running():
+        openfreebuds_backend.show_message(t("application_running_message"), callback=lambda: sys.exit())
+        openfreebuds_backend.ui_lock()
+    else:
+        openfreebuds_applet.start()
 
 
 def do_command(command):
-    port = tool_server.get_port()
+    port = http_server.get_port()
 
     try:
         url = "http://localhost:{}/{}".format(port, command)
@@ -56,52 +62,19 @@ def do_command(command):
         print("Failed. Check that app started and web-server is active.")
 
 
-# noinspection PyUnresolvedReferences,PyProtectedMember
-def start_applet():
-    if tools.is_running():
-        openfreebuds_backend.show_message(t("application_running_message"),
-                                          callback=lambda: os._exit(0))
-        openfreebuds_backend.ui_lock()
-    openfreebuds_applet.start()
-
-
-def setup_logging(debug):
-    if args.verbose or debug:
-        print("Enabled verbose mode")
-        logging.basicConfig(level=logging.DEBUG, format=log_format, force=True)
-    else:
-        logfile = tools.get_log_filename()
-        print("Log redirected to file " + logfile + ". Set --verbose flag to see logs here.")
-        logging.basicConfig(level=logging.DEBUG, format=log_format, filename=logfile)
-
-    logging.getLogger("asyncio").disabled = True
-
-
 def run_shell():
     man = manager.create()
 
-    if args.verbose:
-        print("Enabled verbose mode")
-        logging.basicConfig(level=logging.DEBUG, format=log_format, force=True)
-
-    print("-- Scan feature test:")
+    # Device picker
     devices = openfreebuds_backend.bt_list_devices()
     for i, a in enumerate(devices):
         print(i, a["name"], "(" + a["address"] + ")", a["connected"])
     print()
 
     num = int(input("Enter device num to use: "))
-    name = devices[num]["name"]
     address = devices[num]["address"]
 
-    if not device_names.is_supported(name):
-        print("!! Device with this name isn't tested.")
-        print("!! It can work incorrectly with this app")
-        if not input("Type yes to continue: ").lower() == "yes":
-            print("bye")
-            raise SystemExit
-    print()
-
+    # Start shell
     print("-- Using device", address)
     man.set_device(address)
 
@@ -110,24 +83,19 @@ def run_shell():
         while man.state != man.STATE_CONNECTED:
             event_bus.wait_for(EVENT_MANAGER_STATE_CHANGED)
 
-        logging.getLogger("CLI-IO").disabled = True
-        shell(man)
+        while not man.device.closed:
+            command = input("OpenFreebuds> ").split(" ")
+
+            if command[0] == "":
+                continue
+
+            if command[0] == "q":
+                man.close()
+                print('bye')
+                raise SystemExit
+
+            print(cli_io.dev_command(man, command))
         print("-- Device disconnected")
 
 
-def shell(mgr):
-    while not mgr.device.closed:
-        command = input("OpenFreebuds> ").split(" ")
-
-        if command[0] == "":
-            continue
-
-        if command[0] == "q":
-            mgr.close()
-            print('bye')
-            raise SystemExit
-
-        print(cli_io.dev_command(mgr, command))
-
-
-tools.run_safe(main, "MainThread", True)
+utils.run_safe(main, "MainThread", True)

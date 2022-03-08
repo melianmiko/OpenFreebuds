@@ -2,7 +2,7 @@ import json
 import logging
 import os
 
-from openfreebuds_applet import tools
+from openfreebuds_applet import utils
 
 
 class SettingsStorage:
@@ -27,7 +27,7 @@ class SettingsStorage:
         self._read()
 
     def _read(self):
-        path = tools.get_settings_path()
+        path = utils.get_settings_path()
         logging.debug("Using config path: " + path)
         if not os.path.isfile(path):
             return
@@ -41,7 +41,7 @@ class SettingsStorage:
             logging.warning("Can't load saved config")
 
     def write(self):
-        path = tools.get_settings_path()
+        path = utils.get_settings_path()
 
         with open(path, "w") as f:
             f.write(json.dumps(self.__dict__))

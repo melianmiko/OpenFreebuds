@@ -8,7 +8,9 @@ import openfreebuds.manager
 import openfreebuds_backend
 from openfreebuds import event_bus
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE_PROP_CHANGED, EVENT_MANAGER_STATE_CHANGED
-from openfreebuds_applet import tools, settings, icons, tool_server, tool_hotkeys, tool_update
+from openfreebuds_applet import settings, utils
+from openfreebuds_applet.modules import hotkeys, http_server, updater
+from openfreebuds_applet.ui import icons
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.ui.menu_device import DeviceMenu
 from openfreebuds_applet.ui.menu_no_device import DeviceOfflineMenu, DeviceScanMenu
@@ -30,7 +32,7 @@ class FreebudsApplet:
         self.log = StringIO()
 
         self.manager = openfreebuds.manager.create()
-        self.manager.safe_run_wrapper = tools.run_thread_safe
+        self.manager.safe_run_wrapper = utils.run_thread_safe
 
         self.menu_app = ApplicationMenuPart(self)
         self.menu_header = HeaderMenuPart(self)
@@ -46,14 +48,14 @@ class FreebudsApplet:
     def start(self):
         icons.set_theme(self.settings.theme)
 
-        tool_hotkeys.start(self)
-        tool_server.start(self)
-        tool_update.start(self)
+        hotkeys.start(self)
+        http_server.start(self)
+        updater.start(self)
 
         if self.settings.enable_debug_features:
             self.start_debug()
 
-        tools.run_thread_safe(self._ui_update_loop, "Applet", True)
+        utils.run_thread_safe(self._ui_update_loop, "Applet", True)
         self._tray.run()
 
     def start_debug(self):
@@ -109,7 +111,7 @@ class FreebudsApplet:
         items += menu.build()
         items += self.menu_app.build()
 
-        items_hash = tools.items_hash_string(items)
+        items_hash = utils.items_hash_string(items)
 
         if self.current_menu_hash != items_hash:
             menu = pystray.Menu(*items)

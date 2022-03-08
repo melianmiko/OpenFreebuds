@@ -4,8 +4,9 @@ import os
 import openfreebuds_backend
 from openfreebuds import cli_io
 from openfreebuds.spp.device import SPPDevice
-from openfreebuds_applet import tools, tool_update
+from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
+from openfreebuds_applet.modules import updater
 from openfreebuds_applet.wrapper.tray import TrayMenu
 
 
@@ -35,12 +36,12 @@ class HeaderMenuPart(TrayMenu):
         self.device_info_menu = DeviceInfoMenu(applet)
 
     def on_build(self):
-        has_update, new_version = tool_update.get_result()
+        has_update, new_version = updater.get_result()
         device_name = self.applet.settings.device_name
         is_connected = self.applet.manager.state == self.applet.manager.STATE_CONNECTED
 
         self.add_item(text=t('action_update').format(new_version),
-                      action=tool_update.show_update_message,
+                      action=updater.show_update_message,
                       visible=has_update)
 
         if self.applet.manager.state != self.applet.manager.STATE_NO_DEV:
@@ -58,7 +59,7 @@ class HeaderMenuPart(TrayMenu):
         if manager.state == manager.STATE_CONNECTED:
             return False
 
-        tools.run_thread_safe(self._do_force_connect, "ForceConnect", False)
+        utils.run_thread_safe(self._do_force_connect, "ForceConnect", False)
         return True
 
     def do_disconnect(self):
@@ -66,7 +67,7 @@ class HeaderMenuPart(TrayMenu):
         if manager.state != manager.STATE_CONNECTED:
             return False
 
-        tools.run_thread_safe(self._do_force_disconnect, "ForceDisconnect", False)
+        utils.run_thread_safe(self._do_force_disconnect, "ForceDisconnect", False)
         return True
 
     def _do_force_connect(self):
@@ -136,7 +137,7 @@ class DeviceInfoMenu(TrayMenu):
 
     def show_log(self):
         value = self.applet.log.getvalue()
-        path = str(tools.get_app_storage_dir()) + "/last_log.txt"
+        path = str(utils.get_app_storage_dir()) + "/last_log.txt"
         with open(path, "w") as f:
             f.write(value)
 

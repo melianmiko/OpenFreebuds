@@ -1,7 +1,7 @@
 import logging
 
 import openfreebuds_backend
-from openfreebuds_applet import tool_actions
+from openfreebuds_applet.modules import actions
 
 log = logging.getLogger("HotkeysTool")
 
@@ -14,7 +14,7 @@ def start(applet):
 
     log.debug("Starting hotkey tool...")
 
-    handlers = tool_actions.get_actions(applet)
+    handlers = actions.get_actions(applet)
     config = applet.settings.hotkeys_config
     merged = {}
 

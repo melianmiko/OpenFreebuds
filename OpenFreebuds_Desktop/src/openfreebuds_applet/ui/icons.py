@@ -3,10 +3,10 @@ import logging
 from PIL import Image, ImageDraw
 
 from openfreebuds.manager import FreebudsManager
-from openfreebuds_applet import tools
+from openfreebuds_applet import utils
 
 ICON_SIZE = (64, 64)
-ASSETS_PATH = tools.get_assets_path()
+ASSETS_PATH = utils.get_assets_path()
 
 
 def spawn_color_image(size, color):

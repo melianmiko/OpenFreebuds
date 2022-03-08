@@ -7,7 +7,7 @@ import webbrowser
 import openfreebuds_backend
 from openfreebuds import event_bus
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
-from openfreebuds_applet import tools
+from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
 
 release_url = "https://st.melianmiko.ru/openfreebuds/release.json"
@@ -27,11 +27,11 @@ def get_result():
 
 def start(applet):
     Data.show_messages = applet.settings.enable_update_dialog
-    tools.run_thread_safe(_check_updates, "UpdateChecker", False)
+    utils.run_thread_safe(_check_updates, "UpdateChecker", False)
 
 
 def _check_updates():
-    current_version, _ = tools.get_version()
+    current_version, _ = utils.get_version()
     release_info = _fetch_release_info()
     if release_info is None:
         log.debug("Can't get release info, skip update check...")

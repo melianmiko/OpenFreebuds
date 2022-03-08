@@ -4,8 +4,10 @@ import time
 import urllib.request
 import urllib.error
 
-from openfreebuds_applet import tools, tool_actions
+from openfreebuds_applet import utils
 from http.server import HTTPServer, SimpleHTTPRequestHandler
+
+from openfreebuds_applet.modules import actions
 
 log = logging.getLogger("Webserver")
 
@@ -44,7 +46,7 @@ class AppHandler(SimpleHTTPRequestHandler):
             self.wfile.write(f.read())
 
     def info(self):
-        return self._answer_html_file(tools.get_assets_path() + "/server_help.html", 200)
+        return self._answer_html_file(utils.get_assets_path() + "/server_help.html", 200)
 
     def get_props(self):
         man = Config.applet.manager
@@ -64,7 +66,7 @@ class AppHandler(SimpleHTTPRequestHandler):
 
 def start(applet):
     Config.applet = applet
-    Config.actions = tool_actions.get_actions(applet)
+    Config.actions = actions.get_actions(applet)
 
     if Config.started:
         try:
@@ -74,7 +76,7 @@ def start(applet):
             pass
 
     if applet.settings.enable_server:
-        tools.run_thread_safe(_httpd_thread, "HTTPServer", False)
+        utils.run_thread_safe(_httpd_thread, "HTTPServer", False)
 
 
 def _httpd_thread():

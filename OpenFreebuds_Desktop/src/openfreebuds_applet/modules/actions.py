@@ -4,6 +4,7 @@ from openfreebuds_applet.l18n import t
 
 log = logging.getLogger("AppletActions")
 
+
 def do_next_mode(applet):
     dev = _get_device(applet)
     if dev is not None:
