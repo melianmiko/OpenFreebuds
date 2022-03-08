@@ -55,6 +55,7 @@ class GesturesMenu(TrayMenu):
     def __init__(self, applet):
         super().__init__()
         self.applet = applet
+        self.lt_glob = ANCControlSetupMenu(applet)
         self.dt_left = DoubleTapSetupMenu(applet, "action_double_tap_left")
         self.dt_right = DoubleTapSetupMenu(applet, "action_double_tap_right")
 
@@ -66,6 +67,10 @@ class GesturesMenu(TrayMenu):
                       args=["auto_pause", not auto_pause_value],
                       checked=auto_pause_value,
                       visible=auto_pause_value != -1)
+
+        left_long = device.get_property("action_long_tap_left", -1) == 10
+        self.add_submenu(t("long_tap_global"), self.lt_glob,
+                         visible=left_long != -99)
 
         left_2tap = device.get_property("action_double_tap_left", -99)
         self.add_submenu(t("double_tap_left"), self.dt_left,
@@ -103,6 +108,41 @@ class DoubleTapSetupMenu(TrayMenu):
     def set_value(self, value):
         device = self.applet.manager.device
         device.set_property(self.prop, value)
+
+
+class ANCControlSetupMenu(TrayMenu):
+    VARIANTS = {
+        2: "noise_control_2",
+        1: "noise_control_1",
+        4: "noise_control_4",
+        3: "noise_control_3"
+    }
+
+    def __init__(self, applet):
+        super().__init__()
+        self.applet = applet
+
+    def on_build(self):
+        device = self.applet.manager.device
+        enabled = device.get_property("action_long_tap_left", -1) == 10
+        current = device.get_property("action_noise_control_left", -1)
+
+        self.add_item(t("prop_enabled"), action=self.on_global_toggle, checked=enabled)
+        self.add_separator()
+        for value in self.VARIANTS:
+            str_key = self.VARIANTS[value]
+            self.add_item(t(str_key), action=self.set_current, checked=current == value, args=[value])
+
+    def on_global_toggle(self):
+        device = self.applet.manager.device
+        enabled = device.get_property("action_long_tap_left", -1) == 10
+        val = -1 if enabled else 10
+
+        device.set_property("action_long_tap_left", val)
+
+    def set_current(self, value):
+        device = self.applet.manager.device
+        device.set_property("action_noise_control_left", value)
 
 
 class NoiseControlMenu(TrayMenu):

@@ -7,5 +7,10 @@
 7 = prev track
 
 -- Noise control action codes:
-10 10 = all modes
+    /**
+     * 1 = off + cal
+     * 2 = all
+     * 3 = cal + awr
+     * 4 = off + awr
+     */
 

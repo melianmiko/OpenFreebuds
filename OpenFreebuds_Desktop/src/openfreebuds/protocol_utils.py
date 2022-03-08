@@ -45,7 +45,17 @@ def array2bytes(data):
     return b
 
 
-def parse_tlv(data):
+class TLVPackage:
+    def __init__(self, pkg_type, data):
+        self.type = pkg_type
+        self.data = data
+        self.length = len(data)
+
+    def get_bytes(self):
+        return array2bytes(self.data)
+
+
+def parse_tlv(data: bytes) -> list[TLVPackage]:
     data = bytes2array(data)
     values = []
     i = 0
@@ -67,8 +77,18 @@ def parse_tlv(data):
                 length -= i - len(data)
                 i = len(data)
             arr = data[pos:pos + length]
-            values.append([b_cur, arr, array2bytes(arr)])
+            values.append(TLVPackage(b_cur, arr))
         else:
-            values.append([b_cur, [], b""])
+            values.append(TLVPackage(b_cur, []))
 
     return values
+
+
+def parse_tlv_legacy(data):
+    d = parse_tlv(data)
+    r = []
+
+    for a in d:
+        r.append([a.type, a.data, a.get_bytes()])
+
+    return r

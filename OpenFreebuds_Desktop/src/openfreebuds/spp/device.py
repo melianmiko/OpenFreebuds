@@ -18,6 +18,7 @@ class SPPCommands:
     GET_LONG_TAP_ACTION = [43, 23, 1, 0, 2, 0]
     GET_SHORT_TAP_ACTION = [1, 32, 1, 0, 2, 0]
     GET_LANGUAGE = [12, 2, 1, 0, 3, 0]
+    GET_NOISE_CONTROL_ACTION = [43, 25, 1, 0, 2, 0]
 
 
 class SPPDevice(BaseSPPDevice):
@@ -32,6 +33,7 @@ class SPPDevice(BaseSPPDevice):
         self.send_command(SPPCommands.GET_LONG_TAP_ACTION, True)
         self.send_command(SPPCommands.GET_SHORT_TAP_ACTION, True)
         self.send_command(SPPCommands.GET_LANGUAGE, True)
+        self.send_command(SPPCommands.GET_NOISE_CONTROL_ACTION, True)
 
     def set_property(self, prop, value):
         if prop == "noise_mode" and value in [0, 1, 2]:
@@ -45,14 +47,24 @@ class SPPDevice(BaseSPPDevice):
         elif prop == "action_double_tap_right":
             self.send_command([1, 31, 2, 1, value])
             self.send_command(SPPCommands.GET_SHORT_TAP_ACTION)
-        elif prop == "action_long_tap_enabled":
-            raise "TODO: Implement me!"
+        elif prop == "action_long_tap_left":
+            self.send_command([43, 22, 1, 1, value])
+            self.send_command(SPPCommands.GET_LONG_TAP_ACTION)
+        elif prop == "action_long_tap_right":
+            self.send_command([43, 22, 2, 1, value])
+            self.send_command(SPPCommands.GET_LONG_TAP_ACTION)
+        elif prop == "action_noise_control_left":
+            self.send_command([43, 24, 1, 1, value])
+            self.send_command(SPPCommands.GET_NOISE_CONTROL_ACTION)
+        elif prop == "action_noise_control_right":
+            self.send_command([43, 24, 2, 1, value])
+            self.send_command(SPPCommands.GET_NOISE_CONTROL_ACTION)
         elif prop == "language":
             data = value.encode("utf8")
             data = protocol_utils.bytes2array(data)
             self.send_command([12, 1, 1, len(data)] + data + [2, 1, 1])
         else:
-            raise "Can't set this prop: " + prop
+            raise Exception("Can't set this prop: " + prop)
 
     def on_package(self, pkg):
         if pkg[0] == 1:
@@ -62,6 +74,8 @@ class SPPDevice(BaseSPPDevice):
                 self._parse_double_tap_action(pkg)
             elif pkg[1] == 7:
                 self._parse_device_info(pkg)
+            else:
+                logging.debug("Got undefined package: " + str(protocol_utils.bytes2array(pkg)))
         elif pkg[0] == 43:
             if pkg[1] == 3:
                 self._parse_in_ear_state(pkg)
@@ -70,15 +84,21 @@ class SPPDevice(BaseSPPDevice):
             elif pkg[1] == 17:
                 self._parse_auto_pause_mode(pkg)
             elif pkg[1] == 23:
-                self._parse_long_tap_enabled(pkg)
+                self._parse_long_tap_action(pkg)
+            elif pkg[1] == 25:
+                self._parse_noise_control_function(pkg)
+            else:
+                logging.debug("Got undefined package: " + str(protocol_utils.bytes2array(pkg)))
         elif pkg[0] == 12:
             if pkg[1] == 2:
                 self._parse_language(pkg)
+            else:
+                logging.debug("Got undefined package: " + str(protocol_utils.bytes2array(pkg)))
         else:
-            logging.debug("Got undefined pacakge: " + str(protocol_utils.bytes2array(pkg)))
+            logging.debug("Got undefined package: " + str(protocol_utils.bytes2array(pkg)))
 
     def _parse_language(self, pkg):
-        parts = protocol_utils.parse_tlv(pkg[2:])
+        parts = protocol_utils.parse_tlv_legacy(pkg[2:])
         for a in parts:
             if a[0] == 3:
                 self.put_property("supported_languages", a[2].decode("utf8"))
@@ -86,7 +106,7 @@ class SPPDevice(BaseSPPDevice):
                 self.put_property("current_language", a[1][0])
 
     def _parse_battery_pkg(self, pkg):
-        parts = protocol_utils.parse_tlv(pkg[2:])
+        parts = protocol_utils.parse_tlv_legacy(pkg[2:])
         for a in parts:
             if a[0] == 2:
                 data = a[1]
@@ -95,7 +115,7 @@ class SPPDevice(BaseSPPDevice):
                 self.put_property("battery_case", data[2])
 
     def _parse_in_ear_state(self, pkg):
-        parts = protocol_utils.parse_tlv(pkg[2:])
+        parts = protocol_utils.parse_tlv_legacy(pkg[2:])
 
         for data in parts:
             if data[0] == 8 or data[0] == 9:
@@ -103,31 +123,41 @@ class SPPDevice(BaseSPPDevice):
                 return
 
     def _parse_noise_mode(self, pkg):
-        parts = protocol_utils.parse_tlv(pkg[2:])
+        parts = protocol_utils.parse_tlv_legacy(pkg[2:])
 
         for a in parts:
             if a[0] == 1 and len(a[1]) == 2:
                 self.put_property("noise_mode", a[1][1])
                 return
 
+    def _parse_noise_control_function(self, pkg):
+        contents = protocol_utils.parse_tlv(pkg[2:])
+
+        for row in contents:
+            if row.type == 1 and row.length == 1:
+                self.put_property("action_noise_control_left", row.data[0])
+            elif row.type == 2 and row.length == 1:
+                self.put_property("action_noise_control_right", row.data[0])
+
     def _parse_auto_pause_mode(self, pkg):
-        parts = protocol_utils.parse_tlv(pkg[2:])
+        parts = protocol_utils.parse_tlv_legacy(pkg[2:])
 
         for a in parts:
             if a[0] == 1 and len(a[1]) == 1:
                 self.put_property("auto_pause", a[1][0])
                 return
 
-    def _parse_long_tap_enabled(self, pkg):
-        parts = protocol_utils.parse_tlv(pkg[2:])
+    def _parse_long_tap_action(self, pkg):
+        contents = protocol_utils.parse_tlv(pkg[2:])
 
-        for a in parts:
-            if a[0] == 1 and len(a[1]) == 1:
-                self.put_property("action_long_tap_enabled", a[1][0] == 10)
-                return
+        for row in contents:
+            if row.type == 1 and row.length == 1:
+                self.put_property("action_long_tap_left", row.data[0])
+            elif row.type == 2 and row.length == 1:
+                self.put_property("action_long_tap_right", row.data[0])
 
     def _parse_double_tap_action(self, pkg):
-        parts = protocol_utils.parse_tlv(pkg[2:])
+        parts = protocol_utils.parse_tlv_legacy(pkg[2:])
 
         for a in parts:
             if a[0] == 1 and len(a[1]) == 1:
@@ -136,7 +166,7 @@ class SPPDevice(BaseSPPDevice):
                 self.put_property("action_double_tap_right", a[1][0])
 
     def _parse_device_info(self, pkg):
-        parts = protocol_utils.parse_tlv(pkg[2:])
+        parts = protocol_utils.parse_tlv_legacy(pkg[2:])
 
         for a in parts:
             if a[0] == 3:
