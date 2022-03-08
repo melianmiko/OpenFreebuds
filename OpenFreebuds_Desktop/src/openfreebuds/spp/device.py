@@ -21,7 +21,6 @@ class SPPCommands:
     GET_SHORT_TAP_ACTION = [1, 32, 1, 0, 2, 0]
     GET_LANGUAGE = [12, 2, 1, 0, 3, 0]
     GET_NOISE_CONTROL_ACTION = [43, 25, 1, 0, 2, 0]
-    TEST = [43, 56, 1, 0]
 
 
 class SPPDevice(BaseSPPDevice):
@@ -37,7 +36,6 @@ class SPPDevice(BaseSPPDevice):
         self.send_command(SPPCommands.GET_SHORT_TAP_ACTION, True)
         self.send_command(SPPCommands.GET_LANGUAGE, True)
         self.send_command(SPPCommands.GET_NOISE_CONTROL_ACTION, True)
-        self.send_command(SPPCommands.TEST, True)
 
     def set_property(self, prop, value):
         if prop == "noise_mode" and value in [0, 1, 2]:
