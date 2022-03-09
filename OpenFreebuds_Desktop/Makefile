@@ -1,4 +1,4 @@
-DESTDIR="/"
+DESTDIR=
 
 all: lib builddir/openfreebuds/pystray
 	cp -r src/* builddir/openfreebuds

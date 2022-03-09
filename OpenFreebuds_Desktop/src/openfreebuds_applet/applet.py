@@ -8,8 +8,9 @@ import openfreebuds.manager
 import openfreebuds_backend
 from openfreebuds import event_bus
 from openfreebuds.device.base import BaseDevice
-from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE_PROP_CHANGED, EVENT_MANAGER_STATE_CHANGED
-from openfreebuds_applet import settings, utils
+from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE_PROP_CHANGED, \
+    EVENT_MANAGER_STATE_CHANGED
+from openfreebuds_applet import settings, utils, log_format
 from openfreebuds_applet.modules import hotkeys, http_server, updater
 from openfreebuds_applet.ui import icons
 from openfreebuds_applet.l18n import t
@@ -61,10 +62,12 @@ class FreebudsApplet:
         self._tray.run()
 
     def start_debug(self):
-        log.debug("Setup log stram")
+        print("Start debug logging mode")
+        logging.basicConfig(level=logging.DEBUG, format=log_format, force=True)
+
         handler = logging.StreamHandler(self.log)
         handler.setLevel(logging.DEBUG)
-        handler.setFormatter(logging.Formatter("%(levelname)s:%(name)s:%(threadName)s  %(message)s"))
+        handler.setFormatter(logging.Formatter(log_format))
         for a in ["SPPDevice", "FreebudsManager", "BaseDevice"]:
             logging.getLogger(a).addHandler(handler)
 

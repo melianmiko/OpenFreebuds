@@ -12,7 +12,6 @@ from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import http_server
 
-log_format = "%(levelname)s:%(name)s:%(threadName)s  %(message)s"
 description = "Unofficial application to manage HUAWEI FreeBuds device"
 
 parser = argparse.ArgumentParser(description=description)
@@ -36,7 +35,7 @@ def main():
     logging.getLogger("asyncio").disabled = True
     logging.getLogger("CLI-IO").disabled = True
     if args.verbose or debug:
-        logging.basicConfig(level=logging.DEBUG, format=log_format, force=True)
+        logging.basicConfig(level=logging.DEBUG, format=openfreebuds_applet.log_format, force=True)
 
     if args.command != "":
         do_command(args.command)
