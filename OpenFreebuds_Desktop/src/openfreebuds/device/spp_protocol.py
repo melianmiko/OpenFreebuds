@@ -9,6 +9,8 @@ from openfreebuds.constants.events import EVENT_SPP_CLOSED, EVENT_SPP_RECV, EVEN
 
 log = logging.getLogger("SPPDevice")
 port = 16
+SLEEP_DELAY = 5
+SLEEP_TIME = 20
 
 
 class SppProtocolDevice(BaseDevice):
@@ -54,6 +56,9 @@ class SppProtocolDevice(BaseDevice):
         if self.closed:
             return
 
+        if self.sleep:
+            event_bus.invoke(EVENT_SPP_WAKE_UP)
+
         log.debug("Closing device...")
         self.closed = True
         if lock:
@@ -78,9 +83,9 @@ class SppProtocolDevice(BaseDevice):
             if result:
                 last_pkg = time.time()
 
-            if self.config.USE_SOCKET_SLEEP and time.time() - last_pkg > 5:
+            if self.config.USE_SOCKET_SLEEP and time.time() - last_pkg > SLEEP_DELAY:
                 self._sleep_start()
-                event_bus.wait_for(EVENT_SPP_WAKE_UP)
+                event_bus.wait_for(EVENT_SPP_WAKE_UP, timeout=SLEEP_TIME)
                 self._sleep_leave()
 
         log.info("Leaving recv...")
@@ -92,14 +97,13 @@ class SppProtocolDevice(BaseDevice):
         log.debug("No packages, going to sleep...")
         self.socket.close()
         self.sleep = True
-        event_bus.timer(10, EVENT_SPP_WAKE_UP)
 
     def _sleep_leave(self):
         self.sleep = False
         self._connect_socket()
-        event_bus.invoke(EVENT_SPP_ON_WAKE_UP)
-        log.debug("Waked up...")
         self.on_wake_up()
+        log.debug("Waked up...")
+        event_bus.invoke(EVENT_SPP_ON_WAKE_UP)
 
     def _do_recv(self):
         try:
@@ -110,7 +114,7 @@ class SppProtocolDevice(BaseDevice):
                     self.socket.recv(length)
                 else:
                     pkg = self.socket.recv(length)
-                    self.on_package(pkg)
+                    self._process_package(pkg)
                     event_bus.invoke(EVENT_SPP_RECV)
         except (TimeoutError, socket.timeout):
             # Socket timed out, do nothing
@@ -122,6 +126,10 @@ class SppProtocolDevice(BaseDevice):
         return True
 
     def _send_command(self, data, read=False):
+        if self.sleep:
+            event_bus.invoke(EVENT_SPP_WAKE_UP)
+            event_bus.wait_for(EVENT_SPP_ON_WAKE_UP, timeout=1)
+
         self.send(protocol_utils.build_spp_bytes(data))
 
         if read:
@@ -131,10 +139,6 @@ class SppProtocolDevice(BaseDevice):
                 log.warning("Too long read wait, maybe command is ignored")
 
     def send(self, data):
-        if self.sleep:
-            event_bus.invoke(EVENT_SPP_WAKE_UP)
-            event_bus.wait_for(EVENT_SPP_ON_WAKE_UP, timeout=1)
-
         try:
             log.debug("send " + data.hex())
             self.socket.send(data)
@@ -150,3 +154,11 @@ class SppProtocolDevice(BaseDevice):
 
     def on_package(self, pkg):
         raise Exception("Must be override")
+
+    def _process_package(self, pkg):
+        start = time.time()
+        self.on_package(pkg)
+        process_time = time.time() - start
+
+        if process_time > 0.1:
+            log.debug("Package processing took {}, too long".format(process_time))

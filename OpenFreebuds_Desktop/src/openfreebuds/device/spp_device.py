@@ -33,8 +33,8 @@ class SPPDevice(SppProtocolDevice):
         self.put_property("service", "language", "_")
 
     def on_wake_up(self):
-        self._send_command(spp_commands.GET_BATTERY, True)
-        self._send_command(spp_commands.GET_NOISE_MODE, True)
+        self._send_command(spp_commands.GET_BATTERY)
+        self._send_command(spp_commands.GET_NOISE_MODE)
 
     def set_property(self, group, prop, value):
         if group == "anc" and prop == "mode":
@@ -111,16 +111,18 @@ class SPPDevice(SppProtocolDevice):
 
         supported = contents.find_by_type(3)
         if supported.length > 1:
-            self.put_property("info", "supported_languages", supported.get_string())
+            self.put_property("service", "supported_languages", supported.get_string())
 
     def _parse_battery_pkg(self, pkg):
         contents = protocol_utils.parse_tlv(pkg[2:])
 
         level = contents.find_by_type(2)
         if level.length > 0:
-            self.put_property("battery", "left", level.data[0])
-            self.put_property("battery", "right", level.data[1])
-            self.put_property("battery", "case", level.data[2])
+            self.put_group("battery", {
+                "left": level.data[0],
+                "right": level.data[1],
+                "case": level.data[2]
+            })
 
     def _parse_in_ear_state(self, pkg):
         contents = protocol_utils.parse_tlv(pkg[2:])
@@ -184,7 +186,6 @@ class SPPDevice(SppProtocolDevice):
             self.put_property("action", "double_tap_right", right.data[0])
 
     def _parse_device_info(self, pkg):
-        contents = protocol_utils.parse_tlv(pkg[2:])
         descriptor = {
             "device_ver": 3,
             "software_ver": 7,
@@ -193,7 +194,12 @@ class SPPDevice(SppProtocolDevice):
             "ota_version": 15
         }
 
+        contents = protocol_utils.parse_tlv(pkg[2:])
+        out = {}
+
         for key in descriptor:
             row = contents.find_by_type(descriptor[key])
             if row.length > 0:
-                self.put_property("info", key, row.get_string())
+                out[key] = row.get_string()
+
+        self.put_group("info", out)

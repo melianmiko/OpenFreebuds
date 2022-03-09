@@ -1,6 +1,9 @@
+import logging
+
 from openfreebuds import event_bus
 from openfreebuds.constants.events import EVENT_DEVICE_PROP_CHANGED
 
+log = logging.getLogger("BaseDevice")
 
 class DeviceConfig:
     USE_SOCKET_SLEEP = False
@@ -32,11 +35,17 @@ class BaseDevice:
         # Must be overwritten by child class
         self.put_property(group, prop, value)
 
+    def put_group(self, group, value):
+        self._prop_storage[group] = value
+        # log.debug("Set group of props: " + group)
+        event_bus.invoke(EVENT_DEVICE_PROP_CHANGED)
+
     def put_property(self, group, prop, value):
         if group not in self._prop_storage:
             self._prop_storage[group] = {}
 
         self._prop_storage[group][prop] = value
+        # log.debug("Set prop, group={}, prop={}, value={}".format(group, prop, value))
         event_bus.invoke(EVENT_DEVICE_PROP_CHANGED)
 
     def list_properties(self):
