@@ -12,7 +12,7 @@ class BaseDevice:
         self._prop_storage = {}
         self.config = DeviceConfig()
 
-    def send_command(self, ints, read=False):
+    def _send_command(self, ints, read=False):
         raise Exception("Overwrite me!")
 
     def find_group(self, group):

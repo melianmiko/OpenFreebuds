@@ -17,7 +17,6 @@ def create():
 
 
 class FreebudsManager:
-
     MAINLOOP_TIMEOUT = 4
 
     STATE_NO_DEV = 0

@@ -126,7 +126,7 @@ class ANCControlSetupMenu(TrayMenu):
     def on_build(self):
         device = self.applet.manager.device
         enabled = device.find_property("action", "long_tap_left", -1) == 10
-        current = device.find_property("action_noise_control_left", -1)
+        current = device.find_property("action", "noise_control_left", -1)
 
         self.add_item(t("prop_enabled"), action=self.on_global_toggle, checked=enabled)
         self.add_separator()

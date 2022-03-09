@@ -134,11 +134,14 @@ class BaseSPPDevice(BaseDevice):
 
         return True
 
-    def send_command(self, data, read=False):
+    def _send_command(self, data, read=False):
         self.send(build_spp_bytes(data))
 
         if read:
+            t = time.time()
             event_bus.wait_for(EVENT_SPP_RECV, timeout=1)
+            if time.time() - t > 0.9:
+                log.warning("Too long read wait, maybe command is ignored")
 
     def send(self, data):
         if self.sleep:
