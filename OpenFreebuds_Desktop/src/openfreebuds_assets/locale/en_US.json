@@ -10,6 +10,8 @@
   "option_run_at_boot": "Run at boot",
   "option_compact": "Compact menu",
   "option_debug_features": "Developer mode (danger)",
+  "option_sleep_mode": "Enable sleep mode (?)",
+  "sleep_info": "When sleep mode is enabled, application will free device\ncontrol socket when them isn't used. This will reduce count\nof menu updates, reduce device battery usage. But state information\nwill be updated with some delay.\n\nRestart application to apply these changes.",
   "action_about": "About OpenFreebuds...",
   "message_open_website": "Visit website for more information?",
   "option_show_update_dialog": "Show update dialog on start",

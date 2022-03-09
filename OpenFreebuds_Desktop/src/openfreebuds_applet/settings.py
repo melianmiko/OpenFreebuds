@@ -19,6 +19,7 @@ class SettingsStorage:
         self.server_access = False
         self.enable_update_dialog = True
         self.enable_debug_features = False
+        self.enable_sleep = False
 
         self.hotkeys_config = {
             "next_mode": "q"

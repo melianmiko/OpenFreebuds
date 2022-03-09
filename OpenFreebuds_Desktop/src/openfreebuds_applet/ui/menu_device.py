@@ -187,7 +187,7 @@ class DeviceLangSetupMenu(TrayMenu):
 
     def on_build(self):
         device = self.manager.device
-        langs = device.find_property("info", "supported_languages").split(",")
+        langs = device.find_property("service", "supported_languages").split(",")
         if len(langs) == 0:
             return
 

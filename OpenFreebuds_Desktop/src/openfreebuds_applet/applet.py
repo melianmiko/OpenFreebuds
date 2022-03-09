@@ -34,6 +34,7 @@ class FreebudsApplet:
 
         self.manager = openfreebuds.manager.create()
         self.manager.config.SAFE_RUN_WRAPPER = utils.run_thread_safe
+        self.manager.config.USE_SOCKET_SLEEP = self.settings.enable_sleep
 
         self.menu_app = ApplicationMenuPart(self)
         self.menu_header = HeaderMenuPart(self.manager, self.settings)
@@ -64,7 +65,7 @@ class FreebudsApplet:
         handler = logging.StreamHandler(self.log)
         handler.setLevel(logging.DEBUG)
         handler.setFormatter(logging.Formatter("%(levelname)s:%(name)s:%(threadName)s  %(message)s"))
-        for a in ["SPPDevice", "FreebudsManager"]:
+        for a in ["SPPDevice", "FreebudsManager", "BaseDevice"]:
             logging.getLogger(a).addHandler(handler)
 
     def exit(self):

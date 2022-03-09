@@ -39,11 +39,12 @@ class ApplicationMenuPart(TrayMenu):
         self.add_item(t("action_open_appdata"), utils.open_app_storage_dir)
         self.add_separator()
 
-        self.add_item(t("action_exit"), self.applet.exit)
-
         if self.applet.settings.enable_debug_features:
             self.add_item("DEV: Run command", self.do_command)
             self.add_item("DEV: Show logs", self.show_log)
+            self.add_separator()
+
+        self.add_item(t("action_exit"), self.applet.exit)
 
         if self.applet.settings.compact_menu:
             self.wrap(t("submenu_app"))
@@ -221,6 +222,9 @@ class SettingsMenu(TrayMenu):
                       checked=self.settings.enable_update_dialog)
         self.add_item(t("option_compact"), self.toggle_compact,
                       checked=self.settings.compact_menu)
+        self.add_separator()
+        self.add_item(t("option_sleep_mode"), self.toggle_sleep,
+                      checked=self.settings.enable_sleep)
         self.add_item(t("option_debug_features"), self.toggle_debug,
                       checked=self.settings.enable_debug_features)
         self.add_separator()
@@ -230,6 +234,12 @@ class SettingsMenu(TrayMenu):
                       checked=self.settings.server_access)
         self.add_item(t("webserver_port") + " " + str(http_server.get_port()),
                       enabled=False)
+
+    def toggle_sleep(self):
+        self.settings.enable_sleep = not self.settings.enable_sleep
+        self.settings.write()
+        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
+        openfreebuds_backend.show_message(t("sleep_info"))
 
     def toggle_debug(self):
         self.settings.enable_debug_features = not self.settings.enable_debug_features
