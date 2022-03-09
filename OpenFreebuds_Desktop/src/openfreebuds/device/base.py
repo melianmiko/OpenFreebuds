@@ -9,8 +9,9 @@ class DeviceConfig:
 
 class BaseDevice:
     def __init__(self):
-        self._prop_storage = {}
         self.config = DeviceConfig()
+        self.closed = False
+        self._prop_storage = {}
 
     def find_group(self, group):
         if group not in self._prop_storage:

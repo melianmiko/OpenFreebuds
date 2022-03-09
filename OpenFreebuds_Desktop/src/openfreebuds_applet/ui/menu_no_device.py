@@ -1,7 +1,7 @@
 import logging
 
 import openfreebuds_backend
-from openfreebuds import event_bus, device_names
+from openfreebuds import event_bus, device
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t
@@ -45,7 +45,7 @@ class DeviceScanMenu(TrayMenu):
 
     def on_device(self, data):
         name = data["name"]
-        if not device_names.is_supported(name):
+        if not device.is_supported(name):
             openfreebuds_backend.ask_question(t("question_not_supported"),
                                               lambda r: self.do_device(data, r))
             return
@@ -59,7 +59,7 @@ class DeviceScanMenu(TrayMenu):
         if not ui_result:
             return
 
-        self.manager.set_device(address)
+        self.manager.set_device(name, address)
         self.settings.device_name = name
         self.settings.address = address
         self.settings.write()

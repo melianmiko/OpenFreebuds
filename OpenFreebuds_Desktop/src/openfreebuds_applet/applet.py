@@ -7,7 +7,7 @@ import pystray
 import openfreebuds.manager
 import openfreebuds_backend
 from openfreebuds import event_bus
-from openfreebuds.base.device import BaseDevice
+from openfreebuds.device.base import BaseDevice
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE_PROP_CHANGED, EVENT_MANAGER_STATE_CHANGED
 from openfreebuds_applet import settings, utils
 from openfreebuds_applet.modules import hotkeys, http_server, updater
@@ -134,7 +134,7 @@ class FreebudsApplet:
 
         if self.settings.address != "":
             log.info("Using saved address: " + self.settings.address)
-            self.manager.set_device(self.settings.address)
+            self.manager.set_device(self.settings.device_name, self.settings.address)
         else:
             openfreebuds_backend.show_message(t("first_run_message"))
 

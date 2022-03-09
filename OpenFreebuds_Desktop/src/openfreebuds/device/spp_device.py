@@ -1,7 +1,7 @@
 import logging
 
 from openfreebuds import protocol_utils
-from openfreebuds.spp.base import BaseSPPDevice
+from openfreebuds.device.spp_protocol import SppProtocolDevice
 
 log = logging.getLogger("SPPDevice")
 ignored_headers = [
@@ -11,10 +11,6 @@ ignored_headers = [
     [43, 24],
     [1, 31]
 ]
-
-
-def create(address):
-    return SPPDevice(address)
 
 
 class SPPCommands:
@@ -31,7 +27,7 @@ class SPPCommands:
     GET_NOISE_CONTROL_ACTION = [43, 25, 1, 0, 2, 0]
 
 
-class SPPDevice(BaseSPPDevice):
+class SPPDevice(SppProtocolDevice):
     def __init__(self, address):
         super().__init__(address)
 

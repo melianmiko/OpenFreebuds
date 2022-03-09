@@ -3,11 +3,11 @@ import threading
 import time
 from typing import Optional
 
+import openfreebuds.device
 import openfreebuds_backend
 from openfreebuds import event_bus
-from openfreebuds.base.device import DeviceConfig, BaseDevice
+from openfreebuds.device.base import DeviceConfig, BaseDevice
 from openfreebuds.events import EVENT_MANAGER_STATE_CHANGED, EVENT_MANAGER_CLOSE, EVENT_SPP_CLOSED
-from openfreebuds.spp.device import SPPDevice
 
 
 log = logging.getLogger("FreebudsManager")
@@ -29,8 +29,9 @@ class FreebudsManager:
     STATE_PAUSED = 6
 
     def __init__(self):
+        self.device_name = None
+        self.device_address = None
         self.device: Optional[BaseDevice] = None
-        self.address = None
 
         self.started = False
         self.paused = False
@@ -39,11 +40,13 @@ class FreebudsManager:
 
         self.scan_results = []
 
-    def set_device(self, address):
-        if self.address is not None:
+    def set_device(self, name, address):
+        if self.device_address is not None:
             self.unset_device()
 
-        self.address = address
+        self.device_name = name
+        self.device_address = address
+
         if self.config.SAFE_RUN_WRAPPER is None:
             threading.Thread(target=self._mainloop).start()
         else:
@@ -54,7 +57,8 @@ class FreebudsManager:
         if not self.started:
             return
 
-        self.address = None
+        self.device_name = None
+        self.device_address = None
         self.started = False
 
         self.set_state(self.STATE_NO_DEV)
@@ -98,7 +102,7 @@ class FreebudsManager:
         ])
 
         # Check that spp exists in paired
-        if not openfreebuds_backend.bt_device_exists(self.address):
+        if not openfreebuds_backend.bt_device_exists(self.device_address):
             log.warning("Device dont exist, bye...")
             self.set_state(self.STATE_NO_DEV)
             self.started = False
@@ -111,7 +115,7 @@ class FreebudsManager:
                 continue
 
             # If offline, update state and wait
-            if not openfreebuds_backend.bt_is_connected(self.address):
+            if not openfreebuds_backend.bt_is_connected(self.device_address):
                 self.set_state(self.STATE_OFFLINE)
                 self._close_device()
                 time.sleep(self.MAINLOOP_TIMEOUT)
@@ -121,7 +125,7 @@ class FreebudsManager:
             if not self.device:
                 log.info("Trying to create SPP device and connect...")
                 self.set_state(self.STATE_WAIT)
-                self.device = SPPDevice(self.address)
+                self.device = openfreebuds.device.create(self.device_name, self.device_address)
                 self.device.config = self.config
                 status = self.device.connect()
 

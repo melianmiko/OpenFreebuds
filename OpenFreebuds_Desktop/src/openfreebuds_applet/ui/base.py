@@ -3,7 +3,7 @@ import os
 
 import openfreebuds_backend
 from openfreebuds.manager import FreebudsManager
-from openfreebuds.spp.device import SPPDevice
+from openfreebuds.device.spp_device import SPPDevice
 from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import updater

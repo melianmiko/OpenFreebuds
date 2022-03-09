@@ -4,31 +4,18 @@ import threading
 import time
 
 from openfreebuds import protocol_utils, event_bus
-from openfreebuds.base.device import BaseDevice
+from openfreebuds.device.base import BaseDevice
 from openfreebuds.events import EVENT_SPP_CLOSED, EVENT_SPP_RECV, EVENT_SPP_WAKE_UP, EVENT_SPP_ON_WAKE_UP
 
 log = logging.getLogger("SPPDevice")
 port = 16
 
 
-def build_spp_bytes(data):
-    out = b"Z"
-    out += (len(data) + 1).to_bytes(2, byteorder="big") + b"\x00"
-    out += protocol_utils.array2bytes(data)
-
-    checksum = protocol_utils.crc16char(out)
-    out += (checksum >> 8).to_bytes(1, "big")
-    out += (checksum & 0b11111111).to_bytes(1, "big")
-
-    return out
-
-
-class BaseSPPDevice(BaseDevice):
+class SppProtocolDevice(BaseDevice):
     def __init__(self, address):
         super().__init__()
         self.last_pkg = None
         self.address = address
-        self.closed = False
         self.sleep = False
         self.socket = None
 
@@ -135,7 +122,7 @@ class BaseSPPDevice(BaseDevice):
         return True
 
     def _send_command(self, data, read=False):
-        self.send(build_spp_bytes(data))
+        self.send(protocol_utils.build_spp_bytes(data))
 
         if read:
             t = time.time()

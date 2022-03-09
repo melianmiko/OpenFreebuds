@@ -1,3 +1,15 @@
+def build_spp_bytes(data):
+    out = b"Z"
+    out += (len(data) + 1).to_bytes(2, byteorder="big") + b"\x00"
+    out += array2bytes(data)
+
+    checksum = crc16char(out)
+    out += (checksum >> 8).to_bytes(1, "big")
+    out += (checksum & 0b11111111).to_bytes(1, "big")
+
+    return out
+
+
 def crc16char(data: bytes):
     # This CRC table extracted from original app
     # I don't know how it works...

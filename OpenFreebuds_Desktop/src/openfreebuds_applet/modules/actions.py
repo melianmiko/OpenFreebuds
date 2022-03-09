@@ -1,6 +1,6 @@
 import logging
 
-from openfreebuds.base.device import BaseDevice
+from openfreebuds.device.base import BaseDevice
 from openfreebuds_applet.l18n import t
 
 log = logging.getLogger("AppletActions")

@@ -72,11 +72,12 @@ def run_shell():
     print()
 
     num = int(input("Enter device num to use: "))
+    name = devices[num]["name"]
     address = devices[num]["address"]
 
     # Start shell
     print("-- Using device", address)
-    man.set_device(address)
+    man.set_device(name, address)
 
     while True:
         print("-- Waiting for spp connect...")
