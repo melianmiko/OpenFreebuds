@@ -5,7 +5,7 @@ import time
 
 from openfreebuds import protocol_utils, event_bus
 from openfreebuds.device.base import BaseDevice
-from openfreebuds.events import EVENT_SPP_CLOSED, EVENT_SPP_RECV, EVENT_SPP_WAKE_UP, EVENT_SPP_ON_WAKE_UP
+from openfreebuds.constants.events import EVENT_SPP_CLOSED, EVENT_SPP_RECV, EVENT_SPP_WAKE_UP, EVENT_SPP_ON_WAKE_UP
 
 log = logging.getLogger("SPPDevice")
 port = 16

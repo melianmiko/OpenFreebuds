@@ -7,7 +7,7 @@ import openfreebuds.device
 import openfreebuds_backend
 from openfreebuds import event_bus
 from openfreebuds.device.base import DeviceConfig, BaseDevice
-from openfreebuds.events import EVENT_MANAGER_STATE_CHANGED, EVENT_MANAGER_CLOSE, EVENT_SPP_CLOSED
+from openfreebuds.constants.events import EVENT_MANAGER_STATE_CHANGED, EVENT_MANAGER_CLOSE, EVENT_SPP_CLOSED
 
 
 log = logging.getLogger("FreebudsManager")

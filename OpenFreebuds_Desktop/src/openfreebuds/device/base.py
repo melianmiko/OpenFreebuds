@@ -1,5 +1,5 @@
 from openfreebuds import event_bus
-from openfreebuds.events import EVENT_DEVICE_PROP_CHANGED
+from openfreebuds.constants.events import EVENT_DEVICE_PROP_CHANGED
 
 
 class DeviceConfig:

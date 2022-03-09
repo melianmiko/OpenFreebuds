@@ -2,7 +2,7 @@ import logging
 
 import openfreebuds_backend
 from openfreebuds import event_bus, device
-from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
+from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.settings import SettingsStorage

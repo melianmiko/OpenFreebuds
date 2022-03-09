@@ -4,7 +4,7 @@ import webbrowser
 
 import openfreebuds_backend
 from openfreebuds import event_bus, cli_io
-from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
+from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds_applet import utils
 from openfreebuds_applet.modules import hotkeys, http_server, actions
 from openfreebuds_applet.ui import icons

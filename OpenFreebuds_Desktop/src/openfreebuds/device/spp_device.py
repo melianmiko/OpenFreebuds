@@ -1,6 +1,7 @@
 import logging
 
 from openfreebuds import protocol_utils
+from openfreebuds.constants import spp_commands
 from openfreebuds.device.spp_protocol import SppProtocolDevice
 
 log = logging.getLogger("SPPDevice")
@@ -13,69 +14,55 @@ ignored_headers = [
 ]
 
 
-class SPPCommands:
-    GET_DEVICE_INFO = [1, 7, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0,
-                       7, 0, 8, 0, 9, 0, 10, 0, 11, 0,
-                       12, 0, 15, 0, 25, 0]
-    GET_BATTERY = [1, 8, 1, 0, 2, 0, 3, 0]
-    GET_NOISE_MODE = [43, 42, 1, 0]
-    GET_AUTO_PAUSE = [43, 17, 1, 0]
-    GET_TOUCHPAD_ENABLED = [1, 45, 1, 1]
-    GET_LONG_TAP_ACTION = [43, 23, 1, 0, 2, 0]
-    GET_SHORT_TAP_ACTION = [1, 32, 1, 0, 2, 0]
-    GET_LANGUAGE = [12, 2, 1, 0, 3, 0]
-    GET_NOISE_CONTROL_ACTION = [43, 25, 1, 0, 2, 0]
-
-
 class SPPDevice(SppProtocolDevice):
     def __init__(self, address):
         super().__init__(address)
 
     def on_init(self):
-        self._send_command(SPPCommands.GET_DEVICE_INFO, True)
-        self._send_command(SPPCommands.GET_LANGUAGE, True)
-        self._send_command(SPPCommands.GET_BATTERY, True)
-        self._send_command(SPPCommands.GET_NOISE_MODE, True)
-        self._send_command(SPPCommands.GET_AUTO_PAUSE, True)
-        self._send_command(SPPCommands.GET_TOUCHPAD_ENABLED, True)
-        self._send_command(SPPCommands.GET_SHORT_TAP_ACTION, True)
-        self._send_command(SPPCommands.GET_LONG_TAP_ACTION, True)
-        self._send_command(SPPCommands.GET_NOISE_CONTROL_ACTION, True)
+        self._send_command(spp_commands.GET_DEVICE_INFO, True)
+        self._send_command(spp_commands.GET_LANGUAGE, True)
+        self._send_command(spp_commands.GET_BATTERY, True)
+        self._send_command(spp_commands.GET_NOISE_MODE, True)
+        self._send_command(spp_commands.GET_AUTO_PAUSE, True)
+        self._send_command(spp_commands.GET_TOUCHPAD_ENABLED, True)
+        self._send_command(spp_commands.GET_SHORT_TAP_ACTION, True)
+        self._send_command(spp_commands.GET_LONG_TAP_ACTION, True)
+        self._send_command(spp_commands.GET_NOISE_CONTROL_ACTION, True)
 
         # Create dummy properties for service group
         self.put_property("service", "language", "_")
 
     def on_wake_up(self):
-        self._send_command(SPPCommands.GET_BATTERY, True)
-        self._send_command(SPPCommands.GET_NOISE_MODE, True)
+        self._send_command(spp_commands.GET_BATTERY, True)
+        self._send_command(spp_commands.GET_NOISE_MODE, True)
 
     def set_property(self, group, prop, value):
         if group == "anc" and prop == "mode":
             self._send_command([43, 4, 1, 1, value])
         elif group == "config" and prop == "auto_pause":
             self._send_command([43, 16, 1, 1, value])
-            self._send_command(SPPCommands.GET_AUTO_PAUSE)
+            self._send_command(spp_commands.GET_AUTO_PAUSE)
         elif group == "action" and prop == "double_tap_left":
             self._send_command([1, 31, 1, 1, value])
-            self._send_command(SPPCommands.GET_SHORT_TAP_ACTION)
+            self._send_command(spp_commands.GET_SHORT_TAP_ACTION)
         elif group == "action" and prop == "double_tap_right":
             self._send_command([1, 31, 2, 1, value])
-            self._send_command(SPPCommands.GET_SHORT_TAP_ACTION)
+            self._send_command(spp_commands.GET_SHORT_TAP_ACTION)
         elif group == "action" and prop == "long_tap_left":
             self._send_command([43, 22, 1, 1, value])
-            self._send_command(SPPCommands.GET_LONG_TAP_ACTION)
+            self._send_command(spp_commands.GET_LONG_TAP_ACTION)
         elif group == "action" and prop == "long_tap_right":
             self._send_command([43, 22, 2, 1, value])
-            self._send_command(SPPCommands.GET_LONG_TAP_ACTION)
+            self._send_command(spp_commands.GET_LONG_TAP_ACTION)
         elif group == "action" and prop == "noise_control_left":
             self._send_command([43, 24, 1, 1, value])
-            self._send_command(SPPCommands.GET_NOISE_CONTROL_ACTION)
+            self._send_command(spp_commands.GET_NOISE_CONTROL_ACTION)
         elif group == "action" and prop == "noise_control_right":
             self._send_command([43, 24, 2, 1, value])
-            self._send_command(SPPCommands.GET_NOISE_CONTROL_ACTION)
+            self._send_command(spp_commands.GET_NOISE_CONTROL_ACTION)
         elif group == "config" and prop == "touchpad_enabled":
             self._send_command([1, 44, 1, 1, value])
-            self._send_command(SPPCommands.GET_TOUCHPAD_ENABLED)
+            self._send_command(spp_commands.GET_TOUCHPAD_ENABLED)
         elif group == "service" and prop == "language":
             data = value.encode("utf8")
             data = protocol_utils.bytes2array(data)

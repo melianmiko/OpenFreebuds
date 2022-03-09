@@ -7,7 +7,7 @@ import urllib.request
 import openfreebuds_applet
 import openfreebuds_backend
 from openfreebuds import event_bus, manager, cli_io
-from openfreebuds.events import EVENT_MANAGER_STATE_CHANGED
+from openfreebuds.constants.events import EVENT_MANAGER_STATE_CHANGED
 from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import http_server
