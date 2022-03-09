@@ -1,23 +1,28 @@
 import logging
 import traceback
 
+from openfreebuds.base.device import BaseDevice
+
 log = logging.getLogger("CLI-IO")
 
 
 # noinspection PyBroadException
 def dev_command(manager, cmd: list[str]) -> str:
-    dev = manager.device
+    dev = manager.device                    # type: BaseDevice
     out = ""
 
     try:
         if cmd[0] == "l":
-            for a in dev.list_properties():
-                out += str(a) + " " + str(dev.get_property(a)) + "\n"
+            storage = dev.list_properties()
+            for group_name in storage:
+                for prop_name in storage[group_name]:
+                    out += str(group_name).ljust(10) + " " + str(prop_name).ljust(48) + " " + \
+                           str(storage[group_name][prop_name]) + "\n"
         elif cmd[0] == "set":
-            dev.set_property(cmd[1], int(cmd[2]))
+            dev.set_property(cmd[1], cmd[2], int(cmd[3]))
             out += "OK\n"
         elif cmd[0] == "set_str":
-            dev.set_property(cmd[1], cmd[2])
+            dev.set_property(cmd[1], cmd[2], cmd[3])
             out += "OK\n"
         elif cmd[0] == "w":
             ints = []

@@ -39,34 +39,38 @@ class SPPDevice(BaseSPPDevice):
         self.send_command(SPPCommands.GET_LONG_TAP_ACTION, True)
         self.send_command(SPPCommands.GET_NOISE_CONTROL_ACTION, True)
 
-    def set_property(self, prop, value):
-        if prop == "noise_mode" and value in [0, 1, 2]:
+    def on_wake_up(self):
+        self.send_command(SPPCommands.GET_BATTERY, True)
+        self.send_command(SPPCommands.GET_NOISE_MODE, True)
+
+    def set_property(self, group, prop, value):
+        if group == "anc" and prop == "mode":
             self.send_command([43, 4, 1, 1, value])
-        elif prop == "auto_pause" and value in [0, 1]:
+        elif group == "config" and prop == "auto_pause":
             self.send_command([43, 16, 1, 1, value])
             self.send_command(SPPCommands.GET_AUTO_PAUSE)
-        elif prop == "action_double_tap_left":
+        elif group == "action" and prop == "double_tap_left":
             self.send_command([1, 31, 1, 1, value])
             self.send_command(SPPCommands.GET_SHORT_TAP_ACTION)
-        elif prop == "action_double_tap_right":
+        elif group == "action" and prop == "double_tap_right":
             self.send_command([1, 31, 2, 1, value])
             self.send_command(SPPCommands.GET_SHORT_TAP_ACTION)
-        elif prop == "action_long_tap_left":
+        elif group == "action" and prop == "long_tap_left":
             self.send_command([43, 22, 1, 1, value])
             self.send_command(SPPCommands.GET_LONG_TAP_ACTION)
-        elif prop == "action_long_tap_right":
+        elif group == "action" and prop == "long_tap_right":
             self.send_command([43, 22, 2, 1, value])
             self.send_command(SPPCommands.GET_LONG_TAP_ACTION)
-        elif prop == "action_noise_control_left":
+        elif group == "action" and prop == "noise_control_left":
             self.send_command([43, 24, 1, 1, value])
             self.send_command(SPPCommands.GET_NOISE_CONTROL_ACTION)
-        elif prop == "action_noise_control_right":
+        elif group == "action" and prop == "noise_control_right":
             self.send_command([43, 24, 2, 1, value])
             self.send_command(SPPCommands.GET_NOISE_CONTROL_ACTION)
-        elif prop == "touchpad_enabled":
+        elif group == "config" and prop == "touchpad_enabled":
             self.send_command([1, 44, 1, 1, value])
             self.send_command(SPPCommands.GET_TOUCHPAD_ENABLED)
-        elif prop == "language":
+        elif group == "service" and prop == "language":
             data = value.encode("utf8")
             data = protocol_utils.bytes2array(data)
             self.send_command([12, 1, 1, len(data)] + data + [2, 1, 1])
@@ -110,77 +114,77 @@ class SPPDevice(BaseSPPDevice):
 
         supported = contents.find_by_type(3)
         if supported.length > 1:
-            self.put_property("supported_languages", supported.get_string())
+            self.put_property("info", "supported_languages", supported.get_string())
 
     def _parse_battery_pkg(self, pkg):
         contents = protocol_utils.parse_tlv(pkg[2:])
 
         level = contents.find_by_type(2)
         if level.length > 0:
-            self.put_property("battery_left", level.data[0])
-            self.put_property("battery_right", level.data[1])
-            self.put_property("battery_case", level.data[2])
+            self.put_property("battery", "left", level.data[0])
+            self.put_property("battery", "right", level.data[1])
+            self.put_property("battery", "case", level.data[2])
 
     def _parse_in_ear_state(self, pkg):
         contents = protocol_utils.parse_tlv(pkg[2:])
 
         row = contents.find_by_types([8, 9])
         if row.length == 1:
-            self.put_property("is_headphone_in", row.data[0] == 1)
+            self.put_property("state", "in_ear", row.data[0] == 1)
 
     def _parse_noise_mode(self, pkg):
         contents = protocol_utils.parse_tlv(pkg[2:])
 
         row = contents.find_by_type(1)
         if row.length == 2:
-            self.put_property("noise_mode", row.data[1])
+            self.put_property("anc", "mode", row.data[1])
 
     def _parse_touchpad_pkg(self, pkg):
         contents = protocol_utils.parse_tlv(pkg[2:])
 
         row = contents.find_by_type(1)
         if row.length == 1:
-            self.put_property("touchpad_enabled", row.data[0])
+            self.put_property("config", "touchpad_enabled", row.data[0])
 
     def _parse_noise_control_function(self, pkg):
         contents = protocol_utils.parse_tlv(pkg[2:])
 
         left = contents.find_by_type(1)
         if left.length == 1:
-            self.put_property("action_noise_control_left", left.data[0])
+            self.put_property("action", "noise_control_left", left.data[0])
 
         right = contents.find_by_type(2)
         if right.length == 1:
-            self.put_property("action_noise_control_right", right.data[0])
+            self.put_property("action", "noise_control_right", right.data[0])
 
     def _parse_auto_pause_mode(self, pkg):
         contents = protocol_utils.parse_tlv(pkg[2:])
 
         row = contents.find_by_type(1)
         if row.length == 1:
-            self.put_property("auto_pause", row.data[0])
+            self.put_property("config", "auto_pause", row.data[0])
 
     def _parse_long_tap_action(self, pkg):
         contents = protocol_utils.parse_tlv(pkg[2:])
 
         left = contents.find_by_type(1)
         if left.length == 1:
-            self.put_property("action_long_tap_left", left.data[0])
+            self.put_property("action", "long_tap_left", left.data[0])
 
         right = contents.find_by_type(2)
         if right.length == 1:
-            self.put_property("action_long_tap_right", right.data[0])
+            self.put_property("action", "long_tap_right", right.data[0])
 
     def _parse_double_tap_action(self, pkg):
         contents = protocol_utils.parse_tlv(pkg[2:])
 
         left = contents.find_by_type(1)
         if left.length == 1:
-            self.put_property("action_double_tap_left", left.data[0])
+            self.put_property("action", "double_tap_left", left.data[0])
 
         right = contents.find_by_type(2)
         if right.length == 1:
-            self.put_property("action_double_tap_right", right.data[0])
+            self.put_property("action", "double_tap_right", right.data[0])
 
     def _parse_device_info(self, pkg):
         contents = protocol_utils.parse_tlv(pkg[2:])
@@ -195,4 +199,4 @@ class SPPDevice(BaseSPPDevice):
         for key in descriptor:
             row = contents.find_by_type(descriptor[key])
             if row.length > 0:
-                self.put_property(key, row.get_string())
+                self.put_property("info", key, row.get_string())

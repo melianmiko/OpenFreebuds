@@ -4,6 +4,7 @@ import time
 
 import openfreebuds_backend
 from openfreebuds import event_bus
+from openfreebuds.base.device import DeviceConfig
 from openfreebuds.events import EVENT_MANAGER_STATE_CHANGED, EVENT_MANAGER_CLOSE, EVENT_SPP_CLOSED
 from openfreebuds.spp.device import SPPDevice
 
@@ -30,11 +31,11 @@ class FreebudsManager:
     def __init__(self):
         self.device = None
         self.address = None
-        self.safe_run_wrapper = None
 
         self.started = False
         self.paused = False
         self.state = self.STATE_NO_DEV
+        self.config = DeviceConfig()
 
         self.scan_results = []
 
@@ -43,11 +44,11 @@ class FreebudsManager:
             self.unset_device()
 
         self.address = address
-        if self.safe_run_wrapper is None:
+        if self.config.SAFE_RUN_WRAPPER is None:
             threading.Thread(target=self._mainloop).start()
         else:
             log.debug("Running mainloop via safe wrapper")
-            self.safe_run_wrapper(self._mainloop, "ManagerThread", False)
+            self.config.SAFE_RUN_WRAPPER(self._mainloop, "ManagerThread", False)
 
     def unset_device(self, lock=True):
         if not self.started:
@@ -121,7 +122,7 @@ class FreebudsManager:
                 log.info("Trying to create SPP device and connect...")
                 self.set_state(self.STATE_WAIT)
                 self.device = SPPDevice(self.address)
-                self.device.safe_run_wrapper = self.safe_run_wrapper
+                self.device.config = self.config
                 status = self.device.connect()
 
                 if not status:

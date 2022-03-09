@@ -7,6 +7,7 @@ import pystray
 import openfreebuds.manager
 import openfreebuds_backend
 from openfreebuds import event_bus
+from openfreebuds.base.device import BaseDevice
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE_PROP_CHANGED, EVENT_MANAGER_STATE_CHANGED
 from openfreebuds_applet import settings, utils
 from openfreebuds_applet.modules import hotkeys, http_server, updater
@@ -32,7 +33,7 @@ class FreebudsApplet:
         self.log = StringIO()
 
         self.manager = openfreebuds.manager.create()
-        self.manager.safe_run_wrapper = utils.run_thread_safe
+        self.manager.config.SAFE_RUN_WRAPPER = utils.run_thread_safe
 
         self.menu_app = ApplicationMenuPart(self)
         self.menu_header = HeaderMenuPart(self)
@@ -85,15 +86,15 @@ class FreebudsApplet:
         noise_mode = 0
 
         if mgr_state == self.manager.STATE_CONNECTED:
-            dev = self.manager.device
+            dev = self.manager.device           # type: BaseDevice
 
-            battery_left = dev.get_property("battery_left", 0)
-            battery_right = dev.get_property("battery_right", 0)
+            battery_left = dev.find_property("battery", "left", 0)
+            battery_right = dev.find_property("battery", "right", 0)
             if battery_left == 0:
                 battery_left = 100
             if battery_right == 0:
                 battery_right = 100
-            noise_mode = dev.get_property("noise_mode", 0)
+            noise_mode = dev.find_property("anc", "mode", 0)
             battery = min(battery_right, battery_left)
 
         new_hash = icons.get_hash(mgr_state, battery, noise_mode)

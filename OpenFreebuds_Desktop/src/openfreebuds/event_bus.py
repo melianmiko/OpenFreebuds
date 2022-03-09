@@ -1,5 +1,6 @@
 import logging
 import queue
+import threading
 
 log = logging.getLogger("EventBus")
 
@@ -31,6 +32,10 @@ class Listener(queue.Queue):
 def invoke(event_name: str):
     for listener in Data.listeners:
         listener.invoke(event_name)
+
+
+def timer(timeout: int, event_name: str):
+    threading.Timer(interval=timeout, function=invoke, args=[event_name]).start()
 
 
 def wait_for(ev_filter, timeout=None):

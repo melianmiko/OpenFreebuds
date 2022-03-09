@@ -161,14 +161,12 @@ class DeviceInfoMenu(TrayMenu):
 
         dev = self.applet.manager.device
         settings = self.applet.settings
+        props = dev.find_group("info")
 
         message = "{} ({})\n\n".format(settings.device_name, settings.address)
-        message += "Model: {}\n".format(dev.get_property("device_model", "---"))
-        message += "HW ver: {}\n".format(dev.get_property("device_ver", "---"))
-        message += "FW ver: {}\n".format(dev.get_property("software_ver", "---"))
-        message += "OTA ver: {}\n".format(dev.get_property("ota_version", "---"))
-        message += "S/N: {}\n".format(dev.get_property("serial_number", "---"))
-        message += "Headphone in: {}\n".format(dev.get_property("is_headphone_in", "---"))
+
+        for a in props:
+            message += "{}: {}\n".format(a, props[a])
 
         openfreebuds_backend.show_message(message)
 

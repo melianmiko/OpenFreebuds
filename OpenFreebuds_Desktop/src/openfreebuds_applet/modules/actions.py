@@ -1,18 +1,19 @@
 import logging
 
+from openfreebuds.base.device import BaseDevice
 from openfreebuds_applet.l18n import t
 
 log = logging.getLogger("AppletActions")
 
 
 def do_next_mode(applet):
-    dev = _get_device(applet)
+    dev = _get_device(applet)       # type: BaseDevice
     if dev is not None:
-        current = dev.get_property("noise_mode", -99)
+        current = dev.find_property("anc", "mode", -99)
         if current == -99:
             return
         next_mode = (current + 1) % 3
-        dev.set_property("noise_mode", next_mode)
+        dev.set_property("anc", "mode", next_mode)
         log.debug("Switched to mode " + str(next_mode))
         return True
     else:
@@ -20,9 +21,9 @@ def do_next_mode(applet):
 
 
 def do_mode(applet, mode):
-    dev = _get_device(applet)
+    dev = _get_device(applet)       # type: BaseDevice
     if dev is not None:
-        dev.set_property("noise_mode", mode)
+        dev.set_property("anc", "mode", mode)
         log.debug("Switched to mode " + str(mode))
     else:
         return False
