@@ -1,10 +1,11 @@
 import logging
 import threading
 import time
+from typing import Optional
 
 import openfreebuds_backend
 from openfreebuds import event_bus
-from openfreebuds.base.device import DeviceConfig
+from openfreebuds.base.device import DeviceConfig, BaseDevice
 from openfreebuds.events import EVENT_MANAGER_STATE_CHANGED, EVENT_MANAGER_CLOSE, EVENT_SPP_CLOSED
 from openfreebuds.spp.device import SPPDevice
 
@@ -28,7 +29,7 @@ class FreebudsManager:
     STATE_PAUSED = 6
 
     def __init__(self):
-        self.device = None
+        self.device: Optional[BaseDevice] = None
         self.address = None
 
         self.started = False

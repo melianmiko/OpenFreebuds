@@ -3,7 +3,7 @@ import os
 import webbrowser
 
 import openfreebuds_backend
-from openfreebuds import event_bus
+from openfreebuds import event_bus, cli_io
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds_applet import utils
 from openfreebuds_applet.modules import hotkeys, http_server, actions
@@ -41,8 +41,31 @@ class ApplicationMenuPart(TrayMenu):
 
         self.add_item(t("action_exit"), self.applet.exit)
 
+        if self.applet.settings.enable_debug_features:
+            self.add_item("DEV: Run command", self.do_command)
+            self.add_item("DEV: Show logs", self.show_log)
+
         if self.applet.settings.compact_menu:
             self.wrap(t("submenu_app"))
+
+    def show_log(self):
+        value = self.applet.log.getvalue()
+        path = str(utils.get_app_storage_dir()) + "/last_log.txt"
+        with open(path, "w") as f:
+            f.write(value)
+
+        openfreebuds_backend.open_file(path)
+
+    def do_command(self):
+        openfreebuds_backend.ask_string("openfreebuds>", self.on_command)
+
+    def on_command(self, result):
+        if result is None or result == "":
+            return
+
+        command = result.split(" ")
+        result = cli_io.dev_command(self.applet.manager, command)
+        openfreebuds_backend.show_message(result)
 
     def about_dialog(self):
         version, debug = utils.get_version()

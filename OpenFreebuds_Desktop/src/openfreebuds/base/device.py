@@ -12,9 +12,6 @@ class BaseDevice:
         self._prop_storage = {}
         self.config = DeviceConfig()
 
-    def _send_command(self, ints, read=False):
-        raise Exception("Overwrite me!")
-
     def find_group(self, group):
         if group not in self._prop_storage:
             return {}
@@ -43,3 +40,12 @@ class BaseDevice:
 
     def list_properties(self):
         return self._prop_storage
+
+    def _send_command(self, ints, read=False):
+        raise Exception("Overwrite me!")
+
+    def close(self, lock=False):
+        raise Exception("Overwrite me!")
+
+    def connect(self):
+        raise Exception("Overwrite me!")

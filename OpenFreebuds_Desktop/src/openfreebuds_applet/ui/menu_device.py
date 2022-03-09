@@ -1,5 +1,6 @@
-from openfreebuds.base.device import BaseDevice
+from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t, ln
+from openfreebuds_applet.settings import SettingsStorage
 from openfreebuds_applet.wrapper.tray import TrayMenu
 
 
@@ -8,16 +9,17 @@ class DeviceMenu(TrayMenu):
     Device menu
     """
 
-    def __init__(self, applet):
+    def __init__(self, manager:  FreebudsManager, settings: SettingsStorage):
         super().__init__()
-        self.applet = applet
-        self.power_info = DevicePowerMenu(applet)
-        self.noise_control = NoiseControlMenu(applet)
-        self.gestures_menu = GesturesMenu(applet)
-        self.device_lang_menu = DeviceLangSetupMenu(applet)
+        self.manager = manager
+        self.settings = settings
+        self.power_info = DevicePowerMenu(manager, settings)
+        self.noise_control = NoiseControlMenu(manager)
+        self.gestures_menu = GesturesMenu(manager, settings)
+        self.device_lang_menu = DeviceLangSetupMenu(manager)
 
     def on_build(self):
-        compact = self.applet.settings.compact_menu
+        compact = self.settings.compact_menu
         self.include(self.power_info)
         self.add_separator()
 
@@ -34,12 +36,13 @@ class DevicePowerMenu(TrayMenu):
     Device power info menu
     """
 
-    def __init__(self, applet):
+    def __init__(self, manager:  FreebudsManager, settings: SettingsStorage):
         super().__init__()
-        self.applet = applet
+        self.manager = manager
+        self.settings = settings
 
     def on_build(self):
-        device = self.applet.manager.device
+        device = self.manager.device
         props = device.find_group("battery")
         for n in props:
             battery = props[n]
@@ -54,15 +57,18 @@ class GesturesMenu(TrayMenu):
     Device gestures setup menu
     """
 
-    def __init__(self, applet):
+    def __init__(self, manager:  FreebudsManager, settings: SettingsStorage):
         super().__init__()
-        self.applet = applet
-        self.lt_glob = ANCControlSetupMenu(applet)
-        self.dt_left = DoubleTapSetupMenu(applet, "double_tap_left")
-        self.dt_right = DoubleTapSetupMenu(applet, "double_tap_right")
+        self.manager = manager
+        self.settings = settings
+
+        self.lt_glob = ANCControlSetupMenu(manager)
+        self.dt_left = DoubleTapSetupMenu(manager, "double_tap_left")
+        self.dt_right = DoubleTapSetupMenu(manager, "double_tap_right")
 
     def on_build(self):
-        device = self.applet.manager.device
+        device = self.manager.device
+
         auto_pause_value = device.find_property("config", "auto_pause", -1)
         self.add_item(t("gesture_auto_pause"),
                       action=device.set_property,
@@ -95,13 +101,13 @@ class DoubleTapSetupMenu(TrayMenu):
         "tap_action_assistant": 0
     }
 
-    def __init__(self, applet, prop):
+    def __init__(self, manager: FreebudsManager, prop: str):
         super().__init__()
-        self.applet = applet
+        self.manager = manager
         self.prop = prop
 
     def on_build(self):
-        device = self.applet.manager.device
+        device = self.manager.device
         current = device.find_property("action", self.prop, -99)
         for name in self.VARIANTS:
             value = self.VARIANTS[name]
@@ -119,12 +125,12 @@ class ANCControlSetupMenu(TrayMenu):
         3: "noise_control_3"
     }
 
-    def __init__(self, applet):
+    def __init__(self, manager: FreebudsManager):
         super().__init__()
-        self.applet = applet
+        self.manager = manager
 
     def on_build(self):
-        device = self.applet.manager.device
+        device = self.manager.device
         enabled = device.find_property("action", "long_tap_left", -1) == 10
         current = device.find_property("action", "noise_control_left", -1)
 
@@ -135,14 +141,14 @@ class ANCControlSetupMenu(TrayMenu):
             self.add_item(t(str_key), action=self.set_current, checked=current == value, args=[value])
 
     def on_global_toggle(self):
-        device = self.applet.manager.device
+        device = self.manager.device
         enabled = device.find_property("action", "long_tap_left", -1) == 10
         val = -1 if enabled else 10
 
         device.set_property("action", "long_tap_left", val)
 
     def set_current(self, value):
-        device = self.applet.manager.device
+        device = self.manager.device
         device.set_property("action", "noise_control_left", value)
 
 
@@ -151,12 +157,12 @@ class NoiseControlMenu(TrayMenu):
     Noise control menu
     """
 
-    def __init__(self, applet):
+    def __init__(self, manager: FreebudsManager):
         super().__init__()
-        self.applet = applet
+        self.manager = manager
 
     def on_build(self):
-        device = self.applet.manager.device         # type: BaseDevice
+        device = self.manager.device
         current = device.find_property("anc", "mode", -1)
         next_mode = (current + 1) % 3
 
@@ -166,7 +172,7 @@ class NoiseControlMenu(TrayMenu):
                           checked=current == a, default=next_mode == a)
 
     def set_mode(self, val):
-        device = self.applet.manager.device
+        device = self.manager.device
         device.set_property("anc", "mode", val)
 
 
@@ -175,12 +181,12 @@ class DeviceLangSetupMenu(TrayMenu):
     Noise control menu
     """
 
-    def __init__(self, applet):
+    def __init__(self, manager: FreebudsManager):
         super().__init__()
-        self.applet = applet
+        self.manager = manager
 
     def on_build(self):
-        device = self.applet.manager.device         # type: BaseDevice
+        device = self.manager.device
         langs = device.find_property("info", "supported_languages").split(",")
         if len(langs) == 0:
             return

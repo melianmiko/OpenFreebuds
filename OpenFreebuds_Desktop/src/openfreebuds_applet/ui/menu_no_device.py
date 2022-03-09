@@ -3,7 +3,9 @@ import logging
 import openfreebuds_backend
 from openfreebuds import event_bus, device_names
 from openfreebuds.events import EVENT_UI_UPDATE_REQUIRED
+from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t
+from openfreebuds_applet.settings import SettingsStorage
 from openfreebuds_applet.wrapper.tray import TrayMenu
 from openfreebuds_backend import bt_list_devices
 
@@ -11,19 +13,20 @@ log = logging.getLogger("NoDeviceUI")
 
 
 class DeviceOfflineMenu(TrayMenu):
-    def __init__(self, applet):
+    def __init__(self, manager):
         super().__init__()
-        self.applet = applet
+        self.manager = manager          # type: FreebudsManager
 
     def on_build(self):
-        state = self.applet.manager.state
-        self.add_item(t("mgr_state_{}".format(state)), enabled=False)
+        self.add_item(t("mgr_state_{}".format(self.manager.state)),
+                      enabled=False)
 
 
 class DeviceScanMenu(TrayMenu):
-    def __init__(self, applet):
+    def __init__(self, manager, settings):
         super().__init__()
-        self.applet = applet
+        self.manager = manager          # type: FreebudsManager
+        self.settings = settings        # type: SettingsStorage
 
     def on_build(self):
         devices = bt_list_devices()
@@ -56,7 +59,7 @@ class DeviceScanMenu(TrayMenu):
         if not ui_result:
             return
 
-        self.applet.manager.set_device(address)
-        self.applet.settings.device_name = name
-        self.applet.settings.address = address
-        self.applet.settings.write()
+        self.manager.set_device(address)
+        self.settings.device_name = name
+        self.settings.address = address
+        self.settings.write()

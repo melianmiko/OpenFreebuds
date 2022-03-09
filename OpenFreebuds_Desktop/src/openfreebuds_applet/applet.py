@@ -36,10 +36,10 @@ class FreebudsApplet:
         self.manager.config.SAFE_RUN_WRAPPER = utils.run_thread_safe
 
         self.menu_app = ApplicationMenuPart(self)
-        self.menu_header = HeaderMenuPart(self)
-        self.menu_offline = DeviceOfflineMenu(self)
-        self.menu_scan = DeviceScanMenu(self)
-        self.menu_device = DeviceMenu(self)
+        self.menu_header = HeaderMenuPart(self.manager, self.settings)
+        self.menu_offline = DeviceOfflineMenu(self.manager)
+        self.menu_scan = DeviceScanMenu(self.manager, self.settings)
+        self.menu_device = DeviceMenu(self.manager, self.settings)
 
         self._tray = pystray.Icon(name="OpenFreebuds",
                                   title="OpenFreebuds",
