@@ -37,7 +37,7 @@ class SppProtocolDevice(BaseDevice):
             self.on_init()
 
             return True
-        except (ConnectionResetError, ConnectionRefusedError, OSError):
+        except (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError, OSError):
             log.exception("Can't create socket connection")
             self.close()
             return False
@@ -94,16 +94,24 @@ class SppProtocolDevice(BaseDevice):
         event_bus.invoke(EVENT_SPP_CLOSED)
 
     def _sleep_start(self):
-        log.debug("No packages, going to sleep...")
-        self.socket.close()
-        self.sleep = True
+        try:
+            log.debug("No packages, going to sleep...")
+            self.socket.close()
+            self.sleep = True
+        except (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError, OSError):
+            log.exception("Can't create socket connection")
+            self.close()
 
     def _sleep_leave(self):
-        self.sleep = False
-        self._connect_socket()
-        self.on_wake_up()
-        log.debug("Waked up...")
-        event_bus.invoke(EVENT_SPP_ON_WAKE_UP)
+        try:
+            self.sleep = False
+            self._connect_socket()
+            self.on_wake_up()
+            log.debug("Waked up...")
+            event_bus.invoke(EVENT_SPP_ON_WAKE_UP)
+        except (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError, OSError):
+            log.exception("Can't create socket connection")
+            self.close()
 
     def _do_recv(self):
         try:

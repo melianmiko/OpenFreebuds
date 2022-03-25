@@ -47,6 +47,7 @@ def bt_connect(address):
         ])
         return True
     except subprocess.CalledProcessError:
+        log.exception("Can't connect device")
         return False
 
 
@@ -63,6 +64,7 @@ def bt_disconnect(address):
         ])
         return True
     except subprocess.CalledProcessError:
+        log.exception("Can't disconnect device")
         return False
 
 

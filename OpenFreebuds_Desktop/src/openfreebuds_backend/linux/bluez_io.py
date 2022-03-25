@@ -40,7 +40,7 @@ def bt_connect(address):
         device.Connect()
         return True
     except dbus.exceptions.DBusException:
-        log.exception("Failed to check connection state")
+        log.exception("Failed to change connection state")
         return False
 
 
@@ -56,7 +56,7 @@ def bt_disconnect(address):
         device.Disconnect()
         return True
     except dbus.exceptions.DBusException:
-        log.exception("Failed to check connection state")
+        log.exception("Failed to change connection state")
         return False
 
 
@@ -106,7 +106,10 @@ def _dbus_find_bt_device(address):
                 if props.get("Address", "") == address:
                     return path
     except dbus.exceptions.DBusException:
-        return None
+        log.exception("Failed to find device")
+        pass
+
+    return None
 
 
 # From https://stackoverflow.com/questions/11486443/dbus-python-how-to-get-response-with-native-types
