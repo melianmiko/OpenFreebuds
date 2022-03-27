@@ -107,6 +107,7 @@ def run_safe(f, display_name, critical, args=None):
     except Exception:
         exc_text = traceback.format_exc()
         logging.getLogger("RunSafe").exception("Action {} failed.".format(display_name))
+        # TODO: Show message remove
         openfreebuds_backend.show_message(message.format(display_name, exc_text))
 
         if critical:

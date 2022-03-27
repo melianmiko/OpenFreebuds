@@ -2,6 +2,8 @@ import logging
 import os
 import webbrowser
 
+from mtrayapp import Menu
+
 import openfreebuds_backend
 from openfreebuds import event_bus, cli_io
 from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED
@@ -9,10 +11,9 @@ from openfreebuds_applet import utils
 from openfreebuds_applet.modules import hotkeys, http_server, actions
 from openfreebuds_applet.ui import icons
 from openfreebuds_applet.l18n import t, setup_language, setup_auto, ln
-from openfreebuds_applet.wrapper.tray import TrayMenu
 
 
-class ApplicationMenuPart(TrayMenu):
+class ApplicationMenuPart(Menu):
     """
     Base application settings menu part.
     """
@@ -66,7 +67,7 @@ class ApplicationMenuPart(TrayMenu):
 
         command = result.split(" ")
         result = cli_io.dev_command(self.applet.manager, command)
-        openfreebuds_backend.show_message(result)
+        self.application.message_box(result, "Dev mode")
 
     def about_dialog(self):
         version, debug = utils.get_version()
@@ -76,7 +77,7 @@ class ApplicationMenuPart(TrayMenu):
             message += "DEBUG ENABLED\n"
         message += "\n" + t("message_open_website")
 
-        openfreebuds_backend.ask_question(message, self.about_callback)
+        self.application.confirm_box(message, "OpenFreebuds Desktop", self.about_callback)
 
     @staticmethod
     def about_callback(result):
@@ -84,7 +85,7 @@ class ApplicationMenuPart(TrayMenu):
             webbrowser.open("https://melianmiko.ru/openfreebuds")
 
 
-class ThemeMenu(TrayMenu):
+class ThemeMenu(Menu):
     """
     Icon theme select menu
     """
@@ -113,7 +114,7 @@ class ThemeMenu(TrayMenu):
         event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
 
-class LanguageMenu(TrayMenu):
+class LanguageMenu(Menu):
     """
     Language select menu
     """
@@ -150,7 +151,7 @@ class LanguageMenu(TrayMenu):
         event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
 
-class HotkeysMenu(TrayMenu):
+class HotkeysMenu(Menu):
     """
     Language select menu
     """
@@ -205,7 +206,7 @@ class HotkeysMenu(TrayMenu):
         event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
 
-class SettingsMenu(TrayMenu):
+class SettingsMenu(Menu):
     """
     Base app settings menu
     """
@@ -239,7 +240,7 @@ class SettingsMenu(TrayMenu):
         self.settings.enable_sleep = not self.settings.enable_sleep
         self.settings.write()
         event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
-        openfreebuds_backend.show_message(t("sleep_info"))
+        self.application.message_box(t("sleep_info"), "OpenFreebuds")
 
     def toggle_debug(self):
         self.settings.enable_debug_features = not self.settings.enable_debug_features
@@ -270,7 +271,7 @@ class SettingsMenu(TrayMenu):
 
     def toggle_server_access(self):
         if not self.settings.server_access:
-            openfreebuds_backend.ask_question(t("server_global_warn"), self.do_toggle_access)
+            self.application.confirm_box(t("server_global_warn"), "WARNING", self.do_toggle_access)
         else:
             self.do_toggle_access(True)
 

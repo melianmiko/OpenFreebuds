@@ -1,25 +1,33 @@
+from mtrayapp import Menu
+
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t, ln
 from openfreebuds_applet.settings import SettingsStorage
-from openfreebuds_applet.wrapper.tray import TrayMenu
+from openfreebuds_applet.ui.base import HeaderMenuPart
+from openfreebuds_applet.ui.menu_app import ApplicationMenuPart
 
 
-class DeviceMenu(TrayMenu):
+class DeviceMenu(Menu):
     """
     Device menu
     """
 
-    def __init__(self, manager:  FreebudsManager, settings: SettingsStorage):
+    def __init__(self, applet):
         super().__init__()
-        self.manager = manager
-        self.settings = settings
-        self.power_info = DevicePowerMenu(manager, settings)
-        self.noise_control = NoiseControlMenu(manager)
-        self.gestures_menu = GesturesMenu(manager, settings)
-        self.device_lang_menu = DeviceLangSetupMenu(manager)
+        self.manager = applet.manager          # type: FreebudsManager
+        self.settings = applet.settings        # type: SettingsStorage
+        self.footer = ApplicationMenuPart(applet)
+        self.header = HeaderMenuPart(applet.manager, applet.settings)
+
+        self.power_info = DevicePowerMenu(self.manager, self.settings)
+        self.noise_control = NoiseControlMenu(self.manager)
+        self.gestures_menu = GesturesMenu(self.manager, self.settings)
+        self.device_lang_menu = DeviceLangSetupMenu(self.manager)
 
     def on_build(self):
         compact = self.settings.compact_menu
+
+        self.include(self.header)
         self.include(self.power_info)
         self.add_separator()
 
@@ -29,9 +37,10 @@ class DeviceMenu(TrayMenu):
         self.add_submenu(t("submenu_gestures"), self.gestures_menu, visible=compact)
         self.include(self.gestures_menu, visible=not compact)
         self.add_submenu(t("submenu_device_language"), self.device_lang_menu)
+        self.include(self.footer)
 
 
-class DevicePowerMenu(TrayMenu):
+class DevicePowerMenu(Menu):
     """
     Device power info menu
     """
@@ -52,7 +61,7 @@ class DevicePowerMenu(TrayMenu):
             self.add_item(value, enabled=False)
 
 
-class GesturesMenu(TrayMenu):
+class GesturesMenu(Menu):
     """
     Device gestures setup menu
     """
@@ -89,7 +98,7 @@ class GesturesMenu(TrayMenu):
                          visible=right_2tap != -99)
 
 
-class DoubleTapSetupMenu(TrayMenu):
+class DoubleTapSetupMenu(Menu):
     """
     Noise control menu
     """
@@ -117,7 +126,7 @@ class DoubleTapSetupMenu(TrayMenu):
                           args=["action", self.prop, value])
 
 
-class ANCControlSetupMenu(TrayMenu):
+class ANCControlSetupMenu(Menu):
     VARIANTS = {
         2: "noise_control_2",
         1: "noise_control_1",
@@ -152,7 +161,7 @@ class ANCControlSetupMenu(TrayMenu):
         device.set_property("action", "noise_control_left", value)
 
 
-class NoiseControlMenu(TrayMenu):
+class NoiseControlMenu(Menu):
     """
     Noise control menu
     """
@@ -176,7 +185,7 @@ class NoiseControlMenu(TrayMenu):
         device.set_property("anc", "mode", val)
 
 
-class DeviceLangSetupMenu(TrayMenu):
+class DeviceLangSetupMenu(Menu):
     """
     Noise control menu
     """

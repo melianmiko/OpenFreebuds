@@ -42,6 +42,7 @@ def main():
     elif args.shell:
         run_shell()
     elif utils.is_running():
+        # TODO: Do something with this shit
         openfreebuds_backend.show_message(t("application_running_message"), callback=lambda: sys.exit())
         openfreebuds_backend.ui_lock()
     else:

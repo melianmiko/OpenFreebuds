@@ -8,10 +8,10 @@ from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import updater
 from openfreebuds_applet.settings import SettingsStorage
-from openfreebuds_applet.wrapper.tray import TrayMenu
+from mtrayapp import Menu
 
 
-class QuitingMenu(TrayMenu):
+class QuitingMenu(Menu):
     """
     This menu will appear after clicking "Exit" action
     and will provide force quit option
@@ -23,7 +23,7 @@ class QuitingMenu(TrayMenu):
         self.add_item(t("action_kill_app"), action=os._exit, args=[0])
 
 
-class HeaderMenuPart(TrayMenu):
+class HeaderMenuPart(Menu):
     """
     This is base menu header. Contains:
     - Update option, if available
@@ -77,7 +77,7 @@ class HeaderMenuPart(TrayMenu):
         log = logging.getLogger("ForceConnectUI")
 
         if manager.paused:
-            openfreebuds_backend.show_message(t("error_in_work"), is_error=True)
+            self.application.error_box(t("error_in_work"), "OpenFreebuds")
             return
 
         manager.paused = True
@@ -92,7 +92,7 @@ class HeaderMenuPart(TrayMenu):
                 raise Exception("fail")
         except Exception:
             log.exception("Can't force connect device")
-            openfreebuds_backend.show_message(t("error_force_action_fail"), is_error=True)
+            self.application.error_box(t("error_force_action_fail"), "OpenFreebuds")
 
         log.debug("Finish force connecting")
         manager.paused = False
@@ -103,7 +103,7 @@ class HeaderMenuPart(TrayMenu):
         log = logging.getLogger("ForceConnectUI")
 
         if manager.paused:
-            openfreebuds_backend.show_message(t("error_in_work"), is_error=True)
+            self.application.error_box(t("error_in_work"), "OpenFreebuds")
             return
 
         manager.paused = True
@@ -114,13 +114,13 @@ class HeaderMenuPart(TrayMenu):
                 raise Exception("fail")
         except Exception:
             log.exception("Can't disconnect device")
-            openfreebuds_backend.show_message(t("error_force_action_fail"), is_error=True)
+            self.application.error_box(t("error_force_action_fail"), "OpenFreebuds")
 
         log.debug("Finish force disconnecting")
         manager.paused = False
 
 
-class DeviceInfoMenu(TrayMenu):
+class DeviceInfoMenu(Menu):
     """
     Device info/unpair submenu
     """
@@ -135,7 +135,7 @@ class DeviceInfoMenu(TrayMenu):
 
     def show_device_info(self):
         if self.manager.state != self.manager.STATE_CONNECTED:
-            openfreebuds_backend.show_message(t("mgr_state_2"))
+            self.application.message_box(t("mgr_state_2"), "Device info")
             return
 
         props = self.manager.device.find_group("info")
@@ -144,7 +144,7 @@ class DeviceInfoMenu(TrayMenu):
         for a in props:
             message += "{}: {}\n".format(a, props[a])
 
-        openfreebuds_backend.show_message(message)
+        self.application.message_box(message, "Device info")
 
     def do_unpair(self):
         self.settings.address = ""

@@ -1,16 +1,8 @@
 DESTDIR=
 
-all: lib builddir/openfreebuds/pystray
+all:
 	cp -r src/* builddir/openfreebuds
 	find builddir/openfreebuds -type d -name "__pycache__" -exec rm -rf {} +
-
-lib:
-	mkdir -p lib
-	cd lib && pip wheel --no-deps pystray==0.19.2
-
-builddir/openfreebuds/pystray:
-	mkdir -p builddir/openfreebuds/openfreebuds
-	pip install --target=builddir/openfreebuds --no-deps lib/*
 
 install:
 	rm -rf ${DESTDIR}/opt/openfreebuds

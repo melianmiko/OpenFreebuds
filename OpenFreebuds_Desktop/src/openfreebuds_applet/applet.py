@@ -2,7 +2,7 @@ import logging
 import os
 from io import StringIO
 
-import pystray
+import mtrayapp
 
 import openfreebuds.manager
 import openfreebuds_backend
@@ -39,14 +39,14 @@ class FreebudsApplet:
 
         self.menu_app = ApplicationMenuPart(self)
         self.menu_header = HeaderMenuPart(self.manager, self.settings)
-        self.menu_offline = DeviceOfflineMenu(self.manager)
-        self.menu_scan = DeviceScanMenu(self.manager, self.settings)
-        self.menu_device = DeviceMenu(self.manager, self.settings)
+        self.menu_offline = DeviceOfflineMenu(self)
+        self.menu_scan = DeviceScanMenu(self)
+        self.menu_device = DeviceMenu(self)
 
-        self._tray = pystray.Icon(name="OpenFreebuds",
-                                  title="OpenFreebuds",
-                                  icon=icons.generate_icon(1),
-                                  menu=pystray.Menu())
+        self.tray_application = mtrayapp.TrayApplication(name="OpenFreebuds",
+                                                         title="OpenFreebuds",
+                                                         icon=icons.generate_icon(1),
+                                                         menu=mtrayapp.Menu())
 
     def start(self):
         icons.set_theme(self.settings.theme)
@@ -59,7 +59,7 @@ class FreebudsApplet:
             self.start_debug()
 
         utils.run_thread_safe(self._ui_update_loop, "Applet", True)
-        self._tray.run()
+        self.tray_application.run()
 
     def start_debug(self):
         print("Start debug logging mode")
@@ -73,9 +73,7 @@ class FreebudsApplet:
 
     def exit(self):
         log.info("Exiting this app...")
-        items = QuitingMenu().build()
-        menu = pystray.Menu(*items)
-        self._tray.menu = menu
+        self.tray_application.menu = QuitingMenu()
 
         self.allow_ui_update = False
         self.started = False
@@ -90,7 +88,7 @@ class FreebudsApplet:
         noise_mode = 0
 
         if mgr_state == self.manager.STATE_CONNECTED:
-            dev = self.manager.device           # type: BaseDevice
+            dev = self.manager.device  # type: BaseDevice
 
             battery_left = dev.find_property("battery", "left", 0)
             battery_right = dev.find_property("battery", "right", 0)
@@ -105,24 +103,17 @@ class FreebudsApplet:
         if self.current_icon_hash == new_hash:
             return
 
-        self._tray.icon = icons.generate_icon(mgr_state, battery, noise_mode)
+        self.tray_application.icon = icons.generate_icon(mgr_state, battery, noise_mode)
         self.current_icon_hash = new_hash
 
     def apply_menu(self, menu):
         if not self.allow_ui_update:
             return
 
-        items = self.menu_header.build()
-        items += menu.build()
-        items += self.menu_app.build()
-
-        items_hash = utils.items_hash_string(items)
-
+        items_hash = utils.items_hash_string(menu.items)
         if self.current_menu_hash != items_hash:
-            menu = pystray.Menu(*items)
-
             self.current_menu_hash = items_hash
-            self._tray.menu = menu
+            self.tray_application.menu = menu
 
             log.debug("Menu updated, hash=" + items_hash)
 
@@ -140,7 +131,7 @@ class FreebudsApplet:
             log.info("Using saved address: " + self.settings.address)
             self.manager.set_device(self.settings.device_name, self.settings.address)
         else:
-            openfreebuds_backend.show_message(t("first_run_message"))
+            self.tray_application.message_box(t("first_run_message"), "Welcome")
 
         while self.started:
             self.update_icon()
@@ -153,7 +144,7 @@ class FreebudsApplet:
             event_queue.wait()
 
         self.manager.close()
-        self._tray.stop()
+        self.tray_application.stop()
         log.info("Tray stopped, exiting...")
 
         # noinspection PyProtectedMember,PyUnresolvedReferences

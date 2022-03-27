@@ -19,6 +19,7 @@ class Data:
     has_update = False
     new_version = ""
     release_data = None
+    tray_application = None
 
 
 def get_result():
@@ -27,6 +28,7 @@ def get_result():
 
 def start(applet):
     Data.show_messages = applet.settings.enable_update_dialog
+    Data.tray_application = applet.tray_application
     utils.run_thread_safe(_check_updates, "UpdateChecker", False)
 
 
@@ -68,9 +70,10 @@ def show_update_message():
     log.debug(msg_base)
 
     if is_repo_installed():
-        openfreebuds_backend.show_message(t("update_message_auto").format(msg_base))
+        Data.tray_application.message_box(t("update_message_auto").format(msg_base), "OpenFreebuds Updater")
     else:
-        openfreebuds_backend.ask_question(t("update_message").format(msg_base), on_ui_result)
+        Data.tray_application.confirm_box(t("update_message").format(msg_base), "OpenFreebuds Updater",
+                                          on_ui_result)
 
 
 def on_ui_result(result):
