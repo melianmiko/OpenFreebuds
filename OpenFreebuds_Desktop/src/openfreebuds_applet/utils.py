@@ -9,6 +9,8 @@ import psutil as psutil
 
 import openfreebuds_backend
 
+current_tray_application = None
+
 
 def get_version():
     from version_info import VERSION, DEBUG_MODE
@@ -93,30 +95,3 @@ def get_log_filename():
     time_tag = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M")
     return str(path / (time_tag + ".log"))
 
-
-# noinspection PyBroadException,PyUnresolvedReferences
-def run_safe(f, display_name, critical, args=None):
-    message = "An unhandled exception was caught in thread {}.\n\n{}"
-    if critical:
-        message += "\nThis exception is critical. App will be closed."
-    if args is None:
-        args = []
-
-    try:
-        f(*args)
-    except Exception:
-        exc_text = traceback.format_exc()
-        logging.getLogger("RunSafe").exception("Action {} failed.".format(display_name))
-        # TODO: Show message remove
-        openfreebuds_backend.show_message(message.format(display_name, exc_text))
-
-        if critical:
-            # noinspection PyProtectedMember
-            os._exit(99)
-
-
-def run_thread_safe(f, display_name, critical):
-    t = threading.Thread(target=run_safe, args=(f, display_name, critical))
-    t.start()
-
-    return t

@@ -61,19 +61,6 @@ def get_system_id():
     return []
 
 
-def show_message(message, callback=None, is_error=False):
-    logging.info("msg " + message)
-    logging.info(str(is_error))
-    if callback:
-        callback()
-
-
-def ask_question(message, callback):
-    logging.info("ask_question" + message)
-    if callback:
-        callback(False)
-
-
 def ask_string(message, callback):
     logging.info("ask_str" + message)
     if callback:

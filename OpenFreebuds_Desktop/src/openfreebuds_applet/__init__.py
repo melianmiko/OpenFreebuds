@@ -1,5 +1,6 @@
 log_format = "%(levelname)s:%(name)s:%(threadName)s  %(message)s"
 
-def start():
+
+def create():
     from openfreebuds_applet.applet import FreebudsApplet
-    FreebudsApplet().start()
+    return FreebudsApplet()

@@ -29,7 +29,7 @@ def get_result():
 def start(applet):
     Data.show_messages = applet.settings.enable_update_dialog
     Data.tray_application = applet.tray_application
-    utils.run_thread_safe(_check_updates, "UpdateChecker", False)
+    applet.run_thread(_check_updates, "UpdateChecker", False)
 
 
 def _check_updates():

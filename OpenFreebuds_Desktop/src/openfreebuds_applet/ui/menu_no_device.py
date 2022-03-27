@@ -20,7 +20,7 @@ class DeviceOfflineMenu(Menu):
         super().__init__()
         self.manager = applet.manager  # type: FreebudsManager
         self.footer = ApplicationMenuPart(applet)
-        self.header = HeaderMenuPart(applet.manager, applet.settings)
+        self.header = HeaderMenuPart(applet)
 
     def on_build(self):
         self.include(self.header)

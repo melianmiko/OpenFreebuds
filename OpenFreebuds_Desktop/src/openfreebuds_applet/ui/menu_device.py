@@ -17,7 +17,7 @@ class DeviceMenu(Menu):
         self.manager = applet.manager          # type: FreebudsManager
         self.settings = applet.settings        # type: SettingsStorage
         self.footer = ApplicationMenuPart(applet)
-        self.header = HeaderMenuPart(applet.manager, applet.settings)
+        self.header = HeaderMenuPart(applet)
 
         self.power_info = DevicePowerMenu(self.manager, self.settings)
         self.noise_control = NoiseControlMenu(self.manager)

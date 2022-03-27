@@ -4,7 +4,6 @@ import os
 import openfreebuds_backend
 from openfreebuds.manager import FreebudsManager
 from openfreebuds.device.spp_device import SPPDevice
-from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import updater
 from openfreebuds_applet.settings import SettingsStorage
@@ -31,12 +30,13 @@ class HeaderMenuPart(Menu):
     - Device connect/disconnect button
     """
 
-    def __init__(self, manager: FreebudsManager, settings: SettingsStorage):
+    def __init__(self, applet):
         super().__init__()
-        self.manager = manager
-        self.settings = settings
+        self.manager = applet.manager
+        self.settings = applet.settings
+        self.applet = applet
 
-        self.device_info_menu = DeviceInfoMenu(manager, settings)
+        self.device_info_menu = DeviceInfoMenu(self.manager, self.settings)
 
     def on_build(self):
         has_update, new_version = updater.get_result()
@@ -61,14 +61,14 @@ class HeaderMenuPart(Menu):
         if self.manager.state == self.manager.STATE_CONNECTED:
             return False
 
-        utils.run_thread_safe(self._do_force_connect, "ForceConnect", False)
+        self.applet.run_thread(self._do_force_connect, "ForceConnect", False)
         return True
 
     def do_disconnect(self):
         if self.manager.state != self.manager.STATE_CONNECTED:
             return False
 
-        utils.run_thread_safe(self._do_force_disconnect, "ForceDisconnect", False)
+        self.applet.run_thread(self._do_force_disconnect, "ForceDisconnect", False)
         return True
 
     def _do_force_connect(self):

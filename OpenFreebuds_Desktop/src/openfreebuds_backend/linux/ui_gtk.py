@@ -6,39 +6,6 @@ gi.require_version("Gtk", "3.0")
 log = logging.getLogger("LinuxBackend")
 
 
-def show_message(message, callback=None, is_error=False):
-    from gi.repository import GLib, Gtk
-
-    def show_async():
-        msg_type = Gtk.MessageType.INFO
-        if is_error:
-            msg_type = Gtk.MessageType.ERROR
-
-        msg = Gtk.MessageDialog(None, 0, msg_type, Gtk.ButtonsType.OK, "OpenFreebuds")
-        msg.format_secondary_text(message)
-        msg.run()
-        msg.destroy()
-
-        if callback is not None:
-            callback()
-
-    GLib.idle_add(show_async)
-
-
-def ask_question(message, callback):
-    from gi.repository import GLib, Gtk
-
-    def show_async():
-        msg = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.YES_NO, "OpenFreebuds")
-        msg.format_secondary_text(message)
-        result = msg.run()
-        msg.destroy()
-
-        callback(result == -8)
-
-    GLib.idle_add(show_async)
-
-
 def ask_string(message, callback):
     from gi.repository import GLib, Gtk
 

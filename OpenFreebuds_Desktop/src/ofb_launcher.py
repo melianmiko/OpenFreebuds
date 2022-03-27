@@ -39,14 +39,18 @@ def main():
 
     if args.command != "":
         do_command(args.command)
+        return
     elif args.shell:
         run_shell()
-    elif utils.is_running():
-        # TODO: Do something with this shit
-        openfreebuds_backend.show_message(t("application_running_message"), callback=lambda: sys.exit())
-        openfreebuds_backend.ui_lock()
-    else:
-        openfreebuds_applet.start()
+        return
+
+    applet = openfreebuds_applet.create()
+    if utils.is_running():
+        applet.tray_application.message_box(t("application_running_message"), "Error", lambda: sys.exit())
+        applet.tray_application.run()
+        return
+
+    applet.start()
 
 
 def do_command(command):
@@ -99,4 +103,5 @@ def run_shell():
         print("-- Device disconnected")
 
 
-utils.run_safe(main, "MainThread", True)
+if __name__ == "__main__":
+    main()

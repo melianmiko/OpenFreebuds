@@ -76,7 +76,7 @@ def start(applet):
             pass
 
     if applet.settings.enable_server:
-        utils.run_thread_safe(_httpd_thread, "HTTPServer", False)
+        applet.run_thread(_httpd_thread, "HTTPServer", False)
 
 
 def _httpd_thread():

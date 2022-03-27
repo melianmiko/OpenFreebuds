@@ -41,19 +41,27 @@ def stop_hotkeys():
     KeybinderState.current_hotkeys = []
 
 
+# noinspection PyArgumentList
+def _wayland_warning():
+    from gi.repository import Gtk
+    msg = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.YES_NO, "OpenFreebuds")
+    msg.format_secondary_text(t("hotkeys_wayland"))
+    result = msg.run()
+    msg.destroy()
+
+    if result == -8:
+        webbrowser.open("https://melianmiko.ru/posts/openfreebuds-faq/")
+
+
 def _init_keybinder():
-    from gi.repository import Keybinder
+    from gi.repository import Keybinder, GLib
+
     if KeybinderState.init_complete:
         return
 
     if "XDG_SESSION_TYPE" in os.environ:
         if os.environ["XDG_SESSION_TYPE"] == "wayland":
-            ui_gtk.ask_question(t("hotkeys_wayland"), callback=_wayland_warn_callback)
+            GLib.idle_add(_wayland_warning)
 
     Keybinder.init()
     KeybinderState.init_complete = True
-
-
-def _wayland_warn_callback(result):
-    if result:
-        webbrowser.open("https://melianmiko.ru/posts/openfreebuds-wayland/")
