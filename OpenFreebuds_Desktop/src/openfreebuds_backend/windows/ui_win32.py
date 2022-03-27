@@ -1,4 +1,3 @@
-import ctypes
 import logging
 import threading
 import tkinter.simpledialog

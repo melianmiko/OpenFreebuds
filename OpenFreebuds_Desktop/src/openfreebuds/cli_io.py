@@ -29,7 +29,7 @@ def dev_command(manager, cmd: list[str]) -> str:
             for a in cmd[1:]:
                 ints.append(int(a))
             out += "Wrote command: " + str(ints) + "\n"
-            dev._send_command(ints, True)
+            dev.send_command(ints, True)
         else:
             out += "Unknown device command\n"
     except Exception:

@@ -1,6 +1,5 @@
 import logging
 import os
-import time
 
 log = logging.getLogger("DummyPlatform")
 
@@ -65,11 +64,6 @@ def ask_string(message, callback):
     logging.info("ask_str" + message)
     if callback:
         callback(None)
-
-
-def ui_lock():
-    while True:
-        time.sleep(10)
 
 
 def is_dark_theme():

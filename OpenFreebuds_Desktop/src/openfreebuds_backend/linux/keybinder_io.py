@@ -5,7 +5,6 @@ import webbrowser
 import gi
 
 from openfreebuds_applet.l18n import t
-from openfreebuds_backend.linux import ui_gtk
 
 log = logging.getLogger("LinuxBackend")
 gi.require_version('Keybinder', '3.0')

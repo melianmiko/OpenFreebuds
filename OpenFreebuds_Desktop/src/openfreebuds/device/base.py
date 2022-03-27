@@ -5,6 +5,7 @@ from openfreebuds.constants.events import EVENT_DEVICE_PROP_CHANGED
 
 log = logging.getLogger("BaseDevice")
 
+
 class DeviceConfig:
     USE_SOCKET_SLEEP = False
     SAFE_RUN_WRAPPER = None
@@ -51,7 +52,7 @@ class BaseDevice:
     def list_properties(self):
         return self._prop_storage
 
-    def _send_command(self, ints, read=False):
+    def send_command(self, ints, read=False):
         raise Exception("Overwrite me!")
 
     def close(self, lock=False):

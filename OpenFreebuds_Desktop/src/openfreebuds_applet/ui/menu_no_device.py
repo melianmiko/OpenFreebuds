@@ -2,7 +2,6 @@ import logging
 
 from mtrayapp import Menu
 
-import openfreebuds_backend
 from openfreebuds import event_bus, device
 from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds.manager import FreebudsManager

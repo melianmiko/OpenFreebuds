@@ -1,6 +1,6 @@
 import argparse
 import logging
-import sys
+import os
 import urllib.error
 import urllib.request
 
@@ -12,29 +12,31 @@ from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import http_server
 
-description = "Unofficial application to manage HUAWEI FreeBuds device"
 
-parser = argparse.ArgumentParser(description=description)
-parser.add_argument("--verbose",
-                    default=False, action="store_true",
-                    help="Print debug log to console")
-parser.add_argument("--shell",
-                    default=False, action="store_true",
-                    help="Start CLI shell instead of applet")
-parser.add_argument("command",
-                    default="", type=str, nargs='?',
-                    help="If provided, will send command to httpserver and exit")
-args = parser.parse_args()
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Unofficial application to manage HUAWEI FreeBuds device")
+
+    parser.add_argument("--verbose",
+                        default=False, action="store_true",
+                        help="Print debug log to console")
+    parser.add_argument("--shell",
+                        default=False, action="store_true",
+                        help="Start CLI shell instead of applet")
+    parser.add_argument("command",
+                        default="", type=str, nargs='?',
+                        help="If provided, will send command to httpserver and exit")
+    return parser.parse_args()
 
 
+# noinspection PyUnresolvedReferences,PyProtectedMember
 def main():
-    version, debug = utils.get_version()
-    print("openfreebuds version=" + version + " is_debug=" + str(debug))
+    args = parse_args()
 
     # Setup logging
     logging.getLogger("asyncio").disabled = True
     logging.getLogger("CLI-IO").disabled = True
-    if args.verbose or debug:
+    if args.verbose:
         logging.basicConfig(level=logging.DEBUG, format=openfreebuds_applet.log_format, force=True)
 
     if args.command != "":
@@ -46,7 +48,8 @@ def main():
 
     applet = openfreebuds_applet.create()
     if utils.is_running():
-        applet.tray_application.message_box(t("application_running_message"), "Error", lambda: sys.exit())
+        applet.tray_application.message_box(t("application_running_message"), "Error",
+                                            lambda: os._exit(1))
         applet.tray_application.run()
         return
 

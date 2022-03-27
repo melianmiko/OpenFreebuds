@@ -14,6 +14,8 @@ def crc16char(data: bytes):
     # This CRC table extracted from original app
     # I don't know how it works...
 
+    # TODO: Reverse this
+
     crc16_tab = [0, 4129, 8258, 12387, 16516, 20645, 24774, 28903, -32504, -28375, -24246, -20117, -15988, -11859,
                  -7730,
                  -3601, 4657, 528, 12915, 8786, 21173, 17044, 29431, 25302, -27847, -31976, -19589, -23718, -11331,

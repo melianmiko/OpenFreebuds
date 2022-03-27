@@ -2,8 +2,6 @@ import datetime
 import hashlib
 import logging
 import os
-import threading
-import traceback
 
 import psutil as psutil
 

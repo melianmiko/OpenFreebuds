@@ -38,8 +38,6 @@ class FreebudsManager:
         self.state = self.STATE_NO_DEV
         self.config = DeviceConfig()
 
-        self.scan_results = []
-
     def set_device(self, name, address):
         if self.device_address is not None:
             self.unset_device()

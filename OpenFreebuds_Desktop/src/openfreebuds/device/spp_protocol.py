@@ -133,7 +133,7 @@ class SppProtocolDevice(BaseDevice):
 
         return True
 
-    def _send_command(self, data, read=False):
+    def send_command(self, data, read=False):
         if self.sleep:
             event_bus.invoke(EVENT_SPP_WAKE_UP)
             event_bus.wait_for(EVENT_SPP_ON_WAKE_UP, timeout=1)

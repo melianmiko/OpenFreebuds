@@ -6,9 +6,11 @@ gi.require_version("Gtk", "3.0")
 log = logging.getLogger("LinuxBackend")
 
 
+# noinspection PyPackageRequirements
 def ask_string(message, callback):
     from gi.repository import GLib, Gtk
 
+    # noinspection PyArgumentList
     def show_async():
         dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK_CANCEL, "OpenFreebuds")
         dialog.format_secondary_text(message)
@@ -30,11 +32,6 @@ def ask_string(message, callback):
         callback(text)
 
     GLib.idle_add(show_async)
-
-
-def ui_lock():
-    from gi.repository import Gtk
-    Gtk.main()
 
 
 def is_dark_theme():

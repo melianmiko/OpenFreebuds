@@ -34,10 +34,6 @@ def invoke(event_name: str):
         listener.invoke(event_name)
 
 
-def timer(timeout: int, event_name: str):
-    threading.Timer(interval=timeout, function=invoke, args=[event_name]).start()
-
-
 def wait_for(ev_filter, timeout=None):
     if isinstance(ev_filter, str):
         ev_filter = [ev_filter]

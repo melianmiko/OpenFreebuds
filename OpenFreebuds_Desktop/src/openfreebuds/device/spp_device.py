@@ -19,54 +19,54 @@ class SPPDevice(SppProtocolDevice):
         super().__init__(address)
 
     def on_init(self):
-        self._send_command(spp_commands.GET_DEVICE_INFO, True)
-        self._send_command(spp_commands.GET_LANGUAGE, True)
-        self._send_command(spp_commands.GET_BATTERY, True)
-        self._send_command(spp_commands.GET_NOISE_MODE, True)
-        self._send_command(spp_commands.GET_AUTO_PAUSE, True)
-        self._send_command(spp_commands.GET_TOUCHPAD_ENABLED, True)
-        self._send_command(spp_commands.GET_SHORT_TAP_ACTION, True)
-        self._send_command(spp_commands.GET_LONG_TAP_ACTION, True)
-        self._send_command(spp_commands.GET_NOISE_CONTROL_ACTION, True)
+        self.send_command(spp_commands.GET_DEVICE_INFO, True)
+        self.send_command(spp_commands.GET_LANGUAGE, True)
+        self.send_command(spp_commands.GET_BATTERY, True)
+        self.send_command(spp_commands.GET_NOISE_MODE, True)
+        self.send_command(spp_commands.GET_AUTO_PAUSE, True)
+        self.send_command(spp_commands.GET_TOUCHPAD_ENABLED, True)
+        self.send_command(spp_commands.GET_SHORT_TAP_ACTION, True)
+        self.send_command(spp_commands.GET_LONG_TAP_ACTION, True)
+        self.send_command(spp_commands.GET_NOISE_CONTROL_ACTION, True)
 
         # Create dummy properties for service group
         self.put_property("service", "language", "_")
 
     def on_wake_up(self):
-        self._send_command(spp_commands.GET_BATTERY)
-        self._send_command(spp_commands.GET_NOISE_MODE)
+        self.send_command(spp_commands.GET_BATTERY)
+        self.send_command(spp_commands.GET_NOISE_MODE)
 
     def set_property(self, group, prop, value):
         if group == "anc" and prop == "mode":
-            self._send_command([43, 4, 1, 1, value])
+            self.send_command([43, 4, 1, 1, value])
         elif group == "config" and prop == "auto_pause":
-            self._send_command([43, 16, 1, 1, value])
-            self._send_command(spp_commands.GET_AUTO_PAUSE)
+            self.send_command([43, 16, 1, 1, value])
+            self.send_command(spp_commands.GET_AUTO_PAUSE)
         elif group == "action" and prop == "double_tap_left":
-            self._send_command([1, 31, 1, 1, value])
-            self._send_command(spp_commands.GET_SHORT_TAP_ACTION)
+            self.send_command([1, 31, 1, 1, value])
+            self.send_command(spp_commands.GET_SHORT_TAP_ACTION)
         elif group == "action" and prop == "double_tap_right":
-            self._send_command([1, 31, 2, 1, value])
-            self._send_command(spp_commands.GET_SHORT_TAP_ACTION)
+            self.send_command([1, 31, 2, 1, value])
+            self.send_command(spp_commands.GET_SHORT_TAP_ACTION)
         elif group == "action" and prop == "long_tap_left":
-            self._send_command([43, 22, 1, 1, value])
-            self._send_command(spp_commands.GET_LONG_TAP_ACTION)
+            self.send_command([43, 22, 1, 1, value])
+            self.send_command(spp_commands.GET_LONG_TAP_ACTION)
         elif group == "action" and prop == "long_tap_right":
-            self._send_command([43, 22, 2, 1, value])
-            self._send_command(spp_commands.GET_LONG_TAP_ACTION)
+            self.send_command([43, 22, 2, 1, value])
+            self.send_command(spp_commands.GET_LONG_TAP_ACTION)
         elif group == "action" and prop == "noise_control_left":
-            self._send_command([43, 24, 1, 1, value])
-            self._send_command(spp_commands.GET_NOISE_CONTROL_ACTION)
+            self.send_command([43, 24, 1, 1, value])
+            self.send_command(spp_commands.GET_NOISE_CONTROL_ACTION)
         elif group == "action" and prop == "noise_control_right":
-            self._send_command([43, 24, 2, 1, value])
-            self._send_command(spp_commands.GET_NOISE_CONTROL_ACTION)
+            self.send_command([43, 24, 2, 1, value])
+            self.send_command(spp_commands.GET_NOISE_CONTROL_ACTION)
         elif group == "config" and prop == "touchpad_enabled":
-            self._send_command([1, 44, 1, 1, value])
-            self._send_command(spp_commands.GET_TOUCHPAD_ENABLED)
+            self.send_command([1, 44, 1, 1, value])
+            self.send_command(spp_commands.GET_TOUCHPAD_ENABLED)
         elif group == "service" and prop == "language":
             data = value.encode("utf8")
             data = protocol_utils.bytes2array(data)
-            self._send_command([12, 1, 1, len(data)] + data + [2, 1, 1])
+            self.send_command([12, 1, 1, len(data)] + data + [2, 1, 1])
         else:
             raise Exception("Can't set this prop: " + prop)
 
