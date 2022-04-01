@@ -3,12 +3,14 @@ import socket
 import threading
 import time
 
+import bluetooth
+
 from openfreebuds import protocol_utils, event_bus
 from openfreebuds.device.base import BaseDevice
 from openfreebuds.constants.events import EVENT_SPP_CLOSED, EVENT_SPP_RECV, EVENT_SPP_WAKE_UP, EVENT_SPP_ON_WAKE_UP
 
 log = logging.getLogger("SPPDevice")
-port = 16
+sdp_uuid = "00001101-0000-1000-8000-00805f9b34fb"
 SLEEP_DELAY = 5
 SLEEP_TIME = 20
 
@@ -37,7 +39,7 @@ class SppProtocolDevice(BaseDevice):
             self.on_init()
 
             return True
-        except (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError, OSError):
+        except SocketConnectionError:
             log.exception("Can't create socket connection")
             self.close()
             return False
@@ -49,7 +51,7 @@ class SppProtocolDevice(BaseDevice):
 
             self.socket.close()
             return True
-        except (ConnectionResetError, ConnectionRefusedError, OSError):
+        except SocketConnectionError:
             return False
 
     def close(self, lock=False):
@@ -65,11 +67,22 @@ class SppProtocolDevice(BaseDevice):
             event_bus.wait_for(EVENT_SPP_CLOSED)
 
     def _connect_socket(self):
-        # noinspection PyUnresolvedReferences
-        self.socket = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM,
-                                    socket.BTPROTO_RFCOMM)
-        self.socket.settimeout(2)
-        self.socket.connect((self.address, port))
+        try:
+            # noinspection PyUnresolvedReferences
+            self.socket = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM,
+                                        socket.BTPROTO_RFCOMM)
+            self.socket.settimeout(2)
+
+            service_data = bluetooth.find_service(address=self.address,
+                                                  uuid=sdp_uuid)
+
+            if len(service_data) < 1:
+                raise ValueError("Service not found")
+
+            self.socket.connect((service_data[0]["host"],
+                                 service_data[0]["port"]))
+        except (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError, OSError, ValueError):
+            raise SocketConnectionError()
 
     def _mainloop(self):
         log.info("starting recv...")
@@ -109,7 +122,7 @@ class SppProtocolDevice(BaseDevice):
             self.on_wake_up()
             log.debug("Waked up...")
             event_bus.invoke(EVENT_SPP_ON_WAKE_UP)
-        except (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError, OSError):
+        except (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError, OSError, ValueError):
             log.exception("Can't create socket connection")
             self.close()
 
@@ -170,3 +183,7 @@ class SppProtocolDevice(BaseDevice):
 
         if process_time > 0.1:
             log.debug("Package processing took {}, too long".format(process_time))
+
+
+class SocketConnectionError(Exception):
+    pass

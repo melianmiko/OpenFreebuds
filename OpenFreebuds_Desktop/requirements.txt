@@ -1,7 +1,7 @@
-pystray~=0.19.2
 Pillow~=9.0.1
 psutil~=5.9.0
 mtrayapp==1.0.1
+PyBluez==0.23
 
 PyGObject==3.42.0; sys_platform == "linux"
 dbus-python==1.2.18; sys_platform == "linux"
