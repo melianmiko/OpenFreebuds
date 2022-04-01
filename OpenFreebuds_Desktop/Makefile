@@ -1,6 +1,8 @@
 DESTDIR=
 
 all:
+	rm -rf builddir/openfreebuds
+	mkdir -p builddir/openfreebuds
 	cp -r src/* builddir/openfreebuds
 	find builddir/openfreebuds -type d -name "__pycache__" -exec rm -rf {} +
 
