@@ -3,4 +3,4 @@ import sys
 sys.path.append("/opt/openfreebuds")
 
 import ofb_launcher
-
+ofb_launcher.main()

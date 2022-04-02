@@ -44,6 +44,9 @@ RequestExecutionLevel admin
 
 Section "Dummy Section" SecDummy
 
+    ; Kill running process
+    nsExec::ExecToStack "C:\Windows\System32\taskkill.exe /f /im:openfreebuds.exe"
+
 	; Copy files
 	SetOutPath "$INSTDIR"
 	File /r "${APP_BUILD_NAME}\"
