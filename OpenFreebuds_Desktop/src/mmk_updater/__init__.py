@@ -113,7 +113,6 @@ class TkinterUiMod:
     def _progress_auto_close(self):
         if self.percent >= 100:
             log.debug("download complete, closing self window")
-            self.close_download_bar()
             return
         self.tk_dl_root.after(1000, self._progress_auto_close)
 
@@ -309,6 +308,7 @@ class UpdaterTool:
         self.ui_mod.show_download()
         log.debug("downloading {}".format(url))
         buff = self._download_with_progress(url)
+        self.ui_mod.percent = 100
 
         # Trigger download stats
         log.debug("trigger download stats")

@@ -5,17 +5,18 @@ import time
 
 import bluetooth
 
-from openfreebuds import protocol_utils, event_bus
+from openfreebuds import event_bus
 from openfreebuds.device.base import BaseDevice
 from openfreebuds.constants.events import EVENT_SPP_CLOSED, EVENT_SPP_RECV, EVENT_SPP_WAKE_UP, EVENT_SPP_ON_WAKE_UP
 
 log = logging.getLogger("SPPDevice")
-sdp_uuid = "00001101-0000-1000-8000-00805f9b34fb"
 SLEEP_DELAY = 5
 SLEEP_TIME = 20
 
 
 class SppProtocolDevice(BaseDevice):
+    SPP_SERVICE_UUID = ""
+
     def __init__(self, address):
         super().__init__()
         self.last_pkg = None
@@ -74,7 +75,7 @@ class SppProtocolDevice(BaseDevice):
             self.socket.settimeout(2)
 
             service_data = bluetooth.find_service(address=self.address,
-                                                  uuid=sdp_uuid)
+                                                  uuid=self.SPP_SERVICE_UUID)
 
             if len(service_data) < 1:
                 raise ValueError("Service not found")
@@ -145,19 +146,6 @@ class SppProtocolDevice(BaseDevice):
             return None
 
         return True
-
-    def send_command(self, data, read=False):
-        if self.sleep:
-            event_bus.invoke(EVENT_SPP_WAKE_UP)
-            event_bus.wait_for(EVENT_SPP_ON_WAKE_UP, timeout=1)
-
-        self.send(protocol_utils.build_spp_bytes(data))
-
-        if read:
-            t = time.time()
-            event_bus.wait_for(EVENT_SPP_RECV, timeout=1)
-            if time.time() - t > 0.9:
-                log.warning("Too long read wait, maybe command is ignored")
 
     def send(self, data):
         try:

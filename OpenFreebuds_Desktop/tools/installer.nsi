@@ -72,6 +72,9 @@ SectionEnd
 
 Section "Uninstall"
 
+    ; Kill running process
+    nsExec::ExecToStack "C:\Windows\System32\taskkill.exe /f /im:openfreebuds.exe"
+
 	; Delete all
 	Delete "$INSTDIR\Uninstall.exe"
 	Delete "$DESKTOP\${APP_NAME}.lnk"

@@ -1,8 +1,10 @@
 import logging
+import time
 
-from openfreebuds import protocol_utils
+from openfreebuds import protocol_utils, event_bus
 from openfreebuds.constants import spp_commands
 from openfreebuds.device.spp_protocol import SppProtocolDevice
+from openfreebuds.constants.events import EVENT_SPP_RECV, EVENT_SPP_WAKE_UP, EVENT_SPP_ON_WAKE_UP
 
 log = logging.getLogger("SPPDevice")
 ignored_headers = [
@@ -14,9 +16,8 @@ ignored_headers = [
 ]
 
 
-class SPPDevice(SppProtocolDevice):
-    def __init__(self, address):
-        super().__init__(address)
+class HuaweiSPPDevice(SppProtocolDevice):
+    SPP_SERVICE_UUID = "00001101-0000-1000-8000-00805f9b34fb"
 
     def on_init(self):
         self.send_command(spp_commands.GET_DEVICE_INFO, True)
@@ -105,6 +106,19 @@ class SPPDevice(SppProtocolDevice):
                     log.debug("tlv type={}, data={}".format(a.type, a.data))
             except (protocol_utils.TLVException, ValueError):
                 log.debug("Can't read as TLV pkg")
+
+    def send_command(self, data, read=False):
+        if self.sleep:
+            event_bus.invoke(EVENT_SPP_WAKE_UP)
+            event_bus.wait_for(EVENT_SPP_ON_WAKE_UP, timeout=1)
+
+        self.send(protocol_utils.build_spp_bytes(data))
+
+        if read:
+            t = time.time()
+            event_bus.wait_for(EVENT_SPP_RECV, timeout=1)
+            if time.time() - t > 0.9:
+                log.warning("Too long read wait, maybe command is ignored")
 
     def _parse_language(self, pkg):
         contents = protocol_utils.parse_tlv(pkg[2:])

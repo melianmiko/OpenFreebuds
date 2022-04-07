@@ -3,7 +3,7 @@ import os
 
 import openfreebuds_backend
 from openfreebuds.manager import FreebudsManager
-from openfreebuds.device.spp_device import SPPDevice
+from openfreebuds.device.huawei_spp_device import HuaweiSPPDevice
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import updater
 from openfreebuds_applet.settings import SettingsStorage
@@ -84,7 +84,7 @@ class HeaderMenuPart(Menu):
         log.debug("Trying to force connect device...")
         # noinspection PyBroadException
         try:
-            spp = SPPDevice(settings.address)
+            spp = HuaweiSPPDevice(settings.address)
             if not spp.request_interaction():
                 log.debug("Can't interact via SPP, try to connect anyway...")
 
