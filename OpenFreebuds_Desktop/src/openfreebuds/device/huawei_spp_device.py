@@ -74,6 +74,8 @@ class HuaweiSPPDevice(SppProtocolDevice):
     def on_package(self, pkg):
         header = protocol_utils.bytes2array(pkg[0:2])
 
+        # log.debug("got pkg, pkg={}".format(pkg))
+
         if header in ignored_headers:
             log.debug("Ignored package with header: " + str(header))
             return

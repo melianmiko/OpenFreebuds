@@ -16,14 +16,6 @@ def open_file(path):
     logging.info("open_file " + path)
 
 
-def bind_hotkeys(keys):
-    logging.info(keys)
-
-
-def stop_hotkeys():
-    logging.info("Stop hotkeys dummy!")
-
-
 def is_run_at_boot():
     return False
 

@@ -4,29 +4,6 @@ import subprocess
 import sys
 import winreg
 
-from pynput.keyboard import GlobalHotKeys
-
-
-class _PynputState:
-    current = None
-
-
-def bind_hotkeys(keys):
-    stop_hotkeys()
-
-    # Add prefix to all keys
-    x_keys = {}
-    for a in keys:
-        x_keys["<ctrl>+<alt>+" + a] = keys[a]
-
-    _PynputState.current = GlobalHotKeys(x_keys)
-    _PynputState.current.start()
-
-
-def stop_hotkeys():
-    if _PynputState.current is not None:
-        _PynputState.current.stop()
-
 
 def get_app_storage_path():
     return pathlib.Path.home() / "AppData/Roaming"
