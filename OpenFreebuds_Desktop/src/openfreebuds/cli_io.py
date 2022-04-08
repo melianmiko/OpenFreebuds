@@ -7,8 +7,7 @@ log = logging.getLogger("CLI-IO")
 
 
 # noinspection PyBroadException
-def dev_command(manager, cmd: list[str]) -> str:
-    dev = manager.device                    # type: BaseDevice
+def dev_command(dev: BaseDevice, cmd: list[str]) -> str:
     out = ""
 
     try:

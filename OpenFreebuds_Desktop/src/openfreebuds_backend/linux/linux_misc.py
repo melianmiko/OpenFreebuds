@@ -38,13 +38,6 @@ def set_run_at_boot(val):
         log.debug("Removed autostart file: " + path)
 
 
-def get_system_id():
-    if os.path.isfile("/usr/bin/dpkg"):
-        return ["debian", "linux"]
-    else:
-        return ["linux"]
-
-
 def _get_autostart_file_path():
     autostart_dir = pathlib.Path.home() / ".config/autostart"
     if not autostart_dir.exists():

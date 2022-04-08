@@ -102,7 +102,7 @@ def run_shell():
                 print('bye')
                 raise SystemExit
 
-            print(cli_io.dev_command(man, command))
+            print(cli_io.dev_command(man.device, command))
         print("-- Device disconnected")
 
 

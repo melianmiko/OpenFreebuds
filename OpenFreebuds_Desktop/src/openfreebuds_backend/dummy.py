@@ -48,10 +48,6 @@ def bt_list_devices():
     return []
 
 
-def get_system_id():
-    return []
-
-
 def ask_string(message, callback):
     logging.info("ask_str" + message)
     if callback:

@@ -50,7 +50,3 @@ def set_run_at_boot(val):
                 winreg.DeleteValue(key, "openfreebuds")
         except OSError:
             return
-
-
-def get_system_id():
-    return ["windows"]

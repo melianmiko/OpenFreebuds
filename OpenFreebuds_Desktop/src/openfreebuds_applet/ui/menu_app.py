@@ -66,7 +66,7 @@ class ApplicationMenuPart(Menu):
             return
 
         command = result.split(" ")
-        result = cli_io.dev_command(self.applet.manager, command)
+        result = cli_io.dev_command(self.applet.manager.device, command)
         self.application.message_box(result, "Dev mode")
 
     def about_dialog(self):
