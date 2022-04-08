@@ -1,5 +1,11 @@
 **/__pycache__
 *.bak
-builddir
 test.py
+
+# Make downloads, builddata
 lib
+builddir
+
+# TTK Theme download (makefile)
+src/openfreebuds_assets/ttk_theme
+src/openfreebuds_assets/theme.zip
