@@ -1,5 +1,6 @@
 {
   "action_exit": "Leave application",
+  "action_settings": "Settings...",
   "action_kill_app": "Force exit",
   "action_open_appdata": "Open config directory...",
   "action_refresh_list": "Refresh list",
@@ -76,5 +77,8 @@
   "update_message": "New version is available.\n\n{}\n\nDownload it now?",
   "update_message_auto": "New version is available. Use your system package manager to install it.\n\n{}",
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+  "connect": "Connect",
+  "cancel": "Cancel",
+  "profile_select_message": "This device isn't supported, for yet. But if you want,\nyou cant force connect them. To do that, select an exiting\nprofile. Then application will try to apply it to your \ndevice. You can change profile in any time.\n\nNotice that this may be dangerous for some kind of devices.\nDo it of your risk. You also can share information about your\ndevice and selected profile at GitHub, if you want get offical\nsupport."
 }

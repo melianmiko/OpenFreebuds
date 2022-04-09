@@ -9,6 +9,7 @@ class SettingsStorage:
     def __init__(self):
         self.address = ""
         self.device_name = ""
+        self.is_device_mocked = False
 
         self.language = ""
         self.theme = "auto"

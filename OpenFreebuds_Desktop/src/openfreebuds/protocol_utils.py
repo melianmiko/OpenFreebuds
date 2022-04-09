@@ -1,16 +1,7 @@
-def build_spp_bytes(data):
-    out = b"Z"
-    out += (len(data) + 1).to_bytes(2, byteorder="big") + b"\x00"
-    out += array2bytes(data)
-
-    checksum = crc16char(out)
-    out += (checksum >> 8).to_bytes(1, "big")
-    out += (checksum & 0b11111111).to_bytes(1, "big")
-
-    return out
+from array import array
 
 
-def crc16char(data: bytes):
+def crc16char(data):
     # This CRC table extracted from original app
     # I don't know how it works...
 
@@ -42,7 +33,7 @@ def crc16char(data: bytes):
         s = crc16_tab[((s >> 8) ^ byte) & 255] ^ (s << 8)
         s = s & 0b1111111111111111  # use only 16 bits
 
-    return s
+    return array("b", s.to_bytes(2, "big"))
 
 
 def bytes2array(data):
@@ -60,16 +51,16 @@ def array2bytes(data):
 
 
 class TLVPackage:
-    def __init__(self, pkg_type, data):
+    def __init__(self, pkg_type: int, data: array):
         self.type = pkg_type
         self.data = data
         self.length = len(data)
 
     def get_bytes(self):
-        return array2bytes(self.data)
+        return self.data.tobytes()
 
     def get_string(self):
-        return self.get_bytes().decode("utf8")
+        return self.data.tobytes().decode("utf8")
 
 
 class TLVResponse:
@@ -86,21 +77,20 @@ class TLVResponse:
         for a in self.contents:
             if a.type == type_key:
                 return a
-        return TLVPackage(type_key, [])
+        return TLVPackage(type_key, array("b", b""))
 
     def find_by_types(self, types_list):
         for a in self.contents:
             if a.type in types_list:
                 return a
-        return TLVPackage(types_list[0], [])
+        return TLVPackage(types_list[0], array("b", b""))
 
 
 class TLVException(Exception):
     pass
 
 
-def parse_tlv(data: bytes) -> TLVResponse:
-    data = bytes2array(data)
+def parse_tlv(data: array) -> TLVResponse:
     response = TLVResponse()
     i = 0
 
@@ -121,6 +111,6 @@ def parse_tlv(data: bytes) -> TLVResponse:
             arr = data[pos:pos + length]
             response.append(TLVPackage(b_cur, arr))
         else:
-            response.append(TLVPackage(b_cur, []))
+            response.append(TLVPackage(b_cur, array("b", b"")))
 
     return response

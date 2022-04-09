@@ -7,6 +7,7 @@ from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.settings import SettingsStorage
+from openfreebuds_applet.ui import profile_select_ui
 from openfreebuds_applet.ui.base import HeaderMenuPart
 from openfreebuds_applet.ui.menu_app import ApplicationMenuPart
 from openfreebuds_backend import bt_list_devices
@@ -53,21 +54,16 @@ class DeviceScanMenu(Menu):
 
     def on_device(self, data):
         name = data["name"]
-        if not device.is_supported(name):
-            self.application.confirm_box(t("question_not_supported"), "OpenFreebuds",
-                                         lambda r: self.do_device(data, r))
-            return
-
-        self.do_device(data, True)
-
-    def do_device(self, data, ui_result):
-        name = data["name"]
         address = data["address"]
 
-        if not ui_result:
+        if not device.is_supported(name):
+            profile_select_ui.start(address, self.settings, self.manager)
             return
 
-        self.manager.set_device(name, address)
         self.settings.device_name = name
         self.settings.address = address
+        self.settings.is_device_mocked = False
         self.settings.write()
+
+        self.manager.set_device(name, address)
+

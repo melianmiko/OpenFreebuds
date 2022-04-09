@@ -1,7 +1,9 @@
 import logging
+import queue
 import socket
 import threading
 import time
+from queue import Queue
 
 import bluetooth
 
@@ -24,6 +26,8 @@ class SppProtocolDevice(BaseDevice):
         self.sleep = False
         self.socket = None
 
+        self._send_queue = Queue()
+
     def connect(self):
         if self.closed:
             raise Exception("Can't reuse exiting device object")
@@ -31,12 +35,8 @@ class SppProtocolDevice(BaseDevice):
         try:
             self._connect_socket()
 
-            if self.config.SAFE_RUN_WRAPPER is None:
-                threading.Thread(target=self._mainloop).start()
-            else:
-                log.debug("Starting via safe wrapper")
-                self.config.SAFE_RUN_WRAPPER(self._mainloop, "SPPDevice", False)
-
+            self._run_thread(self._thread_recv)
+            self._run_thread(self._thread_send)
             self.on_init()
 
             return True
@@ -44,6 +44,13 @@ class SppProtocolDevice(BaseDevice):
             log.exception("Can't create socket connection")
             self.close()
             return False
+
+    def _run_thread(self, fnc):
+        if self.config.SAFE_RUN_WRAPPER is None:
+            threading.Thread(target=fnc).start()
+        else:
+            log.debug("Starting via safe wrapper")
+            self.config.SAFE_RUN_WRAPPER(fnc, "SPPDevice", False)
 
     def request_interaction(self):
         try:
@@ -85,7 +92,24 @@ class SppProtocolDevice(BaseDevice):
         except (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError, OSError, ValueError):
             raise SocketConnectionError()
 
-    def _mainloop(self):
+    # noinspection PyBroadException
+    def _thread_send(self):
+        log.info("starting send thread...")
+        data = b""
+        while not self.closed:
+            try:
+                data = self._send_queue.get(timeout=2)
+                log.debug("send " + data.hex())
+                self.socket.send(data)
+            except queue.Empty:
+                pass
+            except ConnectionResetError:
+                self.close()
+            except Exception:
+                log.exception("Send exception, package={}".format(data.hex()))
+        log.info("leaving send thread...")
+
+    def _thread_recv(self):
         log.info("starting recv...")
         last_pkg = time.time()
 
@@ -147,13 +171,8 @@ class SppProtocolDevice(BaseDevice):
 
         return True
 
-    def send(self, data):
-        try:
-            log.debug("send " + data.hex())
-            self.socket.send(data)
-        except ConnectionResetError:
-            self.close()
-            return
+    def send(self, data: bytes):
+        self._send_queue.put(data)
 
     def on_wake_up(self):
         raise Exception("Must be override")

@@ -11,11 +11,32 @@ class DeviceConfig:
     SAFE_RUN_WRAPPER = None
 
 
+def with_no_prop_changed_event(func):
+    def internal(*args, **kwargs):
+        args[0].enable_prop_changed_event = True
+
+        func(*args, **kwargs)
+
+        args[0].enable_prop_changed_event = False
+        event_bus.invoke(EVENT_DEVICE_PROP_CHANGED)
+    return internal
+
+
 class BaseDevice:
     def __init__(self):
         self.config = DeviceConfig()
         self.closed = False
+        self.enable_prop_changed_event = True
         self._prop_storage = {}
+        self.recv_handlers = {}
+        self.set_property_handlers = {}
+
+    def bind_on_package(self, headers, func):
+        for a in headers:
+            self.recv_handlers[a] = func
+
+    def bind_set_property(self, group, prop, func):
+        self.set_property_handlers[group + "___" + prop] = func
 
     def find_group(self, group):
         if group not in self._prop_storage:
@@ -33,21 +54,22 @@ class BaseDevice:
         return self._prop_storage[group][prop]
 
     def set_property(self, group, prop, value):
-        # Must be overwritten by child class
-        self.put_property(group, prop, value)
+        if group + "___" + prop not in self.set_property_handlers:
+            raise Exception("This property isn't writable")
+        self.set_property_handlers[group + "___" + prop](value)
 
     def put_group(self, group, value):
         self._prop_storage[group] = value
-        # log.debug("Set group of props: " + group)
-        event_bus.invoke(EVENT_DEVICE_PROP_CHANGED)
+        if self.enable_prop_changed_event:
+            event_bus.invoke(EVENT_DEVICE_PROP_CHANGED)
 
     def put_property(self, group, prop, value):
         if group not in self._prop_storage:
             self._prop_storage[group] = {}
 
         self._prop_storage[group][prop] = value
-        # log.debug("Set prop, group={}, prop={}, value={}".format(group, prop, value))
-        event_bus.invoke(EVENT_DEVICE_PROP_CHANGED)
+        if self.enable_prop_changed_event:
+            event_bus.invoke(EVENT_DEVICE_PROP_CHANGED)
 
     def list_properties(self):
         return self._prop_storage

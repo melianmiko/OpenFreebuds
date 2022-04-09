@@ -7,8 +7,7 @@ from openfreebuds.device.huawei_spp_device import HuaweiSPPDevice
 log = logging.getLogger("OpenFreebudsDeviceRoot")
 DEVICE_PROFILES = {
     "HUAWEI FreeBuds 4i": FreeBuds4iDevice,
-    "HONOR Earbuds 2 Lite": FreeBuds4iDevice,
-    "generic": HuaweiSPPDevice
+    "HONOR Earbuds 2 Lite": FreeBuds4iDevice
 }
 
 
@@ -18,7 +17,6 @@ def is_supported(name: str):
 
 def create(name: str, address: str) -> BaseDevice:
     if name not in DEVICE_PROFILES:
-        log.warning("USING GENERIC DEVICE PROFILE")
-        name = "generic"
+        raise ValueError("No profile for " + name)
 
     return DEVICE_PROFILES[name](address)
