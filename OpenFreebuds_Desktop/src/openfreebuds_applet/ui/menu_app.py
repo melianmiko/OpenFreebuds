@@ -9,7 +9,7 @@ from openfreebuds import event_bus, cli_io
 from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds_applet import utils
 from openfreebuds_applet.modules import hotkeys, http_server, actions
-from openfreebuds_applet.ui import icons
+from openfreebuds_applet.ui import icons, settings_ui
 from openfreebuds_applet.l18n import t, setup_language, setup_auto, ln
 
 
@@ -21,21 +21,18 @@ class ApplicationMenuPart(Menu):
     def __init__(self, applet):
         super().__init__()
         self.applet = applet
-        self.theme_menu = ThemeMenu(applet)
         self.language_menu = LanguageMenu(applet)
         self.hotkeys_menu = HotkeysMenu(applet)
-        self.base_settings_menu = SettingsMenu(applet)
 
     def on_build(self):
         if not self.applet.settings.compact_menu:
             self.add_separator()
 
-        self.add_submenu(t("submenu_options"), self.base_settings_menu)
-        self.add_submenu(t("submenu_theme"), self.theme_menu)
         self.add_submenu(t("submenu_language"), self.language_menu)
         self.add_submenu(t("submenu_hotkeys"), self.hotkeys_menu)
         self.add_separator()
 
+        self.add_item(t("action_settings"), self.open_settings)
         self.add_item(t("action_about"), self.about_dialog)
         self.add_item(t("action_open_appdata"), utils.open_app_storage_dir)
         self.add_separator()
@@ -49,6 +46,9 @@ class ApplicationMenuPart(Menu):
 
         if self.applet.settings.compact_menu:
             self.wrap(t("submenu_app"))
+
+    def open_settings(self):
+        settings_ui.start(self.applet)
 
     def show_log(self):
         value = self.applet.log.getvalue()
@@ -83,35 +83,6 @@ class ApplicationMenuPart(Menu):
     def about_callback(result):
         if result:
             webbrowser.open("https://melianmiko.ru/openfreebuds")
-
-
-class ThemeMenu(Menu):
-    """
-    Icon theme select menu
-    """
-
-    def __init__(self, applet):
-        super().__init__()
-        self.applet = applet
-
-    def on_build(self):
-        current = self.applet.settings.theme
-
-        for a in ["auto", "light", "dark"]:
-            self.add_item(text=t("theme_" + a),
-                          action=self.set_theme,
-                          args=[a], checked=current == a)
-
-    def set_theme(self, name):
-        icons.set_theme(name)
-
-        self.applet.settings.theme = name
-        self.applet.settings.write()
-
-        # Wipe hash for icon reload
-        self.applet.current_icon_hash = ""
-
-        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
 
 class LanguageMenu(Menu):
@@ -203,83 +174,4 @@ class HotkeysMenu(Menu):
         self.applet.settings.write()
 
         hotkeys.start(self.applet)
-        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
-
-
-class SettingsMenu(Menu):
-    """
-    Base app settings menu
-    """
-
-    def __init__(self, applet):
-        super().__init__()
-        self.applet = applet
-        self.settings = applet.settings
-
-    def on_build(self):
-        self.add_item(t("option_run_at_boot"), self.toggle_run_at_boot,
-                      checked=openfreebuds_backend.is_run_at_boot())
-        self.add_item(t("option_show_update_dialog"), self.toggle_update_dialog,
-                      checked=self.settings.enable_update_dialog)
-        self.add_item(t("option_compact"), self.toggle_compact,
-                      checked=self.settings.compact_menu)
-        self.add_separator()
-        self.add_item(t("option_sleep_mode"), self.toggle_sleep,
-                      checked=self.settings.enable_sleep)
-        self.add_item(t("option_debug_features"), self.toggle_debug,
-                      checked=self.settings.enable_debug_features)
-        self.add_separator()
-        self.add_item(t("option_server"), self.toggle_server,
-                      checked=self.settings.enable_server)
-        self.add_item(t("prop_server_access"), self.toggle_server_access,
-                      checked=self.settings.server_access)
-        self.add_item(t("webserver_port") + " " + str(http_server.get_port()),
-                      enabled=False)
-
-    def toggle_sleep(self):
-        self.settings.enable_sleep = not self.settings.enable_sleep
-        self.settings.write()
-        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
-        self.application.message_box(t("sleep_info"), "OpenFreebuds")
-
-    def toggle_debug(self):
-        self.settings.enable_debug_features = not self.settings.enable_debug_features
-        self.settings.write()
-        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
-
-    def toggle_compact(self):
-        self.settings.compact_menu = not self.settings.compact_menu
-        self.settings.write()
-        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
-
-    def toggle_update_dialog(self):
-        self.settings.enable_update_dialog = not self.settings.enable_update_dialog
-        self.settings.write()
-        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
-
-    @staticmethod
-    def toggle_run_at_boot():
-        run_at_boot = openfreebuds_backend.is_run_at_boot()
-        openfreebuds_backend.set_run_at_boot(not run_at_boot)
-        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
-
-    def toggle_server(self):
-        self.settings.enable_server = not self.settings.enable_server
-        self.settings.write()
-        http_server.start(self.applet)
-        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
-
-    def toggle_server_access(self):
-        if not self.settings.server_access:
-            self.application.confirm_box(t("server_global_warn"), "WARNING", self.do_toggle_access)
-        else:
-            self.do_toggle_access(True)
-
-    def do_toggle_access(self, result):
-        if not result:
-            return
-
-        self.settings.server_access = not self.settings.server_access
-        self.settings.write()
-        http_server.start(self.applet)
         event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)

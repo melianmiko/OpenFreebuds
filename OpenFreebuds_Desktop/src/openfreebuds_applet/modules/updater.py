@@ -31,17 +31,16 @@ def show_update_message():
 
 
 class FreebudsUpdateUiMod(TkinterUiMod):
-    def __init__(self, settings: SettingsStorage):
+    def __init__(self):
         super().__init__()
-        self.settings = settings
 
     def mk_window(self) -> tkinter.Tk:
-        return tk_tools.create_themed(self.settings.theme)
+        return tk_tools.create_themed()
 
 
 class FreebudsUpdater(UpdaterTool):
     def __init__(self, settings: SettingsStorage):
-        super().__init__(release_url, utils.get_version()[0], FreebudsUpdateUiMod(settings))
+        super().__init__(release_url, utils.get_version()[0], FreebudsUpdateUiMod())
         log.debug(self.current_version)
         self.new_version = ""
         self.has_update = False

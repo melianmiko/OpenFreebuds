@@ -11,6 +11,7 @@ from openfreebuds.constants.events import EVENT_MANAGER_STATE_CHANGED
 from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import http_server
+from openfreebuds_applet.ui import tk_tools, settings_ui
 
 
 def parse_args():
@@ -20,6 +21,9 @@ def parse_args():
     parser.add_argument("--verbose",
                         default=False, action="store_true",
                         help="Print debug log to console")
+    parser.add_argument("--settings",
+                        default=False, action="store_true",
+                        help="Directly open app settings")
     parser.add_argument("--shell",
                         default=False, action="store_true",
                         help="Start CLI shell instead of applet")
@@ -29,7 +33,6 @@ def parse_args():
     return parser.parse_args()
 
 
-# noinspection PyUnresolvedReferences,PyProtectedMember
 def main():
     args = parse_args()
 
@@ -48,10 +51,13 @@ def main():
 
     applet = openfreebuds_applet.create()
     if utils.is_running():
-        applet.tray_application.message_box(t("application_running_message"), "Error",
-                                            lambda: os._exit(1))
+        # noinspection PyUnresolvedReferences,PyProtectedMember
+        tk_tools.message(t("application_running_message"), "Error", lambda: os._exit(1))
         applet.tray_application.run()
         return
+
+    if args.settings:
+        settings_ui.start(applet)
 
     applet.start()
 

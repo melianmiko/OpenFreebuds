@@ -14,7 +14,7 @@ from openfreebuds.device.base import BaseDevice
 from openfreebuds_applet import settings, utils, log_format
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import hotkeys, http_server, updater
-from openfreebuds_applet.ui import icons
+from openfreebuds_applet.ui import icons, tk_tools
 from openfreebuds_applet.ui.base import QuitingMenu
 from openfreebuds_applet.ui.menu_device import DeviceMenu
 from openfreebuds_applet.ui.menu_no_device import DeviceOfflineMenu, DeviceScanMenu
@@ -50,7 +50,8 @@ class FreebudsApplet:
         self._safe_run_wrapper(self._start, "MainThread", True)
 
     def _start(self):
-        icons.set_theme(self.settings.theme)
+        icons.set_theme(self.settings.icon_theme)
+        tk_tools.set_theme(self.settings.theme)
 
         hotkeys.start(self)
         http_server.start(self)

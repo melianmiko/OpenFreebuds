@@ -1,10 +1,10 @@
 import logging
 import os
-import traceback
 import webbrowser
 
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import actions
+from openfreebuds_applet.ui import tk_tools
 
 log = logging.getLogger("HotkeysTool")
 
@@ -26,13 +26,13 @@ def start(applet):
         from pynput.keyboard import GlobalHotKeys
     except ImportError as e:
         info = "Can't import pynput due to {}. Hotkeys won't work".format(e.msg)
-        applet.tray_application.message_box(info, "OpenFreebuds Hotkeys")
+        tk_tools.message(info, "OpenFreebuds Hotkeys")
         return
 
     if "XDG_SESSION_TYPE" in os.environ:
         if os.environ["XDG_SESSION_TYPE"] == "wayland":
-            applet.tray_application.confirm_box(t("hotkeys_wayland"), "OpenFreebuds",
-                                                _wayland_callback)
+            tk_tools.confirm(t("hotkeys_wayland"), "OpenFreebuds",
+                             _wayland_callback)
 
     handlers = actions.get_actions(applet)
     config = applet.settings.hotkeys_config

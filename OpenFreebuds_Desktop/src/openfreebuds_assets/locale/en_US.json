@@ -48,7 +48,7 @@
   "submenu_gestures": "Gestures...",
   "submenu_hotkeys": "Hotkeys...",
   "submenu_server": "Web-server...",
-  "submenu_theme": "Icon style...",
+  "submenu_theme": "Тема:",
   "submenu_language": "Language...",
   "submenu_options": "Options...",
   "submenu_device_language": "Device language...",
@@ -58,8 +58,8 @@
   "tap_action_pause": "Play/pause",
   "tap_action_prev": "Prev track",
   "theme_auto": "Auto-detect",
-  "theme_dark": "Dark icon",
-  "theme_light": "Light icon",
+  "theme_dark": "Dark",
+  "theme_light": "Light",
   "long_tap_global": "Long tap action",
   "noise_control_2": "Cycle all modes",
   "noise_control_1": "Off and cancellation",
@@ -74,5 +74,7 @@
   "question_not_supported": "Compatability with this device isn't tested yet. \nApp may work incorrectly.\n\nDo you really want to use this device?",
   "action_update": "Update OpenFreebuds ({})",
   "update_message": "New version is available.\n\n{}\n\nDownload it now?",
-  "update_message_auto": "New version is available. Use your system package manager to install it.\n\n{}"
+  "update_message_auto": "New version is available. Use your system package manager to install it.\n\n{}",
+  "yes": "Yes",
+  "no": "No"
 }
