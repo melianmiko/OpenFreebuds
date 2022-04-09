@@ -16,6 +16,10 @@ def open_file(path):
     logging.info("open_file " + path)
 
 
+def list_processes():
+    return []
+
+
 def is_run_at_boot():
     return False
 

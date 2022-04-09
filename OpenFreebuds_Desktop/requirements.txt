@@ -1,5 +1,4 @@
 Pillow~=9.0.1
-psutil~=5.9.0
 mtrayapp==1.0.2
 PyBluez==0.23
 pynput~=1.7.6

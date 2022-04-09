@@ -18,6 +18,11 @@ def open_file(path):
     subprocess.Popen(["xdg-open", path])
 
 
+def list_processes():
+    data = [(int(p), c) for p, c in [x.rstrip('\n').split(' ', 1) for x in os.popen('ps h -eo pid:1,command')]]
+    return data
+
+
 def is_run_at_boot():
     return os.path.isfile(_get_autostart_file_path())
 

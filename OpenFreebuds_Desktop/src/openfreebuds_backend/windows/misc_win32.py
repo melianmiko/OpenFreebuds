@@ -1,8 +1,12 @@
 import os
 import pathlib
+import re
 import subprocess
 import sys
 import winreg
+
+no_console = subprocess.STARTUPINFO()
+no_console.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 
 
 def get_app_storage_path():
@@ -15,6 +19,21 @@ def open_in_file_manager(path):
 
 def open_file(path):
     subprocess.Popen(["notepad.exe", path])
+
+
+def list_processes():
+    cmd = "wmic process get description,processid"
+    resp = re.sub(' +', ' ', subprocess.check_output(cmd, startupinfo=no_console).decode("utf8"))
+    lines = resp.split("\r\r\n")[1:]
+    out = []
+    for a in lines:
+        a = a.split(" ", 1)
+        try:
+            out.append((int(a[1]), a[0]))
+        except (ValueError, IndexError):
+            pass
+
+    return out
 
 
 def is_run_at_boot():

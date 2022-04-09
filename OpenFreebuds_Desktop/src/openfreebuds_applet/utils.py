@@ -3,8 +3,6 @@ import hashlib
 import logging
 import os
 
-import psutil as psutil
-
 import openfreebuds_backend
 
 current_tray_application = None
@@ -30,26 +28,14 @@ def items_hash_string(items):
 
 def is_running():
     our_pid = os.getpid()
+    processes = openfreebuds_backend.list_processes()
 
-    for a in psutil.process_iter():
-        name = _get_process_name_part(a)
-        if "openfreebuds" in name and a.pid != our_pid:
-            logging.debug("Found running instance PID=" + str(a.pid))
+    for pid, name in processes:
+        if "openfreebuds" in name and pid != our_pid:
+            logging.debug("Found running instance PID=" + str(pid))
             return True
 
     return False
-
-
-def _get_process_name_part(pr):
-    if "python" in pr.name():
-        try:
-            cmd = pr.cmdline()
-            if len(cmd) > 1:
-                return cmd[1]
-        except psutil.Error:
-            pass
-
-    return pr.name()
 
 
 def get_assets_path():
