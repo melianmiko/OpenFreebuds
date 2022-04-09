@@ -1,5 +1,6 @@
 import logging
 import os
+import signal
 import threading
 import traceback
 from io import StringIO
@@ -60,8 +61,22 @@ class FreebudsApplet:
         if self.settings.enable_debug_features:
             self._enable_debug_logging()
 
+        self._setup_ctrl_c()
         self.run_thread(self._ui_update_loop, "Applet", True)
         self.tray_application.run()
+
+    def _setup_ctrl_c(self):
+        # noinspection PyUnresolvedReferences,PyProtectedMember
+        def _handle_ctrl_c(_, __):
+            if not self.started:
+                os._exit(1)
+            log.debug("Leaving, press Ctrl-C again to force exit")
+            self.exit()
+
+        try:
+            signal.signal(signal.SIGINT, _handle_ctrl_c)
+        except ValueError:
+            pass
 
     def run_thread(self, target, display_name, critical):
         log.debug("Running new thread, display_name={}".format(display_name))
@@ -158,7 +173,7 @@ class FreebudsApplet:
             log.info("Using saved address: " + self.settings.address)
             self.manager.set_device(self.settings.device_name, self.settings.address)
         else:
-            self.tray_application.message_box(t("first_run_message"), "Welcome")
+            tk_tools.message(t("first_run_message"), "Welcome")
 
         while self.started:
             self.update_icon()
