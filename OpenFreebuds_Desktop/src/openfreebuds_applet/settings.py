@@ -23,8 +23,8 @@ class SettingsStorage:
         self.enable_debug_features = False
         self.enable_sleep = False
 
-        self.hotkeys_config = {
-            "next_mode": "q"
+        self.hotkeys_config_2 = {
+            "next_mode": "<ctrl>+<alt>+q"
         }
 
         self._read()

@@ -6,7 +6,7 @@ from openfreebuds import protocol_utils, event_bus
 from openfreebuds.constants import spp_commands
 from openfreebuds.device.base import with_no_prop_changed_event
 from openfreebuds.device.spp_protocol import SppProtocolDevice
-from openfreebuds.constants.events import EVENT_SPP_RECV, EVENT_SPP_WAKE_UP, EVENT_SPP_ON_WAKE_UP
+from openfreebuds.constants.events import EVENT_SPP_RECV
 
 log = logging.getLogger("SPPDevice")
 
@@ -77,10 +77,6 @@ class HuaweiSPPDevice(SppProtocolDevice):
                 log.debug("Can't read as TLV pkg")
 
     def send_command(self, data: array, read=False):
-        if self.sleep:
-            event_bus.invoke(EVENT_SPP_WAKE_UP)
-            event_bus.wait_for(EVENT_SPP_ON_WAKE_UP, timeout=1)
-
         header = b"Z" + (len(data) + 1).to_bytes(2, byteorder="big") + b"\x00"
         package = array("b", header)
         package.extend(data)

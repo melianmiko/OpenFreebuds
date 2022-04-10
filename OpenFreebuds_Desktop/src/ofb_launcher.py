@@ -57,7 +57,7 @@ def main():
         return
 
     if args.settings:
-        settings_ui.start(applet)
+        settings_ui.open_app_settings(applet)
 
     applet.start()
 

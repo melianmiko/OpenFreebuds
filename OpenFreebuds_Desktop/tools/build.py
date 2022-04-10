@@ -23,7 +23,7 @@ WINDOWS_PYINSTALLER_ARGS = {
 def make_win32():
     base_wd = os.getcwd()
 
-    if not os.path.isdir(base_wd + "src/openfreebuds_assets/ttk_theme"):
+    if not os.path.isdir(base_wd + "/src/openfreebuds_assets/ttk_theme"):
         download_ttk_theme()
 
     args = mk_args(WINDOWS_PYINSTALLER_ARGS)
@@ -87,6 +87,7 @@ def download_ttk_theme():
     os.unlink("ttk_theme.zip")
     os.rename(dirname[:-1], "ttk_theme")
     print("ready")
+    os.chdir(base_wd)
 
 
 if __name__ == "__main__":

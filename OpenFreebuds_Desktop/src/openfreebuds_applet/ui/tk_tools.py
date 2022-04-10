@@ -10,11 +10,30 @@ from openfreebuds_applet.l18n import t
 
 class Config:
     theme = "light"
+    single_lock = False
 
 
 def in_other_thread(func):
     def internal(*args, **kwargs):
         threading.Thread(target=func, kwargs=kwargs, args=args).start()
+    return internal
+
+
+def main_window(func):
+    def th(*args, **kwargs):
+        if Config.single_lock:
+            logging.debug("Can't open this window: other main is started")
+            return
+
+        try:
+            Config.single_lock = True
+            func(*args, **kwargs)
+        finally:
+            Config.single_lock = False
+
+    def internal(*args, **kwargs):
+        threading.Thread(target=th, kwargs=kwargs, args=args).start()
+
     return internal
 
 

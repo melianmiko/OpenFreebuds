@@ -1,51 +1,21 @@
-import threading
 import tkinter
 from tkinter import ttk
 
 import openfreebuds_backend
 from openfreebuds import event_bus
 from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED
-from openfreebuds_applet.l18n import t
+from openfreebuds_applet import utils
+from openfreebuds_applet.l18n import t, list_langs, ln, setup_language, setup_auto
 from openfreebuds_applet.modules import http_server
 from openfreebuds_applet.settings import SettingsStorage
 from openfreebuds_applet.ui import tk_tools, icons
 
-PAD_X_BASE = 8
-PAD_Y_BASE = 6
-PAD_X_GROUP = 16
-PAD_Y_GROUP = 12
-
-
-def start(applet):
-    def _int():
-        SettingsBaseApp(applet).mainloop()
-
-    threading.Thread(target=_int).start()
-
-
-class SettingsBaseApp(tkinter.Tk):
-    def __init__(self, applet):
-        super().__init__()
-        self.applet = applet
-        tk_tools.apply_theme(self)
-
-        self.wm_title(t("settings_title"))
-        self.wm_resizable(False, False)
-
-        self._build_ui()
-
-    def _build_ui(self):
-        frame = ttk.Frame(self)
-        frame.grid()
-
-        notebook = ttk.Notebook(frame)
-        notebook.grid(column=0, row=0, sticky="nesw")
-
-        notebook.add(AppSettingsTab(notebook, self.applet, self),
-                     text=t("settings_tab_app"))
+PAD_X_BASE = 16
+PAD_Y_BASE = 4
 
 
 class AppSettingsTab(ttk.Frame):
+    LANGUAGE_OPTIONS = list_langs()
     THEME_OPTIONS = {
         "auto": t("theme_auto"),
         "light": t("theme_light"),
@@ -57,7 +27,7 @@ class AppSettingsTab(ttk.Frame):
         self.applet = applet
         self.root = root
         self.settings = applet.settings     # type: SettingsStorage
-        self.grid()
+        self.grid_columnconfigure(0, weight=1)
 
         self.var_run_at_boot = tkinter.BooleanVar(value=openfreebuds_backend.is_run_at_boot())
         self.var_show_update_dialog = tkinter.BooleanVar(value=self.settings.enable_update_dialog)
@@ -68,45 +38,56 @@ class AppSettingsTab(ttk.Frame):
         self.var_server_access = tkinter.BooleanVar(value=self.settings.server_access)
         self.var_theme = tkinter.StringVar(value=self.THEME_OPTIONS[self.settings.theme])
         self.var_icon_theme = tkinter.StringVar(value=self.THEME_OPTIONS[self.settings.icon_theme])
+        self.var_language = tkinter.StringVar(value=ln(self.settings.language))
 
-        # Ui Settings
-        ui_root = ttk.Frame(self)
-        ui_root.grid(column=0, row=0, padx=PAD_X_GROUP, pady=PAD_Y_GROUP, sticky="nesw")
-
-        ttk.Label(ui_root, text=t("submenu_theme"))\
-            .grid(column=0, row=0, sticky="nws", padx=PAD_X_BASE)
-        c = ttk.Combobox(ui_root, values=list(self.THEME_OPTIONS.values()),
-                         textvariable=self.var_theme, state="readonly")
-        c.bind("<<ComboboxSelected>>", self._theme_changed)
-        c.grid(column=1, row=0, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
-
-        ttk.Label(ui_root, text=t("submenu_icon_theme"))\
-            .grid(column=0, row=1, sticky="nws", padx=PAD_X_BASE)
-        c = ttk.Combobox(ui_root, values=list(self.THEME_OPTIONS.values()),
-                         textvariable=self.var_icon_theme, state="readonly")
-        c.bind("<<ComboboxSelected>>", self._icon_theme_changed)
-        c.grid(column=1, row=1, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
+        label_fnt = tkinter.font.Font(weight="bold")
 
         # Main settings
-        main_root = ttk.Labelframe(self, text=t("settings_group_main"))
-        main_root.grid(column=0, row=1, padx=PAD_X_GROUP, pady=PAD_Y_GROUP, sticky="nesw")
+        ttk.Label(self, text=t("settings_group_main"), font=label_fnt)\
+            .grid(row=1, pady=16, sticky=tkinter.NW, padx=PAD_X_BASE)
+        main_root = ttk.Frame(self)
+        main_root.grid(column=0, row=2, sticky=tkinter.NSEW)
+        main_root.grid_columnconfigure(0, weight=1)
+
+        ttk.Label(main_root, text=t("submenu_language"))\
+            .grid(column=0, row=0, sticky="nws", padx=PAD_X_BASE)
+        c = ttk.Combobox(main_root, values=list(self.LANGUAGE_OPTIONS.keys()),
+                         textvariable=self.var_language, state="readonly")
+        c.bind("<<ComboboxSelected>>", self._language_changed)
+        c.grid(column=1, row=0, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
+
+        ttk.Label(main_root, text=t("submenu_theme"))\
+            .grid(column=0, row=1, sticky="nws", padx=PAD_X_BASE)
+        c = ttk.Combobox(main_root, values=list(self.THEME_OPTIONS.values()),
+                         textvariable=self.var_theme, state="readonly")
+        c.bind("<<ComboboxSelected>>", self._theme_changed)
+        c.grid(column=1, row=1, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
+
+        ttk.Label(main_root, text=t("submenu_icon_theme"))\
+            .grid(column=0, row=2, sticky="nws", padx=PAD_X_BASE)
+        c = ttk.Combobox(main_root, values=list(self.THEME_OPTIONS.values()),
+                         textvariable=self.var_icon_theme, state="readonly")
+        c.bind("<<ComboboxSelected>>", self._icon_theme_changed)
+        c.grid(column=1, row=2, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
 
         ttk.Checkbutton(main_root, text=t("option_run_at_boot"),
                         variable=self.var_run_at_boot,
                         command=self._toggle_run_at_boot)\
-            .grid(column=0, row=0, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
+            .grid(column=0, row=3, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE, columnspan=2)
         ttk.Checkbutton(main_root, text=t("option_show_update_dialog"),
                         variable=self.var_show_update_dialog,
                         command=self._toggle_show_update_dialog)\
-            .grid(column=0, row=1, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
+            .grid(column=0, row=4, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE, columnspan=2)
         ttk.Checkbutton(main_root, text=t("option_compact"),
                         variable=self.var_compact_mode,
                         command=self._toggle_compact_mode)\
-            .grid(column=0, row=2, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
+            .grid(column=0, row=5, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE, columnspan=2)
 
         # HTTP server
-        server_root = ttk.Labelframe(self, text=t("settings_group_server"))
-        server_root.grid(column=0, row=2, padx=PAD_X_GROUP, pady=PAD_Y_GROUP, sticky="nesw")
+        ttk.Label(self, text=t("settings_group_server"), font=label_fnt)\
+            .grid(row=3, pady=16, sticky=tkinter.NW, padx=PAD_X_BASE)
+        server_root = ttk.Frame(self)
+        server_root.grid(column=0, row=4, sticky=tkinter.NSEW)
 
         ttk.Checkbutton(server_root, text=t("option_server"),
                         variable=self.var_server,
@@ -121,17 +102,18 @@ class AppSettingsTab(ttk.Frame):
             .grid(row=2, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
 
         # Advanced
-        adv_root = ttk.Labelframe(self, text=t("settings_group_advanced"))
-        adv_root.grid(column=0, row=3, padx=PAD_X_GROUP, pady=PAD_Y_GROUP, sticky="nesw")
+        ttk.Label(self, text=t("settings_group_advanced"), font=label_fnt)\
+            .grid(row=5, pady=16, sticky=tkinter.NW, padx=PAD_X_BASE)
+        adv_root = ttk.Frame(self)
+        adv_root.grid(column=0, row=6, sticky=tkinter.NSEW)
 
-        ttk.Checkbutton(adv_root, text=t("option_sleep_mode"),
-                        variable=self.var_sleep_mode,
-                        command=self._toggle_sleep_mode) \
-            .grid(column=0, row=0, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
         ttk.Checkbutton(adv_root, text=t("option_debug_features"),
                         variable=self.var_debug_mode,
                         command=self._toggle_debug) \
-            .grid(column=0, row=1, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
+            .grid(column=0, row=0, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
+
+        ttk.Button(adv_root, text=t("action_open_appdata"), command=utils.open_app_storage_dir)\
+            .grid(row=1, sticky=tkinter.NW, padx=PAD_X_BASE, pady=4)
 
     def _toggle_run_at_boot(self):
         openfreebuds_backend.set_run_at_boot(self.var_run_at_boot.get())
@@ -186,6 +168,19 @@ class AppSettingsTab(ttk.Frame):
         self.settings.icon_theme = name
         self.applet.settings.write()
         self.applet.current_icon_hash = ""
+        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
+
+    def _language_changed(self, _):
+        name = self.var_language.get()
+        lang = self.LANGUAGE_OPTIONS[name]
+
+        self.applet.settings.language = lang
+        self.applet.settings.write()
+
+        if lang == "":
+            setup_auto()
+        else:
+            setup_language(lang)
         event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
     def _do_toggle_access(self, result):

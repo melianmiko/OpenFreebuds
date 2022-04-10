@@ -44,7 +44,7 @@ def get_actions(applet):
         "mode_1": lambda *args: do_mode(applet, 1),
         "mode_2": lambda *args: do_mode(applet, 2),
         "connect": lambda *args: applet.force_connect(),
-        "disconnect": lambda *args: applet.force_disconnect(),
+        "disconnect": lambda *args: applet.force_disconnect()
     }
 
 

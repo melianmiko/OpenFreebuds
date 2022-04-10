@@ -2,11 +2,9 @@ import logging
 import os
 
 import openfreebuds_backend
-from openfreebuds.manager import FreebudsManager
 from openfreebuds.device.huawei_spp_device import HuaweiSPPDevice
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import updater
-from openfreebuds_applet.settings import SettingsStorage
 from mtrayapp import Menu
 
 
@@ -36,8 +34,6 @@ class HeaderMenuPart(Menu):
         self.settings = applet.settings
         self.applet = applet
 
-        self.device_info_menu = DeviceInfoMenu(self.manager, self.settings)
-
     def on_build(self):
         has_update, new_version = updater.get_result()
         device_name = self.settings.device_name
@@ -48,7 +44,7 @@ class HeaderMenuPart(Menu):
                       visible=has_update)
 
         if self.manager.state != self.manager.STATE_NO_DEV:
-            self.add_submenu(text=device_name, menu=self.device_info_menu)
+            self.add_item(text=device_name, enabled=False)
 
             if is_connected:
                 self.add_item(t('action_disconnect'), self.do_disconnect)
@@ -118,37 +114,3 @@ class HeaderMenuPart(Menu):
 
         log.debug("Finish force disconnecting")
         manager.paused = False
-
-
-class DeviceInfoMenu(Menu):
-    """
-    Device info/unpair submenu
-    """
-    def __init__(self, manager: FreebudsManager, settings: SettingsStorage):
-        super().__init__()
-        self.manager = manager
-        self.settings = settings
-
-    def on_build(self):
-        self.add_item(t("submenu_device_info"), self.show_device_info)
-        self.add_item(t("action_unpair"), self.do_unpair)
-
-    def show_device_info(self):
-        if self.manager.state != self.manager.STATE_CONNECTED:
-            self.application.message_box(t("mgr_state_2"), "Device info")
-            return
-
-        props = self.manager.device.find_group("info")
-        message = "{} ({})\n\n".format(self.settings.device_name, self.settings.address)
-
-        for a in props:
-            message += "{}: {}\n".format(a, props[a])
-
-        self.application.message_box(message, "Device info")
-
-    def do_unpair(self):
-        self.settings.address = ""
-        self.settings.device_name = ""
-        self.settings.write()
-
-        self.manager.unset_device(lock=False)

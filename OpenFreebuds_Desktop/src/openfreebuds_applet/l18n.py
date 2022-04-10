@@ -10,6 +10,7 @@ lc_path = utils.get_assets_path() + "/locale/{}.json"
 log = logging.getLogger("FreebudsLocale")
 
 lang_names = {
+    "": "Auto",
     "en_US": "English",
     "en_GB": "English (Britain)",
     "ru_RU": "Русский",
@@ -57,6 +58,17 @@ def ln(prop):
         return lang_names[prop]
 
     return prop
+
+
+def list_langs():
+    variants = os.listdir(utils.get_assets_path() + "/locale")
+    variants.sort()
+
+    out = {"Auto": ""}
+    for lang in variants:
+        lang = lang.replace(".json", "")
+        out[ln(lang)] = lang
+    return out
 
 
 def t(prop):
