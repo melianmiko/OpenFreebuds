@@ -1,12 +1,55 @@
+import tkinter.font
 import webbrowser
+from tkinter import ttk
 
+from PIL import Image, ImageTk
 from mtrayapp import Menu
 
 import openfreebuds_backend
 from openfreebuds import cli_io
 from openfreebuds_applet import utils
-from openfreebuds_applet.ui import settings_ui
+from openfreebuds_applet.ui import settings_ui, tk_tools
 from openfreebuds_applet.l18n import t
+
+
+@tk_tools.in_other_thread
+def about_window():
+    version, debug = utils.get_version()
+    logo_path = utils.get_assets_path() + "/icon.png"
+
+    def website():
+        webbrowser.open("https://melianmiko.ru/openfreebuds")
+
+    def source():
+        webbrowser.open("https://github.com/melianmiko/OpenFreebuds")
+
+    tk = tk_tools.create_themed()
+    tk.wm_title("About OpenFreebuds")
+
+    frame = ttk.Frame(tk)
+    frame.grid()
+    frame.grid_columnconfigure(1, weight=1)
+
+    # logo = tkinter.PhotoImage(file=logo_path, width=48, height=48)
+    logo = Image.open(logo_path)
+    logo = logo.resize((72, 72))
+    logo = ImageTk.PhotoImage(logo)
+    ttk.Label(tk, image=logo).grid(pady=16, padx=16, rowspan=30, sticky=tkinter.NW)
+
+    h1_font = tkinter.font.Font(size=12, weight="bold")
+    ttk.Label(tk, text="OpenFreebuds {}".format(version), font=h1_font)\
+        .grid(row=10, column=1, pady=16, padx=16, columnspan=3, sticky=tkinter.NW)
+    ttk.Label(tk, text="by melianmiko")\
+        .grid(row=11, column=1, padx=16, pady=4, columnspan=3, sticky=tkinter.NW)
+    ttk.Label(tk, text="available under GPLv3 license")\
+        .grid(row=12, column=1, padx=16, pady=4, columnspan=3, sticky=tkinter.NW)
+
+    ttk.Button(tk, text=t('open_website'), command=website)\
+        .grid(row=20, column=1, padx=16, pady=16)
+    ttk.Button(tk, text=t('open_github'), command=source)\
+        .grid(row=20, column=2, padx=4, pady=16)
+
+    tk.mainloop()
 
 
 class ApplicationMenuPart(Menu):
@@ -23,7 +66,7 @@ class ApplicationMenuPart(Menu):
             self.add_separator()
 
         self.add_item(t("action_settings"), self.open_settings)
-        self.add_item(t("action_about"), self.about_dialog)
+        self.add_item(t("action_about"), about_window)
         self.add_separator()
 
         if self.applet.settings.enable_debug_features:
@@ -57,18 +100,3 @@ class ApplicationMenuPart(Menu):
         command = result.split(" ")
         result = cli_io.dev_command(self.applet.manager.device, command)
         self.application.message_box(result, "Dev mode")
-
-    def about_dialog(self):
-        version, debug = utils.get_version()
-
-        message = "OpenFreebuds v{}\nBy MelianMiko\nLicensed under GPLv3\n".format(version)
-        if debug:
-            message += "DEBUG ENABLED\n"
-        message += "\n" + t("message_open_website")
-
-        self.application.confirm_box(message, "OpenFreebuds Desktop", self.about_callback)
-
-    @staticmethod
-    def about_callback(result):
-        if result:
-            webbrowser.open("https://melianmiko.ru/openfreebuds")
