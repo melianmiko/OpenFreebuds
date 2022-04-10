@@ -1,22 +1,18 @@
 DESTDIR=
 
-all: lib
+all: lib src/openfreebuds_assets/ttk_theme
 	rm -rf builddir/openfreebuds
 	mkdir -p builddir/openfreebuds
 	cp -r src/* builddir/openfreebuds
 	cp -r lib/* builddir/openfreebuds
 	find builddir/openfreebuds -type d -name "__pycache__" -exec rm -rf {} +
 
-lib: src/openfreebuds_assets/ttk_theme
+lib:
 	mkdir -p lib
 	cd lib && pip install --target=. --no-deps -r ../requirements_lib.txt
 
 src/openfreebuds_assets/ttk_theme:
-	mkdir -p src/openfreebuds_assets
-	wget -O src/openfreebuds_assets/theme.zip https://github.com/rdbende/Sun-Valley-ttk-theme/archive/refs/heads/master.zip
-	cd src/openfreebuds_assets && unzip theme.zip
-	cd src/openfreebuds_assets && mv Sun-Valley-ttk-theme-master ttk_theme
-	cd src/openfreebuds_assets && rm theme.zip
+	python tools/build.py ttk_theme
 
 install:
 	rm -rf ${DESTDIR}/opt/openfreebuds

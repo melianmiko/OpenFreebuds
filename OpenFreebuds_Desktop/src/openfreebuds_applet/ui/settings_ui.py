@@ -41,7 +41,7 @@ class SettingsBaseApp(tkinter.Tk):
         notebook = ttk.Notebook(frame)
         notebook.grid(column=0, row=0, sticky="nesw")
 
-        notebook.add(AppSettingsTab(notebook, self.applet),
+        notebook.add(AppSettingsTab(notebook, self.applet, self),
                      text=t("settings_tab_app"))
 
 
@@ -52,9 +52,10 @@ class AppSettingsTab(ttk.Frame):
         "dark": t("theme_dark")
     }
 
-    def __init__(self, root, applet):
-        super().__init__(root)
+    def __init__(self, parent, applet, root: tkinter.Tk):
+        super().__init__(parent)
         self.applet = applet
+        self.root = root
         self.settings = applet.settings     # type: SettingsStorage
         self.grid()
 
@@ -116,6 +117,9 @@ class AppSettingsTab(ttk.Frame):
                         command=self._toggle_server_access) \
             .grid(column=0, row=1, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
 
+        ttk.Label(server_root, text=t("webserver_port") + " " + str(http_server.get_port())) \
+            .grid(row=2, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
+
         # Advanced
         adv_root = ttk.Labelframe(self, text=t("settings_group_advanced"))
         adv_root.grid(column=0, row=3, padx=PAD_X_GROUP, pady=PAD_Y_GROUP, sticky="nesw")
@@ -172,6 +176,8 @@ class AppSettingsTab(ttk.Frame):
         tk_tools.set_theme(name)
         self.settings.theme = name
         self.applet.settings.write()
+
+        self.root.tk.call("set_theme", name)
 
     def _icon_theme_changed(self, _):
         name = self._get_theme_values()[self.var_icon_theme.get()]

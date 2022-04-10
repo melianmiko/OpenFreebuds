@@ -13,11 +13,11 @@ class DeviceConfig:
 
 def with_no_prop_changed_event(func):
     def internal(*args, **kwargs):
-        args[0].enable_prop_changed_event = True
+        args[0].enable_prop_changed_event = False
 
         func(*args, **kwargs)
 
-        args[0].enable_prop_changed_event = False
+        args[0].enable_prop_changed_event = True
         event_bus.invoke(EVENT_DEVICE_PROP_CHANGED)
     return internal
 

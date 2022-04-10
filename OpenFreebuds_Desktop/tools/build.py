@@ -1,6 +1,11 @@
 import os
 import shutil
 import subprocess
+import sys
+import urllib.request
+import zipfile
+
+TTK_THEME_URL = "https://github.com/rdbende/Sun-Valley-ttk-theme/archive/refs/heads/master.zip"
 
 WINDOWS_PYINSTALLER_ARGS = {
     "name": "openfreebuds",
@@ -17,6 +22,10 @@ WINDOWS_PYINSTALLER_ARGS = {
 
 def make_win32():
     base_wd = os.getcwd()
+
+    if not os.path.isdir(base_wd + "src/openfreebuds_assets/ttk_theme"):
+        download_ttk_theme()
+
     args = mk_args(WINDOWS_PYINSTALLER_ARGS)
     path = base_wd + "\\src\\ofb_launcher.py"
 
@@ -58,5 +67,37 @@ def mk_args(args):
     return out
 
 
+def download_ttk_theme():
+    base_wd = os.getcwd()
+    os.chdir(base_wd + "/src/openfreebuds_assets")
+    if os.path.isdir("ttk_theme"):
+        print("Deleting exiting theme...")
+        shutil.rmtree("ttk_theme")
+
+    print("Downloading theme...")
+    with urllib.request.urlopen(TTK_THEME_URL) as dl_file:
+        with open("ttk_theme.zip", 'wb') as out_file:
+            out_file.write(dl_file.read())
+
+    print("Extracting")
+    with zipfile.ZipFile("ttk_theme.zip", "r") as theme_zip:
+        dirname = theme_zip.namelist()[0]
+        theme_zip.extractall()
+
+    os.unlink("ttk_theme.zip")
+    os.rename(dirname[:-1], "ttk_theme")
+    print("ready")
+
+
 if __name__ == "__main__":
-    make_win32()
+    if not os.path.isdir("src"):
+        print("Can't find 'src' folder. Run this script from repo root.")
+        raise SystemExit
+
+    if len(sys.argv) < 2 and sys.platform == 'win32':
+        print("We think that you want to compile win32 bundle")
+        make_win32()
+    elif len(sys.argv) < 2:
+        print("No command")
+    elif sys.argv[1] == "ttk_theme":
+        download_ttk_theme()

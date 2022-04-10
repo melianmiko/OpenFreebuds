@@ -39,7 +39,7 @@ class HuaweiSPPDevice(SppProtocolDevice):
 
         self.bind_on_package([b'\x0c\x02'], self._parse_language)
         self.bind_on_package([b'\x01-'], self._parse_touchpad_enabled)
-        self.bind_on_package([b'\x01\x08', b'\x01\x08'], self._parse_battery_pkg)
+        self.bind_on_package([b'\x01\x08', b'\x01\''], self._parse_battery_pkg)
         self.bind_on_package([b'\x01 '], self._parse_double_tap_action)
         self.bind_on_package([b'\x01\x07'], self._parse_device_info)
         self.bind_on_package([b'+\x03'], self._parse_in_ear_state)
@@ -51,6 +51,7 @@ class HuaweiSPPDevice(SppProtocolDevice):
         self.bind_set_property("service", "language", self._set_language)
         self.bind_set_property("anc", "mode", self._set_noise_mode)
         self.bind_set_property("config", "touchpad_enabled", self._set_touchpad_enabled)
+        self.bind_set_property("config", "auto_pause", self._set_auto_pause_mode)
         self.bind_set_property("action", "long_tap_left", self._set_long_tab_action_left)
         self.bind_set_property("action", "long_tap_right", self._set_long_tab_action_right)
         self.bind_set_property("action", "double_tap_left", self._set_double_tap_action_left)
