@@ -12,7 +12,7 @@ from openfreebuds_applet.ui import settings_ui, tk_tools
 from openfreebuds_applet.l18n import t
 
 
-@tk_tools.in_other_thread
+@tk_tools.main_window
 def about_window():
     version, debug = utils.get_version()
     logo_path = utils.get_assets_path() + "/icon.png"
