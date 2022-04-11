@@ -6,8 +6,8 @@ from openfreebuds_applet.l18n import t
 log = logging.getLogger("AppletActions")
 
 
-def do_next_mode(applet):
-    dev = _get_device(applet)       # type: BaseDevice
+def do_next_mode(manager):
+    dev = _get_device(manager)       # type: BaseDevice
     if dev is not None:
         current = dev.find_property("anc", "mode", -99)
         if current == -99:
@@ -20,8 +20,8 @@ def do_next_mode(applet):
         return False
 
 
-def do_mode(applet, mode):
-    dev = _get_device(applet)       # type: BaseDevice
+def do_mode(manager, mode):
+    dev = _get_device(manager)       # type: BaseDevice
     if dev is not None:
         dev.set_property("anc", "mode", mode)
         log.debug("Switched to mode " + str(mode))
@@ -29,22 +29,31 @@ def do_mode(applet, mode):
         return False
 
 
-def _get_device(applet):
-    if applet.manager.state != applet.manager.STATE_CONNECTED:
+def _get_device(manager):
+    if manager.state != manager.STATE_CONNECTED:
         log.debug("Hotkey ignored, no device")
         return None
 
-    return applet.manager.device
+    return manager.device
 
 
 def get_actions(applet):
     return {
-        "next_mode": lambda *args: do_next_mode(applet),
-        "mode_0": lambda *args: do_mode(applet, 0),
-        "mode_1": lambda *args: do_mode(applet, 1),
-        "mode_2": lambda *args: do_mode(applet, 2),
+        "next_mode": lambda *args: do_next_mode(applet.manager),
+        "mode_0": lambda *args: do_mode(applet.manager, 0),
+        "mode_1": lambda *args: do_mode(applet.manager, 1),
+        "mode_2": lambda *args: do_mode(applet.manager, 2),
         "connect": lambda *args: applet.force_connect(),
         "disconnect": lambda *args: applet.force_disconnect()
+    }
+
+
+def get_device_actions(manager):
+    return {
+        "next_mode": lambda *args: do_next_mode(manager),
+        "mode_0": lambda *args: do_mode(manager, 0),
+        "mode_1": lambda *args: do_mode(manager, 1),
+        "mode_2": lambda *args: do_mode(manager, 2)
     }
 
 

@@ -1,17 +1,21 @@
 import argparse
 import logging
 import os
+import time
 import urllib.error
 import urllib.request
 
 import openfreebuds_applet
 import openfreebuds_backend
 from openfreebuds import event_bus, manager, cli_io
-from openfreebuds.constants.events import EVENT_MANAGER_STATE_CHANGED
+from openfreebuds.constants.events import EVENT_MANAGER_STATE_CHANGED, EVENT_DEVICE_PROP_CHANGED
 from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import http_server
+from openfreebuds_applet.settings import SettingsStorage
 from openfreebuds_applet.ui import tk_tools, settings_ui
+
+log = logging.getLogger("OfbLauncher")
 
 
 def parse_args():
@@ -52,7 +56,7 @@ def main():
     applet = openfreebuds_applet.create()
     if utils.is_running():
         # noinspection PyUnresolvedReferences,PyProtectedMember
-        tk_tools.message(t("application_running_message"), "Error", lambda: os._exit(1))
+        tk_tools.message(t("application_running_message"), "Error", _leave)
         applet.tray_application.run()
         return
 
@@ -63,6 +67,15 @@ def main():
 
 
 def do_command(command):
+    if utils.is_running():
+        log.debug("App is launched, using HTTP server to process command...")
+        _do_command_webserver(command)
+    else:
+        log.debug("App isn't launched, trying to run command without them")
+        _do_command_offline(command)
+
+
+def _do_command_webserver(command):
     port = http_server.get_port()
 
     try:
@@ -72,7 +85,40 @@ def do_command(command):
             print(f.read().decode("utf8"))
 
     except urllib.error.URLError:
-        print("Failed. Check that app started and web-server is active.")
+        log.error("Can't do command via HTTP-server")
+        tk_tools.message(t("do_command_server_error").format(command), "Openfreebuds", _leave)
+
+
+def _do_command_offline(command):
+    man = manager.create()
+    settings = SettingsStorage()
+    if settings.address == "":
+        log.error("No saved device, bye")
+        return
+
+    start = time.time()
+    man.set_device(settings.device_name, settings.address)
+    while man.state != man.STATE_CONNECTED:
+        if time.time() - start > 5:
+            log.debug("connection timed out, bye")
+            _leave()
+        time.sleep(0.25)
+
+    log.debug("ready to run")
+    actions = openfreebuds_applet.modules.actions.get_device_actions(man)
+    if command not in actions:
+        log.error("Undefined command")
+        _leave()
+
+    actions[command]()
+    event_bus.wait_for(EVENT_DEVICE_PROP_CHANGED)
+    print("true")
+    _leave()
+
+
+def _leave():
+    # noinspection PyProtectedMember,PyUnresolvedReferences
+    os._exit(1)
 
 
 def run_shell():
