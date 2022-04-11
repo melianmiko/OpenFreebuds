@@ -1,4 +1,5 @@
 import logging
+import time
 import tkinter
 from tkinter import ttk
 
@@ -19,7 +20,6 @@ class HotkeysSettingsTab(ttk.Frame):
         self.grid()
         self.grid_columnconfigure(0, weight=1)
 
-        self.row_counter = 3
         self.var_main_sw = tkinter.BooleanVar(value=self.settings.enable_hotkeys)
 
         if not self._ui_available():
@@ -29,11 +29,22 @@ class HotkeysSettingsTab(ttk.Frame):
                         style="Switch.TCheckbutton",
                         variable=self.var_main_sw,
                         command=self._toggle_main)\
-            .grid(column=0, row=2, sticky=tkinter.NW, padx=16, pady=16, columnspan=3)
+            .grid(row=0, sticky=tkinter.NW, padx=16, pady=16, columnspan=3)
+
+        self.row_counter = 0
+        self.hotkeys_root = ttk.Frame(self)
+        self.hotkeys_root.grid_columnconfigure(0, weight=1)
+        self._update_hotkeys_visible()
 
         all_actions = actions.get_action_names()
         for a in all_actions:
             self._add_hotkey(a, all_actions[a])
+
+    def _update_hotkeys_visible(self):
+        if self.var_main_sw.get():
+            self.hotkeys_root.grid(column=0, row=3, sticky=tkinter.NSEW)
+        else:
+            self.hotkeys_root.grid_remove()
 
     def _add_hotkey(self, action, display_name):
         variable = tkinter.StringVar()
@@ -55,13 +66,13 @@ class HotkeysSettingsTab(ttk.Frame):
             hotkeys.start(self.applet)
             variable.set("---")
 
-        ttk.Label(self, text=display_name) \
+        ttk.Label(self.hotkeys_root, text=display_name) \
             .grid(row=self.row_counter, sticky="new", padx=16, pady=8, columnspan=3)
-        ttk.Label(self, textvariable=variable) \
+        ttk.Label(self.hotkeys_root, textvariable=variable) \
             .grid(row=self.row_counter+1, sticky="new", padx=16, pady=8)
-        ttk.Button(self, text=t("change"), command=_on_click) \
+        ttk.Button(self.hotkeys_root, text=t("change"), command=_on_click) \
             .grid(row=self.row_counter+1, column=1, sticky=tkinter.NSEW)
-        ttk.Button(self, text=t("clear"), command=_wipe) \
+        ttk.Button(self.hotkeys_root, text=t("clear"), command=_wipe) \
             .grid(row=self.row_counter+1, column=2, sticky=tkinter.NSEW, padx=16)
 
         self.row_counter += 2
@@ -71,6 +82,8 @@ class HotkeysSettingsTab(ttk.Frame):
         self.recorder.record()
         ui_var.set("Press hotkey or ESC to cancel")
 
+        start = time.time()
+
         def _check():
             log.debug("Waiting for hotkey")
             if not self.recorder.working:
@@ -79,6 +92,12 @@ class HotkeysSettingsTab(ttk.Frame):
                     log.debug("New hotkey action={} val={}".format(action, val))
                     self._apply_hotkey(action, val, ui_var)
                     return
+            if time.time() - start > 10:
+                log.debug("Hotkey record timed out, stopping...")
+                self.recorder.cancel()
+                ui_var.set('timeout')
+                self.is_recording = False
+                return
             self.after(250, _check)
         _check()
 
@@ -93,6 +112,7 @@ class HotkeysSettingsTab(ttk.Frame):
     def _toggle_main(self):
         self.settings.enable_hotkeys = not self.settings.enable_hotkeys
         self.settings.write()
+        self._update_hotkeys_visible()
 
         hotkeys.start(self.applet)
 
@@ -101,15 +121,15 @@ class HotkeysSettingsTab(ttk.Frame):
         if not is_available:
             log.warning(av_error)
             ttk.Label(self, text=t("hotkeys_not_available")) \
-                .grid(padx=16, pady=16, sticky=tkinter.NW)
+                .grid(row=1, padx=16, pady=4, sticky=tkinter.NW)
             ttk.Label(self, text=av_error) \
-                .grid(row=1, padx=16, pady=16, sticky=tkinter.NW)
+                .grid(row=2, padx=16, pady=4, sticky=tkinter.NW)
             return False
 
         is_supported, sp_error = hotkeys.test_os_supported()
         if not is_supported:
             log.warning(sp_error)
             ttk.Label(self, text=t("hotkeys_wayland")) \
-                .grid(padx=16, pady=16, sticky=tkinter.NW, columnspan=4)
+                .grid(row=1, padx=16, pady=4, sticky=tkinter.NW, columnspan=4)
 
         return True
