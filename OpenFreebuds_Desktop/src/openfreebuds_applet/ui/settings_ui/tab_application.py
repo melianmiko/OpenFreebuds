@@ -30,7 +30,6 @@ class AppSettingsTab(ttk.Frame):
 
         self.var_run_at_boot = tkinter.BooleanVar(value=openfreebuds_backend.is_run_at_boot())
         self.var_show_update_dialog = tkinter.BooleanVar(value=self.settings.enable_update_dialog)
-        self.var_compact_mode = tkinter.BooleanVar(value=self.settings.compact_menu)
         self.var_sleep_mode = tkinter.BooleanVar(value=self.settings.enable_sleep)
         self.var_debug_mode = tkinter.BooleanVar(value=self.settings.enable_debug_features)
         self.var_server = tkinter.BooleanVar(value=self.settings.enable_server)
@@ -45,7 +44,7 @@ class AppSettingsTab(ttk.Frame):
         ttk.Label(self, text=t("settings_group_main"), font=label_fnt)\
             .grid(row=1, pady=16, sticky=tkinter.NW, padx=PAD_X_BASE)
         main_root = ttk.Frame(self)
-        main_root.grid(column=0, row=2, sticky=tkinter.NSEW)
+        main_root.grid(columnspan=2, row=2, sticky=tkinter.NSEW)
         main_root.grid_columnconfigure(0, weight=1)
 
         ttk.Label(main_root, text=t("submenu_language"))\
@@ -77,34 +76,31 @@ class AppSettingsTab(ttk.Frame):
                         variable=self.var_show_update_dialog,
                         command=self._toggle_show_update_dialog)\
             .grid(column=0, row=4, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE, columnspan=2)
-        ttk.Checkbutton(main_root, text=t("option_compact"),
-                        variable=self.var_compact_mode,
-                        command=self._toggle_compact_mode)\
-            .grid(column=0, row=5, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE, columnspan=2)
 
         # HTTP server
         ttk.Label(self, text=t("settings_group_server"), font=label_fnt)\
             .grid(row=3, pady=16, sticky=tkinter.NW, padx=PAD_X_BASE)
-        server_root = ttk.Frame(self)
-        server_root.grid(column=0, row=4, sticky=tkinter.NSEW)
-
-        ttk.Checkbutton(server_root, text=t("option_server"),
+        ttk.Checkbutton(self, style="Switch.TCheckbutton",
                         variable=self.var_server,
                         command=self._toggle_server) \
-            .grid(column=0, row=0, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
+            .grid(column=1, row=3, sticky="nse", padx=PAD_X_BASE)
+
+        server_root = ttk.Frame(self)
+        server_root.grid(columnspan=2, row=4, sticky=tkinter.NSEW)
+
         ttk.Checkbutton(server_root, text=t("prop_server_access"),
                         variable=self.var_server_access,
                         command=self._toggle_server_access) \
-            .grid(column=0, row=1, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
+            .grid(column=0, row=0, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
 
         ttk.Label(server_root, text=t("webserver_port") + " " + str(http_server.get_port())) \
-            .grid(row=2, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
+            .grid(row=1, sticky=tkinter.NW, padx=PAD_X_BASE, pady=16)
 
         # Advanced
         ttk.Label(self, text=t("settings_group_advanced"), font=label_fnt)\
             .grid(row=5, pady=16, sticky=tkinter.NW, padx=PAD_X_BASE)
         adv_root = ttk.Frame(self)
-        adv_root.grid(column=0, row=6, sticky=tkinter.NSEW)
+        adv_root.grid(columnspan=2, row=6, sticky=tkinter.NSEW)
 
         ttk.Checkbutton(adv_root, text=t("option_debug_features"),
                         variable=self.var_debug_mode,

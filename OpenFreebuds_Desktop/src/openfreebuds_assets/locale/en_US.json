@@ -78,6 +78,7 @@
   "settings_tab_device": "Device",
   "settings_tab_app": "Application",
   "settings_tab_hotkeys": "Hotkeys",
+  "settings_tab_about": "About",
   "open_website": "Website",
   "open_github": "Source code",
   "profile_select_message": "This device isn't supported, for yet. But if you want,\nyou cant force connect them. To do that, select an exiting\nprofile. Then application will try to apply it to your \ndevice. You can change profile in any time.\n\nNotice that this may be dangerous for some kind of devices.\nDo it of your risk. You also can share information about your\ndevice and selected profile at GitHub, if you want get offical\nsupport."

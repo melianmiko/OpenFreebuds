@@ -14,7 +14,6 @@ class SettingsStorage:
         self.language = ""
         self.theme = "auto"
         self.icon_theme = "auto"
-        self.compact_menu = True
 
         self.enable_hotkeys = False
         self.enable_server = False

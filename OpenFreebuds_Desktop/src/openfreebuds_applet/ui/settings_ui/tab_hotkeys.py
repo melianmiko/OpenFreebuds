@@ -26,6 +26,7 @@ class HotkeysSettingsTab(ttk.Frame):
             return
 
         ttk.Checkbutton(self, text=t("prop_enabled"),
+                        style="Switch.TCheckbutton",
                         variable=self.var_main_sw,
                         command=self._toggle_main)\
             .grid(column=0, row=2, sticky=tkinter.NW, padx=16, pady=16, columnspan=3)

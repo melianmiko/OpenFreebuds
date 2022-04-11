@@ -97,15 +97,12 @@ def message(content, title, callback=None, parent=None):
     ttk.Button(frame, text="OK", style="Accent.TButton", command=_on_ok)\
         .pack(padx=16, pady=12, anchor=tkinter.NW)
 
-    root.mainloop()
-    if not callback_used.is_set() and callback is not None:
-        callback()
-    root = None
+    root.tk.eval(f'tk::PlaceWindow {str(root)} center')
+    root.protocol("WM_DELETE_WINDOW", _on_ok)
 
 
 @ui_thread
 def confirm(content, title, callback=None, parent=None):
-    callback_used = threading.Event()
     root = tkinter.Toplevel(parent)
     root.wm_title(title)
     root.wm_resizable(False, False)
@@ -113,13 +110,11 @@ def confirm(content, title, callback=None, parent=None):
     def _on_yes():
         if callback is not None:
             callback(True)
-            callback_used.set()
         root.destroy()
 
     def _on_no():
         if callback is not None:
             callback(False)
-            callback_used.set()
         root.destroy()
 
     frame = ttk.Frame(root)
@@ -133,7 +128,5 @@ def confirm(content, title, callback=None, parent=None):
     ttk.Button(frame, text=t("no"), command=_on_no)\
         .grid(padx=0, pady=12, column=1, row=1)
 
-    root.mainloop()
-    if not callback_used.is_set() and callback is not None:
-        callback(False)
-    root = None
+    root.tk.eval(f'tk::PlaceWindow {str(root)} center')
+    root.protocol("WM_DELETE_WINDOW", _on_no)

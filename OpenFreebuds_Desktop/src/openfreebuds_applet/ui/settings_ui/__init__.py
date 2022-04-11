@@ -3,6 +3,7 @@ from tkinter import ttk
 
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.ui import tk_tools
+from openfreebuds_applet.ui.settings_ui import tab_about
 from openfreebuds_applet.ui.settings_ui.tab_application import AppSettingsTab
 from openfreebuds_applet.ui.settings_ui.tab_device import DeviceSettingsTab
 from openfreebuds_applet.ui.settings_ui.tab_hotkeys import HotkeysSettingsTab
@@ -25,5 +26,6 @@ def open_app_settings(applet):
 
     notebook.add(AppSettingsTab(notebook, applet), text=t("settings_tab_app"))
     notebook.add(HotkeysSettingsTab(notebook, applet), text=t("settings_tab_hotkeys"))
+    notebook.add(tab_about.make_about(notebook), text=t("settings_tab_about"))
 
-    tk.mainloop()
+    tk.tk.eval(f'tk::PlaceWindow {str(tk)} center')
