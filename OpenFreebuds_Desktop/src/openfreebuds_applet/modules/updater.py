@@ -1,5 +1,4 @@
 import logging
-import tkinter
 
 from mmk_updater import UpdaterTool
 from mmk_updater.ui_tkinter import TkinterUiMod
@@ -34,8 +33,8 @@ class FreebudsUpdateUiMod(TkinterUiMod):
     def __init__(self):
         super().__init__()
 
-    def mk_window(self) -> tkinter.Tk:
-        return tk_tools.create_themed()
+    def init_tk(self):
+        return tk_tools.get_root()
 
 
 class FreebudsUpdater(UpdaterTool):

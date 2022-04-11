@@ -6,13 +6,14 @@ from openfreebuds_applet.l18n import t
 from openfreebuds_applet.ui import tk_tools
 
 
-@tk_tools.in_other_thread
+@tk_tools.ui_thread
 def start(address, settings, manager):
     profiles = list(openfreebuds.device.DEVICE_PROFILES.keys())
 
-    root = tk_tools.create_themed()
+    root = tkinter.Toplevel()
     selected = tkinter.StringVar(value=profiles[0])
     root.wm_title("OpenFreebuds")
+    root.wm_resizable(False, False)
 
     def do_connect():
         root.destroy()

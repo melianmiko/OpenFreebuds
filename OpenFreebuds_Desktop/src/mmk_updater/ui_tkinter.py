@@ -18,22 +18,34 @@ class TkinterUiMod(DummyUiModule):
     # noinspection PyTypeChecker
     def __init__(self):
         super().__init__()
-        self.tk_ask_root = None         # type: tkinter.Tk
-        self.tk_dl_root = None          # type: tkinter.Tk
-        self.tk_msg_root = None         # type: tkinter.Tk
+        self.tk = None                  # type: tkinter.Tk
+        self.tk_ask_root = None         # type: tkinter.Toplevel
+        self.tk_dl_root = None          # type: tkinter.Toplevel
+        self.tk_msg_root = None         # type: tkinter.Toplevel
         self.tk_progress = None         # type: ttk.Progressbar
-        self._window_ready = threading.Event()
-        self.percent = 0
         self._sent_percent = 0
 
-    # noinspection PyMethodMayBeStatic
-    def mk_window(self) -> tkinter.Tk:
-        root = tkinter.Tk()
-        return root
+    def init_tk(self):
+        if self.tk is not None:
+            return self.tk
+
+        ready = threading.Event()
+
+        def _internal():
+            self.tk = tkinter.Tk()
+            self.tk.withdraw()
+            ready.set()
+
+            self.tk.mainloop()
+            self.tk = None
+
+        threading.Thread(target=_internal).start()
+        ready.wait()
+        return self.tk
 
     def show_ppa_update_message(self):
         def _internal():
-            root = self.mk_window()
+            root = tkinter.Toplevel()
             root.wm_title("Updater")
 
             frame = ttk.Frame(root)
@@ -43,17 +55,16 @@ class TkinterUiMod(DummyUiModule):
 
             ttk.Label(frame, text=t("repo_install"), justify=tkinter.LEFT) \
                 .grid(column=0, row=4, columnspan=3, padx=16, pady=4, sticky=tkinter.NW)
-
             ttk.Button(frame, text=t("close_btn"), command=root.destroy) \
                 .grid(column=0, row=5, padx=4, pady=4, sticky=tkinter.NW)
 
-            root.mainloop()
-
-        threading.Thread(target=_internal).start()
+        self.init_tk().after_idle(_internal)
 
     def show_download_progress(self):
+        ready = threading.Event()
+
         def _internal():
-            root = self.mk_window()
+            root = tkinter.Toplevel()
             root.wm_title(self.updater.release_data["app"])
             self.tk_dl_root = root
 
@@ -73,24 +84,36 @@ class TkinterUiMod(DummyUiModule):
             progress.pack(expand=True, fill="both", padx=16, pady=16)
             self.tk_progress = progress
 
-            root.after(1000, self._progress_auto_close)
-            self._window_ready.set()
-            root.mainloop()
+            ready.set()
 
-        self._window_ready = threading.Event()
-        threading.Thread(target=_internal).start()
-        self._window_ready.wait()
+        self.init_tk().after_idle(_internal)
+        ready.wait()
 
     def update_download_progress(self, value):
-        self.percent = value
+        def _internal():
+            if value >= 100:
+                log.debug("download complete, closing self window")
+                self.tk_dl_root.destroy()
+                return
+            if value < 0:
+                font = tkinter.font.Font(weight="bold")
+                tkinter.Label(self.tk_dl_root, text=t("dl_error"), font=font) \
+                    .pack(padx=16, pady=16)
+                return
+            self.tk_progress.step(value - self._sent_percent)
+            self._sent_percent = value
+
+        self.init_tk().after_idle(_internal)
 
     def show_auto_update_message(self):
+        ready = threading.Event()
+
         def _internal():
             url, size, tag = self.updater.get_download_data()
             fn = url.split("/")[-1]
             size = sizeof_fmt(size)
 
-            root = self.mk_window()
+            root = tkinter.Toplevel()
             root.wm_title(self.updater.release_data["app"])
 
             self.tk_ask_root = root
@@ -106,30 +129,23 @@ class TkinterUiMod(DummyUiModule):
 
             ttk.Button(frame, text=t("download_btn"), command=self.updater.on_download_confirm) \
                 .grid(column=0, row=5, padx=4, pady=4, sticky=tkinter.NW)
-
             ttk.Button(frame, text=t("close_btn"), command=self.updater.on_download_cancel) \
                 .grid(column=2, row=5, padx=4, pady=4, sticky=tkinter.NW)
 
-            self._close_event = threading.Event()
             root.protocol("WM_DELETE_WINDOW", self.updater.on_download_cancel)
-            self._window_ready.set()
-            root.mainloop()
+            ready.set()
 
-        self._window_ready = threading.Event()
-        threading.Thread(target=_internal).start()
-        self._window_ready.wait()
+        self.init_tk().after_idle(_internal)
+        ready.wait()
 
     def close_auto_update_message(self):
-        try:
-            self.tk_ask_root.destroy()
-            self.tk_ask_root = None
-        except tkinter.TclError:
-            pass
+        self.init_tk().after_idle(self.tk_ask_root.destroy)
+        self.tk_ask_root = None
 
     def show_manual_install_message(self):
         def _internal():
             path = self.updater.file_path
-            root = self.mk_window()
+            root = tkinter.Toplevel()
             root.wm_title(self.updater.release_data["app"])
 
             self.tk_msg_root = root
@@ -139,9 +155,8 @@ class TkinterUiMod(DummyUiModule):
             ttk.Label(frame, text=t("manual_install").format(path), padding=16).grid(column=0, row=0)
             ttk.Button(frame, text="OK", command=self._message_user_install_ok)\
                 .grid(column=0, row=1, padx=4, pady=4, sticky=tkinter.NW)
-            frame.mainloop()
 
-        threading.Thread(target=_internal).start()
+        self.init_tk().after_idle(_internal)
 
     def _message_user_install_ok(self):
         self.tk_msg_root.destroy()
@@ -171,28 +186,10 @@ class TkinterUiMod(DummyUiModule):
             link.bind("<Button-1>", self._open_site)
             link.grid(column=0, row=3, padx=16, pady=4, columnspan=columns, sticky=tkinter.NW)
 
-    def _progress_auto_close(self):
-        if self.percent >= 100:
-            log.debug("download complete, closing self window")
-            self._close_download_bar()
-            return
-        if self.percent < 0:
-            font = tkinter.font.Font(weight="bold")
-            tkinter.Label(self.tk_dl_root, text=t("dl_error"), font=font)\
-                .pack(padx=16, pady=16)
-            return
-        self.tk_progress.step(self.percent - self._sent_percent)
-        self._sent_percent = self.percent
-        self.tk_dl_root.after(1000, self._progress_auto_close)
-
     def _close_download_bar(self):
-        try:
-            log.debug("close dl box from " + str(threading.get_ident()))
-            self.tk_dl_root.destroy()
-            self.tk_dl_root = None
-            self.tk_progress = None
-        except tkinter.TclError:
-            pass
+        self.init_tk().after_idle(self.tk_dl_root.destroy)
+        self.tk_dl_root = None
+        self.tk_progress = None
 
     # noinspection PyUnusedLocal
     def _open_site(self, ev):

@@ -22,10 +22,9 @@ class AppSettingsTab(ttk.Frame):
         "dark": t("theme_dark")
     }
 
-    def __init__(self, parent, applet, root: tkinter.Tk):
+    def __init__(self, parent, applet):
         super().__init__(parent)
         self.applet = applet
-        self.root = root
         self.settings = applet.settings     # type: SettingsStorage
         self.grid_columnconfigure(0, weight=1)
 
@@ -127,11 +126,6 @@ class AppSettingsTab(ttk.Frame):
         self.settings.write()
         event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
-    def _toggle_sleep_mode(self):
-        self.settings.enable_sleep = not self.settings.enable_sleep
-        self.settings.write()
-        tk_tools.message(t("sleep_info"), "OpenFreebuds")
-
     def _toggle_debug(self):
         self.settings.enable_debug_features = not self.settings.enable_debug_features
         self.settings.write()
@@ -145,7 +139,8 @@ class AppSettingsTab(ttk.Frame):
 
     def _toggle_server_access(self):
         if not self.settings.server_access:
-            tk_tools.confirm(t("server_global_warn"), "WARNING", self._do_toggle_access)
+            tk_tools.confirm(t("server_global_warn"), "WARNING",
+                             self._do_toggle_access, self)
         else:
             self._do_toggle_access(True)
 
@@ -158,8 +153,6 @@ class AppSettingsTab(ttk.Frame):
         tk_tools.set_theme(name)
         self.settings.theme = name
         self.applet.settings.write()
-
-        self.root.tk.call("set_theme", name)
 
     def _icon_theme_changed(self, _):
         name = self._get_theme_values()[self.var_icon_theme.get()]

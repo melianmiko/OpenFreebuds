@@ -21,7 +21,7 @@ class DeviceSettingsTab(ttk.Frame):
         0: t("tap_action_assistant")
     }
 
-    def __init__(self, parent: tkinter.Tk, manager: FreebudsManager, settings: SettingsStorage):
+    def __init__(self, parent: tkinter.Toplevel, manager: FreebudsManager, settings: SettingsStorage):
         super().__init__(parent)
         device = manager.device
 
@@ -36,6 +36,9 @@ class DeviceSettingsTab(ttk.Frame):
         self._add_device_settings()
 
     def _add_device_settings(self):
+        if self.manager.state != FreebudsManager.STATE_CONNECTED:
+            return
+
         device = self.manager.device
         auto_pause = device.find_property("config", "auto_pause", -1)
         self.var_auto_pause = tkinter.BooleanVar(value=(auto_pause == 1))
@@ -104,14 +107,15 @@ class DeviceSettingsTab(ttk.Frame):
         ttk.Label(self, text=self.settings.address) \
             .grid(row=1, padx=16, pady=4, column=1, sticky=tkinter.NW)
 
-        info_props = self.device.find_group("info")
         row_counter = 2
-        for a in info_props:
-            ttk.Label(self, text=a)\
-                .grid(row=row_counter, padx=16, pady=4, sticky=tkinter.NW)
-            ttk.Label(self, text=info_props[a])\
-                .grid(row=row_counter, column=1, padx=16, pady=4, sticky=tkinter.NW)
-            row_counter += 1
+        if self.manager.state == FreebudsManager.STATE_CONNECTED:
+            info_props = self.device.find_group("info")
+            for a in info_props:
+                ttk.Label(self, text=a)\
+                    .grid(row=row_counter, padx=16, pady=4, sticky=tkinter.NW)
+                ttk.Label(self, text=info_props[a])\
+                    .grid(row=row_counter, column=1, padx=16, pady=4, sticky=tkinter.NW)
+                row_counter += 1
 
         # Unpair button
         ttk.Button(self, text=t("action_unpair"), command=self._do_unpair)\

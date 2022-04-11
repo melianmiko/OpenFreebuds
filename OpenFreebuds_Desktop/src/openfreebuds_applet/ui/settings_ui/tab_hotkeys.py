@@ -109,6 +109,6 @@ class HotkeysSettingsTab(ttk.Frame):
         if not is_supported:
             log.warning(sp_error)
             ttk.Label(self, text=t("hotkeys_wayland")) \
-                .grid(padx=16, pady=16, sticky=tkinter.NW)
+                .grid(padx=16, pady=16, sticky=tkinter.NW, columnspan=4)
 
         return True

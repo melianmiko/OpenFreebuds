@@ -12,7 +12,7 @@ from openfreebuds_applet.ui import settings_ui, tk_tools
 from openfreebuds_applet.l18n import t
 
 
-@tk_tools.main_window
+@tk_tools.ui_thread
 def about_window():
     version, debug = utils.get_version()
     logo_path = utils.get_assets_path() + "/icon.png"
@@ -23,7 +23,7 @@ def about_window():
     def source():
         webbrowser.open("https://github.com/melianmiko/OpenFreebuds")
 
-    tk = tk_tools.create_themed()
+    tk = tkinter.Toplevel()
     tk.wm_title("About OpenFreebuds")
 
     frame = ttk.Frame(tk)
