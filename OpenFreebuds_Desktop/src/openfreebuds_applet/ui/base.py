@@ -3,6 +3,7 @@ import os
 
 import openfreebuds_backend
 from openfreebuds.device.huawei_spp_device import HuaweiSPPDevice
+from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import updater
 from mtrayapp import Menu
@@ -53,21 +54,11 @@ class HeaderMenuPart(Menu):
 
         self.add_separator()
 
+    @utils.async_with_ui("ForceConnect")
     def do_connect(self):
         if self.manager.state == self.manager.STATE_CONNECTED:
-            return False
+            return
 
-        self.applet.run_thread(self._do_force_connect, "ForceConnect", False)
-        return True
-
-    def do_disconnect(self):
-        if self.manager.state != self.manager.STATE_CONNECTED:
-            return False
-
-        self.applet.run_thread(self._do_force_disconnect, "ForceDisconnect", False)
-        return True
-
-    def _do_force_connect(self):
         manager = self.manager
         settings = self.settings
         log = logging.getLogger("ForceConnectUI")
@@ -93,7 +84,8 @@ class HeaderMenuPart(Menu):
         log.debug("Finish force connecting")
         manager.paused = False
 
-    def _do_force_disconnect(self):
+    @utils.async_with_ui("ForceDisconnect")
+    def do_disconnect(self):
         manager = self.manager
         settings = self.settings
         log = logging.getLogger("ForceConnectUI")

@@ -1,8 +1,6 @@
 import logging
 import os
 import signal
-import threading
-import traceback
 from io import StringIO
 
 import mtrayapp
@@ -35,7 +33,7 @@ class FreebudsApplet:
         self.log = StringIO()
 
         self.manager = openfreebuds.manager.create()
-        self.manager.config.SAFE_RUN_WRAPPER = self.run_thread
+        self.manager.config.SAFE_RUN_WRAPPER = utils.safe_run_wrapper
         self.manager.config.USE_SOCKET_SLEEP = self.settings.enable_sleep
 
         self.menu_offline = DeviceOfflineMenu(self)
@@ -47,10 +45,8 @@ class FreebudsApplet:
                                                          icon=icons.generate_icon(1),
                                                          menu=mtrayapp.Menu())
 
+    @utils.with_ui_exception("MainThread")
     def start(self):
-        self._safe_run_wrapper(self._start, "MainThread", True)
-
-    def _start(self):
         icons.set_theme(self.settings.icon_theme)
         tk_tools.set_theme(self.settings.theme)
 
@@ -62,7 +58,7 @@ class FreebudsApplet:
             self._enable_debug_logging()
 
         self._setup_ctrl_c()
-        self.run_thread(self._ui_update_loop, "Applet", True)
+        self._ui_update_loop()
         self.tray_application.run()
 
     def _setup_ctrl_c(self):
@@ -77,12 +73,6 @@ class FreebudsApplet:
             signal.signal(signal.SIGINT, _handle_ctrl_c)
         except ValueError:
             pass
-
-    def run_thread(self, target, display_name, critical):
-        log.debug("Running new thread, display_name={}".format(display_name))
-        thread = threading.Thread(target=self._safe_run_wrapper, args=(target, display_name, critical))
-        thread.start()
-        return thread
 
     def exit(self):
         log.info("Exiting this app...")
@@ -140,25 +130,7 @@ class FreebudsApplet:
         for a in ["SPPDevice", "FreebudsManager", "BaseDevice"]:
             logging.getLogger(a).addHandler(handler)
 
-    def _safe_run_wrapper(self, f, display_name, critical, args=None):
-        message = "An unhandled exception was caught in thread {}.\n\n{}"
-        if critical:
-            message += "\nThis exception is critical. App will be closed."
-        if args is None:
-            args = []
-
-        # noinspection PyBroadException
-        try:
-            f(*args)
-        except Exception:
-            exc_text = traceback.format_exc()
-            logging.getLogger("RunSafe").exception("Action {} failed.".format(display_name))
-            self.tray_application.message_box(message.format(display_name, exc_text),
-                                              "OpenFreebuds Error")
-            if critical:
-                # noinspection PyProtectedMember,PyUnresolvedReferences
-                os._exit(99)
-
+    @utils.async_with_ui("Applet")
     def _ui_update_loop(self):
         self.started = True
         self.allow_ui_update = True

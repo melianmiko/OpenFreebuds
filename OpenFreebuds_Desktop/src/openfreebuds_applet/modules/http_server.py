@@ -76,9 +76,10 @@ def start(applet):
             pass
 
     if applet.settings.enable_server:
-        applet.run_thread(_httpd_thread, "HTTPServer", False)
+        _httpd_thread()
 
 
+@utils.async_with_ui("HTTPServer")
 def _httpd_thread():
     while Config.httpd is not None:
         log.debug("waiting for stop")

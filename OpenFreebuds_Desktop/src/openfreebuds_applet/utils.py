@@ -2,6 +2,8 @@ import datetime
 import hashlib
 import logging
 import os
+import threading
+import traceback
 
 import openfreebuds_backend
 
@@ -79,3 +81,35 @@ def get_log_filename():
     time_tag = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M")
     return str(path / (time_tag + ".log"))
 
+
+def safe_run_wrapper(func, display_name, _):
+    async_with_ui(display_name)(func)()
+
+
+def with_ui_exception(display_name):
+    from openfreebuds_applet.ui import tk_tools
+
+    def _wrapper(func):
+        # noinspection PyUnresolvedReferences,PyProtectedMember,PyBroadException
+        def _internal(*args, **kwargs):
+            try:
+                func(*args, **kwargs)
+            except Exception:
+                exc_text = traceback.format_exc()
+                message = "An unhandled exception was caught in thread {}.\n\n{}"
+                message = message.format(display_name, exc_text)
+                logging.getLogger("RunSafe").exception("Action {} failed.".format(display_name))
+                tk_tools.message(message, "OpenFreebuds", lambda: os._exit(1))
+        return _internal
+    return _wrapper
+
+
+def async_with_ui(display_name):
+    def _wrapper(func):
+        def _thread(*args, **kwargs):
+            with_ui_exception(display_name)(func)(*args, **kwargs)
+
+        def _internal(*args, **kwargs):
+            threading.Thread(target=_thread, args=args, kwargs=kwargs).start()
+        return _internal
+    return _wrapper
