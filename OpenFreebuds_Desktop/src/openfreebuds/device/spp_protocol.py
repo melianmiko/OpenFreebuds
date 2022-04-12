@@ -151,6 +151,7 @@ class SppProtocolDevice(BaseDevice):
         raise Exception("Must be override")
 
     def _process_package(self, pkg):
+        log.debug("recv " + pkg.hex())
         start = time.time()
         self.on_package(pkg)
         process_time = time.time() - start
