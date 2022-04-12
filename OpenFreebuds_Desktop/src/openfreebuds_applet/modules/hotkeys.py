@@ -4,7 +4,6 @@ import threading
 import webbrowser
 
 from openfreebuds_applet.modules import actions
-from openfreebuds_applet.ui import tk_tools
 
 log = logging.getLogger("HotkeysTool")
 
@@ -36,15 +35,13 @@ def start(applet):
     if not applet.settings.enable_hotkeys:
         return
 
-    log.debug("Starting hotkey tool...")
-
-    try:
-        from pynput.keyboard import GlobalHotKeys
-    except ImportError as e:
-        info = "Can't import pynput due to {}. Hotkeys won't work".format(e.msg)
-        tk_tools.message(info, "OpenFreebuds Hotkeys")
+    if not test_available()[0]:
+        log.error("Can't start hotkeys tool: service don't available")
         return
 
+    log.debug("Starting hotkey tool...")
+
+    from pynput.keyboard import GlobalHotKeys
     handlers = actions.get_actions(applet)
     config = applet.settings.hotkeys_config_2
     merged = {}

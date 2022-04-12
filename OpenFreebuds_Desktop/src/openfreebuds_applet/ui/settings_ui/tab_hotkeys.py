@@ -6,6 +6,7 @@ from tkinter import ttk
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import hotkeys, actions
 from openfreebuds_applet.settings import SettingsStorage
+from openfreebuds_applet.ui import tk_tools
 
 log = logging.getLogger("SettingsHotkeysTab")
 
@@ -16,6 +17,7 @@ class HotkeysSettingsTab(ttk.Frame):
         self.applet = applet
         self.settings = applet.settings     # type: SettingsStorage
         self.is_recording = False
+        self.av_error = ""
         self.recorder = hotkeys.HotkeyRecorder()
         self.grid()
         self.grid_columnconfigure(0, weight=1)
@@ -116,13 +118,18 @@ class HotkeysSettingsTab(ttk.Frame):
 
         hotkeys.start(self.applet)
 
+    def _show_compat_error_message(self):
+        tk_tools.message(self.av_error, "OpenFreebuds")
+
     def _ui_available(self):
         is_available, av_error = hotkeys.test_available()
         if not is_available:
             log.warning(av_error)
+            self.av_error = av_error
             ttk.Label(self, text=t("hotkeys_not_available")) \
-                .grid(row=1, padx=16, pady=4, sticky=tkinter.NW)
-            ttk.Label(self, text=av_error) \
+                .grid(row=1, padx=16, pady=16, sticky=tkinter.NW)
+            ttk.Button(self, text=t("show_error"),
+                       command=self._show_compat_error_message) \
                 .grid(row=2, padx=16, pady=4, sticky=tkinter.NW)
             return False
 
