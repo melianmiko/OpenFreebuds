@@ -33,7 +33,7 @@ def is_running():
     processes = openfreebuds_backend.list_processes()
 
     for pid, name in processes:
-        if "openfreebuds" in name and pid != our_pid:
+        if ("openfreebuds" in name or "ofb_launcher" in name) and pid != our_pid:
             logging.debug("Found running instance PID=" + str(pid))
             return True
 
