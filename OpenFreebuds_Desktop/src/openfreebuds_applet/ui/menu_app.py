@@ -3,7 +3,7 @@ from mtrayapp import Menu
 import openfreebuds_backend
 from openfreebuds import cli_io
 from openfreebuds_applet import utils
-from openfreebuds_applet.ui import settings_ui
+from openfreebuds_applet.ui import settings_ui, dev_console
 from openfreebuds_applet.l18n import t
 
 
@@ -20,7 +20,7 @@ class ApplicationMenuPart(Menu):
         self.add_separator()
 
         if self.applet.settings.enable_debug_features:
-            self.add_item("DEV: Run command", self.do_command)
+            self.add_item("DEV: Device console", self.do_command)
             self.add_item("DEV: Show logs", self.show_log)
             self.add_separator()
 
@@ -39,12 +39,4 @@ class ApplicationMenuPart(Menu):
         openfreebuds_backend.open_file(path)
 
     def do_command(self):
-        openfreebuds_backend.ask_string("openfreebuds>", self.on_command)
-
-    def on_command(self, result):
-        if result is None or result == "":
-            return
-
-        command = result.split(" ")
-        result = cli_io.dev_command(self.applet.manager.device, command)
-        self.application.message_box(result, "Dev mode")
+        dev_console.start(self.applet.manager)
