@@ -1,9 +1,11 @@
 import logging
 import os
+import sys
 import threading
 import webbrowser
 
 from openfreebuds_applet.modules import actions
+from openfreebuds_applet.ui import tk_tools
 
 log = logging.getLogger("HotkeysTool")
 
@@ -50,9 +52,13 @@ def start(applet):
         if a in config and config[a] != "":
             merged[config[a]] = handlers[a]
 
-    _PynputState.current = GlobalHotKeys(merged)
-    _PynputState.current.start()
-    log.debug("Started hotkey tool.")
+    try:
+        _PynputState.current = GlobalHotKeys(merged)
+        _PynputState.current.start()
+        log.debug("Started hotkey tool.")
+    except ValueError:
+        log.exception("Can't start GlobalHotKeys")
+        tk_tools.message("Can't bind hotkeys due to error")
 
 
 class HotkeyRecorder:
@@ -103,7 +109,9 @@ class HotkeyRecorder:
     def on_press(self, key):
         from pynput import keyboard
         if isinstance(key, keyboard.Key):
-            val = str(key).replace("Key.", "")
+            val = str(key)\
+                .replace("Key.", "")\
+                .replace("_l", "")
             if val not in self._specials:
                 self._specials.append(val)
 
@@ -117,9 +125,17 @@ class HotkeyRecorder:
             if val in self._specials:
                 self._specials.remove(val)
         elif str(key) not in self.ignored_keys:
+            if len(self._specials) < 1:
+                return
+            if sys.platform == "win32":
+                key = _parse_win32_key_vk(key.vk)
             self._main_key = str(key)
             self._result = True
             self._finish()
+
+
+def _parse_win32_key_vk(vk: int):
+    return vk.to_bytes(length=1, byteorder="big", signed=False).decode("utf8")
 
 
 def _wayland_callback(result):
