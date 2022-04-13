@@ -47,6 +47,7 @@ class HuaweiSPPDevice(SppProtocolDevice):
         self.bind_on_package([b'+\x11'], self._parse_auto_pause_mode)
         self.bind_on_package([b'+\x17'], self._parse_long_tap_action)
         self.bind_on_package([b'+\x19'], self._parse_noise_control_function)
+        self.bind_on_package([b'\n\r'], _ignore)                                # DeviceLog
 
         self.bind_set_property("service", "language", self._set_language)
         self.bind_set_property("anc", "mode", self._set_noise_mode)
@@ -263,3 +264,8 @@ class HuaweiSPPDevice(SppProtocolDevice):
                 out[key] = row.get_string()
 
         self.put_group("info", out)
+
+
+def _ignore(_):
+    # dummy function for ignored packages
+    pass

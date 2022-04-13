@@ -73,7 +73,7 @@ class TLVResponse:
     def append(self, item):
         self.contents.append(item)
 
-    def find_by_type(self, type_key):
+    def find_by_type(self, type_key) -> TLVPackage:
         for a in self.contents:
             if a.type == type_key:
                 return a
