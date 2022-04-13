@@ -84,8 +84,10 @@ def download_ttk_theme():
         dirname = theme_zip.namelist()[0]
         theme_zip.extractall()
 
-    os.unlink("ttk_theme.zip")
     os.rename(dirname[:-1], "ttk_theme")
+    os.unlink("ttk_theme.zip")
+    os.unlink("ttk_theme/DOCUMENTATION.pdf")
+    os.unlink("ttk_theme/Screenshot.png")
     print("ready")
     os.chdir(base_wd)
 
