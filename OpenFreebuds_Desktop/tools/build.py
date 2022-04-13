@@ -12,7 +12,6 @@ WINDOWS_PYINSTALLER_ARGS = {
     "icon": "..\\src\\openfreebuds_assets\\icon.ico",
     "windowed": True,
     "exclude-module": [
-        "PIL.ImageTk"
     ],
     "add-data": [
         "..\\src\\openfreebuds_assets;openfreebuds_assets"
