@@ -15,4 +15,4 @@ openfreebuds (0.10-1) impish; urgency=medium
   * Misc: removed psutil dependency
   * Misc: xlib become optional
 
- -- MelianMiko <melianmiko@gmail.com>  Wed, 02 Mar 2022 19:33:30 +0700
+ -- MelianMiko <melianmiko@gmail.com>  Wed, 13 Apr 2022 16:25:29 +0700
