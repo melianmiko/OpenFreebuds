@@ -10,6 +10,12 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 from openfreebuds_applet.modules import actions
 
 log = logging.getLogger("Webserver")
+base_help_template = utils.get_assets_path() + "/server_help.html"
+help_item_pattern = """<section>
+<div class="method">GET</div>
+<div class="url">/{}</div>
+<div class="info">{}</div>
+</section>"""
 
 
 class Config:
@@ -18,6 +24,18 @@ class Config:
     applet = None
     actions = {}
     port = 21201
+
+
+def generate_help():
+    with open(base_help_template, "r") as f:
+        data = f.read()
+
+    labels = actions.get_action_names()
+    content = ""
+    for action_name in labels:
+        content += help_item_pattern.format(action_name, labels[action_name])
+
+    return data.replace("{items}", content)
 
 
 class AppHandler(SimpleHTTPRequestHandler):
@@ -37,16 +55,14 @@ class AppHandler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps(data).encode("utf8"))
 
-    def _answer_html_file(self, path, code):
-        self.send_response(code)
+    def info(self):
+        data = generate_help()
+
+        self.send_response(200)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
-        with open(path, "rb") as f:
-            self.wfile.write(f.read())
-
-    def info(self):
-        return self._answer_html_file(utils.get_assets_path() + "/server_help.html", 200)
+        self.wfile.write(data.encode("utf8"))
 
     def get_props(self):
         man = Config.applet.manager
