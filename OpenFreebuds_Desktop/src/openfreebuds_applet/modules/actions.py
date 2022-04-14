@@ -1,7 +1,11 @@
 import logging
 
+import openfreebuds_backend
+from openfreebuds.device import HuaweiSPPDevice
 from openfreebuds.device.base import BaseDevice
+from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t
+from openfreebuds_applet.ui import tk_tools
 
 log = logging.getLogger("AppletActions")
 
@@ -37,23 +41,68 @@ def _get_device(manager):
     return manager.device
 
 
-def get_actions(applet):
-    return {
-        "next_mode": lambda *args: do_next_mode(applet.manager),
-        "mode_0": lambda *args: do_mode(applet.manager, 0),
-        "mode_1": lambda *args: do_mode(applet.manager, 1),
-        "mode_2": lambda *args: do_mode(applet.manager, 2),
-        "connect": lambda *args: applet.force_connect(),
-        "disconnect": lambda *args: applet.force_disconnect()
-    }
+# @utils.async_with_ui("ForceConnect")
+def do_connect(manager: FreebudsManager):
+    if manager.state == manager.STATE_CONNECTED:
+        return
+
+    if manager.state == manager.STATE_PAUSED:
+        tk_tools.message(t("error_in_work"), "OpenFreebuds")
+        return
+
+    manager.set_paused(True)
+    log.debug("Trying to force connect device...")
+    # noinspection PyBroadException
+    try:
+        spp = HuaweiSPPDevice(manager.device_address)
+        if not spp.request_interaction():
+            log.debug("Can't interact via SPP, try to connect anyway...")
+
+        if not openfreebuds_backend.bt_connect(manager.device_address):
+            raise Exception("fail")
+    except Exception:
+        log.exception("Can't force connect device")
+        tk_tools.message(t("error_force_action_fail"), "OpenFreebuds")
+
+    log.debug("Finish force connecting")
+    manager.set_paused(False)
 
 
-def get_device_actions(manager):
+def do_disconnect(manager):
+    if manager.state == manager.STATE_PAUSED:
+        tk_tools.message(t("error_in_work"), "OpenFreebuds")
+        return
+
+    manager.set_paused(True)
+    log.debug("Trying to force disconnect device...")
+    # noinspection PyBroadException
+    try:
+        if not openfreebuds_backend.bt_disconnect(manager.device_address):
+            raise Exception("fail")
+    except Exception:
+        log.exception("Can't disconnect device")
+        tk_tools.message(t("error_force_action_fail"), "OpenFreebuds")
+
+    log.debug("Finish force disconnecting")
+    manager.set_paused(False)
+
+
+def do_toggle_connected(manager: FreebudsManager):
+    if manager.state == manager.STATE_CONNECTED:
+        return do_disconnect(manager)
+    else:
+        return do_connect(manager)
+
+
+def get_actions(manager: FreebudsManager):
     return {
         "next_mode": lambda *args: do_next_mode(manager),
         "mode_0": lambda *args: do_mode(manager, 0),
         "mode_1": lambda *args: do_mode(manager, 1),
-        "mode_2": lambda *args: do_mode(manager, 2)
+        "mode_2": lambda *args: do_mode(manager, 2),
+        "connect": lambda *args: do_connect(manager),
+        "disconnect": lambda *args: do_disconnect(manager),
+        "toggle_connect": lambda *args: do_toggle_connected(manager)
     }
 
 
@@ -64,5 +113,6 @@ def get_action_names():
         "mode_1": t("noise_mode_1"),
         "mode_2": t("noise_mode_2"),
         "connect": t("action_connect"),
-        "disconnect": t("action_disconnect")
+        "disconnect": t("action_disconnect"),
+        "toggle_connect": t("action_toggle_connection")
     }

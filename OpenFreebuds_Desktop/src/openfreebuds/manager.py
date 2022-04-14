@@ -34,7 +34,7 @@ class FreebudsManager:
         self.device: Optional[BaseDevice] = None
 
         self.started = False
-        self.paused = False
+        self._paused = False
         self.state = self.STATE_NO_DEV
         self.config = DeviceConfig()
 
@@ -82,6 +82,12 @@ class FreebudsManager:
         self.device.close(lock=True)
         self.device = None
 
+    def set_paused(self, val):
+        self._paused = val
+
+        if val:
+            self.set_state(self.STATE_PAUSED)
+
     def set_state(self, state):
         if state == self.state:
             return
@@ -106,7 +112,7 @@ class FreebudsManager:
             self.started = False
 
         while self.started:
-            if self.paused:
+            if self._paused:
                 log.debug("Manager thread paused")
                 time.sleep(self.MAINLOOP_TIMEOUT)
                 self.set_state(self.STATE_PAUSED)

@@ -98,20 +98,20 @@ def _do_command_offline(command):
 
     start = time.time()
     man.set_device(settings.device_name, settings.address)
-    while man.state != man.STATE_CONNECTED:
+    while man.state != man.STATE_CONNECTED and man.state != man.STATE_OFFLINE:
         if time.time() - start > 5:
             log.debug("connection timed out, bye")
             _leave()
         time.sleep(0.25)
 
     log.debug("ready to run")
-    actions = openfreebuds_applet.modules.actions.get_device_actions(man)
+    actions = openfreebuds_applet.modules.actions.get_actions(man)
     if command not in actions:
         log.error("Undefined command")
         _leave()
 
     actions[command]()
-    event_bus.wait_for(EVENT_DEVICE_PROP_CHANGED)
+    event_bus.wait_for(EVENT_DEVICE_PROP_CHANGED, timeout=2)
     print("true")
     _leave()
 

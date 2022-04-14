@@ -66,7 +66,7 @@ class AppHandler(SimpleHTTPRequestHandler):
 
 def start(applet):
     Config.applet = applet
-    Config.actions = actions.get_actions(applet)
+    Config.actions = actions.get_actions(applet.manager)
 
     if Config.started:
         try:

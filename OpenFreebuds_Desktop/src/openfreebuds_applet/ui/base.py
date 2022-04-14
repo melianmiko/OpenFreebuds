@@ -1,11 +1,8 @@
-import logging
 import os
 
-import openfreebuds_backend
-from openfreebuds.device.huawei_spp_device import HuaweiSPPDevice
 from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
-from openfreebuds_applet.modules import updater
+from openfreebuds_applet.modules import updater, actions
 from mtrayapp import Menu
 
 
@@ -54,55 +51,10 @@ class HeaderMenuPart(Menu):
 
         self.add_separator()
 
-    @utils.async_with_ui("ForceConnect")
+    @utils.async_with_ui("DoConnect")
     def do_connect(self):
-        if self.manager.state == self.manager.STATE_CONNECTED:
-            return
+        actions.do_connect(self.manager)
 
-        manager = self.manager
-        settings = self.settings
-        log = logging.getLogger("ForceConnectUI")
-
-        if manager.paused:
-            self.application.error_box(t("error_in_work"), "OpenFreebuds")
-            return
-
-        manager.paused = True
-        log.debug("Trying to force connect device...")
-        # noinspection PyBroadException
-        try:
-            spp = HuaweiSPPDevice(settings.address)
-            if not spp.request_interaction():
-                log.debug("Can't interact via SPP, try to connect anyway...")
-
-            if not openfreebuds_backend.bt_connect(settings.address):
-                raise Exception("fail")
-        except Exception:
-            log.exception("Can't force connect device")
-            self.application.error_box(t("error_force_action_fail"), "OpenFreebuds")
-
-        log.debug("Finish force connecting")
-        manager.paused = False
-
-    @utils.async_with_ui("ForceDisconnect")
+    @utils.async_with_ui("DoDisconnect")
     def do_disconnect(self):
-        manager = self.manager
-        settings = self.settings
-        log = logging.getLogger("ForceConnectUI")
-
-        if manager.paused:
-            self.application.error_box(t("error_in_work"), "OpenFreebuds")
-            return
-
-        manager.paused = True
-        log.debug("Trying to force disconnect device...")
-        # noinspection PyBroadException
-        try:
-            if not openfreebuds_backend.bt_disconnect(settings.address):
-                raise Exception("fail")
-        except Exception:
-            log.exception("Can't disconnect device")
-            self.application.error_box(t("error_force_action_fail"), "OpenFreebuds")
-
-        log.debug("Finish force disconnecting")
-        manager.paused = False
+        actions.do_disconnect(self.manager)

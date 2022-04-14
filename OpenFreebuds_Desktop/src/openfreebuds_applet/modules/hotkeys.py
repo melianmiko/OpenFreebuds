@@ -44,7 +44,7 @@ def start(applet):
     log.debug("Starting hotkey tool...")
 
     from pynput.keyboard import GlobalHotKeys
-    handlers = actions.get_actions(applet)
+    handlers = actions.get_actions(applet.manager)
     config = applet.settings.hotkeys_config_2
     merged = {}
 
