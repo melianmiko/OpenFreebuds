@@ -19,8 +19,15 @@ def open_file(path):
 
 
 def list_processes():
-    data = [(int(p), c) for p, c in [x.rstrip('\n').split(' ', 1) for x in os.popen('ps h -eo pid:1,command')]]
-    return data
+    procs = []
+    for pid_s in os.listdir("/proc"):
+        if pid_s.isdigit() and os.path.isfile("/proc/{}/cmdline".format(pid_s)):
+            with open("/proc/{}/cmdline".format(pid_s), "r") as f:
+                cmd = f.read()
+                pid = int(pid_s)
+            procs.append((pid, cmd))
+
+    return procs
 
 
 def is_run_at_boot():
