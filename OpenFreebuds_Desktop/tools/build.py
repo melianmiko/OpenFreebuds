@@ -29,8 +29,9 @@ def make_win32():
     path = base_wd + "\\src\\ofb_launcher.py"
 
     os.environ["PYTHONPATH"] = base_wd + "/src"
+    sys.path.append(base_wd + "/src")
 
-    from version_info import VERSION
+    import version_info
 
     # Go to builddir
     if not os.path.isdir(os.getcwd() + "/builddir"):
@@ -49,7 +50,7 @@ def make_win32():
     print("-- makensis...")
     os.chdir(base_wd + "/builddir/dist")
     subprocess.Popen([r"C:\Program Files (x86)\NSIS\Bin\makensis", "installer.nsi"]).wait()
-    os.rename("openfreebuds.install.exe", "openfreebuds_{}_win64.exe".format(VERSION))
+    os.rename("openfreebuds.install.exe", "openfreebuds_{}_win64.exe".format(version_info.VERSION))
 
     os.chdir(base_wd)
 
