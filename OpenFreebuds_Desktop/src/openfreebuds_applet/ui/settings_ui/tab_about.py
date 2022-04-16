@@ -13,7 +13,7 @@ def make_about(parent):
     version, debug = utils.get_version()
 
     def website():
-        webbrowser.open("https://melianmiko.ru/openfreebuds")
+        webbrowser.open(t("app_site_url"))
 
     def source():
         webbrowser.open("https://github.com/melianmiko/OpenFreebuds")

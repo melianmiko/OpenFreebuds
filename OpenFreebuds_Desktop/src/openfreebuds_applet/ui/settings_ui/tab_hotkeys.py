@@ -1,6 +1,7 @@
 import logging
 import time
 import tkinter
+import webbrowser
 from tkinter import ttk
 
 from openfreebuds_applet.l18n import t
@@ -138,5 +139,13 @@ class HotkeysSettingsTab(ttk.Frame):
             log.warning(sp_error)
             ttk.Label(self, text=t("hotkeys_wayland")) \
                 .grid(row=1, padx=16, pady=4, sticky=tkinter.NW, columnspan=4)
+            link = ttk.Label(self, text=t("hotkeys_wayland_link"),
+                             foreground="#04F", cursor="hand2")
+            link.bind("<Button-1>", self.show_wayland_help)
+            link.grid(row=2, padx=16, pady=8, sticky=tkinter.NW, columnspan=4)
 
         return True
+
+    @staticmethod
+    def show_wayland_help(_):
+        webbrowser.open(t("hotkeys_wayland_url"))

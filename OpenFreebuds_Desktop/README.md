@@ -32,14 +32,12 @@ pip install -r requirements.txt
 Then, run build script:
 
 ```
-python .\tools\build_windows.py
+python .\tools\build.py
 ```
 
 Artifacts will be in `builddir\dist`.
 
 ### Linux
-
-To do.
 
 Requirements
 ------------
