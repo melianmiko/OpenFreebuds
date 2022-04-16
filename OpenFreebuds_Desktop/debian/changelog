@@ -1,18 +1,6 @@
-openfreebuds (0.10-1) impish; urgency=medium
+openfreebuds (0.10.1-1) impish; urgency=medium
 
-  * New: integrated mmk_updater
-  * New: cli-actions can be used without running app
-  * UI: new tkinter-based settings ui
-  * UI: reduced size of tray menu
-  * UI: added debug features
-  * UI: handle ctrl-c for safe exit
-  * Manager: HONOR Earbuds 2 Lite marked as supported
-  * Manager: use Bluetooth SDP instead of hard-coded port number
-  * Device: added long tap configuration
-  * Device: use group-organized props
-  * Device: use python arrays instead of lists
-  * Windows installer: kill app on update/reinstall
-  * Misc: removed psutil dependency
-  * Misc: xlib become optional
+  * Fix: connect/disconnect action not work
+  * Some mirror UI fixes
 
- -- MelianMiko <melianmiko@gmail.com>  Wed, 13 Apr 2022 16:25:29 +0700
+ -- MelianMiko <melianmiko@gmail.com>  Sat, 16 Apr 2022 10:32:03 +0700
