@@ -76,7 +76,7 @@ def bt_list_devices():
                                         "org.freedesktop.DBus.Properties")
                 props = _dbus_to_python(device.GetAll("org.bluez.Device1"))
 
-                if props.get("Name", "") == "":
+                if props.get("Name", "") == "" and not props.get("Paired", False):
                     continue
 
                 scan_results.append({
