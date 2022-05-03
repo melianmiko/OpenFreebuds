@@ -13,7 +13,7 @@ from openfreebuds.device.base import BaseDevice
 from openfreebuds_applet import settings, utils, log_format
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import hotkeys, http_server, updater
-from openfreebuds_applet.ui import icons, tk_tools
+from openfreebuds_applet.ui import icons, tk_tools, device_select_ui
 from openfreebuds_applet.ui.base import QuitingMenu
 from openfreebuds_applet.ui.menu_device import DeviceMenu
 from openfreebuds_applet.ui.menu_no_device import DeviceOfflineMenu, DeviceScanMenu
@@ -145,7 +145,8 @@ class FreebudsApplet:
             log.info("Using saved address: " + self.settings.address)
             self.manager.set_device(self.settings.device_name, self.settings.address)
         else:
-            tk_tools.message(t("first_run_message"), "Welcome")
+            log.info("Show device select UI")
+            device_select_ui.start(self.settings, self.manager)
 
         while self.started:
             self.update_icon()

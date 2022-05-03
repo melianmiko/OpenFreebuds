@@ -106,10 +106,10 @@ class FreebudsManager:
         ])
 
         # Check that spp exists in paired
-        if not openfreebuds_backend.bt_device_exists(self.device_address):
-            log.warning("Device dont exist, bye...")
-            self.set_state(self.STATE_NO_DEV)
-            self.started = False
+        # if not openfreebuds_backend.bt_device_exists(self.device_address):
+        #     log.warning("Device dont exist, bye...")
+        #     self.set_state(self.STATE_NO_DEV)
+        #     self.started = False
 
         while self.started:
             if self._paused:
