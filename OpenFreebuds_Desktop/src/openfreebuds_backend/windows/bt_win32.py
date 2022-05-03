@@ -24,9 +24,13 @@ no_console.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 
 def bt_is_connected(address):
     async def run():
-        host_name = HostName(address)
-        bt_device = await BluetoothDevice.from_host_name_async(host_name)
-        return bt_device.connection_status
+        try:
+            host_name = HostName(address)
+            bt_device = await BluetoothDevice.from_host_name_async(host_name)
+            return bt_device.connection_status
+        except OSError as e:
+            log.warn("Got OSError, looks like bt adapter is missing\n" + str(e))
+            return False
     return asyncio.run(run())
 
 
@@ -92,8 +96,8 @@ def bt_list_devices():
                     "address": bt_device.host_name.raw_name[1:-1],
                     "connected": bt_device.connection_status
                 })
-        except OSError:
-            log.exception("got OSError when listing windows devices")
+        except OSError as e:
+            log.warn("Got OSError, looks like bt adapter is missing\n" + str(e))
 
         return out
     return asyncio.run(run())

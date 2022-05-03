@@ -1,11 +1,11 @@
 mtrayapp==1.0.2
 pynput~=1.7.6
 
-Pillow~=9.0.1
+Pillow~=9.1.0
 PyBluez==0.23
 
 PyGObject==3.42.0; sys_platform == "linux"
 dbus-python==1.2.18; sys_platform == "linux"
 
-pyinstaller==4.9; sys_platform == "win32"
+pyinstaller==5.0.1; sys_platform == "win32"
 winsdk==1.0.0b2; sys_platform == "win32"
