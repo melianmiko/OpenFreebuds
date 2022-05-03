@@ -102,11 +102,6 @@ class AppSettingsTab(ttk.Frame):
         adv_root = ttk.Frame(self)
         adv_root.grid(columnspan=2, row=6, sticky=tkinter.NSEW)
 
-        ttk.Checkbutton(adv_root, text=t("option_debug_features"),
-                        variable=self.var_debug_mode,
-                        command=self._toggle_debug) \
-            .grid(column=0, row=0, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
-
         ttk.Button(adv_root, text=t("action_open_appdata"), command=utils.open_app_storage_dir)\
             .grid(row=1, sticky=tkinter.NW, padx=PAD_X_BASE, pady=4)
 

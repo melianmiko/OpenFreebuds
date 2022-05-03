@@ -11,7 +11,7 @@ from openfreebuds import event_bus, manager, cli_io
 from openfreebuds.constants.events import EVENT_MANAGER_STATE_CHANGED, EVENT_DEVICE_PROP_CHANGED
 from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
-from openfreebuds_applet.modules import http_server
+from openfreebuds_applet.modules import http_server, self_check
 from openfreebuds_applet.settings import SettingsStorage
 from openfreebuds_applet.ui import tk_tools, settings_ui
 
@@ -28,6 +28,9 @@ def parse_args():
     parser.add_argument("--settings",
                         default=False, action="store_true",
                         help="Directly open app settings")
+    parser.add_argument("--report",
+                        default=False, action="store_true",
+                        help="Generate self-check report")
     parser.add_argument("--shell",
                         default=False, action="store_true",
                         help="Start CLI shell instead of applet")
@@ -58,6 +61,11 @@ def main():
         # noinspection PyUnresolvedReferences,PyProtectedMember
         tk_tools.message(t("application_running_message"), "Error", _leave)
         applet.tray_application.run()
+        return
+
+    if args.report:
+        report = self_check.generate_report(applet)
+        print(report)
         return
 
     if args.settings:

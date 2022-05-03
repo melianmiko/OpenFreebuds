@@ -26,6 +26,6 @@ def open_app_settings(applet):
 
     notebook.add(AppSettingsTab(notebook, applet), text=t("settings_tab_app"))
     notebook.add(HotkeysSettingsTab(notebook, applet), text=t("settings_tab_hotkeys"))
-    notebook.add(tab_about.make_about(notebook), text=t("settings_tab_about"))
+    notebook.add(tab_about.make_about(notebook, applet), text=t("settings_tab_about"))
 
     tk.tk.eval(f'tk::PlaceWindow {str(tk)} center')

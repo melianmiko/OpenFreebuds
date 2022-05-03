@@ -10,7 +10,7 @@ from openfreebuds import event_bus
 from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE_PROP_CHANGED, \
     EVENT_MANAGER_STATE_CHANGED
 from openfreebuds.device.base import BaseDevice
-from openfreebuds_applet import settings, utils, log_format
+from openfreebuds_applet import settings, utils, log_format, base_logger_names
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import hotkeys, http_server, updater
 from openfreebuds_applet.ui import icons, tk_tools, device_select_ui
@@ -54,9 +54,7 @@ class FreebudsApplet:
         http_server.start(self)
         updater.start(self)
 
-        if self.settings.enable_debug_features:
-            self._enable_debug_logging()
-
+        self.enable_debug_logging()
         self._setup_ctrl_c()
         self._ui_update_loop()
         self.tray_application.run()
@@ -120,14 +118,13 @@ class FreebudsApplet:
 
             log.debug("Menu updated, hash=" + items_hash)
 
-    def _enable_debug_logging(self):
-        print("Start debug logging mode")
+    def enable_debug_logging(self):
         logging.basicConfig(level=logging.DEBUG, format=log_format, force=True)
 
         handler = logging.StreamHandler(self.log)
         handler.setLevel(logging.DEBUG)
         handler.setFormatter(logging.Formatter(log_format))
-        for a in ["SPPDevice", "FreebudsManager", "BaseDevice"]:
+        for a in base_logger_names:
             logging.getLogger(a).addHandler(handler)
 
     @utils.async_with_ui("Applet")

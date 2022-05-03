@@ -97,5 +97,9 @@
   "manual_device_setup_message": "Enter bluetooth address of your device and select\ntheir model from list.\n\nYou can find bluetooth address in system settings.",
   "ui_manual_hint_address": "Bluetooth Address (XX:XX:XX:XX:XX:XX):",
   "ui_manual_hint_profile": "Device model (profile):",
-  "welcome_tray_message": "Ready. Application icon will appear in system tray.\nUse it to check device status and manager settings."
+  "welcome_tray_message": "Ready. Application icon will appear in system tray.\nUse it to check device status and manager settings.",
+  "category_tested": "Supported devices",
+  "category_extras": "Extra options",
+  "action_mk_report": "Create report for developer...",
+  "action_dev_console": "Start device console (danger!)..."
 }

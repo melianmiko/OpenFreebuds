@@ -1,10 +1,7 @@
-import logging
-
 from openfreebuds.device.base import BaseDevice
 from openfreebuds.device.profile_freebuds_4i import FreeBuds4iDevice
 from openfreebuds.device.huawei_spp_device import HuaweiSPPDevice
 
-log = logging.getLogger("OpenFreebudsDeviceRoot")
 DEVICE_PROFILES = {
     "HUAWEI FreeBuds 4i": FreeBuds4iDevice,
     "HONOR Earbuds 2 Lite": FreeBuds4iDevice
