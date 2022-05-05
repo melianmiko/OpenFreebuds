@@ -15,6 +15,8 @@ def open_app_settings(applet):
     tk.wm_title(t("settings_title"))
     tk.wm_resizable(False, False)
 
+    tk_tools.setup_window(tk)
+
     frame = ttk.Frame(tk)
     frame.grid()
 

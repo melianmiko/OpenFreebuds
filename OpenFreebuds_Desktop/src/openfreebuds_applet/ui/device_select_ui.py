@@ -22,6 +22,8 @@ def start(settings: SettingsStorage, manager: FreebudsManager):
     root.wm_resizable(False, False)
     root.grid()
 
+    tk_tools.setup_window(root)
+
     ttk.Label(root, text=t("first_run_message")) \
         .grid(sticky=tkinter.NW, columnspan=10, row=0, column=0, padx=16, pady=16)
 
@@ -109,6 +111,8 @@ def setup_manually_ui(address, settings, manager):
     address_var = tkinter.StringVar(value=address)
     root.wm_title(t("ui_manual_title"))
     root.wm_resizable(False, False)
+
+    tk_tools.setup_window(root)
 
     def do_connect():
         root.destroy()

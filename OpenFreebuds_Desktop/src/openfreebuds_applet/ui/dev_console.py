@@ -23,6 +23,8 @@ def start(manager: FreebudsManager):
     window.wm_geometry("800x600")
     window.grid_columnconfigure(0, weight=1)
 
+    tk_tools.setup_window(window)
+
     var_input = tkinter.StringVar()
     font = tkinter.font.Font(family="monospace", size=10)
 

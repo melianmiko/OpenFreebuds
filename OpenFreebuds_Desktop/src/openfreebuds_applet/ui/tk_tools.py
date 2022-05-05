@@ -21,6 +21,12 @@ def ui_thread(func):
     return _inner
 
 
+def setup_window(window: tkinter.Toplevel):
+    assets = utils.get_assets_path()
+
+    window.iconphoto(False, tkinter.PhotoImage(file=assets + "/icon.png"))
+
+
 def get_root():
     def th():
         log.debug("Starting UI thread...")
@@ -84,6 +90,8 @@ def message(content, title, callback=None, parent=None):
     root.wm_title(title)
     root.wm_resizable(False, False)
 
+    setup_window(root)
+
     def _on_ok():
         if callback is not None:
             callback()
@@ -106,6 +114,8 @@ def confirm(content, title, callback=None, parent=None):
     root = tkinter.Toplevel(parent)
     root.wm_title(title)
     root.wm_resizable(False, False)
+
+    setup_window(root)
 
     def _on_yes():
         if callback is not None:
