@@ -12,7 +12,7 @@ lib:
 	cd lib && pip install --target=. --no-deps -r ../requirements_lib.txt
 
 src/openfreebuds_assets/ttk_theme:
-	python tools/build.py ttk_theme
+	python3 tools/build.py ttk_theme
 
 install:
 	rm -rf ${DESTDIR}/opt/openfreebuds
