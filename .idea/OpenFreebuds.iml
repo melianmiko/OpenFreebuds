@@ -7,6 +7,7 @@
       <excludeFolder url="file://$MODULE_DIR$/OpenFreebuds_Desktop/debian" />
       <excludeFolder url="file://$MODULE_DIR$/OpenFreebuds_Desktop/builddir" />
       <excludeFolder url="file://$MODULE_DIR$/debian" />
+      <excludeFolder url="file://$MODULE_DIR$/builddir" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.10 (OpenFreebuds)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

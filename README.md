@@ -6,14 +6,9 @@ Desktop client.
 
 Compiling
 ---------
-
-First, clone this repo (git required)
-```bash
-git clone https://github.com/melianmiko/OpenFreebuds.git
-cd OpenFreebuds/OpenFreebuds_Desktop
-```
-
 ### Windows
+
+**WARN:** Build may be broken for now...
 
 Requirements:
 - Python 3.10
@@ -38,11 +33,14 @@ python .\tools\build.py
 Artifacts will be in `builddir\dist`.
 
 ### Linux
-
-Requirements
-------------
-
-Debian:
 ```bash
-sudo apt install libappindicator3-1 python3 python3-dbus python3-gobject
+# Debian example
+sudo apt install python3 make git python3-pip python3-wheel \
+  python3-gi python3-tk python3-dbus python3-pil python3-pil.imagetk \
+  libgtk-3-0 gir1.2-ayatanaappindicator3-0.1 libbluetooth-dev
+git clone https://github.com/melianmiko/OpenFreebuds
+cd OpenFreebuds
+
+make
+sudo make install # Install
 ```

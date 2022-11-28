@@ -85,9 +85,11 @@ class SppProtocolDevice(BaseDevice):
                 host = service_data[0]['host']
                 port = service_data[0]['port']
                 log.info(f"Found serial port {host}:{port} from UUID")
-            except (AssertionError, NameError):
-                log.exception("Can't fetch serial port info from device, attempt to use "
-                              "fallback port 16")
+            except (AssertionError, NameError) as e:
+                log.error(f"Can't fetch service info from device, err: {e}")
+                log.warning("Can't fetch serial port info from device, attempt to use "
+                            "fallback port 16. This is issue of pybluez2, to fix uninstall it,"
+                            "then build and install pybluez from one of latest commits")
                 host = self.address
                 port = 16
 

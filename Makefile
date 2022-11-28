@@ -25,7 +25,7 @@ lib/bluetooth:
 	mkdir -p lib/tmp
 
 	# Fetch pybluez edge and build a wheel
-	[ -x lib/tmp/pybluez ] && rm -rf lib/tmp/pybluez
+	rm -rf lib/tmp/pybluez
 	git clone https://github.com/pybluez/pybluez.git lib/tmp/pybluez
 	cd lib/tmp/pybluez && git checkout -q ${PYBLUEZ_COMMIT}
 	cd lib/tmp/pybluez && python3 setup.py bdist_wheel
