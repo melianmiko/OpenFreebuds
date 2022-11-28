@@ -3,6 +3,8 @@ import threading
 import tkinter
 from tkinter import ttk
 
+import sv_ttk
+
 import openfreebuds_backend
 from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
@@ -31,8 +33,10 @@ def get_root():
     def th():
         log.debug("Starting UI thread...")
         Config.tk_root = tkinter.Tk()
-        apply_theme(Config.tk_root)
         Config.tk_root.withdraw()
+
+        apply_theme()
+
         complete.set()
         Config.tk_root.mainloop()
         Config.tk_root = None
@@ -45,12 +49,9 @@ def get_root():
     return Config.tk_root
 
 
-def apply_theme(root):
-    assets = utils.get_assets_path()
-
+def apply_theme():
     try:
-        root.tk.call("source", assets + "/ttk_theme/sun-valley.tcl")
-        root.tk.call("set_theme", Config.theme)
+        sv_ttk.set_theme(Config.theme)
     except tkinter.TclError:
         logging.exception("Can't set tkinter theme")
 
@@ -74,7 +75,7 @@ def set_theme(theme: str):
     @ui_thread
     def _int():
         try:
-            Config.tk_root.tk.call("set_theme", Config.theme)
+            sv_ttk.set_theme(Config.theme)
         except tkinter.TclError:
             logging.exception("Can't set tkinter theme")
 

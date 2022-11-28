@@ -1,2 +1,0 @@
-mtrayapp==1.0.2
-pynput~=1.7.6

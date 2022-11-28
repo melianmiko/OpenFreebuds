@@ -1,18 +1,8 @@
-openfreebuds_*.deb
-openfreebuds_*.buildinfo
-openfreebuds_*.changes
-openfreebuds_*.tar.gz
-openfreebuds_*.upload
-openfreebuds_*.dsc
-
 **/__pycache__
 *.bak
-test.py
+/test.py
 
-# Make downloads, builddata
-lib
-builddir
+/lib
+/builddir
+/venv
 
-# TTK Theme download (makefile)
-src/openfreebuds_assets/ttk_theme
-src/openfreebuds_assets/theme.zip

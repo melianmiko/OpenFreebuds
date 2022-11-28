@@ -39,4 +39,5 @@ def is_dark_theme():
     settings = Gtk.Settings()
     defaults = settings.get_default()
     theme_name = defaults.get_property("gtk-theme-name")
+    log.info(f"System theme name is {theme_name}")
     return "Dark" in theme_name
