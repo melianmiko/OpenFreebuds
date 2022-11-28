@@ -21,6 +21,7 @@ class SppProtocolDevice(BaseDevice):
 
     def __init__(self, address):
         super().__init__()
+        self.closed = False
         self.last_pkg = None
         self.address = address
         self.socket = None
@@ -77,14 +78,20 @@ class SppProtocolDevice(BaseDevice):
                                         socket.BTPROTO_RFCOMM)
             self.socket.settimeout(2)
 
-            service_data = bluetooth.find_service(address=self.address,
-                                                  uuid=self.SPP_SERVICE_UUID)
+            try:
+                service_data = bluetooth.find_service(address=self.address,
+                                                      uuid=self.SPP_SERVICE_UUID)
+                assert len(service_data) > 0
+                host = service_data[0]['host']
+                port = service_data[0]['port']
+                log.info(f"Found serial port {host}:{port} from UUID")
+            except (AssertionError, NameError):
+                log.exception("Can't fetch serial port info from device, attempt to use "
+                              "fallback port 16")
+                host = self.address
+                port = 16
 
-            if len(service_data) < 1:
-                raise ValueError("Service not found")
-
-            self.socket.connect((service_data[0]["host"],
-                                 service_data[0]["port"]))
+            self.socket.connect((host, port))
         except (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError, OSError, ValueError):
             raise SocketConnectionError()
 

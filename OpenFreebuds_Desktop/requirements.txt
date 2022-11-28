@@ -2,7 +2,7 @@ mtrayapp==1.0.2
 pynput~=1.7.6
 
 Pillow~=9.1.0
-PyBluez==0.23
+PyBluez>=0.23
 
 PyGObject==3.42.0; sys_platform == "linux"
 dbus-python==1.2.18; sys_platform == "linux"

@@ -10,8 +10,8 @@ Package: openfreebuds
 Architecture: all
 Depends:
  ${misc:Depends}, python3, python3-gi, python3-dbus, python3-tk,
- python3-pil, python3-pil.imagetk, python3-bluez, 
- libgtk-3-0, gir1.2-appindicator3-0.1 | gir1.2-ayatanaappindicator3-0.1
+ python3-pil, python3-pil.imagetk, libgtk-3-0,
+ gir1.2-appindicator3-0.1 | gir1.2-ayatanaappindicator3-0.1
 Description:
  Open-source client application for HUAWEI FreeBuds bluetooth headset series.
  .
