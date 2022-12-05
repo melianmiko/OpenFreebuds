@@ -13,27 +13,13 @@ all: lib/mtrayapp lib/pynput lib/sv_ttk lib/bluetooth
 	# Wipe cache
 	find builddir/openfreebuds -type d -name "__pycache__" -exec rm -rf {} +
 
-lib/mtrayapp lib/pynput lib/sv_ttk:
+lib/mtrayapp lib/pynput lib/sv_ttk lib/bluetooth:
 	mkdir -p lib
 
 	# Fetch libraries that will be packaged into deb-file
 	# (i know that this isn't a "Linux-way", but this is easier than
 	# package all of them by myself)
-	cd lib && pip install --target=. --no-deps mtrayapp==1.0.2 pynput~=1.7.6 sv-ttk==2.2
-
-lib/bluetooth:
-	mkdir -p lib/tmp
-
-	# Fetch pybluez edge and build a wheel
-	rm -rf lib/tmp/pybluez
-	git clone https://github.com/pybluez/pybluez.git lib/tmp/pybluez
-	cd lib/tmp/pybluez && git checkout -q ${PYBLUEZ_COMMIT}
-	cd lib/tmp/pybluez && python3 setup.py bdist_wheel
-
-	# Install to lib dir
-	cd lib && pip install --target=. --no-deps tmp/pybluez/dist/${PYBLUEZ_OUT_FILE}
-
-	rm -rf lib/tmp
+	cd lib && pip install --target=. --no-deps -r ../requirements-pkg.txt
 
 install:
 	rm -rf ${DESTDIR}/opt/openfreebuds
