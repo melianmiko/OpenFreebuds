@@ -8,6 +8,7 @@ import sv_ttk
 import openfreebuds_backend
 from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
+from openfreebuds_applet.ui.high_dpi_tkinter import MakeTkDPIAware
 
 log = logging.getLogger("TkinterTools")
 
@@ -25,6 +26,7 @@ def ui_thread(func):
 
 def setup_window(window: tkinter.Toplevel):
     assets = utils.get_assets_path()
+    MakeTkDPIAware(window)
 
     window.iconphoto(False, tkinter.PhotoImage(file=assets + "/icon.png"))
 
@@ -35,6 +37,7 @@ def get_root():
         Config.tk_root = tkinter.Tk()
         Config.tk_root.withdraw()
 
+        MakeTkDPIAware(Config.tk_root)
         apply_theme()
 
         complete.set()
