@@ -104,6 +104,7 @@ class FreebudsApplet:
         if self.current_icon_hash == new_hash:
             return
 
+        log.info(f"Change icon: {new_hash}")
         self.tray_application.icon = icons.generate_icon(mgr_state, battery, noise_mode)
         self.current_icon_hash = new_hash
 
