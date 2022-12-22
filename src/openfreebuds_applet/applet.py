@@ -11,8 +11,7 @@ from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE
     EVENT_MANAGER_STATE_CHANGED
 from openfreebuds.device.base import BaseDevice
 from openfreebuds_applet import settings, utils, log_format, base_logger_names
-from openfreebuds_applet.l18n import t
-from openfreebuds_applet.modules import hotkeys, http_server, updater
+from openfreebuds_applet.modules import hotkeys, http_server, updater, device_autoconfig
 from openfreebuds_applet.ui import icons, tk_tools, device_select_ui
 from openfreebuds_applet.ui.base import QuitingMenu
 from openfreebuds_applet.ui.menu_device import DeviceMenu
@@ -139,17 +138,19 @@ class FreebudsApplet:
             EVENT_MANAGER_STATE_CHANGED
         ])
 
-        if self.settings.address != "":
-            log.info("Using saved address: " + self.settings.address)
-            self.manager.set_device(self.settings.device_name, self.settings.address)
-        else:
-            log.info("Show device select UI")
-            device_select_ui.start(self.settings, self.manager)
+        if not self.settings.device_autoconfig:
+            if self.settings.address != "":
+                log.info("Using saved address: " + self.settings.address)
+                self.manager.set_device(self.settings.device_name, self.settings.address)
+            else:
+                log.info("Show device select UI")
+                device_select_ui.start(self.settings, self.manager)
 
         while self.started:
             self.update_icon()
             if self.manager.state == self.manager.STATE_NO_DEV:
                 self.apply_menu(self.menu_scan)
+                device_autoconfig.process(self.manager, self.settings)
             elif self.manager.state == self.manager.STATE_CONNECTED:
                 self.apply_menu(self.menu_device)
             else:

@@ -118,8 +118,8 @@ class DeviceSettingsTab(ttk.Frame):
                 row_counter += 1
 
         # Unpair button
-        ttk.Button(self, text=t("action_unpair"), command=self._do_unpair)\
-            .grid(row=row_counter, padx=16, pady=8, sticky=tkinter.NW)
+        # ttk.Button(self, text=t("action_change"), command=self._do_unpair)\
+        #     .grid(row=row_counter, padx=16, pady=8, sticky=tkinter.NW)
 
     def _do_unpair(self):
         self.settings.address = ""

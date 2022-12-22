@@ -34,7 +34,7 @@ class HeaderMenuPart(Menu):
 
     def on_build(self):
         has_update, new_version = updater.get_result()
-        device_name = self.settings.device_name
+        device_name = self.manager.device_name
         is_connected = self.manager.state == self.manager.STATE_CONNECTED
 
         self.add_item(text=t('action_update').format(new_version),

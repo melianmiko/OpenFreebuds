@@ -14,6 +14,6 @@ def is_supported(name: str):
 
 def create(name: str, address: str) -> BaseDevice:
     if name not in DEVICE_PROFILES:
-        raise ValueError("No profile for " + name)
+        raise ValueError(f"No profile for {name}")
 
     return DEVICE_PROFILES[name](address)

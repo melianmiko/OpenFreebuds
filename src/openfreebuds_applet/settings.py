@@ -10,6 +10,7 @@ class SettingsStorage:
         self.address = ""
         self.device_name = ""
         self.is_device_mocked = False
+        self.device_autoconfig = True
 
         self.language = ""
         self.theme = "auto"

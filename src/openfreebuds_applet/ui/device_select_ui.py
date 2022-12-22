@@ -1,11 +1,11 @@
 import tkinter
 import logging
-import time
 from tkinter import ttk
 
 import openfreebuds_backend
 from openfreebuds import device
 from openfreebuds.manager import FreebudsManager
+from openfreebuds_applet.modules import device_autoconfig
 from openfreebuds_applet.ui import tk_tools
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.settings import SettingsStorage
@@ -15,8 +15,6 @@ log = logging.getLogger("DeviceSelectUI")
 
 @tk_tools.ui_thread
 def start(settings: SettingsStorage, manager: FreebudsManager):
-    last_tap = time.time()
-
     root = tkinter.Toplevel()
     root.wm_title("OpenFreebuds")
     root.wm_resizable(False, False)
@@ -49,50 +47,54 @@ def start(settings: SettingsStorage, manager: FreebudsManager):
     status.grid(row=2, column=0, columnspan=10, pady=16, padx=16, sticky=tkinter.NW)
 
     # Connect selected device
-    def do_connect():
+    def on_confirm():
         iid = treeview.focus()
         values = treeview.item(iid)["values"]
-        if len(values) < 2:
-            return
-        
-        name, address = values
-        if not device.is_supported(name):
-            setup_manually_ui(address, settings, manager)
-        else:
-            apply_device(settings, manager, name, address)
-        root.destroy()
+
+        if values[0] == "pin":
+            _, name, address = values
+            if device.is_supported(name):
+                apply_device(settings, manager, name, address)
+            else:
+                setup_manually_ui(address, settings, manager)
+            root.destroy()
+        elif values[0] == "custom":
+            setup_manually_ui("", settings, manager)
+            root.destroy()
+        elif values[0] == "autoconfig":
+            apply_device(settings, manager, "", "", autoconfig=True)
+            root.destroy()
 
     # On select (update status row)
     def on_select(_):
         iid = treeview.focus()
         values = treeview.item(iid)["values"]
-        if len(values) < 2:
-            status.config(text=" ")
-            return
-        if values[1] == "":
+        if values[0] != "pin":
             status.config(text=" ")
             return
         status.config(text=t("address_prefix") + ": " + values[1])
 
     # Rebuild list
+    # noinspection PyTypeChecker
     def rebuild_treeview():
         treeview.delete(*treeview.get_children())
-        treeview.insert("", "end", iid=1, text=t("type_paired"), open=True)
+        treeview.insert("", "end", text=t("device_autoconfig_mode"), values=("autoconfig", ))
+        treeview.insert("", "end", iid=1, text=t("type_paired"), values=("none", ), open=True)
 
         # List paired
         paired = openfreebuds_backend.bt_list_devices()
         if len(paired) == 0:
-            treeview.insert(1, "end", text=t("no_devices"), values=("", ""))
+            treeview.insert(1, "end", text=t("no_devices"), values=("none", ))
         for dev in paired:
-            treeview.insert(1, "end", text=dev["name"], values=(dev["name"], dev["address"]))
+            treeview.insert(1, "end", text=dev["name"], values=("pin", dev["name"], dev["address"]))
         
         # Add "manual" option
-        treeview.insert("", "end", text=t("action_manual_connect"), values=("", ""))
+        treeview.insert("", "end", text=t("action_manual_connect"), values=("custom", ))
 
     rebuild_treeview()
     treeview.bind("<<TreeviewSelect>>", on_select)
 
-    ttk.Button(root, text=t("connect"), style="Accent.TButton", command=do_connect) \
+    ttk.Button(root, text=t("connect"), style="Accent.TButton", command=on_confirm) \
         .grid(sticky=tkinter.NSEW, row=10, column=0, padx=16, pady=16)
     ttk.Button(root, text=t("refresh"), command=rebuild_treeview) \
         .grid(sticky=tkinter.NSEW, row=10, column=1, padx=0, pady=16)
@@ -152,12 +154,16 @@ def setup_manually_ui(address, settings, manager):
     root.mainloop()
 
 
-def apply_device(settings, manager, name, address):
-    log.debug("Applying device {} {}".format(name, address))
+def apply_device(settings, manager, name, address, autoconfig=False):
+    log.debug("Applying device {} {} autoconfig={}".format(name, address, autoconfig))
     settings.device_name = name
     settings.address = address
+    settings.device_autoconfig = autoconfig
     settings.write()
 
-    manager.set_device(name, address)
+    if address != "":
+        manager.set_device(name, address)
+    else:
+        device_autoconfig.process(manager, settings)
 
-    tk_tools.message(t("welcome_tray_message"), "OpenFreebuds")
+    # tk_tools.message(t("welcome_tray_message"), "OpenFreebuds")
