@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+import socket
 import time
 import urllib.error
 import urllib.request
@@ -60,6 +61,11 @@ def main():
     if utils.is_running():
         # noinspection PyUnresolvedReferences,PyProtectedMember
         tk_tools.message(t("application_running_message"), "Error", _leave)
+        applet.tray_application.run()
+        return
+
+    if not getattr(socket, "AF_BLUETOOTH", False):
+        tk_tools.message(t("no_af_bluetooth"), "Error", _leave)
         applet.tray_application.run()
         return
 

@@ -12,8 +12,8 @@ def is_supported(name: str):
     return name in DEVICE_PROFILES
 
 
-def create(name: str, address: str) -> BaseDevice:
+def create(name: str, address: str) -> BaseDevice|None:
     if name not in DEVICE_PROFILES:
-        raise ValueError(f"No profile for {name}")
+        return None
 
     return DEVICE_PROFILES[name](address)

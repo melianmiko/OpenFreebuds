@@ -111,6 +111,10 @@ class FreebudsManager:
         #     self.set_state(self.STATE_NO_DEV)
         #     self.started = False
 
+        if self.device_address is None or self.device_name is None:
+            log.warning("No device")
+            self.started = False
+
         while self.started:
             if self._paused:
                 log.debug("Manager thread paused")
@@ -130,6 +134,9 @@ class FreebudsManager:
                 log.info("Trying to create SPP device and connect...")
                 self.set_state(self.STATE_WAIT)
                 self.device = openfreebuds.device.create(self.device_name, self.device_address)
+                if not self.device:
+                    self.set_state(self.STATE_FAILED)
+                    continue
                 self.device.config = self.config
                 status = self.device.connect()
 

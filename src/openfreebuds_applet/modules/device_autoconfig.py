@@ -11,7 +11,7 @@ log = logging.getLogger("AutoConfig")
 
 
 def process(manager: FreebudsManager, settings: SettingsStorage):
-    if not settings.device_autoconfig:
+    if not settings.device_autoconfig or manager.state > 1:
         return
 
     if not autoconf_lock.acquire(blocking=False):
@@ -31,10 +31,11 @@ def process(manager: FreebudsManager, settings: SettingsStorage):
             log.info(f"Use {name} {address}")
             manager.set_device(name, address)
 
-            # Save last device for fast re-connect
-            settings.device_name = name
-            settings.address = address
-            settings.write()
+            if settings.address != address:
+                settings.device_name = name
+                settings.address = address
+                settings.write()
+
             break
 
     autoconf_lock.release()

@@ -12,7 +12,7 @@ from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE
 from openfreebuds.device.base import BaseDevice
 from openfreebuds_applet import settings, utils, log_format, base_logger_names
 from openfreebuds_applet.modules import hotkeys, http_server, updater, device_autoconfig
-from openfreebuds_applet.ui import icons, tk_tools, device_select_ui
+from openfreebuds_applet.ui import icons, tk_tools, device_select_ui, first_run
 from openfreebuds_applet.ui.base import QuitingMenu
 from openfreebuds_applet.ui.menu_device import DeviceMenu
 from openfreebuds_applet.ui.menu_no_device import DeviceOfflineMenu, DeviceScanMenu
@@ -146,6 +146,9 @@ class FreebudsApplet:
                 log.info("Show device select UI")
                 device_select_ui.start(self.settings, self.manager)
 
+        if self.settings.first_run:
+            first_run.show(self.settings, self.manager)
+
         while self.started:
             self.update_icon()
             if self.manager.state == self.manager.STATE_NO_DEV:
@@ -155,6 +158,7 @@ class FreebudsApplet:
                 self.apply_menu(self.menu_device)
             else:
                 self.apply_menu(self.menu_offline)
+                device_autoconfig.process(self.manager, self.settings)
             event_queue.wait()
 
         self.manager.close()
