@@ -1,8 +1,20 @@
 
-OpenFreebuds Desktop
+![Icon](docs/logo.png) OpenFreebuds Desktop
 =====================
 
-Desktop client.
+![Last release](https://img.shields.io/github/v/release/melianmiko/openfreebuds)
+![AUR last modified](https://img.shields.io/aur/last-modified/openfreebuds)
+[![Crowdin](https://badges.crowdin.net/openfreebuds/localized.svg)](https://crowdin.com/project/openfreebuds)
+
+Desktop application to manage your HUAWEI FreeBuds device.
+Written in Python, available for Windows and Linux.
+
+- [💿 **Download binaries**](https://melianmiko.ru/en/openfreebuds)
+- [🌍 Translate to your language](https://crowdin.com/project/openfreebuds)
+
+Content bellow may be outdated.
+
+---
 
 Compiling
 ---------

@@ -32,7 +32,6 @@ def make_about(parent, applet):
     def do_console(_):
         dev_console.start(applet.manager)
 
-
     frame = ttk.Frame(parent)
     frame.grid_columnconfigure(2, weight=1)
 

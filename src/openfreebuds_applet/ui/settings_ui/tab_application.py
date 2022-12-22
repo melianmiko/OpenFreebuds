@@ -1,4 +1,5 @@
 import tkinter
+import webbrowser
 from tkinter import ttk
 
 import openfreebuds_backend
@@ -12,6 +13,8 @@ from openfreebuds_applet.ui import tk_tools, icons
 
 PAD_X_BASE = 16
 PAD_Y_BASE = 4
+
+LINK_TRANSLATE = "https://crowdin.com/project/openfreebuds"
 
 
 class AppSettingsTab(ttk.Frame):
@@ -77,6 +80,10 @@ class AppSettingsTab(ttk.Frame):
                         command=self._toggle_show_update_dialog)\
             .grid(column=0, row=4, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE, columnspan=2)
 
+        link = ttk.Label(main_root, text=t("action_help_translate"), foreground="#04F", cursor="hand2")
+        link.bind("<Button-1>", lambda: webbrowser.open(LINK_TRANSLATE))
+        link.grid(row=5, columnspan=2, padx=PAD_X_BASE, pady=PAD_Y_BASE, sticky=tkinter.NW)
+
         # HTTP server
         ttk.Label(self, text=t("settings_group_server"), font=label_fnt)\
             .grid(row=3, pady=16, sticky=tkinter.NW, padx=PAD_X_BASE)
@@ -94,7 +101,7 @@ class AppSettingsTab(ttk.Frame):
             .grid(column=0, row=0, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
 
         ttk.Label(server_root, text=t("webserver_port") + " " + str(http_server.get_port())) \
-            .grid(row=1, sticky=tkinter.NW, padx=PAD_X_BASE, pady=16)
+            .grid(row=1, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
 
         # Advanced
         ttk.Label(self, text=t("settings_group_advanced"), font=label_fnt)\

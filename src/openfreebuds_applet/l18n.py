@@ -9,9 +9,13 @@ from openfreebuds_applet.settings import SettingsStorage
 lc_path = utils.get_assets_path() + "/locale/{}.json"
 log = logging.getLogger("FreebudsLocale")
 
+available_langs = [
+    "base", "ru_RU"
+]
+
 lang_names = {
     "": "Auto",
-    "en_US": "English",
+    "base": "English",
     "en_GB": "English (Britain)",
     "ru_RU": "Русский",
     "zh_CN": "Chinese"
@@ -61,12 +65,8 @@ def ln(prop):
 
 
 def list_langs():
-    variants = os.listdir(utils.get_assets_path() + "/locale")
-    variants.sort()
-
     out = {"Auto": ""}
-    for lang in variants:
-        lang = lang.replace(".json", "")
+    for lang in available_langs:
         out[ln(lang)] = lang
     return out
 

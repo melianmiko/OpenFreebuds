@@ -6,6 +6,7 @@
   "action_kill_app": "Force exit",
   "action_open_appdata": "Open config directory...",
   "action_refresh_list": "Refresh list",
+  "action_help_translate": "Help with translation",
   "action_unpair": "Forgot device",
   "action_connect": "Connect device",
   "action_disconnect": "Disconnect device",
