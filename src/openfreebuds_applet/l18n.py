@@ -44,7 +44,7 @@ def setup_language(langauge):
     Data.loaded = True
     Data.charset = locale.getdefaultlocale()[1]
 
-    with open(lc_path.format("en_US", encoding="utf-8"), "r") as f:
+    with open(lc_path.format("base", encoding="utf-8"), "r") as f:
         Data.base_strings = json.loads(f.read())
 
     if langauge != "none":
