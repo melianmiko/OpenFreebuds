@@ -71,12 +71,10 @@ class HotkeysSettingsTab(ttk.Frame):
 
         ttk.Label(self.hotkeys_root, text=display_name) \
             .grid(row=self.row_counter, sticky="new", padx=16, pady=8, columnspan=3)
-        ttk.Label(self.hotkeys_root, textvariable=variable) \
-            .grid(row=self.row_counter+1, sticky="new", padx=16, pady=8)
-        ttk.Button(self.hotkeys_root, text=t("change"), command=_on_click) \
-            .grid(row=self.row_counter+1, column=1, sticky=tkinter.NSEW)
+        ttk.Button(self.hotkeys_root, textvariable=variable, command=_on_click) \
+            .grid(row=self.row_counter, column=1, sticky=tkinter.NSEW, pady=4)
         ttk.Button(self.hotkeys_root, text=t("clear"), command=_wipe) \
-            .grid(row=self.row_counter+1, column=2, sticky=tkinter.NSEW, padx=16)
+            .grid(row=self.row_counter, column=2, sticky=tkinter.NSEW, padx=4, pady=4)
 
         self.row_counter += 2
 

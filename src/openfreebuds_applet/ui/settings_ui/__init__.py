@@ -8,6 +8,8 @@ from openfreebuds_applet.ui.settings_ui.tab_application import AppSettingsTab
 from openfreebuds_applet.ui.settings_ui.tab_device import DeviceSettingsTab
 from openfreebuds_applet.ui.settings_ui.tab_hotkeys import HotkeysSettingsTab
 
+SETTINGS_SIZES = [600, 650]
+
 
 @tk_tools.ui_thread
 def open_app_settings(applet):
@@ -15,12 +17,15 @@ def open_app_settings(applet):
     tk.wm_title(t("settings_title"))
     tk.wm_resizable(False, False)
 
+    w, h = SETTINGS_SIZES
+    tk.geometry(f"{w}x{h}")
+
     tk_tools.setup_window(tk)
 
     frame = ttk.Frame(tk)
     frame.grid()
 
-    notebook = ttk.Notebook(frame)
+    notebook = ttk.Notebook(frame, height=h, width=w)
     notebook.grid(column=0, row=0, sticky="nesw")
 
     if applet.settings.address != "":
