@@ -13,7 +13,7 @@ from openfreebuds_applet.modules import self_check
 
 
 def make_about(parent, applet):
-    version, debug = utils.get_version()
+    version = utils.get_version()
 
     def website():
         webbrowser.open(t("app_site_url"))

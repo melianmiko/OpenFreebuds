@@ -11,8 +11,8 @@ current_tray_application = None
 
 
 def get_version():
-    from version_info import VERSION, DEBUG_MODE
-    return VERSION, DEBUG_MODE
+    from version_info import VERSION
+    return VERSION
 
 
 def items_hash_string(items):

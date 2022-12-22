@@ -39,7 +39,7 @@ class FreebudsUpdateUiMod(TkinterUiMod):
 
 class FreebudsUpdater(UpdaterTool):
     def __init__(self, settings: SettingsStorage):
-        super().__init__(release_url, utils.get_version()[0], FreebudsUpdateUiMod())
+        super().__init__(release_url, utils.get_version(), FreebudsUpdateUiMod())
         log.debug(self.current_version)
         self.new_version = ""
         self.has_update = False
