@@ -6,4 +6,5 @@
 /lib
 /venv
 /build
+/builddir
 /dist
