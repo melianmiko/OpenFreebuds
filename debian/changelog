@@ -1,5 +1,12 @@
-openfreebuds (0.11-1b1) impish; urgency=medium
+openfreebuds (0.11-1) impish; urgency=medium
 
-  * Experimental
+  * New feature: automatic device switching
+  * New feature: manual connect (for unsupported devices)
+  * New feature: first run dialog
+  * UI: better device picker dialog
+  * UI: compact hotkey settings
+  * win32: partial fix HiDPI scaling issues
+  * win32: installer fixes
+  * update dependencies
 
- -- MelianMiko <melianmiko@gmail.com>  Sat, 16 Apr 2022 10:32:03 +0700
+ -- MelianMiko <melianmiko@gmail.com>  Fri, 23 Dec 2022 15:11:16 +0700
