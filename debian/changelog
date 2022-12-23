@@ -1,7 +1,5 @@
-openfreebuds (0.10.1-2) impish; urgency=medium
+openfreebuds (0.11-1b1) impish; urgency=medium
 
-  * Fix: connect/disconnect action not work
-  * Some mirror UI fixes
-  * Fix: dependencies list
+  * Experimental
 
  -- MelianMiko <melianmiko@gmail.com>  Sat, 16 Apr 2022 10:32:03 +0700
