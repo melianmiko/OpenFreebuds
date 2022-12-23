@@ -1,4 +1,4 @@
-openfreebuds (0.11-1) impish; urgency=medium
+openfreebuds (0.11-1) jammy; urgency=medium
 
   * New feature: automatic device switching
   * New feature: manual connect (for unsupported devices)
