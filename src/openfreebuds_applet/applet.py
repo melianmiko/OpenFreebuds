@@ -138,7 +138,9 @@ class FreebudsApplet:
             EVENT_MANAGER_STATE_CHANGED
         ])
 
+        timeout = 5
         if not self.settings.device_autoconfig:
+            timeout = None
             if self.settings.address != "":
                 log.info("Using saved address: " + self.settings.address)
                 self.manager.set_device(self.settings.device_name, self.settings.address)
@@ -159,7 +161,7 @@ class FreebudsApplet:
             else:
                 self.apply_menu(self.menu_offline)
                 device_autoconfig.process(self.manager, self.settings)
-            event_queue.wait()
+            event_queue.wait(timeout)
 
         self.manager.close()
         self.tray_application.stop()

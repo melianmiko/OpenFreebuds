@@ -12,7 +12,6 @@ SV_PATH = os.path.abspath(os.path.dirname(sv_ttk.__file__))
 WINDOWS_PYINSTALLER_ARGS = {
     "name": "openfreebuds",
     "icon": "..\\src\\openfreebuds_assets\\icon.ico",
-    "windowed": True,
     "exclude-module": [
     ],
     "add-data": [
