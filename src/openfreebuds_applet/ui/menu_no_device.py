@@ -2,15 +2,12 @@ import logging
 
 from mtrayapp import Menu
 
-from openfreebuds import event_bus, device
-from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.settings import SettingsStorage
 from openfreebuds_applet.ui import device_select_ui
 from openfreebuds_applet.ui.base import HeaderMenuPart
 from openfreebuds_applet.ui.menu_app import ApplicationMenuPart
-from openfreebuds_backend import bt_list_devices
 
 log = logging.getLogger("NoDeviceUI")
 

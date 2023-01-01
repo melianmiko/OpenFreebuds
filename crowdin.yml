@@ -1,5 +1,0 @@
-files:
-  - source: /locale/base.json
-    translation: /locale/%locale_with_underscore%.json
-  - source: /src/openfreebuds_assets/locale/base.json
-    translation: /src/openfreebuds_assets/locale/%locale_with_underscore%.json

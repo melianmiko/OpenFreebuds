@@ -99,11 +99,6 @@ class FreebudsManager:
             EVENT_SPP_CLOSED
         ])
 
-        # Check that spp exists in paired
-        # if not openfreebuds_backend.bt_device_exists(self.device_address):
-        #     log.warning("Device dont exist, bye...")
-        #     self.set_state(self.STATE_NO_DEV)
-
         if self.device_address is None or self.device_name is None:
             log.warning("No device")
             self._must_leave = True
