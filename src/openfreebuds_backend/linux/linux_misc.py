@@ -18,16 +18,37 @@ def open_file(path):
     subprocess.Popen(["xdg-open", path])
 
 
-def list_processes():
-    procs = []
-    for pid_s in os.listdir("/proc"):
-        if pid_s.isdigit() and os.path.isfile("/proc/{}/cmdline".format(pid_s)):
-            with open("/proc/{}/cmdline".format(pid_s), "r") as f:
-                cmd = f.read()
-                pid = int(pid_s)
-            procs.append((pid, cmd))
+def is_running():
+    """
+    Check, is application already started.
 
-    return procs
+    Will list OS processes and check for 'python -m openfreebuds'
+    or 'openfreebuds' proc.
+    """
+    our_pid = os.getpid()
+
+    for process in pathlib.Path("/proc").iterdir():
+        if not process.name.isdigit():
+            continue
+
+        pid = int(process.name)
+        if pid == our_pid:
+            continue
+
+        try:
+            executable = (process / "exe").readlink().name
+        except PermissionError:
+            continue
+
+        if not executable.startswith("python"):
+            continue
+
+        cmdline = (process / "cmdline").read_text().replace("\x00", " ")
+        log.info(cmdline)
+        if "ofb_launcher.py" in cmdline or "/usr/bin/openfreebuds" in cmdline:
+            return pid
+
+    return False
 
 
 def is_run_at_boot():

@@ -29,14 +29,10 @@ def items_hash_string(items):
 
 
 def is_running():
-    our_pid = os.getpid()
-    processes = openfreebuds_backend.list_processes()
-
-    for pid, name in processes:
-        if ("openfreebuds" in name or name.startswith("python3 src/ofb_launcher.py")) and pid != our_pid:
-            logging.debug("Found running instance PID=" + str(pid))
-            return True
-
+    result = openfreebuds_backend.is_running()
+    if result:
+        logging.warning(f"Application already started, pid {result}")
+        return True
     return False
 
 
