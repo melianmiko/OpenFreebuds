@@ -34,9 +34,5 @@ class DeviceScanMenu(Menu):
         self.footer = ApplicationMenuPart(applet)
 
     def on_build(self):
-        self.add_item(t("action_connect_device"), self.connect)
-
+        self.add_item(t("state_no_device"), enabled=False)
         self.include(self.footer)
-
-    def connect(self):
-        device_select_ui.start(self.settings, self.manager)
