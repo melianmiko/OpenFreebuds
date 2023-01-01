@@ -129,6 +129,9 @@ class FreebudsApplet:
 
     @utils.async_with_ui("Applet")
     def _ui_update_loop(self):
+        log.info("Started")
+        timeout = 5 if self.settings.device_autoconfig else None
+
         self.started = True
         self.allow_ui_update = True
 
@@ -138,15 +141,12 @@ class FreebudsApplet:
             EVENT_MANAGER_STATE_CHANGED
         ])
 
-        timeout = 5
-        if not self.settings.device_autoconfig:
-            timeout = None
-            if self.settings.address != "":
-                log.info("Using saved address: " + self.settings.address)
-                self.manager.set_device(self.settings.device_name, self.settings.address)
-            else:
-                log.info("Show device select UI")
-                device_select_ui.start(self.settings, self.manager)
+        if self.settings.address != "":
+            log.info(f"Attach recently used device, mac={self.settings.address}")
+            self.manager.set_device(self.settings.device_name, self.settings.address)
+        elif not self.settings.device_autoconfig:
+            log.info("No device and no autoconfig, show device picker...")
+            device_select_ui.start(self.settings, self.manager)
 
         if self.settings.first_run:
             first_run.show(self.settings, self.manager)

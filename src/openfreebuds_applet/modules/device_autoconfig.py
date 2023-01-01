@@ -18,7 +18,6 @@ def process(manager: FreebudsManager, settings: SettingsStorage):
         # Already locked
         return
 
-    log.info("Attempt to change device automatically")
     paired_devices = openfreebuds_backend.bt_list_devices()
 
     for bt_dev in paired_devices:
@@ -28,7 +27,7 @@ def process(manager: FreebudsManager, settings: SettingsStorage):
         name = bt_dev["name"]
         address = bt_dev["address"]
         if device.is_supported(name):
-            log.info(f"Use {name} {address}")
+            log.info(f"Set device {name} {address}")
             manager.set_device(name, address)
 
             if settings.address != address:
