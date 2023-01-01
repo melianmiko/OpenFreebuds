@@ -86,13 +86,28 @@ sudo apt install make git gcc upx-ucl python3 python3-pip python3-wheel \
   libgtk-3-0 libbluetooth-dev
 ```
 
-Grab sources and run `make`:
+### Run from source code
+`python3-venv` and `build-essentials` are required, also as big part of libraries listed above.
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python src/ofb_launcher.py
+```
 
+### Install
+Grab sources and run `make`:
 ```bash
 git clone https://github.com/melianmiko/OpenFreebuds
 cd OpenFreebuds
 make
 sudo make install # Install
+```
+
+### Build debian package
+```bash
+dpkg-buildpackage -b # binary pkg
+dpkg-buildpackage -S # source pkg
 ```
 
 That's all.
