@@ -126,7 +126,7 @@ class DeviceSettingsTab(ttk.Frame):
         self.settings.device_name = ""
         self.settings.write()
 
-        self.manager.unset_device(lock=False)
+        self.manager.close(lock=False)
         self.parent.destroy()
 
     def _toggle_long_tap_left(self):

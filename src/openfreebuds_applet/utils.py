@@ -79,7 +79,7 @@ def get_log_filename():
 
 
 def safe_run_wrapper(func, display_name, _):
-    async_with_ui(display_name)(func)()
+    return async_with_ui(display_name)(func)()
 
 
 def with_ui_exception(display_name):
@@ -106,6 +106,6 @@ def async_with_ui(display_name):
             with_ui_exception(display_name)(func)(*args, **kwargs)
 
         def _internal(*args, **kwargs):
-            threading.Thread(target=_thread, args=args, kwargs=kwargs).start()
+            return threading.Thread(target=_thread, args=args, kwargs=kwargs).start()
         return _internal
     return _wrapper

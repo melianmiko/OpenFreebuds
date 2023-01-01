@@ -33,46 +33,42 @@ class FreebudsManager:
         self.device_address = None
         self.device: Optional[BaseDevice] = None
 
-        self.started = False
         self._paused = False
+        self._must_leave = False
+        self._thread = None                 # type: threading.Thread|None
         self.state = self.STATE_NO_DEV
         self.config = DeviceConfig()
 
     def set_device(self, name, address):
-        if self.device_address is not None:
-            self.unset_device()
-
         self.device_name = name
         self.device_address = address
 
+        if self._is_thread_alive():
+            self.close()
+
+        self._must_leave = False
         if self.config.SAFE_RUN_WRAPPER is None:
-            threading.Thread(target=self._mainloop).start()
+            self._thread = threading.Thread(target=self._mainloop)
+            self._thread.start()
         else:
             log.debug("Running mainloop via safe wrapper")
-            self.config.SAFE_RUN_WRAPPER(self._mainloop, "ManagerThread", False)
+            self._thread = self.config.SAFE_RUN_WRAPPER(self._mainloop, "ManagerThread", False)
 
-    def unset_device(self, lock=True):
-        if not self.started:
-            return
-
-        self.device_name = None
-        self.device_address = None
-        self.started = False
-
-        self.set_state(self.STATE_NO_DEV)
-
-        if lock:
-            event_bus.wait_for(EVENT_MANAGER_CLOSE)
+    def _is_thread_alive(self):
+        return self._thread is not None and self._thread.is_alive()
 
     def close(self, lock=True):
-        if not self.started:
+        """
+        Exit manager thread NOW
+        """
+        if not self._is_thread_alive():
             return
 
         log.info("closing...")
-        self.started = False
+        self._must_leave = False
 
         if lock:
-            event_bus.wait_for(EVENT_MANAGER_CLOSE)
+            self._thread.join()
 
     def _close_device(self):
         # Close spp if it was started
@@ -97,8 +93,6 @@ class FreebudsManager:
         event_bus.invoke(EVENT_MANAGER_STATE_CHANGED)
 
     def _mainloop(self):
-        self.started = True
-
         log.debug("Started")
 
         event_queue = event_bus.register([
@@ -109,13 +103,12 @@ class FreebudsManager:
         # if not openfreebuds_backend.bt_device_exists(self.device_address):
         #     log.warning("Device dont exist, bye...")
         #     self.set_state(self.STATE_NO_DEV)
-        #     self.started = False
 
         if self.device_address is None or self.device_name is None:
             log.warning("No device")
-            self.started = False
+            self._must_leave = True
 
-        while self.started:
+        while not self._must_leave:
             if self._paused:
                 log.debug("Manager thread paused")
                 time.sleep(self.MAINLOOP_TIMEOUT)
@@ -163,3 +156,4 @@ class FreebudsManager:
 
         event_queue.close()
         event_bus.invoke(EVENT_MANAGER_CLOSE)
+        log.info("Thread finished")
