@@ -2,7 +2,7 @@ import os
 
 from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
-from openfreebuds_applet.modules import updater, actions
+from openfreebuds_applet.modules import actions
 from mtrayapp import Menu
 
 
@@ -33,13 +33,10 @@ class HeaderMenuPart(Menu):
         self.applet = applet
 
     def on_build(self):
-        has_update, new_version = updater.get_result()
         device_name = self.manager.device_name
         is_connected = self.manager.state == self.manager.STATE_CONNECTED
 
-        self.add_item(text=t('action_update').format(new_version),
-                      action=updater.show_update_message,
-                      visible=has_update)
+        self.add_updater()
 
         if self.manager.state != self.manager.STATE_NO_DEV:
             self.add_item(text=device_name, enabled=False)
@@ -50,6 +47,16 @@ class HeaderMenuPart(Menu):
                 self.add_item(t('action_connect'), self.do_connect)
 
         self.add_separator()
+
+    def add_updater(self):
+        try:
+            from openfreebuds_applet.modules import updater
+            has_update, new_version = updater.get_result()
+            self.add_item(text=t('action_update').format(new_version),
+                          action=updater.show_update_message,
+                          visible=has_update)
+        except ModuleNotFoundError:
+            pass
 
     @utils.async_with_ui("DoConnect")
     def do_connect(self):

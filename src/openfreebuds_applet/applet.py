@@ -11,7 +11,7 @@ from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE
     EVENT_MANAGER_STATE_CHANGED
 from openfreebuds.device.base import BaseDevice
 from openfreebuds_applet import settings, utils, log_format, base_logger_names
-from openfreebuds_applet.modules import hotkeys, http_server, updater, device_autoconfig
+from openfreebuds_applet.modules import hotkeys, http_server, device_autoconfig
 from openfreebuds_applet.ui import icons, tk_tools, device_select_ui, first_run
 from openfreebuds_applet.ui.base import QuitingMenu
 from openfreebuds_applet.ui.menu_device import DeviceMenu
@@ -51,7 +51,12 @@ class FreebudsApplet:
 
         hotkeys.start(self)
         http_server.start(self)
-        updater.start(self)
+
+        try:
+            from openfreebuds_applet.modules import updater
+            updater.start(self)
+        except ModuleNotFoundError:
+            log.warning("No mmk-updater...")
 
         self.enable_debug_logging()
         self._setup_ctrl_c()
