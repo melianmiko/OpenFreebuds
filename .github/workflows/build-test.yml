@@ -1,0 +1,22 @@
+name: Build test build
+on: [push]
+jobs:
+  Build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Sync APT
+        run: apt update
+      - name: Install python and tools
+        run: apt install build-essentials python3 python3-pip python3-wheel gir1.2-ayatanaappindicator3-0.1 libgtk-3-0 libbluetooth-dev
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install PyPI packages
+        run: pip install -r requirements.txt
+      - name: Try to build
+        run: python make_release.py
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: dist/*.tar.gz
+
