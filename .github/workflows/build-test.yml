@@ -14,9 +14,11 @@ jobs:
         run: bash -c 'echo "VERSION = \"$(git rev-parse HEAD)\"" > src/version_info.py'
       - name: Try to build
         run: dpkg-buildpackage -b
+      - name: Move result file to current dir
+        run: mv ../openfreebuds_*_all.deb openfreebuds_test.deb
       - name: Archive code coverage results
         uses: actions/upload-artifact@v3
         with:
-          name: build
-          path: ../*.deb
+          name: Debian package
+          path: openfreebuds_test.deb
 
