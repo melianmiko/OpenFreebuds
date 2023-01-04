@@ -1,22 +1,20 @@
 name: Build test build
 on: [push]
 jobs:
-  Build:
+  Build_Deb:
     runs-on: ubuntu-22.04
     steps:
       - name: Sync APT
         run: sudo apt update
       - name: Install python and tools
-        run: sudo apt install build-essential python3 python3-pip python3-wheel gir1.2-ayatanaappindicator3-0.1 libgtk-3-0 libbluetooth-dev
+        run: sudo apt install python3 python3-pip debhelper-compat make python3-gi python3-dbus python3-tk python3-pil python3-pil.imagetk libgtk-3-0 gir1.2-ayatanaappindicator3-0.1 build-essential
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install PyPI packages
-        run: pip install -r requirements.txt
       - name: Try to build
-        run: python make_release.py
+        run: dpkg-buildpackage -b
       - name: Archive code coverage results
         uses: actions/upload-artifact@v3
         with:
           name: build
-          path: dist/*.tar.gz
+          path: ../*.deb
 
