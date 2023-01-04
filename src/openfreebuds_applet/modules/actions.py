@@ -20,17 +20,19 @@ def do_next_mode(manager):
         dev.set_property("anc", "mode", next_mode)
         log.debug("Switched to mode " + str(next_mode))
         return True
-    else:
-        return False
+
+    return False
 
 
 def do_mode(manager, mode):
     dev = _get_device(manager)       # type: BaseDevice
+
     if dev is not None:
         dev.set_property("anc", "mode", mode)
         log.debug("Switched to mode " + str(mode))
-    else:
-        return False
+        return True
+
+    return False
 
 
 def _get_device(manager):
@@ -44,11 +46,11 @@ def _get_device(manager):
 # @utils.async_with_ui("ForceConnect")
 def do_connect(manager: FreebudsManager):
     if manager.state == manager.STATE_CONNECTED:
-        return
+        return True
 
     if manager.state == manager.STATE_PAUSED:
         tk_tools.message(t("error_in_work"), "OpenFreebuds")
-        return
+        return True
 
     manager.set_paused(True)
     log.debug("Trying to force connect device...")
@@ -66,12 +68,13 @@ def do_connect(manager: FreebudsManager):
 
     log.debug("Finish force connecting")
     manager.set_paused(False)
+    return True
 
 
 def do_disconnect(manager):
     if manager.state == manager.STATE_PAUSED:
         tk_tools.message(t("error_in_work"), "OpenFreebuds")
-        return
+        return False
 
     manager.set_paused(True)
     log.debug("Trying to force disconnect device...")
@@ -85,6 +88,7 @@ def do_disconnect(manager):
 
     log.debug("Finish force disconnecting")
     manager.set_paused(False)
+    return True
 
 
 def do_toggle_connected(manager: FreebudsManager):

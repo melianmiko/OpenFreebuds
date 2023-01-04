@@ -77,7 +77,7 @@ class AppHandler(SimpleHTTPRequestHandler):
         if result:
             return self._answer_json(True, 200)
         else:
-            return self._answer_json(False, 501)
+            return self._answer_json(False, 502)
 
 
 def start(applet):
