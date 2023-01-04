@@ -2,7 +2,7 @@ mtrayapp==1.0.2
 pynput~=1.7.6
 sv-ttk==2.4
 pybluez-edge==2022.12.6
-https://github.com/melianmiko/mmk-updater/archive/refs/tags/v0.12.zip
+mmk-updater==0.12
 
 Pillow~=9.3.0
 

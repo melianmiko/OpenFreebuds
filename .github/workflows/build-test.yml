@@ -12,6 +12,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Change in-app version
         run: bash -c 'echo "VERSION = \"$(git rev-parse HEAD)\"" > src/version_info.py'
+      - name: Remove mmk_updater
+        run: sed -i '/mmk-updater/d' requirements-pkg.txt
       - name: Try to build
         run: dpkg-buildpackage -b
       - name: Move result file to current dir
