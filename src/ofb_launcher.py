@@ -99,7 +99,7 @@ def _do_command_webserver(command):
             print(f.read().decode("utf8"))
 
     except urllib.error.URLError:
-        log.error("Can't do command via HTTP-server")
+        log.exception("Can't do command via HTTP-server")
         tk_tools.message(t("do_command_server_error").format(command), "Openfreebuds", _leave)
 
 
