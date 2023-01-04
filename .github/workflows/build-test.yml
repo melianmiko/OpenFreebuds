@@ -7,9 +7,11 @@ jobs:
       - name: Sync APT
         run: sudo apt update
       - name: Install python and tools
-        run: sudo apt install python3 python3-pip debhelper-compat make python3-gi python3-dbus python3-tk python3-pil python3-pil.imagetk libgtk-3-0 gir1.2-ayatanaappindicator3-0.1 build-essential
+        run: sudo apt install python3 python3-pip debhelper-compat make python3-gi python3-dbus python3-tk python3-pil python3-pil.imagetk libgtk-3-0 gir1.2-ayatanaappindicator3-0.1 build-essential libbluetooth-dev
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Change in-app version
+        run: bash -c 'echo "VERSION = \"$(git rev-parse HEAD)\"" > src/version_info.py'
       - name: Try to build
         run: dpkg-buildpackage -b
       - name: Archive code coverage results
