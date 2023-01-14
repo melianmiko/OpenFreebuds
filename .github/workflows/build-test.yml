@@ -1,13 +1,31 @@
-name: Build test build
+name: Make test binaries
 on: [push]
 jobs:
+  Build_Exe:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Change inapp version
+        run: echo "VERSION = \"gh-test\"" > src/version_info.py
+      - name: Create virtualenv
+        run: python3 -m venv venv
+      - name: Install deps
+        run: .\venv\Scripts\pip install -r requirements.txt
+      - name: Build bundle
+        run: .\venv\Scripts\pyinstaller .\openfreebuds.spec
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Windows binaries
+          path: dist
   Build_Deb:
     runs-on: ubuntu-22.04
     steps:
       - name: Sync APT
         run: sudo apt update
       - name: Install python and tools
-        run: sudo apt install python3 python3-pip debhelper-compat make python3-gi python3-dbus python3-tk python3-pil python3-pil.imagetk libgtk-3-0 gir1.2-ayatanaappindicator3-0.1 build-essential libbluetooth-dev
+        run: sudo apt install -y python3 python3-pip debhelper-compat make python3-gi python3-dbus python3-tk python3-pil python3-pil.imagetk libgtk-3-0 gir1.2-ayatanaappindicator3-0.1 build-essential libbluetooth-dev
       - name: Checkout
         uses: actions/checkout@v3
       - name: Change in-app version

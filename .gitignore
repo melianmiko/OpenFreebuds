@@ -1,8 +1,9 @@
 **/__pycache__
 *.bak
 *~
-/test.py
+*.swp
 
+/test.py
 /lib
 /venv
 /build
