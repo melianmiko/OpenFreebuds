@@ -1,6 +1,5 @@
-from openfreebuds.device.base import BaseDevice
-from openfreebuds.device.profile_freebuds_4i import FreeBuds4iDevice
-from openfreebuds.device.huawei_spp_device import HuaweiSPPDevice
+from openfreebuds.device.generic.base import BaseDevice
+from openfreebuds.device.huawei.profiles import FreeBuds4iDevice
 
 DEVICE_PROFILES = {
     "HUAWEI FreeBuds 4i": FreeBuds4iDevice,
@@ -12,7 +11,7 @@ def is_supported(name: str):
     return name in DEVICE_PROFILES
 
 
-def create(name: str, address: str) -> BaseDevice|None:
+def create(name: str, address: str) -> BaseDevice | None:
     if name not in DEVICE_PROFILES:
         return None
 

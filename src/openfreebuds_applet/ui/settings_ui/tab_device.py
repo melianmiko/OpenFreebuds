@@ -8,10 +8,10 @@ from openfreebuds_applet.settings import SettingsStorage
 
 class DeviceSettingsTab(ttk.Frame):
     ANC_CONTROL_OPTIONS = {
-        2: t("noise_control_2"),
         1: t("noise_control_1"),
+        2: t("noise_control_2"),
+        3: t("noise_control_3"),
         4: t("noise_control_4"),
-        3: t("noise_control_3")
     }
     DOUBLE_TAP_OPTIONS = {
         -1: t("tap_action_off"),

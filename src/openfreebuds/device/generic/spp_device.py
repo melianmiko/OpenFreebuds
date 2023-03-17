@@ -8,16 +8,16 @@ from queue import Queue
 import bluetooth
 
 from openfreebuds import event_bus
-from openfreebuds.device.base import BaseDevice
-from openfreebuds.constants.events import EVENT_SPP_CLOSED, EVENT_SPP_RECV
+from openfreebuds.constants.events import EVENT_SPP_CLOSED
+from openfreebuds.device.generic.base import BaseDevice
 
-log = logging.getLogger("SPPDevice")
+log = logging.getLogger("GenericSPPDevice")
 SLEEP_DELAY = 5
 SLEEP_TIME = 20
 
 
-class SppProtocolDevice(BaseDevice):
-    SPP_SERVICE_UUID = ""
+class GenericSppDevice(BaseDevice):
+    spp_service_uuid = ""
 
     def __init__(self, address):
         super().__init__()
@@ -80,7 +80,7 @@ class SppProtocolDevice(BaseDevice):
 
             try:
                 service_data = bluetooth.find_service(address=self.address,
-                                                      uuid=self.SPP_SERVICE_UUID)
+                                                      uuid=self.spp_service_uuid)
                 assert len(service_data) > 0
                 host = service_data[0]['host']
                 port = service_data[0]['port']
@@ -118,7 +118,7 @@ class SppProtocolDevice(BaseDevice):
         log.info("starting recv...")
 
         while not self.closed:
-            result = self._do_recv()
+            result = self.do_socket_read()
             if result is None:
                 break
 
@@ -127,46 +127,14 @@ class SppProtocolDevice(BaseDevice):
         self.closed = True
         event_bus.invoke(EVENT_SPP_CLOSED)
 
-    def _do_recv(self):
-        try:
-            byte = self.socket.recv(4)
-            if byte[0:2] == b"Z\x00":
-                length = byte[2]
-                if length < 4:
-                    self.socket.recv(length)
-                else:
-                    pkg = self.socket.recv(length)
-                    self._process_package(pkg)
-                    event_bus.invoke(EVENT_SPP_RECV)
-        except (TimeoutError, socket.timeout):
-            # Socket timed out, do nothing
-            return False
-        except (ConnectionResetError, ConnectionAbortedError, OSError):
-            # Something bad happened, exiting...
-            return None
-
-        return True
-
     def send(self, data: bytes):
         self._send_queue.put(data)
 
-    def on_wake_up(self):
-        raise Exception("Must be override")
+    def do_socket_read(self):
+        raise Exception("Must be overriden")
 
     def on_init(self):
         raise Exception("Must be override")
-
-    def on_package(self, pkg):
-        raise Exception("Must be override")
-
-    def _process_package(self, pkg):
-        log.debug("recv " + pkg.hex())
-        start = time.time()
-        self.on_package(pkg)
-        process_time = time.time() - start
-
-        if process_time > 0.1:
-            log.debug("Package processing took {}, too long".format(process_time))
 
 
 class SocketConnectionError(Exception):

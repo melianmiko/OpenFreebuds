@@ -28,15 +28,6 @@ class BaseDevice:
         self.closed = False
         self.enable_prop_changed_event = True
         self._prop_storage = {}
-        self.recv_handlers = {}
-        self.set_property_handlers = {}
-
-    def bind_on_package(self, headers, func):
-        for a in headers:
-            self.recv_handlers[a] = func
-
-    def bind_set_property(self, group, prop, func):
-        self.set_property_handlers[group + "___" + prop] = func
 
     def find_group(self, group):
         if group not in self._prop_storage:
@@ -53,10 +44,13 @@ class BaseDevice:
 
         return self._prop_storage[group][prop]
 
-    def set_property(self, group, prop, value):
-        if group + "___" + prop not in self.set_property_handlers:
-            raise Exception("This property isn't writable")
-        self.set_property_handlers[group + "___" + prop](value)
+    def set_property(self, group: str, prop: str, value: str):
+        self.on_set_property(group, prop, value)
+        if self.enable_prop_changed_event:
+            event_bus.invoke(EVENT_DEVICE_PROP_CHANGED)
+
+    def on_set_property(self, group: str, prop: str, value: str):
+        raise Exception("Not overriden")
 
     def put_group(self, group, value):
         self._prop_storage[group] = value
@@ -73,9 +67,6 @@ class BaseDevice:
 
     def list_properties(self):
         return self._prop_storage
-
-    def send_command(self, ints, read=False):
-        raise Exception("Overwrite me!")
 
     def close(self, lock=False):
         raise Exception("Overwrite me!")

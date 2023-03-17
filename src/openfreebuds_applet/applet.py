@@ -9,7 +9,7 @@ import openfreebuds.manager
 from openfreebuds import event_bus
 from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE_PROP_CHANGED, \
     EVENT_MANAGER_STATE_CHANGED
-from openfreebuds.device.base import BaseDevice
+from openfreebuds.device.generic.base import BaseDevice
 from openfreebuds_applet import settings, utils, log_format, base_logger_names
 from openfreebuds_applet.modules import hotkeys, http_server, device_autoconfig
 from openfreebuds_applet.ui import icons, tk_tools, device_select_ui, first_run

@@ -1,7 +1,7 @@
 import logging
 import traceback
 
-from openfreebuds.device.base import BaseDevice
+from openfreebuds.device.generic.base import BaseDevice
 
 log = logging.getLogger("CLI-IO")
 
