@@ -1,11 +1,6 @@
-import tkinter
-from tkinter import ttk
-
 from openfreebuds.manager import FreebudsManager
-from openfreebuds_applet.l18n import t
 from openfreebuds_applet.settings import SettingsStorage
-from openfreebuds_applet.ui.settings_ui.device_options.options import AutoPauseOption, SeparateLongTapLeft, \
-    DoubleTapOptionView, VoiceLanguageOption
+from openfreebuds_applet.ui.settings_ui.device_options.options import *
 
 
 class DeviceSettingsTab(ttk.Frame):
@@ -32,12 +27,17 @@ class DeviceSettingsTab(ttk.Frame):
             SeparateLongTapLeft(),
             DoubleTapOptionView(),
             VoiceLanguageOption(),
+            BaseActionSelectView("power_button"),
+            BaseActionSelectView("long_tap"),
         ]
+
+        glob_y = 20
 
         for option in option_views:
             option.init(self, self.device)
             if option.is_available():
-                option.build()
+                option.build(glob_y)
+                glob_y += option.count_rows
 
     def _add_device_info(self):
         # Device info

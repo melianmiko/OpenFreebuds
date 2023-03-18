@@ -1,7 +1,12 @@
+import tkinter
+from tkinter import ttk
+
 from openfreebuds.device.generic.base import BaseDevice
 
 
 class BaseDeviceOptionView:
+    count_rows = 0
+
     def __init__(self):
         self.device: BaseDevice | None = None
         self.view = None
@@ -20,5 +25,5 @@ class BaseDeviceOptionView:
     def is_available(self):
         return False
 
-    def build(self):
+    def build(self, y):
         pass
