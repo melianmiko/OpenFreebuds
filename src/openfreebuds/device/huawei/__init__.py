@@ -5,4 +5,5 @@ devices = {
     "HUAWEI FreeBuds 5i": FreeBuds4iDevice,
     "HONOR Earbuds 2 Lite": FreeBuds4iDevice,
     "HUAWEI FreeLace Pro": FreeLaceProDevice,
+    "HUAWEI FreeBuds Pro 2": FreeBuds4iDevice,
 }
