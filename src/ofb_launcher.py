@@ -26,12 +26,6 @@ def parse_args():
     parser.add_argument("--verbose",
                         default=False, action="store_true",
                         help="Print debug log to console")
-    parser.add_argument("--settings",
-                        default=False, action="store_true",
-                        help="Directly open app settings")
-    parser.add_argument("--report",
-                        default=False, action="store_true",
-                        help="Generate self-check report")
     parser.add_argument("--shell",
                         default=False, action="store_true",
                         help="Start CLI shell instead of applet")
@@ -68,14 +62,6 @@ def main():
         tk_tools.message(t("no_af_bluetooth"), "Error", _leave)
         applet.tray_application.run()
         return
-
-    if args.report:
-        report = self_check.generate_report(applet)
-        print(report)
-        return
-
-    if args.settings:
-        settings_ui.open_app_settings(applet)
 
     applet.start()
 

@@ -5,8 +5,6 @@ import threading
 import time
 from queue import Queue
 
-import bluetooth
-
 from openfreebuds import event_bus
 from openfreebuds.constants.events import EVENT_SPP_CLOSED
 from openfreebuds.device.generic.base import BaseDevice
@@ -79,17 +77,17 @@ class GenericSppDevice(BaseDevice):
             self.socket.settimeout(2)
 
             try:
+                import bluetooth
                 service_data = bluetooth.find_service(address=self.address,
                                                       uuid=self.spp_service_uuid)
                 assert len(service_data) > 0
                 host = service_data[0]['host']
                 port = service_data[0]['port']
                 log.info(f"Found serial port {host}:{port} from UUID")
-            except (AssertionError, NameError) as e:
-                log.error(f"Can't fetch service info from device, err: {e}")
-                log.warning("Can't fetch serial port info from device, attempt to use "
-                            "fallback port 16. This is issue of pybluez2, to fix uninstall it,"
-                            "then build and install pybluez from one of latest commits")
+            except (AssertionError, NameError, ImportError) as e:
+                log.error("\n\nCan't fetch service info from device, err: {e}\n"
+                          "Looks like pybluez didn't installed or didn't work as expected.\n"
+                          "Using fallback port number 16\n  ")
                 host = self.address
                 port = 16
 
