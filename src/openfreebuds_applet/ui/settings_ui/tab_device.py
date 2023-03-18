@@ -2,6 +2,8 @@ from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.settings import SettingsStorage
 from openfreebuds_applet.ui.settings_ui.device_options.options import *
 
+import tkinter
+import tkinter.font
 
 class DeviceSettingsTab(ttk.Frame):
     def __init__(self, parent: tkinter.Toplevel, manager: FreebudsManager, settings: SettingsStorage):
