@@ -1,8 +1,8 @@
-openfreebuds (0.11.1-1) jammy; urgency=medium
+openfreebuds (0.12-1) jammy; urgency=medium
 
-  * Fix: false error message when switching modes via HTTP/command line
-  * Fix: Give ability to connect recently used device also if auto-switch is enabled
-  * Fix: Crash when switching between devices when auto-switch is enabled
-  * Fix: Mismatch detection that app is already running
+  * New: HUAWEI FreeLace Pro support (full)
+  * New: HUAWEI FreeBuds 5i support (partial)
+  * New: HUAWEI FreeBuds Pro 2 support (partial)
+  * Minor bugfixes
 
  -- MelianMiko <melianmiko@gmail.com>  Fri, 23 Dec 2022 15:11:16 +0700
