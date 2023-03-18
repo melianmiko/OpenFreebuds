@@ -20,7 +20,12 @@ Features:
 
 Supported devices:
 - HUAWEI FreeBuds 4i
+- HUAWEI FreeLace Pro
 - HONOR Earbuds 2 Lite
+
+Partially supported devices (some features are missing):
+- HUAWEI FreeBuds 5i
+- HUAWEI FreeBuds Pro 2 
 
 Installation
 -------------
