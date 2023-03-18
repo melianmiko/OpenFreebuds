@@ -1,11 +1,8 @@
 from openfreebuds.device.generic.base import BaseDevice
-from openfreebuds.device.huawei.profiles import FreeBuds4iDevice, FreeLaceProDevice
+from openfreebuds.device import huawei
 
-DEVICE_PROFILES = {
-    "HUAWEI FreeBuds 4i": FreeBuds4iDevice,
-    "HONOR Earbuds 2 Lite": FreeBuds4iDevice,
-    "HUAWEI FreeLace Pro": FreeLaceProDevice,
-}
+
+DEVICE_PROFILES = huawei.devices
 
 
 def is_supported(name: str):
