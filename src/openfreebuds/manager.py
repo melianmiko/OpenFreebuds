@@ -40,6 +40,10 @@ class FreebudsManager:
         self.config = DeviceConfig()
 
     def set_device(self, name, address):
+        if self.device_name == name and self.device_address == address:
+            log.info("Device already attached, ignoring set_device")
+            return
+
         self.device_name = name
         self.device_address = address
 

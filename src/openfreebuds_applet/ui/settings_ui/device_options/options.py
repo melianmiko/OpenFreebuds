@@ -118,7 +118,7 @@ class DoubleTapOptionView(BaseDeviceOptionView):
 
 class VoiceLanguageOption(BaseDeviceOptionView):
     def is_available(self):
-        langs = self.device.find_property("service", "supported_languages", "").split(",")
+        langs = self.device.find_property("service", "supported_languages", "")
         return len(langs) > 0
 
     def build(self):

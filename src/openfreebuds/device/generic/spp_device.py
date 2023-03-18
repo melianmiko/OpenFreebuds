@@ -17,10 +17,10 @@ SLEEP_TIME = 20
 
 
 class GenericSppDevice(BaseDevice):
-    spp_service_uuid = ""
-
     def __init__(self, address):
         super().__init__()
+        self.spp_service_uuid = ""
+
         self.closed = False
         self.last_pkg = None
         self.address = address

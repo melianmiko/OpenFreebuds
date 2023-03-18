@@ -7,26 +7,38 @@ from openfreebuds.device.huawei.spp_handlers.tws_handlers import *
 
 
 class FreeLaceProDevice(GenericHuaweiSppDevice):
-    handlers = [
-        Drop2b03Handler(),
-        DeviceInfoHandler(),
-        BatteryHandler(),
-        ProAncHandler(),
-        PowerButtonConfigHandler(),
-        LongTapAction(),
-    ]
+    def __init__(self, address):
+        super().__init__(address)
+        self.ui_data = {
+            "anc_levels": {
+                "comfort": 1,
+                "normal": 0,
+                "ultra": 2,
+            }
+        }
+
+        self.handlers = [
+            Drop2b03Handler(),
+            DeviceInfoHandler(),
+            BatteryHandler(),
+            ProAncHandler(),
+            PowerButtonConfigHandler(),
+            LongTapAction(),
+        ]
 
 
 class FreeBuds4iDevice(GenericHuaweiSppDevice):
-    handlers = [
-        DropLogsHandler(),
-        DeviceInfoHandler(),
-        TwsInEarHandler(),
-        SimpleAncHandler(),
-        BatteryHandler(),
-        # TouchpadConfigHandler(),
-        DoubleTapConfigHandler(),
-        SplitLongTapActionConfigHandler(),
-        TwsAutoPauseHandler(),
-        VoiceLanguageHandler(),
-    ]
+    def __init__(self, address):
+        super().__init__(address)
+        self.handlers = [
+            DropLogsHandler(),
+            DeviceInfoHandler(),
+            TwsInEarHandler(),
+            SimpleAncHandler(),
+            BatteryHandler(),
+            # TouchpadConfigHandler(),
+            DoubleTapConfigHandler(),
+            SplitLongTapActionConfigHandler(),
+            TwsAutoPauseHandler(),
+            VoiceLanguageHandler(),
+        ]

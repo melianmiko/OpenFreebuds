@@ -1,6 +1,5 @@
 import logging
 import time
-from socket import socket
 
 from openfreebuds import event_bus
 from openfreebuds.constants.events import EVENT_SPP_RECV
@@ -18,13 +17,16 @@ class IgnoreHandler(HuaweiSppHandler):
 
 
 class GenericHuaweiSppDevice(GenericSppDevice):
-    spp_service_uuid = "00001101-0000-1000-8000-00805f9b34fb"
+    def __init__(self, address):
+        super().__init__(address)
 
-    handlers: list[HuaweiSppHandler] = []
+        self.spp_service_uuid = "00001101-0000-1000-8000-00805f9b34fb"
 
-    _on_prop_change: dict[str, HuaweiSppHandler] = {}
-    _on_package: dict[bytes, HuaweiSppHandler] = {}
-    _ignore_handler = IgnoreHandler()
+        self.handlers: list[HuaweiSppHandler] = []
+
+        self._on_prop_change: dict[str, HuaweiSppHandler] = {}
+        self._on_package: dict[bytes, HuaweiSppHandler] = {}
+        self._ignore_handler = IgnoreHandler()
 
     @with_no_prop_changed_event
     def on_init(self):

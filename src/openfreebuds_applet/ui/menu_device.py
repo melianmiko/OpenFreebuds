@@ -46,7 +46,18 @@ class DevicePowerMenu(Menu):
     def on_build(self):
         device = self.manager.device
         props = device.find_group("battery")
-        for n in props:
+        if "case" in props:
+            # TWS view
+            self._build_tws(props)
+            return
+
+        if "global" in props:
+            # Global only view
+            value = "--" if props["global"] == 0 else props["global"]
+            self.add_item(t("battery_global").format(value), enabled=False)
+
+    def _build_tws(self, props):
+        for n in ["left", "right", "case"]:
             battery = props[n]
             if battery == 0:
                 battery = "--"
@@ -69,10 +80,39 @@ class NoiseControlMenu(Menu):
         next_mode = (current + 1) % 3
 
         for a in range(0, 3):
-            self.add_item(text=t("noise_mode_{}".format(a),),
-                          action=self.set_mode, args=[a],
-                          checked=current == a, default=next_mode == a)
+            self.add_item(text=t("noise_mode_{}".format(a)),
+                          action=self.set_mode,
+                          args=[a],
+                          checked=current == a,
+                          default=next_mode == a)
+
+        if current == 1 and device.find_property("anc", "level", -99) != -99:
+            self.add_submenu(t("anc_level"), AncLevelSubmenu(self.manager))
 
     def set_mode(self, val):
         device = self.manager.device
         device.set_property("anc", "mode", val)
+
+
+class AncLevelSubmenu(Menu):
+    def __init__(self, manager: FreebudsManager):
+        super().__init__()
+        self.manager = manager
+
+    def on_build(self):
+        device = self.manager.device
+        if "anc_levels" not in device.ui_data:
+            return
+        current = device.find_property("anc", "level", -1)
+        options = device.ui_data["anc_levels"]
+
+        for key_name in options:
+            val = options[key_name]
+            self.add_item(text=t("anc_level_{}".format(key_name)),
+                          action=self.set_level,
+                          args=[val],
+                          checked=current == val)
+
+    def set_level(self, val):
+        device = self.manager.device
+        device.set_property("anc", "level", val)
