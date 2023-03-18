@@ -10,6 +10,13 @@ import openfreebuds_backend
 current_tray_application = None
 
 
+def reverse_dict_props(obj):
+    res = {}
+    for a in obj:
+        res[obj[a]] = a
+    return res
+
+
 def get_version():
     from version_info import VERSION
     return VERSION
