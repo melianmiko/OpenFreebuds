@@ -37,7 +37,7 @@ def is_running():
 
         try:
             executable = (process / "exe").readlink().name
-        except PermissionError:
+        except (PermissionError, FileNotFoundError):
             continue
 
         if not executable.startswith("python"):
