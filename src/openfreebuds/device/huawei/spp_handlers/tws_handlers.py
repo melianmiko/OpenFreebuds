@@ -46,27 +46,3 @@ class TwsInEarHandler(HuaweiSppHandler):
         value = package.find_param(8, 9)
         if len(value) == 1:
             self.device.put_property("state", "in_ear", value[0] == 1)
-
-
-class TwsBatteryHandler(HuaweiSppHandler):
-    """
-    TWS battery read handler
-    """
-
-    handle_commands = [b'\x01\x08', b'\x01\'']
-
-    def on_init(self):
-        self.device.send_package(HuaweiSppPackage(b"\x01\x08", [
-            (1, b""),
-            (2, b""),
-            (3, b"")
-        ]), True)
-
-    def on_package(self, package: HuaweiSppPackage):
-        if 2 in package.parameters and len(package.parameters) > 0:
-            level = package.parameters[2]
-            self.device.put_group("battery", {
-                "left": level[0],
-                "right": level[1],
-                "case": level[2]
-            })

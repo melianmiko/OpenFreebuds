@@ -44,12 +44,12 @@ class BaseDevice:
 
         return self._prop_storage[group][prop]
 
-    def set_property(self, group: str, prop: str, value: str):
+    def set_property(self, group: str, prop: str, value):
         self.on_set_property(group, prop, value)
         if self.enable_prop_changed_event:
             event_bus.invoke(EVENT_DEVICE_PROP_CHANGED)
 
-    def on_set_property(self, group: str, prop: str, value: str):
+    def on_set_property(self, group: str, prop: str, value):
         raise Exception("Not overriden")
 
     def put_group(self, group, value):
