@@ -18,7 +18,7 @@ def create():
 
 
 class FreebudsManager:
-    MAINLOOP_TIMEOUT = 4
+    MAINLOOP_TIMEOUT = 1
 
     STATE_NO_DEV = 0
     STATE_OFFLINE = 1
@@ -43,8 +43,8 @@ class FreebudsManager:
         self.device_name = name
         self.device_address = address
 
-        if self._is_thread_alive():
-            self.close()
+        log.debug("Waiting for finish current manager...")
+        self.close(True)
 
         self._must_leave = False
         if self.config.SAFE_RUN_WRAPPER is None:
@@ -62,13 +62,16 @@ class FreebudsManager:
         Exit manager thread NOW
         """
         if not self._is_thread_alive():
+            log.info("Don't started, nothing to close")
             return
 
-        log.info("closing...")
-        self._must_leave = False
+        log.info("Closing manager thread...")
+        self._must_leave = True
 
         if lock:
             self._thread.join()
+
+        log.info("Manager thread closed from close()...")
 
     def _close_device(self):
         # Close spp if it was started

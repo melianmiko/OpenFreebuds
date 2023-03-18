@@ -113,6 +113,8 @@ def async_with_ui(display_name):
             with_ui_exception(display_name)(func)(*args, **kwargs)
 
         def _internal(*args, **kwargs):
-            return threading.Thread(target=_thread, args=args, kwargs=kwargs).start()
+            thread = threading.Thread(target=_thread, args=args, kwargs=kwargs)
+            thread.start()
+            return thread
         return _internal
     return _wrapper
