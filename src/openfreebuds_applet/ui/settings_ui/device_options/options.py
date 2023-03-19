@@ -68,7 +68,7 @@ class SeparateLongTapLeft(BaseDeviceOptionView):
         self.device.set_property("action", "long_tap_left", val)
 
     def _toggle_noise_control_left(self, _):
-        key = self.variable.get()
+        key = self.variable2.get()
         val = utils.reverse_dict_props(self.ANC_CONTROL_OPTIONS)[key]
         self.device.set_property("action", "noise_control_left", val)
 
