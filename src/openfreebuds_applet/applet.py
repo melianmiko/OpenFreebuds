@@ -88,6 +88,7 @@ class FreebudsApplet:
         if not self.allow_ui_update:
             return
 
+        # Fetch info
         mgr_state = self.manager.state
         if mgr_state == self.manager.STATE_CONNECTED:
             dev = self.manager.device  # type: BaseDevice
@@ -100,12 +101,20 @@ class FreebudsApplet:
             battery = 0
             noise_mode = 0
 
+        # Hashsum
         new_hash = icons.get_hash(mgr_state, battery, noise_mode)
         if self.current_icon_hash == new_hash:
             return
 
+        # Title
+        if mgr_state == self.manager.STATE_CONNECTED:
+            title = f"{self.manager.device_name} | {battery}%"
+        else:
+            title = "OpenFreebuds"
+
         log.info(f"Change icon: {new_hash}")
         self.tray_application.icon = icons.generate_icon(mgr_state, battery, noise_mode)
+        self.tray_application.title = title
         self.current_icon_hash = new_hash
 
     def apply_menu(self, menu):
