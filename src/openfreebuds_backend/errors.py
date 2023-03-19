@@ -1,0 +1,2 @@
+class BluetoothNotAvailableError(ValueError):
+    pass

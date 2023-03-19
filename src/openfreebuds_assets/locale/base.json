@@ -10,6 +10,7 @@
   "action_disconnect": "Disconnect device",
   "option_run_at_boot": "Run application on boot",
   "no_af_bluetooth": "Current Python interpreter didn't support Bluetooth.\n\nSome variants of Python 3 are compiled without BT socket\nsupport, and this application won't work on them. Please\nuse standard Python 3.10 or newer to run OFB.",
+  "no_bluetooth_error": "Can't list bluetooth devices, is your Bluetooth adapter connected and enabled?\n\nIf it's connected and enabled, looks like they isn't compatible.",
   "option_show_update_dialog": "Show update dialog on start",
   "application_running_message": "Application already running, check status area.\n\n If app don't response, stop it from system task manager, \nand then try again.",
   "battery_case": "Battery case: {}%",

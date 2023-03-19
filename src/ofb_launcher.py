@@ -15,6 +15,7 @@ from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import http_server, self_check
 from openfreebuds_applet.settings import SettingsStorage
 from openfreebuds_applet.ui import tk_tools, settings_ui
+from openfreebuds_backend.errors import BluetoothNotAvailableError
 
 log = logging.getLogger("OfbLauncher")
 
@@ -52,18 +53,33 @@ def main():
         return
 
     applet = openfreebuds_applet.create()
-    if utils.is_running():
-        # noinspection PyUnresolvedReferences,PyProtectedMember
-        tk_tools.message(t("application_running_message"), "Error", _leave)
+    if is_start_possible(applet):
+        # Start is allowed, running
+        applet.start()
+    else:
+        # Run main thread to make windows interactive
         applet.tray_application.run()
-        return
 
+
+def is_start_possible(applet):
+    # Is already running?
+    if utils.is_running():
+        tk_tools.message(t("application_running_message"), "Error", _leave)
+        return False
+
+    # Is python built with AF_BLUETOOTH support?
     if not getattr(socket, "AF_BLUETOOTH", False):
         tk_tools.message(t("no_af_bluetooth"), "Error", _leave)
-        applet.tray_application.run()
-        return
+        return False
 
-    applet.start()
+    # Is bluetooth adapter accessible
+    try:
+        openfreebuds_backend.bt_list_devices()
+    except BluetoothNotAvailableError:
+        tk_tools.message(t("no_bluetooth_error"), "Error", _leave)
+        return False
+
+    return True
 
 
 def do_command(command):

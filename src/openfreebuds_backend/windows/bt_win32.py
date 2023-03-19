@@ -5,14 +5,15 @@ import os
 import subprocess
 import webbrowser
 
-# noinspection PyUnresolvedReferences
+# noinspection PyUnresolvedReferences,PyPackageRequirements
 from winsdk.windows.devices.bluetooth import BluetoothDevice
-# noinspection PyUnresolvedReferences
+# noinspection PyUnresolvedReferences,PyPackageRequirements
 from winsdk.windows.devices.enumeration import DeviceInformation, DeviceInformationKind
-# noinspection PyUnresolvedReferences
+# noinspection PyUnresolvedReferences,PyPackageRequirements
 from winsdk.windows.networking import HostName
 
 from openfreebuds_applet.l18n import t
+from openfreebuds_backend.errors import BluetoothNotAvailableError
 
 extra_tools_dir = 'C:\\Program Files (x86)\\Bluetooth Command Line Tools\\bin'
 extra_tools_url = "https://bluetoothinstaller.com/bluetooth-command-line-tools/BluetoothCLTools-1.2.0.56.exe"
@@ -28,9 +29,8 @@ def bt_is_connected(address):
             host_name = HostName(address)
             bt_device = await BluetoothDevice.from_host_name_async(host_name)
             return bt_device.connection_status
-        except OSError as e:
-            log.warn("Got OSError, looks like bt adapter is missing\n" + str(e))
-            return False
+        except OSError:
+            raise BluetoothNotAvailableError("Got OSError, looks like bluetooth isn't installed")
     return asyncio.run(run())
 
 
@@ -96,8 +96,8 @@ def bt_list_devices():
                     "address": bt_device.host_name.raw_name[1:-1],
                     "connected": bt_device.connection_status
                 })
-        except OSError as e:
-            log.warn("Got OSError, looks like bt adapter is missing\n" + str(e))
+        except OSError:
+            raise BluetoothNotAvailableError("Got OSError, looks like bluetooth isn't installed")
 
         return out
     return asyncio.run(run())
