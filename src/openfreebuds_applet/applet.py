@@ -89,20 +89,16 @@ class FreebudsApplet:
             return
 
         mgr_state = self.manager.state
-        battery = 0
-        noise_mode = 0
-
         if mgr_state == self.manager.STATE_CONNECTED:
             dev = self.manager.device  # type: BaseDevice
 
-            battery_left = dev.find_property("battery", "left", 0)
-            battery_right = dev.find_property("battery", "right", 0)
-            if battery_left == 0:
-                battery_left = 100
-            if battery_right == 0:
-                battery_right = 100
             noise_mode = dev.find_property("anc", "mode", 0)
-            battery = min(battery_right, battery_left)
+            battery = dev.find_property("battery", "global", 0)
+            if battery == 0:
+                battery = 100
+        else:
+            battery = 0
+            noise_mode = 0
 
         new_hash = icons.get_hash(mgr_state, battery, noise_mode)
         if self.current_icon_hash == new_hash:
