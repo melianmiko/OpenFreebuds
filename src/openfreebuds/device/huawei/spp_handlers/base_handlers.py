@@ -10,8 +10,8 @@ class DropLogsHandler(HuaweiSppHandler):
     ignore_commands = [b"\x0a\x0d"]
 
 
-class Drop2b03Handler(HuaweiSppHandler):
-    ignore_commands = [b"\x2b\x03"]
+# class Drop2b03Handler(HuaweiSppHandler):
+#     ignore_commands = [b"\x2b\x03"]
 
 
 class BatteryHandler(HuaweiSppHandler):

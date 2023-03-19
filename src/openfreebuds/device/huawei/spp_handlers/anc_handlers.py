@@ -36,6 +36,19 @@ class SimpleAncHandler(HuaweiSppHandler):
         ]))
 
 
+class AncChangeDetectionHandler(HuaweiSppHandler):
+    """
+    This handler wait for 2b03 command package to
+    detect ANC mode change via on-device button
+    """
+    handle_commands = [b"\x2b\x03"]
+
+    def on_package(self, package: HuaweiSppPackage):
+        data = package.find_param(1)
+        if len(data) == 1 and 0 <= data[0] <= 2:
+            self.device.put_property("anc", "mode", data[0])
+
+
 class ProAncHandler(HuaweiSppHandler):
     """
     Pro ANC mode switching handler.

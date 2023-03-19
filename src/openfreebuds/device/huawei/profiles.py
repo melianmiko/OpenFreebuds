@@ -29,10 +29,11 @@ class FreeLaceProDevice(GenericHuaweiSppDevice):
         }
 
         self.handlers = [
-            Drop2b03Handler(),
+            # Drop2b03Handler(),
             DeviceInfoHandler(),
             BatteryHandler(),
             ProAncHandler(),
+            AncChangeDetectionHandler(),
             PowerButtonConfigHandler(),
             LongTapAction(),
         ]
