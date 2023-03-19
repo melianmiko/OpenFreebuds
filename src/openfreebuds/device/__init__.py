@@ -2,15 +2,21 @@ from openfreebuds.device.generic.base import BaseDevice
 from openfreebuds.device import huawei
 
 
-DEVICE_PROFILES = huawei.devices
+SUPPORTED_DEVICES = huawei.devices
+PROFILES = huawei.profiles
 
 
 def is_supported(name: str):
-    return name in DEVICE_PROFILES
+    if name not in SUPPORTED_DEVICES:
+        return False
+
+    level, profile = SUPPORTED_DEVICES[name]
+    return level == "full" or level == "partial"
 
 
 def create(name: str, address: str) -> BaseDevice | None:
-    if name not in DEVICE_PROFILES:
+    if name not in SUPPORTED_DEVICES:
         return None
 
-    return DEVICE_PROFILES[name](address)
+    level, profile = SUPPORTED_DEVICES[name]
+    return profile(address)

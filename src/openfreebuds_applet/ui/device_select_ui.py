@@ -22,7 +22,7 @@ def start(settings: SettingsStorage, manager: FreebudsManager):
 
     tk_tools.setup_window(root)
 
-    ttk.Label(root, text=t("first_run_message")) \
+    ttk.Label(root, text=t("action_select_device")) \
         .grid(sticky=tkinter.NW, columnspan=10, row=0, column=0, padx=16, pady=16)
 
     pane = ttk.Panedwindow(root, height=300)
@@ -72,7 +72,7 @@ def start(settings: SettingsStorage, manager: FreebudsManager):
         if values[0] != "pin":
             status.config(text=" ")
             return
-        status.config(text=t("address_prefix") + ": " + values[1])
+        status.config(text=t("address_prefix") + ": " + values[2])
 
     # Rebuild list
     # noinspection PyTypeChecker
@@ -106,7 +106,7 @@ def start(settings: SettingsStorage, manager: FreebudsManager):
 
 @tk_tools.ui_thread
 def setup_manually_ui(address, settings, manager):
-    profiles = list(device.DEVICE_PROFILES.keys())
+    profiles = list(device.PROFILES.keys())
 
     root = tkinter.Toplevel()
     selected = tkinter.StringVar(value=profiles[0])

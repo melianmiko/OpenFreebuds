@@ -2,14 +2,10 @@ import tkinter
 import webbrowser
 from tkinter import ttk
 
-from PIL import ImageTk, Image
-
 import openfreebuds.device
-import openfreebuds_backend
 from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.ui import dev_console
-from openfreebuds_applet.modules import self_check
 
 
 def make_about(parent, applet):
@@ -21,13 +17,14 @@ def make_about(parent, applet):
     def source():
         webbrowser.open("https://github.com/melianmiko/OpenFreebuds")
 
-    def do_report(_):
-        report = self_check.generate_report(applet)
-        path = str(utils.get_app_storage_dir()) + "/report.txt"
-        with open(path, "w") as f:
-            f.write(report)
-
-        openfreebuds_backend.open_file(path)
+    # TODO: Refactor report tool
+    # def do_report(_):
+    #     report = self_check.generate_report(applet)
+    #     path = str(utils.get_app_storage_dir()) + "/report.txt"
+    #     with open(path, "w") as f:
+    #         f.write(report)
+    #
+    #     openfreebuds_backend.open_file(path)
 
     def do_console(_):
         dev_console.start(applet.manager)
@@ -55,8 +52,9 @@ def make_about(parent, applet):
         .grid(row=30, padx=16, pady=16, columnspan=3, sticky=tkinter.NW)
 
     counter = 31
-    for a in openfreebuds.device.DEVICE_PROFILES:
-        ttk.Label(frame, text="- {}".format(a)).grid(row=counter, padx=16, pady=4, columnspan=3, sticky=tkinter.NW)
+    for name in openfreebuds.device.SUPPORTED_DEVICES:
+        ttk.Label(frame, text="- {}".format(name))\
+            .grid(row=counter, padx=16, pady=4, columnspan=3, sticky=tkinter.NW)
         counter += 1
 
     # Adv. label
@@ -64,9 +62,9 @@ def make_about(parent, applet):
         .grid(row=60, padx=16, pady=16, columnspan=3, sticky=tkinter.NW)
 
     # Report button
-    link = ttk.Label(frame, text=t("action_mk_report"), foreground="#04F", cursor="hand2")
-    link.bind("<Button-1>", do_report)
-    link.grid(row=61, columnspan=3, padx=16, pady=4, sticky=tkinter.NW)
+    # link = ttk.Label(frame, text=t("action_mk_report"), foreground="#04F", cursor="hand2")
+    # link.bind("<Button-1>", do_report)
+    # link.grid(row=61, columnspan=3, padx=16, pady=4, sticky=tkinter.NW)
 
     # Console button
     link = ttk.Label(frame, text=t("action_dev_console"), foreground="#04F", cursor="hand2")
