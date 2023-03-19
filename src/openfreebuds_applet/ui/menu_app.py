@@ -1,10 +1,7 @@
-from mtrayapp import Menu
+from pystrayx import Menu
 
-import openfreebuds_backend
-from openfreebuds import cli_io
-from openfreebuds_applet import utils
-from openfreebuds_applet.ui import settings_ui, dev_console, device_select_ui
 from openfreebuds_applet.l18n import t
+from openfreebuds_applet.ui import settings_ui, device_select_ui
 
 
 class ApplicationMenuPart(Menu):

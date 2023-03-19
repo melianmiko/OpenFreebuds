@@ -1,4 +1,4 @@
-from mtrayapp import Menu
+from pystrayx import Menu
 
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t

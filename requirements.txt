@@ -1,8 +1,9 @@
-mtrayapp==1.0.2
+pystray==0.19.4
 pynput~=1.7.6
 sv-ttk==2.4
-pybluez-edge==2022.12.6
 mmk-updater==0.13.1
+
+pybluez-edge==2022.12.6
 
 Pillow~=9.3.0
 

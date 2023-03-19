@@ -3,7 +3,7 @@ import os
 from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import actions
-from mtrayapp import Menu
+from pystrayx import Menu
 
 
 class QuitingMenu(Menu):

@@ -3,7 +3,7 @@ import os
 import signal
 from io import StringIO
 
-import mtrayapp
+import pystrayx
 
 import openfreebuds.manager
 from openfreebuds import event_bus
@@ -39,10 +39,10 @@ class FreebudsApplet:
         self.menu_scan = DeviceScanMenu(self)
         self.menu_device = DeviceMenu(self)
 
-        self.tray_application = mtrayapp.TrayApplication(name="OpenFreebuds",
+        self.tray_application = pystrayx.TrayApplication(name="OpenFreebuds",
                                                          title="OpenFreebuds",
                                                          icon=icons.generate_icon(1),
-                                                         menu=mtrayapp.Menu())
+                                                         menu=pystrayx.Menu())
 
     @utils.with_ui_exception("MainThread")
     def start(self):

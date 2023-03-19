@@ -1,6 +1,6 @@
 DESTDIR=
 
-all: lib/mtrayapp lib/pynput lib/sv_ttk lib/bluetooth
+all: lib/pystray lib/pynput lib/sv_ttk
 	# Copy all contents to builddir
 	rm -rf builddir/openfreebuds
 	mkdir -p builddir/openfreebuds
@@ -10,7 +10,7 @@ all: lib/mtrayapp lib/pynput lib/sv_ttk lib/bluetooth
 	# Wipe cache
 	find builddir/openfreebuds -type d -name "__pycache__" -exec rm -rf {} +
 
-lib/mtrayapp lib/pynput lib/sv_ttk lib/bluetooth:
+lib/pystray lib/pynput lib/sv_ttk:
 	mkdir -p lib
 
 	# Fetch libraries that will be packaged into deb-file
