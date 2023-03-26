@@ -73,11 +73,11 @@ def is_start_possible(applet):
         return False
 
     # Is bluetooth adapter accessible
-    try:
-        openfreebuds_backend.bt_list_devices()
-    except BluetoothNotAvailableError:
-        tk_tools.message(t("no_bluetooth_error"), "Error", _leave)
-        return False
+    # try:
+    #     openfreebuds_backend.bt_list_devices()
+    # except BluetoothNotAvailableError:
+    #     tk_tools.message(t("no_bluetooth_error"), "Error", _leave)
+    #     return False
 
     return True
 
