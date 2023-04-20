@@ -1,4 +1,4 @@
-openfreebuds (0.12.1-1) jammy; urgency=medium
+openfreebuds (0.12.1-2) bookworm kinetic jammy; urgency=medium
 
   * New: HUAWEI FreeLace Pro support (full)
   * New: HUAWEI FreeBuds 5i support (partial)

@@ -89,15 +89,19 @@ def bt_list_devices():
         try:
             selector = BluetoothDevice.get_device_selector_from_pairing_state(True)
             devices = await DeviceInformation.find_all_async(selector, [], DeviceInformationKind.DEVICE)
-            for a in devices:
+        except OSError:
+            raise BluetoothNotAvailableError("Got OSError, looks like bluetooth isn't installed")
+
+        for a in devices:
+            try:
                 bt_device = await BluetoothDevice.from_id_async(a.id)
                 out.append({
                     "name": bt_device.name,
                     "address": bt_device.host_name.raw_name[1:-1],
                     "connected": bt_device.connection_status
                 })
-        except OSError:
-            raise BluetoothNotAvailableError("Got OSError, looks like bluetooth isn't installed")
+            except OSError:
+                pass
 
         return out
     return asyncio.run(run())
