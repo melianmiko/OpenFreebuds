@@ -21,9 +21,8 @@ def make_win32():
 	if os.path.isdir("dist"):
 		shutil.rmtree("dist")
 
-	subprocess.Popen(["npm.cmd", "run", "build"]).wait()
 	subprocess.Popen([r"venv\Scripts\pyinstaller.exe", "openfreebuds.spec"]).wait()
-	subprocess.Popen([r"C:\Program Files (x86)\NSIS\Bin\makensis.exe", "openfreebuds.nsi"])
+	subprocess.Popen([r"C:\Program Files (x86)\NSIS\Bin\makensis.exe", "openfreebuds.nsi"]).wait()
 
 	os.rename(r"dist\openfreebuds.install.exe", f"dist\\openfreebuds_{version_info.VERSION}_win32.exe")
 
