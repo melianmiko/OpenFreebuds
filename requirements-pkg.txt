@@ -1,4 +1,4 @@
 pystray==0.19.4
 pynput~=1.7.6
-sv-ttk==2.4
-mmk-updater==0.13.1
+sv-ttk==2.4.5
+mmk-updater==0.14
