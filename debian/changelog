@@ -1,3 +1,12 @@
+openfreebuds (0.12.2-1) bookworm kinetic jammy; urgency=medium
+
+  * Fix: Crash in Windows 10-11
+  * Packaging: declare min Python version
+  * Update dependencies (Pillow, mmk_updater, sv_ttk)
+  * Begin migration from Launchpad PPA
+
+ -- MelianMiko <melianmiko@gmail.com>  Tue, 09 May 2023 15:11:38 +0700
+
 openfreebuds (0.12.1-2) bookworm kinetic jammy; urgency=medium
 
   * New: HUAWEI FreeLace Pro support (full)
