@@ -1,4 +1,4 @@
-openfreebuds (0.12.2-1) bookworm kinetic jammy; urgency=medium
+openfreebuds (0.12.2-1) jammy; urgency=medium
 
   * Fix: Crash in Windows 10-11
   * Packaging: declare min Python version
