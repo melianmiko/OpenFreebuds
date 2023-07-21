@@ -140,4 +140,4 @@ def _parse_win32_key_vk(vk: int):
 
 def _wayland_callback(result):
     if result:
-        webbrowser.open("https://melianmiko.ru/posts/openfreebuds-faq/")
+        webbrowser.open("https://mmk.pw/posts/openfreebuds-faq/")

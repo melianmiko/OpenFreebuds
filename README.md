@@ -9,7 +9,7 @@
 Desktop application to manage your HUAWEI FreeBuds device.
 Written in Python, available for Windows and Linux.
 
-- [💿 **Download binaries**](https://melianmiko.ru/en/openfreebuds)
+- [💿 **Download binaries**](https://mmk.pw/en/openfreebuds/)
 - [🌍 Translate to your language](https://crowdin.com/project/openfreebuds)
 
 Features:
@@ -30,16 +30,15 @@ Partially supported devices (some features are missing):
 Installation
 -------------
 
-**Windows, Debian**: 
-get binary packages [here](https://melianmiko.ru/en/openfreebuds).
+**Windows**: 
+get binary packages [here](https://mmk.pw/en/openfreebuds).
 
 **Arch Linux**: 
 [available in AUR](https://aur.archlinux.org/packages/openfreebuds)
 
-**Ubuntu 22.04-22.10**:
+**Debian, Ubuntu 22.04-23.04**:
 ```shell
-sudo add-apt-repository ppa:melianmiko/software
-sudo apt update
+curl -Sl https://deb.mmk.pw/setup | sudo bash -
 sudo apt install openfreebuds
 ```
 

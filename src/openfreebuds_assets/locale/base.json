@@ -1,5 +1,5 @@
 {
-  "app_site_url": "https://melianmiko.ru/en/openfreebuds/help",
+  "app_site_url": "https://mmk.pw/en/openfreebuds/",
   "action_exit": "Leave application",
   "action_settings": "Settings...",
   "action_select_device": "Change device...",
@@ -28,7 +28,7 @@
   "action_next_mode": "Change noise control mode",
   "hotkeys_wayland": "Global hotkeys won't work correctly under Wayland.",
   "hotkeys_wayland_link": "Alternative way",
-  "hotkeys_wayland_url": "https://melianmiko.ru/en/openfreebuds/help",
+  "hotkeys_wayland_url": "https://mmk.pw/en/openfreebuds/help",
   "mgr_state_0": "Device don't exist",
   "mgr_state_1": "Device don't connected",
   "mgr_state_2": "Waiting for connect...",

@@ -15,7 +15,7 @@ def make_about(parent, applet):
         webbrowser.open(t("app_site_url"))
 
     def source():
-        webbrowser.open("https://github.com/melianmiko/OpenFreebuds")
+        webbrowser.open("https://github.com/melianmiko/openfreebuds")
 
     # TODO: Refactor report tool
     # def do_report(_):

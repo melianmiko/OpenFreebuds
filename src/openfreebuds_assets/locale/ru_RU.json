@@ -1,5 +1,5 @@
 {
-  "app_site_url": "https://melianmiko.ru/openfreebuds/help",
+  "app_site_url": "https://mmk.pw/openfreebuds/",
   "action_exit": "Выйти из программы",
   "action_settings": "Настройки...",
   "action_select_device": "Сменить устройство...",
@@ -28,7 +28,7 @@
   "action_next_mode": "Сменить режим шумоподавления",
   "hotkeys_wayland": "Сочетания клавиш скорее всего не будут работать в Wayland.",
   "hotkeys_wayland_link": "Другие решения проблемы",
-  "hotkeys_wayland_url": "https://melianmiko.ru/openfreebuds/help",
+  "hotkeys_wayland_url": "https://mmk.pw/openfreebuds/help",
   "mgr_state_0": "Устройство не существует",
   "mgr_state_1": "Не подключено",
   "mgr_state_2": "Ждём подключения...",
