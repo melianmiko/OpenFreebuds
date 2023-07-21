@@ -8,7 +8,7 @@ from openfreebuds_applet import utils
 from openfreebuds_applet.settings import SettingsStorage
 from openfreebuds_applet.ui import tk_tools
 
-release_url = "https://st.melianmiko.ru/openfreebuds/release.json"
+release_url = "https://st.mmk.pw/openfreebuds/release.json"
 log = logging.getLogger("UpdateChecker")
 
 

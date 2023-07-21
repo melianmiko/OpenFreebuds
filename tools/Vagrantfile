@@ -1,0 +1,119 @@
+# For windows\macOS
+use_folders = [
+  "src"
+]
+
+use_files = [
+  "requirements.txt",
+  "requirements-pkg.txt",
+  "openfreebuds.spec",
+  "openfreebuds.nsi"
+]
+
+# For normal OS images which have RSync
+exclude_files = [
+  "venv",
+  "build",
+  "dist",
+  "lib",
+  "tools/output"
+]
+
+Vagrant.configure("2") do |config|
+
+  # Link output folder (also used for temporary files
+  config.vm.synced_folder "./output", "/home/vagrant/output"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  # ------------------------------
+  #      Make Debian package
+  # ------------------------------
+  config.vm.define "make_debian" do |debian|
+    # Config
+    debian.vm.box = "debian/bullseye64"
+    debian.vm.provider "virtualbox" do |v|
+      v.memory = 512
+      v.cpus = 1
+      v.linked_clone = true
+    end
+    
+    # Set up rsync
+    debian.vm.synced_folder "../", "/home/vagrant/openfreebuds", type: "rsync", rsync__exclude: exclude_files
+
+    # Install dependencies
+    debian.vm.provision "Install dependencies", type: "shell", run: "once", inline: <<-SHELL
+      cd openfreebuds
+      MAKE_DEPS=$(perl -ne 'next if /^#/; $p=(s/^Build-Depends:\\s*/ / or (/^ / and $p)); s/,|\\n|\\([^)]+\\)//mg; print if $p' < debian/control)
+      echo Deps: $MAKE_DEPS
+
+      sudo apt install -y build-essential $MAKE_DEPS
+    SHELL
+
+    # Run dpkg
+    debian.vm.provision "Build project", type: "shell", run: "always", inline: <<-SHELL
+      cd openfreebuds
+
+      echo "Build Debian package..."
+      dpkg-buildpackage -b
+      cp ../*.deb ../output/
+    SHELL
+
+    if ENV['vg_auto_halt'] == "true"
+      debian.vm.provision "Auto-poweroff", type: "shell", privileged: false, run: "always", inline: <<-SHELL
+        (sleep 15 && sudo poweroff) &
+      SHELL
+    end
+  end
+
+  # ------------------------------
+  #        Make Windows
+  # ------------------------------
+  config.vm.define "make_windows" do |win|
+    # Configure
+    win.vm.box = "gusztavvargadr/windows-server-2022-standard-core"
+    win.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+      v.cpus = 4
+      v.linked_clone = true
+    end
+
+    # Install deps
+    win.vm.provision "Install dependencies (with choco)", type: "shell", privileged: true, run: "once", inline: <<-SHELL
+      choco install python311 upx nsis -y --no-progress
+      
+      mkdir C:\\openfreebuds\\
+    SHELL
+
+    # Link project files (wtf provision "file" dont have exclude option??)
+    # RSync don't work with that image
+    for item in use_folders do
+      win.vm.provision "file", source: "../#{item}/.", destination: "/openfreebuds/", run: "always"
+    end
+    for item in use_files do
+      win.vm.provision "file", source: "../#{item}", destination: "/openfreebuds/", run: "always"
+    end
+
+    # Perform build
+    win.vm.provision "Build project", type: "shell", run: "always", inline: <<-SHELL
+      cd C:\\openfreebuds
+
+      echo "Make venv..."
+      python3.11 -m venv venv
+      
+      echo "Installing python deps..."
+      ./venv/Scripts/pip install -r requirements.txt
+
+      echo "Run make-release"
+      ./venv/Scripts/python make_release.py
+
+      echo "Collect artifacts..."
+      cp dist\\*.zip C:\\home\\vagrant\\output\\
+    SHELL
+
+    if ENV['vg_auto_halt'] == "true"
+      win.vm.provision "Auto-poweroff", type: "shell", privileged: false, run: "always", inline: <<-SHELL
+        shutdown -s -t 15
+      SHELL
+    end
+  end
+end

@@ -1,7 +1,7 @@
 pystray==0.19.4
 pynput~=1.7.6
 sv-ttk==2.4.5
-mmk-updater==0.14
+mmk-updater==0.14.1
 
 pybluez-edge==2022.12.6
 
@@ -10,5 +10,5 @@ Pillow~=9.5.0
 PyGObject==3.44.1; sys_platform == "linux"
 dbus-python==1.3.2; sys_platform == "linux"
 
-pyinstaller==5.7.0; sys_platform == "win32"
+pyinstaller==5.12.0; sys_platform == "win32"
 winsdk==1.0.0b7; sys_platform == "win32"
