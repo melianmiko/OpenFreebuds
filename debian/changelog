@@ -1,8 +1,8 @@
-openfreebuds (0.12.3-1) bookworm jammy kinetic lunar; urgency=medium
+openfreebuds (0.12.3-2) bookworm jammy kinetic lunar; urgency=medium
 
   * Fix update checker crash
 
- -- MelianMiko <support@mmk.pw>
+ -- MelianMiko <support@mmk.pw>  Fri, 21 Jul 2023 15:19:00 +0700
 
 openfreebuds (0.12.2-2) bookworm jammy kinetic lunar; urgency=medium
 

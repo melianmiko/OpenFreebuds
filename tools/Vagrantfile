@@ -7,7 +7,8 @@ use_files = [
   "requirements.txt",
   "requirements-pkg.txt",
   "openfreebuds.spec",
-  "openfreebuds.nsi"
+  "openfreebuds.nsi",
+  "make_release.py"
 ]
 
 # For normal OS images which have RSync
@@ -87,10 +88,10 @@ Vagrant.configure("2") do |config|
     # Link project files (wtf provision "file" dont have exclude option??)
     # RSync don't work with that image
     for item in use_folders do
-      win.vm.provision "file", source: "../#{item}/.", destination: "/openfreebuds/", run: "always"
+      win.vm.provision "file", source: "../#{item}/.", destination: "C:/openfreebuds/", run: "always"
     end
     for item in use_files do
-      win.vm.provision "file", source: "../#{item}", destination: "/openfreebuds/", run: "always"
+      win.vm.provision "file", source: "../#{item}", destination: "C:/openfreebuds/", run: "always"
     end
 
     # Perform build
@@ -107,7 +108,7 @@ Vagrant.configure("2") do |config|
       ./venv/Scripts/python make_release.py
 
       echo "Collect artifacts..."
-      cp dist\\*.zip C:\\home\\vagrant\\output\\
+      cp dist\\*.exe C:\\home\\vagrant\\output\\
     SHELL
 
     if ENV['vg_auto_halt'] == "true"

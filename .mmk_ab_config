@@ -1,0 +1,11 @@
+
+# This is build & deploy config
+# for my private auto-build script =)
+
+PROJECT_ID=openfreebuds
+PROJECT_SERVER_DIR=openfreebuds
+PROJECT_URL=https://mmk.pw/en/openfreebuds/
+
+WITH_WIN32=true
+WITH_DPKG=true
+
