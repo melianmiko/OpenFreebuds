@@ -18,6 +18,7 @@ class GenericSppDevice(BaseDevice):
     def __init__(self, address):
         super().__init__()
         self.spp_service_uuid = ""
+        self.spp_fallback_port = 1
 
         self.closed = False
         self.last_pkg = None
@@ -85,11 +86,11 @@ class GenericSppDevice(BaseDevice):
                 port = service_data[0]['port']
                 log.info(f"Found serial port {host}:{port} from UUID")
             except (AssertionError, NameError, ImportError) as e:
-                log.error("\n\nCan't fetch service info from device, err: {e}\n"
+                log.error(f"\n\nCan't fetch service info from device, err: {e}\n"
                           "Looks like pybluez didn't installed or didn't work as expected.\n"
                           "Using fallback port number 16\n  ")
                 host = self.address
-                port = 16
+                port = self.spp_fallback_port
 
             self.socket.connect((host, port))
         except (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError, OSError, ValueError):

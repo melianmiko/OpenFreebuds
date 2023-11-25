@@ -18,6 +18,7 @@ class SettingsStorage:
         self.first_run = True
 
         self.enable_hotkeys = False
+        self.enable_mpris_helper = False
         self.enable_server = False
         self.server_access = False
         self.enable_update_dialog = True

@@ -84,6 +84,7 @@
   "settings_tab_device": "Device",
   "settings_tab_app": "Application",
   "settings_tab_hotkeys": "Hotkeys",
+  "settings_tab_linux": "For linux",
   "settings_tab_about": "About",
   "open_website": "Website",
   "open_github": "Source code",
@@ -107,5 +108,7 @@
   "category_tested": "Supported devices",
   "category_extras": "Extra options",
   "action_mk_report": "Create report for developer...",
-  "action_dev_console": "Start device console (danger!)..."
+  "action_dev_console": "Start device console (danger!)...",
+  "option_mpris_helper": "Enable MPRIS-helper",
+  "option_mpris_helper_guide": "Try this option if auto-pause doesn't work wit your desktop\nenvironment. Note that only MPRIS-compatible\nmedia players are supported (mostly all standalone\nplayer and browsers support this API)."
 }

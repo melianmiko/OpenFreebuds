@@ -106,30 +106,30 @@ class HotkeyRecorder:
         result += str(self._main_key).replace("'", "")
         return result
 
-    def on_press(self, key):
+    def on_press(self, pressed_key):
         from pynput import keyboard
-        if isinstance(key, keyboard.Key):
-            val = str(key)\
+        if isinstance(pressed_key, keyboard.Key):
+            val = str(pressed_key)\
                 .replace("Key.", "")\
                 .replace("_l", "")
             if val not in self._specials:
                 self._specials.append(val)
 
-    def on_release(self, key):
+    def on_release(self, pressed_key):
         from pynput import keyboard
-        if isinstance(key, keyboard.Key):
-            val = str(key).replace("Key.", "")
+        if isinstance(pressed_key, keyboard.Key):
+            val = str(pressed_key).replace("Key.", "")
             if val == "esc":
                 self.cancel()
                 return
             if val in self._specials:
                 self._specials.remove(val)
-        elif str(key) not in self.ignored_keys:
+        elif str(pressed_key) not in self.ignored_keys:
             if len(self._specials) < 1:
                 return
             if sys.platform == "win32":
-                key = _parse_win32_key_vk(key.vk)
-            self._main_key = str(key)
+                pressed_key = _parse_win32_key_vk(pressed_key.vk)
+            self._main_key = str(pressed_key)
             self._result = True
             self._finish()
 
