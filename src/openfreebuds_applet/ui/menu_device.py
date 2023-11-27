@@ -77,6 +77,8 @@ class NoiseControlMenu(Menu):
     def on_build(self):
         device = self.manager.device
         current = device.find_property("anc", "mode", -1)
+        if current == -1:
+            return
         next_mode = (current + 1) % 3
 
         for a in range(0, 3):
