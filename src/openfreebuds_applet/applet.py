@@ -3,15 +3,14 @@ import os
 import signal
 from io import StringIO
 
-import pystrayx
-
 import openfreebuds.manager
+import pystrayx
 from openfreebuds import event_bus
 from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE_PROP_CHANGED, \
     EVENT_MANAGER_STATE_CHANGED
 from openfreebuds.device.generic.base import BaseDevice
 from openfreebuds_applet import settings, utils, log_format, base_logger_names
-from openfreebuds_applet.modules import hotkeys, http_server, device_autoconfig, mpris_helper
+from openfreebuds_applet.modules import hotkeys, http_server, device_autoconfig, ModuleManager
 from openfreebuds_applet.ui import icons, tk_tools, device_select_ui, first_run
 from openfreebuds_applet.ui.base import QuitingMenu
 from openfreebuds_applet.ui.menu_device import DeviceMenu
@@ -35,6 +34,8 @@ class FreebudsApplet:
         self.manager.config.SAFE_RUN_WRAPPER = utils.safe_run_wrapper
         self.manager.config.USE_SOCKET_SLEEP = self.settings.enable_sleep
 
+        self.modules = ModuleManager(self.settings, self.manager)
+
         self.menu_offline = DeviceOfflineMenu(self)
         self.menu_scan = DeviceScanMenu(self)
         self.menu_device = DeviceMenu(self)
@@ -51,7 +52,10 @@ class FreebudsApplet:
 
         hotkeys.start(self)
         http_server.start(self)
-        mpris_helper.start(self)
+        # mpris_helper.start(self)
+
+        log.info("Loading all modules...")
+        self.modules.autostart()
 
         try:
             from openfreebuds_applet.modules import updater

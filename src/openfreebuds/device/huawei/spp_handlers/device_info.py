@@ -29,7 +29,6 @@ class DeviceInfoHandler(HuaweiSppHandler):
         out = {}
         for key in package.parameters:
             if key not in self.descriptor:
-                log.info(f"Unknown device info field, id={key}, value={package.parameters[key].hex()}")
                 continue
             out[self.descriptor[key]] = package.parameters[key].decode("utf8")
         self.device.put_group("info", out)

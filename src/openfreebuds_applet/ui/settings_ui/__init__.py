@@ -8,7 +8,7 @@ from openfreebuds_applet.ui.settings_ui import tab_about
 from openfreebuds_applet.ui.settings_ui.tab_application import AppSettingsTab
 from openfreebuds_applet.ui.settings_ui.tab_device import DeviceSettingsTab
 from openfreebuds_applet.ui.settings_ui.tab_hotkeys import HotkeysSettingsTab
-from openfreebuds_applet.ui.settings_ui.tab_linux import LinuxSettingsTab
+from openfreebuds_applet.ui.settings_ui.tab_modules import ModulesSettingsTab
 
 SETTINGS_SIZES = [550, 650]
 
@@ -37,7 +37,7 @@ def open_app_settings(applet):
     notebook.add(HotkeysSettingsTab(notebook, applet), text=t("settings_tab_hotkeys"))
 
     if sys.platform == "linux":
-        notebook.add(LinuxSettingsTab(notebook, applet), text=t("settings_tab_linux"))
+        notebook.add(ModulesSettingsTab(notebook, applet), text=t("settings_tab_linux"))
 
     notebook.add(tab_about.make_about(notebook, applet), text=t("settings_tab_about"))
 

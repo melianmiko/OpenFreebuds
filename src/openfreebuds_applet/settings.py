@@ -17,6 +17,8 @@ class SettingsStorage:
         self.icon_theme = "auto"
         self.first_run = True
 
+        self.modules = {}
+
         self.enable_hotkeys = False
         self.enable_mpris_helper = False
         self.enable_server = False
