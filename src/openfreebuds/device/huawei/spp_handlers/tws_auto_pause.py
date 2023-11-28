@@ -11,6 +11,7 @@ class TwsAutoPauseHandler(HuaweiSppHandler):
     TWS pause when plug off config handler
     """
 
+    handler_id = "tws_auto_pause"
     handle_commands = [b'\x2b\x11', b'\x2b\x10']
     handle_props = [
         ("config", "auto_pause"),
@@ -30,19 +31,3 @@ class TwsAutoPauseHandler(HuaweiSppHandler):
         self.device.send_package(HuaweiSppPackage(b"\x2b\x10", [
             (1, value)
         ]), True)
-
-
-class TwsInEarHandler(HuaweiSppHandler):
-    """
-    TWS in-ear state detection handler
-    """
-
-    handle_commands = [b'+\x03']
-
-    def on_init(self):
-        self.device.put_property("state", "in_ear", False)
-
-    def on_package(self, package: HuaweiSppPackage):
-        value = package.find_param(8, 9)
-        if len(value) == 1:
-            self.device.put_property("state", "in_ear", value[0] == 1)

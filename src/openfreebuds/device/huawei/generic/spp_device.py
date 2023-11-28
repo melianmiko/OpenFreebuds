@@ -4,9 +4,9 @@ import time
 from openfreebuds import event_bus
 from openfreebuds.constants.events import EVENT_SPP_RECV
 from openfreebuds.device.generic.base import with_no_prop_changed_event
-from openfreebuds.device.generic.spp_device import GenericSppDevice
 from openfreebuds.device.huawei.generic.spp_handler import HuaweiSppHandler
 from openfreebuds.device.huawei.generic.spp_package import HuaweiSppPackage
+from openfreebuds.device.huawei.interfaces.spp_device import HuaweiSppDevice
 
 log = logging.getLogger("GenericHuaweiSppDevice")
 
@@ -16,7 +16,7 @@ class IgnoreHandler(HuaweiSppHandler):
         pass
 
 
-class GenericHuaweiSppDevice(GenericSppDevice):
+class GenericHuaweiSppDevice(HuaweiSppDevice):
     def __init__(self, address):
         super().__init__(address)
 
