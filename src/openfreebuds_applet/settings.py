@@ -22,7 +22,7 @@ class SettingsStorage:
 
     def _read(self):
         path = utils.get_app_storage_dir() / "settings.json"
-        logging.debug("Using config path: " + path)
+        logging.debug(f"Using config path: {path}")
         if not os.path.isfile(path):
             return
 

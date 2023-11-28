@@ -57,7 +57,7 @@ class ModulesSettingsTab(ttk.Frame):
         self.vars[ident] = tkinter.BooleanVar(value=mod.get_property("enabled", False))
 
         fr = tkinter.Frame(self)
-        fr.grid(column=0, padx=16, pady=4, sticky=tkinter.NW)
+        fr.grid(column=0, padx=16, pady=8, sticky=tkinter.NW)
         fr.grid_columnconfigure(2, weight=1)
 
         enable_checkbox = ttk.Checkbutton(fr,
@@ -83,4 +83,4 @@ class ModulesSettingsTab(ttk.Frame):
         ttk.Label(fr,
                   text=mod.description,
                   font=info_fnt) \
-            .grid(column=0, row=1, sticky=tkinter.NW, pady=8, columnspan=3)
+            .grid(column=0, row=1, sticky=tkinter.NW, pady=(8, 0), columnspan=3)
