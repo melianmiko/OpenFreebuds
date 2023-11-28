@@ -1,8 +1,10 @@
 import logging
+import tkinter
 from copy import deepcopy
 
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet import utils
+from openfreebuds_applet.l18n import t
 from openfreebuds_applet.settings import SettingsStorage
 
 log = logging.getLogger("AppletModule")
@@ -12,7 +14,9 @@ class GenericModule:
     ident: str = ""
     name: str = ""
     description: str = ""
+    order: int = 99
     hidden: bool = False
+    crashed: bool = False
     os_filter: list[str] | None = None
     def_settings: dict[str, any] = {
         "enabled": False
@@ -38,15 +42,17 @@ class GenericModule:
                 changed = True
         return changed
 
+    @property
+    def settings(self):
+        return self.app_settings.modules[self.ident]
+
     def get_property(self, key: str, fallback: any = None) -> any:
-        settings = self.app_settings.modules[self.ident]
-        if key not in settings:
+        if key not in self.settings:
             return fallback
-        return settings[key]
+        return self.settings[key]
 
     def set_property(self, key: str, value: any):
-        settings = self.app_settings.modules[self.ident]
-        settings[key] = value
+        self.settings[key] = value
         self.app_settings.write()
 
     @utils.async_with_ui("Module")
@@ -65,4 +71,20 @@ class GenericModule:
     def mainloop(self):
         pass
 
+    def make_settings_frame(self, parent: tkinter.BaseWidget) -> tkinter.Frame | None:
+        f = tkinter.Frame(parent)
+        tkinter.Label(f, text=t("module_no_settings")).pack()
+        return f
 
+
+class FailedModule(GenericModule):
+    crashed = True
+
+    def __init__(self, ident, error):
+        super().__init__()
+        self.ident = ident
+        self.name = ident
+        self.description = error
+
+    def get_property(self, key: str, fallback: any = None) -> any:
+        return fallback

@@ -57,11 +57,6 @@ def get_assets_path():
     raise Exception("assets dir not found")
 
 
-def open_app_storage_dir():
-    path = str(get_app_storage_dir())
-    openfreebuds_backend.open_in_file_manager(path)
-
-
 def get_app_storage_dir():
     path = openfreebuds_backend.get_app_storage_path() / "openfreebuds"
     if not path.is_dir():
@@ -69,20 +64,9 @@ def get_app_storage_dir():
     return path
 
 
-def get_lock_file_path():
-    path = get_app_storage_dir()
-    return str(path / "lock.pid")
-
-
 def get_settings_path():
     path = get_app_storage_dir()
     return str(path / "settings.json")
-
-
-def get_log_filename():
-    path = get_app_storage_dir()
-    time_tag = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M")
-    return str(path / (time_tag + ".log"))
 
 
 def safe_run_wrapper(func, display_name, _):

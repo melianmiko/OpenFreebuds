@@ -1,4 +1,3 @@
-import sys
 import tkinter
 from tkinter import ttk
 
@@ -7,7 +6,6 @@ from openfreebuds_applet.ui import tk_tools
 from openfreebuds_applet.ui.settings_ui import tab_about
 from openfreebuds_applet.ui.settings_ui.tab_application import AppSettingsTab
 from openfreebuds_applet.ui.settings_ui.tab_device import DeviceSettingsTab
-from openfreebuds_applet.ui.settings_ui.tab_hotkeys import HotkeysSettingsTab
 from openfreebuds_applet.ui.settings_ui.tab_modules import ModulesSettingsTab
 
 SETTINGS_SIZES = [550, 650]
@@ -34,10 +32,8 @@ def open_app_settings(applet):
         notebook.add(DeviceSettingsTab(tk, applet.manager, applet.settings), text=t("settings_tab_device"))
 
     notebook.add(AppSettingsTab(notebook, applet), text=t("settings_tab_app"))
-    notebook.add(HotkeysSettingsTab(notebook, applet), text=t("settings_tab_hotkeys"))
-
-    if sys.platform == "linux":
-        notebook.add(ModulesSettingsTab(notebook, applet), text=t("settings_tab_linux"))
+    # notebook.add(HotkeysSettingsTab(notebook, applet.modules.modules['hotkeys']), text=t("settings_tab_hotkeys"))
+    notebook.add(ModulesSettingsTab(notebook, applet), text=t("settings_tab_modules"))
 
     notebook.add(tab_about.make_about(notebook, applet), text=t("settings_tab_about"))
 

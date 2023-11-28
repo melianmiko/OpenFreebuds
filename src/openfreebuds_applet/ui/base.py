@@ -49,13 +49,14 @@ class HeaderMenuPart(Menu):
         self.add_separator()
 
     def add_updater(self):
+        # noinspection PyBroadException
         try:
-            from openfreebuds_applet.modules import updater
+            updater = self.applet.modules.modules["update_check"]
             has_update, new_version = updater.get_result()
             self.add_item(text=t('action_update').format(new_version),
                           action=updater.show_update_message,
                           visible=has_update)
-        except ModuleNotFoundError:
+        except Exception:
             pass
 
     @utils.async_with_ui("DoConnect")

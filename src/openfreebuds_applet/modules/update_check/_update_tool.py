@@ -1,40 +1,15 @@
 import logging
 
 from mmk_updater import UpdaterTool
-from mmk_updater.ui_tkinter import TkinterUiMod
+
 from openfreebuds import event_bus
 from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds_applet import utils
+from openfreebuds_applet.modules.update_check._update_ui import FreebudsUpdateUiMod
+from openfreebuds_applet.modules.update_check._url import release_url
 from openfreebuds_applet.settings import SettingsStorage
-from openfreebuds_applet.ui import tk_tools
 
-release_url = "https://st.mmk.pw/openfreebuds/release.json"
 log = logging.getLogger("UpdateChecker")
-
-
-class Data:
-    updater = None      # type: FreebudsUpdater
-
-
-def get_result():
-    return Data.updater.has_update, Data.updater.new_version
-
-
-def start(applet):
-    Data.updater = FreebudsUpdater(applet.settings)
-    Data.updater.start()
-
-
-def show_update_message():
-    Data.updater.show_update_dialog()
-
-
-class FreebudsUpdateUiMod(TkinterUiMod):
-    def __init__(self):
-        super().__init__()
-
-    def init_tk(self):
-        return tk_tools.get_root()
 
 
 class FreebudsUpdater(UpdaterTool):
@@ -54,3 +29,6 @@ class FreebudsUpdater(UpdaterTool):
         self.new_version = self.release_data["version"]
         self.has_update = self.current_version != self.release_data["version"]
         event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
+
+    def start(self):
+        self._process()

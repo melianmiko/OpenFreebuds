@@ -9,7 +9,9 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[('.\\src\\openfreebuds_assets', 'openfreebuds_assets'), ('.\\venv\\Lib\\site-packages\\sv_ttk', 'sv_ttk')],
-    hiddenimports=[],
+    hiddenimports=[
+        'openfreebuds_applet.modules.*'
+    ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

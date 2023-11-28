@@ -3,7 +3,7 @@ import logging
 from pkgutil import walk_packages
 
 from openfreebuds.manager import FreebudsManager
-from openfreebuds_applet.modules.generic import GenericModule
+from openfreebuds_applet.modules.generic import GenericModule, FailedModule
 from openfreebuds_applet.settings import SettingsStorage
 
 log = logging.getLogger("ModuleManager")
@@ -19,9 +19,12 @@ class ModuleManager:
     def _load(self):
         for o in walk_packages(__path__):
             if o.ispkg:
-                imported = importlib.import_module(f"openfreebuds_applet.modules.{o.name}")
-                module = imported.Module()  # type: GenericModule
-                module.connect(self._app_settings, self._app_manager)
+                try:
+                    imported = importlib.import_module(f"openfreebuds_applet.modules.{o.name}")
+                    module = imported.Module()  # type: GenericModule
+                    module.connect(self._app_settings, self._app_manager)
+                except ModuleNotFoundError as e:
+                    module = FailedModule(o.name, str(e))
                 self.modules[module.ident] = module
 
     def autostart(self):

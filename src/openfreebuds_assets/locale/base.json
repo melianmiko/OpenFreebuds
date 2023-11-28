@@ -84,7 +84,7 @@
   "settings_tab_device": "Device",
   "settings_tab_app": "Application",
   "settings_tab_hotkeys": "Hotkeys",
-  "settings_tab_linux": "For linux",
+  "settings_tab_modules": "Modules",
   "settings_tab_about": "About",
   "open_website": "Website",
   "open_github": "Source code",
@@ -109,6 +109,14 @@
   "category_extras": "Extra options",
   "action_mk_report": "Create report for developer...",
   "action_dev_console": "Start device console (danger!)...",
-  "option_mpris_helper": "Enable MPRIS-helper",
-  "option_mpris_helper_guide": "Try this option if auto-pause doesn't work wit your desktop\nenvironment. Note that only MPRIS-compatible\nmedia players are supported (mostly all standalone\nplayer and browsers support this API)."
+  "button_settings": "Settings",
+  "module_no_settings": "This module don't have any options",
+  "option_mpris_helper": "MPRIS-helper",
+  "option_mpris_helper_guide": "Try this option if auto-pause doesn't work wit your desktop\nenvironment. Note that only MPRIS-compatible\nmedia players are supported (mostly all standalone\nplayer and browsers support this API).",
+  "module_restart_required": "Re-enable module to apply changes",
+  "module_http_server": "HTTP-server",
+  "http_server_info": "Allows managing OpenFreebuds from other apps or devices",
+  "module_updater": "Update checker",
+  "updater_info": "Auto-check for updates and show \"New version\" dialog",
+  "hotkeys_info": "Manage OpenFreebuds via keyboard shortcuts"
 }

@@ -1,4 +1,5 @@
 import logging
+import tkinter
 
 from openfreebuds import event_bus
 from openfreebuds.constants.events import EVENT_DEVICE_PROP_CHANGED
@@ -11,8 +12,8 @@ log = logging.getLogger("MprisHelper")
 
 class Module(GenericModule):
     ident = "mpris_helper"
-    name = t("MPRIS-helper")
-    description = "Enable this if auto-pause don't work"
+    name = t("option_mpris_helper")
+    description = t("option_mpris_helper_guide")
 
     os_filter = ["linux"]
     def_settings = {

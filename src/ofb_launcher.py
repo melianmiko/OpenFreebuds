@@ -94,7 +94,7 @@ def do_command(command):
 
 
 def _do_command_webserver(command):
-    port = http_server.get_port()
+    port = 21201
 
     try:
         url = "http://localhost:{}/{}".format(port, command)

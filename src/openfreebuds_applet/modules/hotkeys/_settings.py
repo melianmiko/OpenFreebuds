@@ -5,57 +5,44 @@ import webbrowser
 from tkinter import ttk
 
 from openfreebuds_applet.l18n import t
-from openfreebuds_applet.modules import hotkeys, actions
+from openfreebuds_applet.modules import actions
+from openfreebuds_applet.modules.hotkeys import _recorder
 from openfreebuds_applet.settings import SettingsStorage
 from openfreebuds_applet.ui import tk_tools
 
 log = logging.getLogger("SettingsHotkeysTab")
 
 
-class HotkeysSettingsTab(ttk.Frame):
-    def __init__(self, parent, applet):
+class HotkeysSettings(ttk.Frame):
+    def __init__(self, parent, module):
         super().__init__(parent)
-        self.applet = applet
-        self.settings = applet.settings     # type: SettingsStorage
+        self.module = module
+        self.settings = module.app_settings     # type: SettingsStorage
         self.is_recording = False
         self.av_error = ""
-        self.recorder = hotkeys.HotkeyRecorder()
+        self.recorder = _recorder.HotkeyRecorder()
         self.grid()
         self.grid_columnconfigure(0, weight=1)
-
-        self.var_main_sw = tkinter.BooleanVar(value=self.settings.enable_hotkeys)
 
         if not self._ui_available():
             return
 
-        ttk.Checkbutton(self, text=t("prop_enabled"),
-                        style="Switch.TCheckbutton",
-                        variable=self.var_main_sw,
-                        command=self._toggle_main)\
-            .grid(row=0, sticky=tkinter.NW, padx=16, pady=16, columnspan=3)
-
         self.row_counter = 0
         self.hotkeys_root = ttk.Frame(self)
         self.hotkeys_root.grid_columnconfigure(0, weight=1)
-        self._update_hotkeys_visible()
+        self.hotkeys_root.grid(column=0, row=3, sticky=tkinter.NSEW, pady=16)
 
         all_actions = actions.get_action_names()
         for a in all_actions:
             self._add_hotkey(a, all_actions[a])
 
-    def _update_hotkeys_visible(self):
-        if self.var_main_sw.get():
-            self.hotkeys_root.grid(column=0, row=3, sticky=tkinter.NSEW)
-        else:
-            self.hotkeys_root.grid_remove()
-
     def _add_hotkey(self, action, display_name):
         variable = tkinter.StringVar()
 
         st_val = "---"
-        if action in self.settings.hotkeys_config_2:
-            if self.settings.hotkeys_config_2[action] != "":
-                st_val = self.settings.hotkeys_config_2[action]
+        if action in self.module.settings:
+            if self.module.settings[action] != "":
+                st_val = self.module.settings[action]
         variable.set(st_val)
 
         def _on_click():
@@ -64,9 +51,8 @@ class HotkeysSettingsTab(ttk.Frame):
             self._update_hotkey(variable, action)
 
         def _wipe():
-            self.settings.hotkeys_config_2[action] = ""
-            self.settings.write()
-            hotkeys.start(self.applet)
+            self.module.set_property(action, "")
+            self.module.start()
             variable.set("---")
 
         ttk.Label(self.hotkeys_root, text=display_name) \
@@ -103,25 +89,18 @@ class HotkeysSettingsTab(ttk.Frame):
         _check()
 
     def _apply_hotkey(self, action, val, ui_var):
-        self.settings.hotkeys_config_2[action] = val
+        self.module.set_property(action, val)
         self.settings.write()
-        hotkeys.start(self.applet)
+        self.module.start()
 
         ui_var.set(val)
         self.is_recording = False
-
-    def _toggle_main(self):
-        self.settings.enable_hotkeys = not self.settings.enable_hotkeys
-        self.settings.write()
-        self._update_hotkeys_visible()
-
-        hotkeys.start(self.applet)
 
     def _show_compat_error_message(self):
         tk_tools.message(self.av_error, "OpenFreebuds")
 
     def _ui_available(self):
-        is_available, av_error = hotkeys.test_available()
+        is_available, av_error = self.module.test_available()
         if not is_available:
             log.warning(av_error)
             self.av_error = av_error
@@ -132,7 +111,7 @@ class HotkeysSettingsTab(ttk.Frame):
                 .grid(row=2, padx=16, pady=4, sticky=tkinter.NW)
             return False
 
-        is_supported, sp_error = hotkeys.test_os_supported()
+        is_supported, sp_error = _recorder.test_os_supported()
         if not is_supported:
             log.warning(sp_error)
             ttk.Label(self, text=t("hotkeys_wayland")) \
