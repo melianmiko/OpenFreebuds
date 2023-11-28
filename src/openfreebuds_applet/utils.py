@@ -7,8 +7,6 @@ import traceback
 
 import openfreebuds_backend
 
-current_tray_application = None
-
 
 def reverse_dict_props(obj):
     res = {}
@@ -35,14 +33,6 @@ def items_hash_string(items):
     return hashlib.sha1(hs.encode("utf8")).hexdigest()
 
 
-def is_running():
-    result = openfreebuds_backend.is_running()
-    if result:
-        logging.warning(f"Application already started, pid {result}")
-        return True
-    return False
-
-
 def get_assets_path():
     assets_dir_name = "openfreebuds_assets"
     path = os.path.dirname(os.path.realpath(__file__))
@@ -62,11 +52,6 @@ def get_app_storage_dir():
     if not path.is_dir():
         path.mkdir()
     return path
-
-
-def get_settings_path():
-    path = get_app_storage_dir()
-    return str(path / "settings.json")
 
 
 def safe_run_wrapper(func, display_name, _):

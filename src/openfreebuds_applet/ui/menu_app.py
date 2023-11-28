@@ -1,7 +1,8 @@
 from pystrayx import Menu
 
 from openfreebuds_applet.l18n import t
-from openfreebuds_applet.ui import settings_ui, device_select_ui
+from openfreebuds_applet.ui import settings_ui
+from openfreebuds_applet.dialog import device_select
 
 
 class ApplicationMenuPart(Menu):
@@ -21,7 +22,7 @@ class ApplicationMenuPart(Menu):
         self.add_item(t("action_exit"), self.applet.exit)
 
     def open_device_picker(self):
-        device_select_ui.start(self.applet.settings, self.applet.manager)
+        device_select.start(self.applet.settings, self.applet.manager)
 
     def open_settings(self):
         settings_ui.open_app_settings(self.applet)

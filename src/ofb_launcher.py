@@ -65,7 +65,7 @@ def main():
 
 def is_start_possible(applet):
     # Is already running?
-    if utils.is_running():
+    if openfreebuds_backend.is_running():
         tk_tools.message(t("application_running_message"), "Error", _leave)
         return False
 
@@ -85,7 +85,7 @@ def is_start_possible(applet):
 
 
 def do_command(command):
-    if utils.is_running():
+    if openfreebuds_backend.is_running():
         log.debug("App is launched, using HTTP server to process command...")
         _do_command_webserver(command)
     else:

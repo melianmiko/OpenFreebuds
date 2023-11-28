@@ -11,7 +11,8 @@ from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE
 from openfreebuds.device.generic.base import BaseDevice
 from openfreebuds_applet import settings, utils, log_format, base_logger_names
 from openfreebuds_applet.modules import device_autoconfig, ModuleManager
-from openfreebuds_applet.ui import icons, tk_tools, device_select_ui, first_run
+from openfreebuds_applet.ui import icons, tk_tools
+from openfreebuds_applet.dialog import first_run, device_select
 from openfreebuds_applet.ui.base import QuitingMenu
 from openfreebuds_applet.ui.menu_device import DeviceMenu
 from openfreebuds_applet.ui.menu_no_device import DeviceOfflineMenu, DeviceScanMenu
@@ -32,7 +33,7 @@ class FreebudsApplet:
 
         self.manager = openfreebuds.manager.create()
         self.manager.config.SAFE_RUN_WRAPPER = utils.safe_run_wrapper
-        self.manager.config.USE_SOCKET_SLEEP = self.settings.enable_sleep
+        # self.manager.config.USE_SOCKET_SLEEP = self.settings.enable_sleep
 
         self.modules = ModuleManager(self.settings, self.manager)
 
@@ -151,7 +152,7 @@ class FreebudsApplet:
             self.manager.set_device(self.settings.device_name, self.settings.address)
         elif not self.settings.device_autoconfig:
             log.info("No device and no autoconfig, show device picker...")
-            device_select_ui.start(self.settings, self.manager)
+            device_select.start(self.settings, self.manager)
 
         if self.settings.first_run:
             first_run.show(self.settings, self.manager)

@@ -28,8 +28,7 @@ class Module(GenericModule):
         auto_pause_enabled = False
         if self.app_manager.device:
             auto_pause_enabled = self.app_manager.device.find_property("config", "auto_pause", 0) > 0
-
-        return self.app_settings.enable_mpris_helper and auto_pause_enabled
+        return auto_pause_enabled
 
     def pause_all(self):
         self.paused_players = []

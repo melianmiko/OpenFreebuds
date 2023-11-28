@@ -69,20 +69,6 @@ class AppSettingsTab(ttk.Frame):
     def _toggle_run_at_boot(self):
         openfreebuds_backend.set_run_at_boot(self.var_run_at_boot.get())
 
-    def _toggle_show_update_dialog(self):
-        self.settings.enable_update_dialog = not self.settings.enable_update_dialog
-        self.settings.write()
-
-    def _toggle_compact_mode(self):
-        self.settings.compact_menu = not self.settings.compact_menu
-        self.settings.write()
-        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
-
-    def _toggle_debug(self):
-        self.settings.enable_debug_features = not self.settings.enable_debug_features
-        self.settings.write()
-        event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
-
     def _get_theme_values(self):
         return dict((y, x) for x, y in self.THEME_OPTIONS.items())
 

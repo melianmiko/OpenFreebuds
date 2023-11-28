@@ -165,5 +165,3 @@ def apply_device(settings, manager, name, address, autoconfig=False):
         manager.set_device(name, address)
     else:
         device_autoconfig.process(manager, settings)
-
-    # tk_tools.message(t("welcome_tray_message"), "OpenFreebuds")

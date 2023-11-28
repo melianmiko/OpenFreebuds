@@ -21,8 +21,6 @@ class FreebudsUpdater(UpdaterTool):
         self.settings = settings
 
     def should_show_update_ui(self):
-        if not self.settings.enable_update_dialog:
-            return False
         return super().should_show_update_ui()
 
     def on_release_data(self):

@@ -25,7 +25,8 @@ def generate_report(applet):
     # Settings
     try:
         report += ("-- settings file\n")
-        with open(utils.get_settings_path(), "r") as f:
+        path = utils.get_app_storage_dir() / "settings.json"
+        with open(path, "r") as f:
             settings = json.loads(f.read())
             report += json.dumps(settings, indent=2) + "\n"
     except Exception:

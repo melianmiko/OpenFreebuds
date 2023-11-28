@@ -7,7 +7,8 @@ import openfreebuds_backend
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.settings import SettingsStorage
-from openfreebuds_applet.ui import tk_tools, device_select_ui
+from openfreebuds_applet.ui import tk_tools
+from openfreebuds_applet.dialog import device_select
 
 log = logging.getLogger("FirstRun")
 
@@ -32,7 +33,7 @@ def show(settings: SettingsStorage, manager: FreebudsManager):
         if var_run_at_boot.get():
             openfreebuds_backend.set_run_at_boot(True)
         if var_config.get():
-            device_select_ui.start(settings, manager)
+            device_select.start(settings, manager)
 
     ttk.Label(root, text=t("first_run_text"), wraplength=500)\
         .pack(padx=12, pady=12, expand=True)

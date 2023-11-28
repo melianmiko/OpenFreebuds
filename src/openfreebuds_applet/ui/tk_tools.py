@@ -38,7 +38,11 @@ def get_root():
         Config.tk_root.withdraw()
 
         MakeTkDPIAware(Config.tk_root)
-        apply_theme()
+
+        try:
+            sv_ttk.set_theme(Config.theme)
+        except tkinter.TclError:
+            logging.exception("Can't set tkinter theme")
 
         complete.set()
         Config.tk_root.mainloop()
@@ -50,25 +54,6 @@ def get_root():
         complete.wait()
 
     return Config.tk_root
-
-
-def apply_theme():
-    try:
-        sv_ttk.set_theme(Config.theme)
-    except tkinter.TclError:
-        logging.exception("Can't set tkinter theme")
-
-
-def stop_ui():
-    if Config.tk_root is None:
-        return
-
-    @ui_thread
-    def _int():
-        Config.tk_root.destroy()
-        Config.tk_root = None
-
-    _int()
 
 
 def set_theme(theme: str):

@@ -16,25 +16,12 @@ class SettingsStorage:
         self.theme = "auto"
         self.icon_theme = "auto"
         self.first_run = True
-
         self.modules = {}
-
-        self.enable_hotkeys = False
-        self.enable_mpris_helper = False
-        self.enable_server = False
-        self.server_access = False
-        self.enable_update_dialog = True
-        self.enable_debug_features = False
-        self.enable_sleep = False
-
-        self.hotkeys_config_2 = {
-            "next_mode": "<ctrl>+<alt>+q"
-        }
 
         self._read()
 
     def _read(self):
-        path = utils.get_settings_path()
+        path = utils.get_app_storage_dir() / "settings.json"
         logging.debug("Using config path: " + path)
         if not os.path.isfile(path):
             return
@@ -48,7 +35,7 @@ class SettingsStorage:
             logging.warning("Can't load saved config")
 
     def write(self):
-        path = utils.get_settings_path()
+        path = utils.get_app_storage_dir() / "settings.json"
 
         with open(path, "w") as f:
             f.write(json.dumps(self.__dict__))

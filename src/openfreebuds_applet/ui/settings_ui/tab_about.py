@@ -6,7 +6,7 @@ import openfreebuds.device
 import openfreebuds_backend
 from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
-from openfreebuds_applet.ui import dev_console
+from openfreebuds_applet.dialog import dev_console
 from openfreebuds_applet.utils import get_app_storage_dir
 
 LINK_TRANSLATE = "https://crowdin.com/project/openfreebuds"
