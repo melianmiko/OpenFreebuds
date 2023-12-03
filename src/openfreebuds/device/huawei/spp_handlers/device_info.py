@@ -19,10 +19,9 @@ class DeviceInfoHandler(HuaweiSppHandler):
     }
 
     def on_init(self):
+        # Try to fetch so much props as we can
         self.device.send_package(HuaweiSppPackage(b"\x01\x07", [
-            (1, b""), (2, b""), (3, b""), (4, b""), (5, b""),
-            (6, b""), (7, b""), (8, b""), (9, b""), (10, b""),
-            (11, b""), (12, b""), (15, b""), (25, b""),
+            (n, b"") for n in range(32)
         ]), True)
 
     def on_package(self, package: HuaweiSppPackage):

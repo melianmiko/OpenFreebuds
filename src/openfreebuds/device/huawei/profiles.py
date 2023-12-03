@@ -18,6 +18,9 @@ class FreeLaceProDevice(GenericHuaweiSppDevice):
     def __init__(self, address):
         super().__init__(address)
 
+        # Add cooldown to prevent device hang
+        self.spp_connect_sleep = 1
+
         self.handlers = [
             # Drop2b03Handler(),
             DeviceInfoHandler(),

@@ -20,6 +20,7 @@ class GenericSppDevice(BaseDevice):
         super().__init__(address)
         self.spp_service_uuid = ""
         self.spp_fallback_port = 1
+        self.spp_connect_sleep = 0
 
         self.closed = False
         self.last_pkg = None
@@ -77,6 +78,8 @@ class GenericSppDevice(BaseDevice):
             self.socket = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM,
                                         socket.BTPROTO_RFCOMM)
             self.socket.settimeout(2)
+
+            time.sleep(self.spp_connect_sleep)
 
             try:
                 import bluetooth
