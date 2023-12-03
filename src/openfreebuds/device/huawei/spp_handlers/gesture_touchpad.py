@@ -2,8 +2,9 @@ import logging
 
 from openfreebuds.device.huawei.generic.spp_handler import HuaweiSppHandler
 from openfreebuds.device.huawei.generic.spp_package import HuaweiSppPackage
+from openfreebuds.logger import create_log
 
-log = logging.getLogger("HuaweiHandlers")
+log = create_log("HuaweiHandlers")
 
 
 class TouchpadConfigHandler(HuaweiSppHandler):

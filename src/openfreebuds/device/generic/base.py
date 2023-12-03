@@ -2,8 +2,9 @@ import logging
 
 from openfreebuds import event_bus
 from openfreebuds.constants.events import EVENT_DEVICE_PROP_CHANGED
+from openfreebuds.logger import create_log
 
-log = logging.getLogger("BaseDevice")
+log = create_log("BaseDevice")
 
 
 class DeviceConfig:

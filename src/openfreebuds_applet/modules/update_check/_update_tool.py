@@ -4,12 +4,13 @@ from mmk_updater import UpdaterTool
 
 from openfreebuds import event_bus
 from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED
+from openfreebuds.logger import create_log
 from openfreebuds_applet import utils
 from openfreebuds_applet.modules.update_check._update_ui import FreebudsUpdateUiMod
 from openfreebuds_applet.modules.update_check._url import release_url
 from openfreebuds_applet.settings import SettingsStorage
 
-log = logging.getLogger("UpdateChecker")
+log = create_log("UpdateChecker")
 
 
 class FreebudsUpdater(UpdaterTool):

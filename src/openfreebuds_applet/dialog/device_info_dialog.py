@@ -3,10 +3,11 @@ import tkinter
 from tkinter import ttk
 
 from openfreebuds.device import BaseDevice
+from openfreebuds.logger import create_log
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.ui import tk_tools
 
-log = logging.getLogger("FirstRun")
+log = create_log("FirstRun")
 
 
 @tk_tools.ui_thread

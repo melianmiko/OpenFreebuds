@@ -1,6 +1,5 @@
 import asyncio
 import ctypes
-import logging
 import os
 import subprocess
 import webbrowser
@@ -12,12 +11,13 @@ from winsdk.windows.devices.enumeration import DeviceInformation, DeviceInformat
 # noinspection PyUnresolvedReferences,PyPackageRequirements
 from winsdk.windows.networking import HostName
 
+from openfreebuds.logger import create_log
 from openfreebuds_applet.l18n import t
 from openfreebuds_backend.errors import BluetoothNotAvailableError
 
 extra_tools_dir = 'C:\\Program Files (x86)\\Bluetooth Command Line Tools\\bin'
 extra_tools_url = "https://bluetoothinstaller.com/bluetooth-command-line-tools/BluetoothCLTools-1.2.0.56.exe"
-log = logging.getLogger("WindowsBackend")
+log = create_log("WindowsBackend")
 
 no_console = subprocess.STARTUPINFO()
 no_console.dwFlags |= subprocess.STARTF_USESHOWWINDOW

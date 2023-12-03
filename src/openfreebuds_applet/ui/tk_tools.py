@@ -6,11 +6,12 @@ from tkinter import ttk
 import sv_ttk
 
 import openfreebuds_backend
+from openfreebuds.logger import create_log
 from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.ui.high_dpi_tkinter import MakeTkDPIAware
 
-log = logging.getLogger("TkinterTools")
+log = create_log("TkinterTools")
 
 
 class Config:

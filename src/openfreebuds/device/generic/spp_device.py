@@ -8,8 +8,9 @@ from queue import Queue
 from openfreebuds import event_bus
 from openfreebuds.constants.events import EVENT_SPP_CLOSED
 from openfreebuds.device.generic.base import BaseDevice
+from openfreebuds.logger import create_log
 
-log = logging.getLogger("GenericSPPDevice")
+log = create_log("GenericSPPDevice")
 SLEEP_DELAY = 5
 SLEEP_TIME = 20
 

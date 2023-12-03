@@ -1,11 +1,11 @@
-import datetime
 import hashlib
-import logging
 import os
 import threading
 import traceback
 
 import openfreebuds_backend
+from openfreebuds.logger import create_log
+from openfreebuds_applet import report_tool
 
 
 def reverse_dict_props(obj):
@@ -58,20 +58,26 @@ def safe_run_wrapper(func, display_name, _):
     return async_with_ui(display_name)(func)()
 
 
+def report_and_exit():
+    report_tool.create_and_show("crash")
+    # noinspection PyUnresolvedReferences,PyProtectedMember
+    os._exit(1)
+
+
 def with_ui_exception(display_name):
     from openfreebuds_applet.ui import tk_tools
 
     def _wrapper(func):
-        # noinspection PyUnresolvedReferences,PyProtectedMember,PyBroadException
         def _internal(*args, **kwargs):
+            # noinspection PyBroadException
             try:
                 func(*args, **kwargs)
             except Exception:
                 exc_text = traceback.format_exc()
                 message = "An unhandled exception was caught in thread {}.\n\n{}"
                 message = message.format(display_name, exc_text)
-                logging.getLogger("RunSafe").exception("Action {} failed.".format(display_name))
-                tk_tools.message(message, "OpenFreebuds", lambda: os._exit(1))
+                create_log("RunSafe").exception("Action {} failed.".format(display_name))
+                tk_tools.message(message, "OpenFreebuds", lambda: report_and_exit())
         return _internal
     return _wrapper
 

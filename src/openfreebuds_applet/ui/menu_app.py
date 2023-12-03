@@ -1,3 +1,4 @@
+from openfreebuds_applet import report_tool
 from pystrayx import Menu
 
 from openfreebuds_applet.l18n import t
@@ -19,6 +20,7 @@ class ApplicationMenuPart(Menu):
 
         self.add_item(t("action_settings"), self.open_settings)
         self.add_item(t("action_select_device"), self.open_device_picker)
+        self.add_item(t("action_mk_report"), report_tool.create_and_show)
         self.add_item(t("action_exit"), self.applet.exit)
 
     def open_device_picker(self):

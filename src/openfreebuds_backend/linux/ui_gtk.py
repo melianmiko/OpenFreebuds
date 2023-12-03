@@ -1,17 +1,19 @@
-import logging
 import gi
+
+from openfreebuds.logger import create_log
 
 gi.require_version("Gtk", "3.0")
 
-log = logging.getLogger("LinuxBackend")
+log = create_log("LinuxBackend")
 
 
 # noinspection PyPackageRequirements
 def ask_string(message, callback):
     from gi.repository import GLib, Gtk
 
-    # noinspection PyArgumentList
+    # noinspection PyArgumentList,PyUnresolvedReferences
     def show_async():
+        # noinspection PyTypeChecker
         dialog = Gtk.MessageDialog(None, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK_CANCEL, "OpenFreebuds")
         dialog.format_secondary_text(message)
 

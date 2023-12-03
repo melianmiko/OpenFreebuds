@@ -4,13 +4,14 @@ import tkinter
 from tkinter import ttk
 
 import openfreebuds_backend
+from openfreebuds.logger import create_log
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.settings import SettingsStorage
 from openfreebuds_applet.ui import tk_tools
 from openfreebuds_applet.dialog import device_select
 
-log = logging.getLogger("FirstRun")
+log = create_log("FirstRun")
 
 
 @tk_tools.ui_thread

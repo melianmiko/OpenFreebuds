@@ -8,16 +8,14 @@ import openfreebuds_backend
 from openfreebuds import event_bus
 from openfreebuds.device.generic.base import DeviceConfig, BaseDevice
 from openfreebuds.constants.events import EVENT_MANAGER_STATE_CHANGED, EVENT_MANAGER_CLOSE, EVENT_SPP_CLOSED
+from openfreebuds.logger import create_log
 
-
-log = logging.getLogger("FreebudsManager")
-
-
-def create():
-    return FreebudsManager()
+log = create_log("FreebudsManager")
 
 
 class FreebudsManager:
+    _manager = None
+
     MAINLOOP_TIMEOUT = 1
 
     STATE_NO_DEV = 0
@@ -28,7 +26,13 @@ class FreebudsManager:
     STATE_FAILED = 5
     STATE_PAUSED = 6
 
-    def __init__(self):
+    @staticmethod
+    def get():
+        if FreebudsManager._manager is None:
+            FreebudsManager._manager = FreebudsManager(True)
+        return FreebudsManager._manager
+
+    def __init__(self, singleton_lock=False):
         self.device_name = None
         self.device_address = None
         self.device: Optional[BaseDevice] = None
@@ -38,6 +42,9 @@ class FreebudsManager:
         self._thread = None                 # type: threading.Thread|None
         self.state = self.STATE_NO_DEV
         self.config = DeviceConfig()
+
+        if not singleton_lock:
+            raise ValueError("Use FreebudsManager.get()")
 
     def set_device(self, name, address):
         if self.device_name == name and self.device_address == address:

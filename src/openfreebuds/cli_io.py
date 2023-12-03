@@ -2,8 +2,9 @@ import logging
 import traceback
 
 from openfreebuds.device.generic.base import BaseDevice
+from openfreebuds.logger import create_log
 
-log = logging.getLogger("CLI-IO")
+log = create_log("CLI-IO")
 
 
 # noinspection PyBroadException

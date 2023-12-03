@@ -3,11 +3,12 @@ import threading
 
 import openfreebuds_backend
 from openfreebuds import device
+from openfreebuds.logger import create_log
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.settings import SettingsStorage
 
 autoconf_lock = threading.Lock()
-log = logging.getLogger("AutoConfig")
+log = create_log("AutoConfig")
 
 
 def process(manager: FreebudsManager, settings: SettingsStorage):

@@ -1,13 +1,14 @@
 import logging
 import tkinter
 
+from openfreebuds.logger import create_log
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import GenericModule
 from openfreebuds_applet.modules.actions import get_actions
 from openfreebuds_applet.modules.hotkeys._settings import HotkeysSettings
 from openfreebuds_applet.ui import tk_tools
 
-log = logging.getLogger("HotkeysTool")
+log = create_log("HotkeysTool")
 
 
 class Module(GenericModule):

@@ -118,7 +118,7 @@
   "table_head_value": "Value",
   "category_tested": "Supported devices",
   "category_extras": "Extra options",
-  "action_mk_report": "Create report for developer...",
+  "action_mk_report": "Bugreport",
   "action_dev_console": "Start device console (danger!)...",
   "button_settings": "Settings",
   "module_no_settings": "This module don't have any options",

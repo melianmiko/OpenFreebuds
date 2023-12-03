@@ -1,7 +1,6 @@
-import logging
-
 from PIL import Image, ImageDraw
 
+from openfreebuds.logger import create_log
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet import utils
 
@@ -55,7 +54,7 @@ def set_theme(theme_name="auto"):
     else:
         raise Exception("Unknown theme value: " + value)
 
-    logging.getLogger("AppletIcons").debug("set theme=" + value)
+    create_log("AppletIcons").debug("set theme=" + value)
 
 
 def spawn_power_bg_mask(level: float):

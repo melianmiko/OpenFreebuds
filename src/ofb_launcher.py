@@ -10,16 +10,16 @@ import urllib.request
 
 import openfreebuds_applet
 import openfreebuds_backend
-from openfreebuds import event_bus, manager, cli_io
+from openfreebuds import event_bus, cli_io
 from openfreebuds.constants.events import EVENT_MANAGER_STATE_CHANGED, EVENT_DEVICE_PROP_CHANGED
-from openfreebuds_applet import utils
+from openfreebuds.logger import create_log
+from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t
-from openfreebuds_applet.modules import http_server, self_check
+from openfreebuds_applet.modules.actions import get_actions
 from openfreebuds_applet.settings import SettingsStorage
-from openfreebuds_applet.ui import tk_tools, settings_ui
-from openfreebuds_backend.errors import BluetoothNotAvailableError
+from openfreebuds_applet.ui import tk_tools
 
-log = logging.getLogger("OfbLauncher")
+log = create_log("OfbLauncher")
 
 
 def parse_args():
@@ -108,7 +108,7 @@ def _do_command_webserver(command):
 
 
 def _do_command_offline(command):
-    man = manager.create()
+    man = FreebudsManager.get()
     settings = SettingsStorage()
     if settings.address == "":
         log.error("No saved device, bye")
@@ -123,7 +123,7 @@ def _do_command_offline(command):
         time.sleep(0.25)
 
     log.debug("ready to run")
-    actions = openfreebuds_applet.modules.actions.get_actions(man)
+    actions = get_actions(man)
     if command not in actions:
         log.error("Undefined command")
         _leave()
@@ -140,7 +140,7 @@ def _leave():
 
 
 def run_shell():
-    man = manager.create()
+    man = FreebudsManager.get()
 
     # Device picker
     devices = openfreebuds_backend.bt_list_devices()

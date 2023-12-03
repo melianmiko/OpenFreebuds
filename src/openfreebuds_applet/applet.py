@@ -1,14 +1,14 @@
 import logging
 import os
 import signal
-from io import StringIO
 
-import openfreebuds.manager
 import pystrayx
 from openfreebuds import event_bus
 from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE_PROP_CHANGED, \
     EVENT_MANAGER_STATE_CHANGED
 from openfreebuds.device.generic.base import BaseDevice
+from openfreebuds.logger import create_log
+from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet import settings, utils, log_format, base_logger_names
 from openfreebuds_applet.modules import device_autoconfig, ModuleManager
 from openfreebuds_applet.ui import icons, tk_tools
@@ -17,7 +17,7 @@ from openfreebuds_applet.ui.base import QuitingMenu
 from openfreebuds_applet.ui.menu_device import DeviceMenu
 from openfreebuds_applet.ui.menu_no_device import DeviceOfflineMenu, DeviceScanMenu
 
-log = logging.getLogger("Applet")
+log = create_log("Applet")
 
 
 class FreebudsApplet:
@@ -29,9 +29,8 @@ class FreebudsApplet:
         self.current_icon_hash = ""
 
         self.settings = settings.SettingsStorage()
-        self.log = StringIO()
 
-        self.manager = openfreebuds.manager.create()
+        self.manager = FreebudsManager.get()
         self.manager.config.SAFE_RUN_WRAPPER = utils.safe_run_wrapper
         # self.manager.config.USE_SOCKET_SLEEP = self.settings.enable_sleep
 
@@ -124,14 +123,9 @@ class FreebudsApplet:
 
             log.debug("Menu updated, hash=" + items_hash)
 
-    def enable_debug_logging(self):
+    @staticmethod
+    def enable_debug_logging():
         logging.basicConfig(level=logging.DEBUG, format=log_format, force=True)
-
-        handler = logging.StreamHandler(self.log)
-        handler.setLevel(logging.DEBUG)
-        handler.setFormatter(logging.Formatter(log_format))
-        for a in base_logger_names:
-            logging.getLogger(a).addHandler(handler)
 
     @utils.async_with_ui("Applet")
     def _ui_update_loop(self):

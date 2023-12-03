@@ -3,11 +3,12 @@ import locale
 import logging
 import os.path
 
+from openfreebuds.logger import create_log
 from openfreebuds_applet import utils
 from openfreebuds_applet.settings import SettingsStorage
 
 lc_path = utils.get_assets_path() + "/locale/{}.json"
-log = logging.getLogger("FreebudsLocale")
+log = create_log("FreebudsLocale")
 
 available_langs = [
     "base", "ru_RU"

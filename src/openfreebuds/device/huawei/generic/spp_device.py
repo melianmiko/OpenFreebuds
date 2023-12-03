@@ -7,8 +7,9 @@ from openfreebuds.device.generic.base import with_no_prop_changed_event
 from openfreebuds.device.huawei.generic.spp_handler import HuaweiSppHandler
 from openfreebuds.device.huawei.generic.spp_package import HuaweiSppPackage
 from openfreebuds.device.huawei.interfaces.spp_device import HuaweiSppDevice
+from openfreebuds.logger import create_log
 
-log = logging.getLogger("GenericHuaweiSppDevice")
+log = create_log("GenericHuaweiSppDevice")
 
 
 class IgnoreHandler(HuaweiSppHandler):

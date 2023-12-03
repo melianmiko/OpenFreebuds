@@ -1,11 +1,12 @@
-import logging
 import threading
 import tkinter.simpledialog
 
 # noinspection PyUnresolvedReferences
 from winsdk.windows.ui.viewmanagement import UISettings, UIColorType
 
-log = logging.getLogger("WindowsBackend")
+from openfreebuds.logger import create_log
+
+log = create_log("WindowsBackend")
 
 
 # noinspection PyUnusedLocal

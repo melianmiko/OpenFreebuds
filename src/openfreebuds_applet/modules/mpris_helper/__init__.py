@@ -3,11 +3,12 @@ import tkinter
 
 from openfreebuds import event_bus
 from openfreebuds.constants.events import EVENT_DEVICE_PROP_CHANGED
+from openfreebuds.logger import create_log
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules.generic import GenericModule
 from .mpris import MediaPlayer2
 
-log = logging.getLogger("MprisHelper")
+log = create_log("MprisHelper")
 
 
 class Module(GenericModule):
@@ -45,7 +46,7 @@ class Module(GenericModule):
             player.play()
         self.paused_players = []
 
-    def mainloop(self):
+    def _mainloop(self):
         event = event_bus.register([
             EVENT_DEVICE_PROP_CHANGED
         ])

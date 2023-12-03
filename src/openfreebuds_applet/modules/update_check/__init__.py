@@ -1,10 +1,11 @@
 import logging
 
+from openfreebuds.logger import create_log
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import GenericModule
 from openfreebuds_applet.modules.update_check._update_tool import FreebudsUpdater
 
-log = logging.getLogger("UpdateChecker")
+log = create_log("UpdateChecker")
 
 
 class Module(GenericModule):
@@ -20,7 +21,7 @@ class Module(GenericModule):
         super().__init__()
         self.updater: FreebudsUpdater | None = None
 
-    def mainloop(self):
+    def _mainloop(self):
         self.updater = FreebudsUpdater(self.app_settings)
         self.updater.ignore_ppa = True
         self.updater.start()

@@ -1,9 +1,8 @@
-import logging
-
 from openfreebuds.device import BaseDevice
+from openfreebuds.logger import create_log
 from version_info import VERSION
 
-log = logging.getLogger("VirtualDevice")
+log = create_log("VirtualDevice")
 
 
 class VirtualDevice(BaseDevice):

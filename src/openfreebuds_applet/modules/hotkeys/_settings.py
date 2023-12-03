@@ -4,13 +4,14 @@ import tkinter
 import webbrowser
 from tkinter import ttk
 
+from openfreebuds.logger import create_log
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules import actions
 from openfreebuds_applet.modules.hotkeys import _recorder
 from openfreebuds_applet.settings import SettingsStorage
 from openfreebuds_applet.ui import tk_tools
 
-log = logging.getLogger("SettingsHotkeysTab")
+log = create_log("SettingsHotkeysTab")
 
 
 class HotkeysSettings(ttk.Frame):

@@ -1,8 +1,8 @@
-import logging
 import queue
-import threading
 
-log = logging.getLogger("EventBus")
+from openfreebuds.logger import create_log
+
+log = create_log("EventBus")
 
 
 class Data:

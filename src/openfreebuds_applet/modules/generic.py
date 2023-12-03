@@ -2,12 +2,13 @@ import logging
 import tkinter
 from copy import deepcopy
 
+from openfreebuds.logger import create_log
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.settings import SettingsStorage
 
-log = logging.getLogger("AppletModule")
+log = create_log("AppletModule")
 
 
 class GenericModule:
@@ -60,7 +61,7 @@ class GenericModule:
         log.info(f"Starting module {self.ident}")
         self.running = True
 
-        self.mainloop()
+        self._mainloop()
 
         log.info(f"Module {self.ident} exited.")
         self.running = False
@@ -68,7 +69,7 @@ class GenericModule:
     def stop(self):
         self.running = False
 
-    def mainloop(self):
+    def _mainloop(self):
         pass
 
     def make_settings_frame(self, parent: tkinter.BaseWidget) -> tkinter.Frame | None:

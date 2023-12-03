@@ -3,7 +3,9 @@ import os
 import sys
 import threading
 
-log = logging.getLogger("HotkeysTool")
+from openfreebuds.logger import create_log
+
+log = create_log("HotkeysTool")
 
 
 class _PynputState:

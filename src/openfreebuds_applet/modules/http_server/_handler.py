@@ -2,11 +2,12 @@ import json
 import logging
 from http.server import SimpleHTTPRequestHandler
 
+from openfreebuds.logger import create_log
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet import utils
 from openfreebuds_applet.modules import actions
 
-log = logging.getLogger("Webserver")
+log = create_log("Webserver")
 
 base_help_template = utils.get_assets_path() + "/server_help.html"
 help_item_pattern = """<section>

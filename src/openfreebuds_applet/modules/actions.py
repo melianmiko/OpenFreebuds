@@ -2,11 +2,12 @@ import logging
 
 import openfreebuds_backend
 from openfreebuds.device.generic.base import BaseDevice
+from openfreebuds.logger import create_log
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.ui import tk_tools
 
-log = logging.getLogger("AppletActions")
+log = create_log("AppletActions")
 
 
 def do_next_mode(manager):
