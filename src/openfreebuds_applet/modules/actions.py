@@ -9,14 +9,17 @@ from openfreebuds_applet.ui import tk_tools
 
 log = create_log("AppletActions")
 
+# TODO: Refactor
+
 
 def do_next_mode(manager):
     dev = _get_device(manager)       # type: BaseDevice
     if dev is not None:
-        current = dev.find_property("anc", "mode", -99)
-        if current == -99:
+        current = dev.find_property("anc", "mode")
+        if current is None:
             return
-        next_mode = (current + 1) % 3
+        options = list(dev.find_property("anc", "mode_options").split(","))
+        next_mode = options[(options.index(current) + 1) % len(options)]
         dev.set_property("anc", "mode", next_mode)
         log.debug("Switched to mode " + str(next_mode))
         return True
@@ -101,9 +104,9 @@ def do_toggle_connected(manager: FreebudsManager):
 def get_actions(manager: FreebudsManager):
     return {
         "next_mode": lambda *args: do_next_mode(manager),
-        "mode_0": lambda *args: do_mode(manager, 0),
-        "mode_1": lambda *args: do_mode(manager, 1),
-        "mode_2": lambda *args: do_mode(manager, 2),
+        "mode_normal": lambda *args: do_mode(manager, "normal"),
+        "mode_cancellation": lambda *args: do_mode(manager, "cancellation"),
+        "mode_awareness": lambda *args: do_mode(manager, "awareness"),
         "connect": lambda *args: do_connect(manager),
         "disconnect": lambda *args: do_disconnect(manager),
         "toggle_connect": lambda *args: do_toggle_connected(manager)
@@ -113,9 +116,9 @@ def get_actions(manager: FreebudsManager):
 def get_action_names():
     return {
         "next_mode": t("action_next_mode"),
-        "mode_0": t("noise_mode_0"),
-        "mode_1": t("noise_mode_1"),
-        "mode_2": t("noise_mode_2"),
+        "mode_normal": t("noise_mode_normal"),
+        "mode_cancellation": t("noise_mode_cancellation"),
+        "mode_awareness": t("noise_mode_awareness"),
         "connect": t("action_connect"),
         "disconnect": t("action_disconnect"),
         "toggle_connect": t("action_toggle_connection")
