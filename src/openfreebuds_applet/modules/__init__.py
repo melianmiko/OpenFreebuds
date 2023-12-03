@@ -34,7 +34,6 @@ class ModuleManager:
                 self.modules[module.ident] = module
 
     def autostart(self):
-        log.info(self.modules)
         for ident in self.modules:
             if self.modules[ident].get_property("enabled"):
                 self.modules[ident].start()

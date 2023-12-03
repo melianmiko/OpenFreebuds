@@ -45,7 +45,6 @@ def is_running():
             continue
 
         cmdline = (process / "cmdline").read_text().replace("\x00", " ")
-        log.info(cmdline)
         if "ofb_launcher.py" in cmdline or "/usr/bin/openfreebuds" in cmdline:
             return pid
 

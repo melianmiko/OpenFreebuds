@@ -44,8 +44,7 @@ def main():
     # Setup logging
     logging.getLogger("asyncio").disabled = True
     logging.getLogger("CLI-IO").disabled = True
-    if args.verbose:
-        logging.basicConfig(level=logging.DEBUG, format=openfreebuds_applet.log_format, force=True)
+    logging.basicConfig(level=logging.DEBUG, format=openfreebuds_applet.log_format, force=True)
 
     if args.command != "":
         do_command(args.command)

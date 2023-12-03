@@ -53,7 +53,7 @@ class FreebudsApplet:
         log.info("Loading all modules...")
         self.modules.autostart()
 
-        self.enable_debug_logging()
+        # self.enable_debug_logging()
         self._setup_ctrl_c()
         self._ui_update_loop()
         self.tray_application.run()
@@ -120,12 +120,6 @@ class FreebudsApplet:
         if self.current_menu_hash != items_hash:
             self.current_menu_hash = items_hash
             self.tray_application.menu = menu
-
-            log.debug("Menu updated, hash=" + items_hash)
-
-    @staticmethod
-    def enable_debug_logging():
-        logging.basicConfig(level=logging.DEBUG, format=log_format, force=True)
 
     @utils.async_with_ui("Applet")
     def _ui_update_loop(self):
