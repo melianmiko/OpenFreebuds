@@ -24,7 +24,6 @@ def with_no_prop_changed_event(func):
 
 class BaseDevice:
     def __init__(self, _):
-        self.ui_data = {}
         self.config = DeviceConfig()
         self.closed = False
         self.enable_prop_changed_event = True

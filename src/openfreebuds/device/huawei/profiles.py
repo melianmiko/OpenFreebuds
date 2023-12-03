@@ -17,24 +17,6 @@ from openfreebuds.device.huawei.spp_handlers.voice_language import VoiceLanguage
 class FreeLaceProDevice(GenericHuaweiSppDevice):
     def __init__(self, address):
         super().__init__(address)
-        self.ui_data = {
-            "anc_levels": {
-                "comfort": 1,
-                "normal": 0,
-                "ultra": 2,
-            },
-            "action_power_button": {
-                -1: "tap_action_off",
-                12: "tap_action_switch_device"
-            },
-            "action_long_tap": {
-                -1: "tap_action_off",
-                3: "noise_control_1",
-                5: "noise_control_2",
-                6: "noise_control_3",
-                9: "noise_control_4"
-            }
-        }
 
         self.handlers = [
             # Drop2b03Handler(),

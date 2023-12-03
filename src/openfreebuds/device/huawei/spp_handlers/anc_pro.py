@@ -1,5 +1,12 @@
 from openfreebuds.device.huawei.generic.spp_handler import HuaweiSppHandler
 from openfreebuds.device.huawei.generic.spp_package import HuaweiSppPackage
+from openfreebuds.device.huawei.tools import reverse_dict
+
+LEVEL_OPTIONS = {
+    1: "comfort",
+    0: "normal",
+    2: "ultra"
+}
 
 
 class ProAncHandler(HuaweiSppHandler):
@@ -25,16 +32,19 @@ class ProAncHandler(HuaweiSppHandler):
     def on_package(self, pkg: HuaweiSppPackage):
         data = pkg.find_param(1)
         if len(data) == 2:
-            self.device.put_property("anc", "level", data[0])
             self.device.put_property("anc", "mode", data[1])
+            self.device.put_property("anc", "level", LEVEL_OPTIONS.get(data[0], data[0]))
+            self.device.put_property("anc", "level_options", ",".join(LEVEL_OPTIONS.values()))
 
     def on_prop_changed(self, group: str, prop: str, value):
-        value = int(value).to_bytes(1, byteorder="big")
         if prop == "mode":
+            value = int(value).to_bytes(1, byteorder="big")
             level = b"\x00" if value == 0 else b"\xff"
             data = value + level
         else:
             # Just change level
+            value = reverse_dict(LEVEL_OPTIONS)[value]
+            value = int(value).to_bytes(1, byteorder="big")
             data = b"\x01" + value
 
         self.device.send_package(HuaweiSppPackage(b"\x2b\x04", [

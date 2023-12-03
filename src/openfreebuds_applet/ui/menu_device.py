@@ -103,18 +103,16 @@ class AncLevelSubmenu(Menu):
 
     def on_build(self):
         device = self.manager.device
-        if "anc_levels" not in device.ui_data:
-            return
         current = device.find_property("anc", "level", -1)
-        options = device.ui_data["anc_levels"]
+        if current == -1:
+            return
+        options = device.find_property("anc", "level_options").split(",")
 
-        for key_name in options:
-            val = options[key_name]
-            self.add_item(text=t("anc_level_{}".format(key_name)),
+        for val in options:
+            self.add_item(text=t(f"anc_level_{val}"),
                           action=self.set_level,
                           args=[val],
                           checked=current == val)
 
     def set_level(self, val):
-        device = self.manager.device
-        device.set_property("anc", "level", val)
+        self.manager.device.set_property("anc", "level", val)
