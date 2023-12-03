@@ -79,21 +79,21 @@ class NoiseControlMenu(Menu):
         current = device.find_property("anc", "mode", -1)
         if current == -1:
             return
-        next_mode = (current + 1) % 3
+        options = list(device.find_property("anc", "mode_options").split(","))
+        next_mode = options[(options.index(current) + 1) % len(options)]
 
-        for a in range(0, 3):
+        for a in options:
             self.add_item(text=t("noise_mode_{}".format(a)),
                           action=self.set_mode,
                           args=[a],
                           checked=current == a,
                           default=next_mode == a)
 
-        if current == 1 and device.find_property("anc", "level", -99) != -99:
+        if current == "cancellation" and device.find_property("anc", "level", -99) != -99:
             self.add_submenu(t("anc_level"), AncLevelSubmenu(self.manager))
 
     def set_mode(self, val):
-        device = self.manager.device
-        device.set_property("anc", "mode", val)
+        self.manager.device.set_property("anc", "mode", val)
 
 
 class AncLevelSubmenu(Menu):

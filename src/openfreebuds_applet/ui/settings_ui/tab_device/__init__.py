@@ -17,8 +17,6 @@ from openfreebuds_applet.ui.settings_ui.tab_device.gesture_power import PowerBut
 from openfreebuds_applet.ui.settings_ui.tab_device.voice_language import LanguageSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.tws_auto_pause import AutoPauseSettingsSection
 
-log = logging.getLogger("DeviceTab")
-
 
 class DeviceSettingsTab(ttk.Frame):
     def __init__(self, parent: tkinter.Toplevel, manager: FreebudsManager, settings: SettingsStorage):
@@ -64,7 +62,6 @@ class DeviceSettingsTab(ttk.Frame):
                         .grid(row=y, column=0, columnspan=2, sticky=tkinter.NW, padx=16, pady=16)
                     self.categories[category] = y + 1
                     y += 20
-                log.info(f"Add option {Option}")
                 Option((self, self.manager.device))\
                     .grid(row=self.categories[category], columnspan=2, sticky=tkinter.NSEW)
                 self.categories[category] += 1

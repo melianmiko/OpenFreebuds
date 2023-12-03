@@ -26,8 +26,10 @@ class VirtualDevice(BaseDevice):
                 "in_ear": 0
             },
             "anc": {
-                "mode": 0,
-                "level": 0
+                "mode": "normal",
+                "mode_options": "normal,cancellation,awareness",
+                "level": "normal",
+                "level_options": "comfort,normal,ultra",
             },
             "battery": {
                 "global": 75,
@@ -41,11 +43,12 @@ class VirtualDevice(BaseDevice):
                 "double_tap_left": "tap_action_off",
                 "double_tap_right": "tap_action_pause",
                 "double_tap_options": "tap_action_off,tap_action_pause",
-                # SplitLongTapActionConfigHandler (with_right=False)
-                "long_tap_left": "tap_action_switch_anc",
+                # LongTapAction
+                "long_tap": "tap_action_switch_anc",
                 "long_tap_options": "tap_action_off,tap_action_switch_anc",
-                "noise_control_left": "noise_control_off_on_aw",
-                "noise_control_options": "noise_control_off_on,noise_control_off_on_aw"
+                # PowerButtonConfigHandler
+                "power_button": "tap_action_switch_device",
+                "power_button_options": "tap_action_off,tap_action_switch_device",
             },
             "config": {
                 "auto_pause": True

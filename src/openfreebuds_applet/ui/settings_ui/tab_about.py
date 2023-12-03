@@ -2,8 +2,8 @@ import tkinter
 import webbrowser
 from tkinter import ttk
 
-import openfreebuds.device
 import openfreebuds_backend
+from openfreebuds.device import SUPPORTED_DEVICES
 from openfreebuds_applet import utils
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.dialog import dev_console
@@ -59,8 +59,16 @@ def make_about(parent, applet):
         .grid(row=30, padx=16, pady=16, columnspan=3, sticky=tkinter.NW)
 
     counter = 31
-    for name in openfreebuds.device.SUPPORTED_DEVICES:
-        ttk.Label(frame, text="- {}".format(name))\
+    for name, (support_level, _) in SUPPORTED_DEVICES.items():
+        if support_level != "full":
+            continue
+        ttk.Label(frame, text=f"- {name}")\
+            .grid(row=counter, padx=16, pady=4, columnspan=3, sticky=tkinter.NW)
+        counter += 1
+    for name, (support_level, _) in SUPPORTED_DEVICES.items():
+        if support_level != "partial":
+            continue
+        ttk.Label(frame, text=f"- {name} ({t('support_level_partial')})")\
             .grid(row=counter, padx=16, pady=4, columnspan=3, sticky=tkinter.NW)
         counter += 1
 

@@ -17,8 +17,8 @@ class BaseImages:
     # Icons
     loading = Image.open(ASSETS_PATH + "/base_loading.png")
     base = Image.open(ASSETS_PATH + "/base_headset.png")
-    mode_1 = Image.open(ASSETS_PATH + "/base_headset_1.png")
-    mode_2 = Image.open(ASSETS_PATH + "/base_headset_2.png")
+    mode_cancellation = Image.open(ASSETS_PATH + "/base_headset_1.png")
+    mode_awareness = Image.open(ASSETS_PATH + "/base_headset_2.png")
     overlay_error = Image.open(ASSETS_PATH + "/overlay_error.png")
     overlay_setup = Image.open(ASSETS_PATH + "/overlay_setup.png")
 
@@ -100,7 +100,7 @@ def get_hash(state, battery=0, noise_mode=0):
     return "connected_{}_{}".format(noise_mode, battery)
 
 
-def generate_icon(state, battery=0, noise_mode=0):
+def generate_icon(state, battery=0, noise_mode="normal"):
     if state == FreebudsManager.STATE_WAIT or state == FreebudsManager.STATE_PAUSED:
         icon = combine_mask(BaseImages.loading,
                             foreground=BaseImages.theme_full,
@@ -130,10 +130,10 @@ def generate_icon(state, battery=0, noise_mode=0):
                             foreground=BaseImages.theme_full,
                             background=BaseImages.theme_empty)
 
-    if noise_mode == 1:
-        icon = BaseImages.mode_1
-    elif noise_mode == 2:
-        icon = BaseImages.mode_2
+    if noise_mode == "cancellation":
+        icon = BaseImages.mode_cancellation
+    elif noise_mode == "awareness":
+        icon = BaseImages.mode_awareness
 
     result = combine_mask(icon,
                           foreground=power_bg,
