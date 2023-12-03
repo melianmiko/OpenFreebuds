@@ -99,6 +99,10 @@ class FreebudsManager:
         log.info("State changed to " + str(state))
         event_bus.invoke(EVENT_MANAGER_STATE_CHANGED)
 
+    def _device_disconnected(self):
+        return (not openfreebuds_backend.bt_is_connected(self.device_address)
+                and not self.device_address == "00:00:00:00:00:00")
+
     def _mainloop(self):
         log.debug("Started")
 
@@ -118,7 +122,7 @@ class FreebudsManager:
                 continue
 
             # If offline, update state and wait
-            if not openfreebuds_backend.bt_is_connected(self.device_address):
+            if self._device_disconnected():
                 self.set_state(self.STATE_OFFLINE)
                 self._close_device()
                 time.sleep(self.MAINLOOP_TIMEOUT)
@@ -126,7 +130,7 @@ class FreebudsManager:
 
             # Create dev and connect if not
             if not self.device:
-                log.info("Trying to create SPP device and connect...")
+                log.info("Trying to create device and connect...")
                 self.set_state(self.STATE_WAIT)
                 self.device = openfreebuds.device.create(self.device_name, self.device_address)
                 if not self.device:
