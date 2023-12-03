@@ -52,6 +52,7 @@ class GenericHuaweiSppDevice(HuaweiSppDevice):
             handler.on_init()
 
     def send_package(self, pkg: HuaweiSppPackage, read=False):
+        log.debug(f"send {pkg}")
         self.send(pkg.to_bytes())
         if read:
             t = time.time()
@@ -71,6 +72,7 @@ class GenericHuaweiSppDevice(HuaweiSppDevice):
     def on_package(self, pkg: bytes):
         try:
             pkg = HuaweiSppPackage.from_bytes(pkg)
+            log.debug(f"recv {pkg}")
         except Exception:
             log.exception(f"Got non-parsable package {pkg.hex()}, ignoring")
             return
@@ -101,7 +103,6 @@ class GenericHuaweiSppDevice(HuaweiSppDevice):
         return True
 
     def _process_package(self, pkg: bytes):
-        log.debug("recv " + pkg.hex())
         start = time.time()
         self.on_package(pkg)
         process_time = time.time() - start

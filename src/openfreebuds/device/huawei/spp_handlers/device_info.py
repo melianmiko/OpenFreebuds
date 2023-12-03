@@ -28,7 +28,5 @@ class DeviceInfoHandler(HuaweiSppHandler):
     def on_package(self, package: HuaweiSppPackage):
         out = {}
         for key in package.parameters:
-            if key not in self.descriptor:
-                continue
-            out[self.descriptor[key]] = package.parameters[key].decode("utf8")
+            out[self.descriptor.get(key, f"field_{key}")] = package.parameters[key].decode("utf8")
         self.device.put_group("info", out)

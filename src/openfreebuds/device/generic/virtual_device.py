@@ -37,12 +37,15 @@ class VirtualDevice(BaseDevice):
                 "is_charging": False
             },
             "action": {
-                "double_tap_left": -1,
-                "double_tap_right": -1,
-                "long_tap_left": -1,
-                "long_tap_right": -1,
-                "noise_control_left": 2,
-                "noise_control_right": 2,
+                # DoubleTapConfigHandler
+                "double_tap_left": "tap_action_off",
+                "double_tap_right": "tap_action_pause",
+                "double_tap_options": "tap_action_off,tap_action_pause",
+                # SplitLongTapActionConfigHandler (with_right=False)
+                "long_tap_left": "tap_action_switch_anc",
+                "long_tap_options": "tap_action_off,tap_action_switch_anc",
+                "noise_control_left": "noise_control_off_on_aw",
+                "noise_control_options": "noise_control_off_on,noise_control_off_on_aw"
             },
             "config": {
                 "auto_pause": True

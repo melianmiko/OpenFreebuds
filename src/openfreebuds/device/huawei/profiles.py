@@ -58,7 +58,7 @@ class FreeBuds4iDevice(GenericHuaweiSppDevice):
             BatteryHandler(),
             # TouchpadConfigHandler(),
             DoubleTapConfigHandler(),
-            SplitLongTapActionConfigHandler(),
+            SplitLongTapActionConfigHandler(False),
             TwsAutoPauseHandler(),
             VoiceLanguageHandler(),
         ]

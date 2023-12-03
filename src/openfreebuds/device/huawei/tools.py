@@ -1,3 +1,10 @@
+def reverse_dict(obj: dict):
+    res = {}
+    for a in obj:
+        res[obj[a]] = a
+    return res
+
+
 def build_table_row(ln, val, description_table=None):
     if description_table is not None and val in description_table:
         val = f"{val} ({description_table[val]})"

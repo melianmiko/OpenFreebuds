@@ -17,6 +17,13 @@ class HuaweiSppPackage:
                 self.parameters[p_type] = p_value
 
     def __str__(self):
+        out = [f"command={self.command_id.hex()}"]
+        for p_type in self.parameters:
+            p_value = self.parameters[p_type]
+            out.append(f"param_{p_type}={p_value}")
+        return ", ".join(out)
+
+    def to_table_string(self):
         """
         Pretty-print this pacakge contents
         """

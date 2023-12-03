@@ -16,7 +16,7 @@ SLEEP_TIME = 20
 
 class GenericSppDevice(BaseDevice):
     def __init__(self, address):
-        super().__init__()
+        super().__init__(address)
         self.spp_service_uuid = ""
         self.spp_fallback_port = 1
 
@@ -103,7 +103,7 @@ class GenericSppDevice(BaseDevice):
         while not self.closed:
             try:
                 data = self._send_queue.get(timeout=2)
-                log.debug("send " + data.hex())
+                # log.debug("send " + data.hex())
                 self.socket.send(data)
             except queue.Empty:
                 pass
