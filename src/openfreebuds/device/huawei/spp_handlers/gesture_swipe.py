@@ -40,7 +40,7 @@ class SwipeActionHandler(HuaweiSppHandler):
         self.device.send_package(pkg)
 
         # re-read
-        self.on_init()
+        # self.on_init()
 
     def on_package(self, package: HuaweiSppPackage):
         left = package.find_param(1)

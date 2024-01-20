@@ -8,6 +8,7 @@ from openfreebuds_applet.settings import SettingsStorage
 import tkinter
 import tkinter.font
 
+from openfreebuds_applet.ui.settings_ui.tab_device.config_sound_quality import SoundQualitySettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.device_info import DeviceInfoSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_double import DoubleTapSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_double_in_call import DoubleTapInCallSettingsSection
@@ -54,6 +55,7 @@ class DeviceSettingsTab(ttk.Frame):
             SwipeGestureSettingsSection,
             PowerButtonSettingsSection,
             AutoPauseSettingsSection,
+            SoundQualitySettingsSection,
             LanguageSettingsSection,
         ]
 

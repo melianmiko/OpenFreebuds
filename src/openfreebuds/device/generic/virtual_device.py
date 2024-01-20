@@ -55,7 +55,9 @@ class VirtualDevice(BaseDevice):
                 "power_button_options": "tap_action_off,tap_action_switch_device",
             },
             "config": {
-                "auto_pause": True
+                "auto_pause": True,
+                "sound_quality_preference": "sqp_quality",
+                "sound_quality_preference_options": "sqp_quality,sqp_connectivity",
             },
             "service": {
                 "supported_languages": "en-GB"
