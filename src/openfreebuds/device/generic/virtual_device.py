@@ -58,6 +58,8 @@ class VirtualDevice(BaseDevice):
                 "auto_pause": True,
                 "sound_quality_preference": "sqp_quality",
                 "sound_quality_preference_options": "sqp_quality,sqp_connectivity",
+                # "equalizer_preset": "equalizer_preset_hardbass",
+                # "equalizer_preset_options": "equalizer_preset_default,equalizer_preset_hardbass",
             },
             "service": {
                 "supported_languages": "en-GB"
