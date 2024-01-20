@@ -1,3 +1,5 @@
+import time
+
 from openfreebuds.device.huawei.generic.spp_handler import HuaweiSppHandler
 from openfreebuds.device.huawei.generic.spp_package import HuaweiSppPackage
 
@@ -13,4 +15,6 @@ class AncChangeDetectionHandler(HuaweiSppHandler):
     def on_package(self, package: HuaweiSppPackage):
         data = package.find_param(1)
         if len(data) == 1 and 0 <= data[0] <= 2:
-            self.device.put_property("anc", "mode", data[0])
+            self.device.send_package(HuaweiSppPackage(b"\x2b\x2a", [
+                (1, b""),
+            ]))

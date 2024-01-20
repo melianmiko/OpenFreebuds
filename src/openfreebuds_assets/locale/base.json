@@ -46,6 +46,8 @@
   "anc_level_comfort": "Comfortable",
   "anc_level_normal": "Normal",
   "anc_level_ultra": "Ultra",
+  "anc_level_dynamic": "Dynamic",
+  "anc_level_voice_boost": "Voice boost",
   "prop_enabled": "Enabled",
   "select_device": "Select your device:",
   "state_quiting": "Exiting...",

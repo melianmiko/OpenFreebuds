@@ -89,7 +89,7 @@ class NoiseControlMenu(Menu):
                           checked=current == a,
                           default=next_mode == a)
 
-        if current == "cancellation" and device.find_property("anc", "level", -99) != -99:
+        if device.find_property("anc", "level_options", ""):
             self.add_submenu(t("anc_level"), AncLevelSubmenu(self.manager))
 
     def set_mode(self, val):
