@@ -49,6 +49,23 @@ class FreeBuds4iDevice(GenericHuaweiSppDevice):
         ]
 
 
+class FreeBuds5iDevice(GenericHuaweiSppDevice):
+    def __init__(self, address):
+        super().__init__(address)
+        self.handlers = [
+            # DropLogsHandler(),
+            DeviceInfoHandler(),
+            TwsInEarHandler(),
+            ProAncHandler(),
+            BatteryHandler(),
+            DoubleTapConfigHandler(),
+            SplitLongTapActionConfigHandler(False),
+            TwsAutoPauseHandler(),
+            VoiceLanguageHandler(),
+        ]
+
+
+
 class FreeBudsSEDevice(GenericHuaweiSppDevice):
     def __init__(self, address):
         super().__init__(address)

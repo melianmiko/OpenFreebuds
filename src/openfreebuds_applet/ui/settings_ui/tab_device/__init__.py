@@ -10,6 +10,7 @@ import tkinter.font
 
 from openfreebuds_applet.ui.settings_ui.tab_device.device_info import DeviceInfoSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_double import DoubleTapSettingsSection
+from openfreebuds_applet.ui.settings_ui.tab_device.gesture_double_in_call import DoubleTapInCallSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_long import LongTapSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_long_separate import LongTapSeparateSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_long_separate_nc import NoiseControlSeparateSettingsSection
@@ -45,6 +46,7 @@ class DeviceSettingsTab(ttk.Frame):
         option_views = [
             DeviceInfoSettingsSection,
             DoubleTapSettingsSection,
+            DoubleTapInCallSettingsSection,
             LongTapSettingsSection,
             LongTapSeparateSettingsSection,
             NoiseControlSeparateSettingsSection,

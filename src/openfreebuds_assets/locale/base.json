@@ -19,6 +19,8 @@
   "battery_global": "Battery: {}%",
   "double_tap_left": "Double-tap on left",
   "double_tap_right": "Double-tap on right",
+  "double_tap_in_call": "Double-tap in call",
+  "tap_action_answer": "Answer to call",
   "conf_action_power_button": "Power button action",
   "conf_action_long_tap": "Long-tap action",
   "first_run_text": "Welcome,\n\nThis application allows you to manage your HUAWEI FreeBuds. There's no main window, app just provide a tray indicator, which you can find on taskbar near other indicators. Right-click them to see a list of options.\n\nDevice will be selected automatically, but you can override it. Here's some common settings, you can change it anytime from settings menu:\n",

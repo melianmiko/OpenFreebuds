@@ -42,6 +42,8 @@ class VirtualDevice(BaseDevice):
                 "double_tap_left": "tap_action_off",
                 "double_tap_right": "tap_action_pause",
                 "double_tap_options": "tap_action_off,tap_action_pause",
+                "double_tap_in_call": "tap_action_answer",
+                "double_tap_in_call_options": "tap_action_off,tap_action_answer",
                 # LongTapAction
                 "long_tap": "tap_action_switch_anc",
                 "long_tap_options": "tap_action_off,tap_action_switch_anc",
