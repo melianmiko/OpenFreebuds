@@ -2,6 +2,7 @@
 !include "x64.nsh"
 
 !define APP_NAME "OpenFreebuds"
+!define APP_VERSION "0.12.3"
 !define APP_DEVELOPER "MelianMiko"
 !define APP_BUILD_NAME "openfreebuds"
 !define APP_EXE "openfreebuds.exe"
@@ -59,9 +60,17 @@ Section "Dummy Section" SecDummy
 	;Store installation folder
 	WriteRegStr HKCU "Software\${APP_DEVELOPER} ${APP_NAME}" "" $INSTDIR
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}_APP" \
+			"DisplayIcon" "$INSTDIR\openfreebuds.exe"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}_APP" \
 			"DisplayName" "OpenFreebuds"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}_APP" \
+			"DisplayVersion" "${APP_VERSION}"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}_APP" \ 
+			"QuietUninstallString" "$\"$INSTDIR\uninstall.exe$\" /S"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}_APP" \
 			"UninstallString" "$\"$INSTDIR\uninstall.exe$\""
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}_APP" \
+			"Publisher" "${APP_DEVELOPER}"
 
 	;Create uninstaller
 	WriteUninstaller "$INSTDIR\Uninstall.exe"
