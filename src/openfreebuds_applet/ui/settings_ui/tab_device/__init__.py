@@ -15,6 +15,7 @@ from openfreebuds_applet.ui.settings_ui.tab_device.gesture_long import LongTapSe
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_long_separate import LongTapSeparateSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_long_separate_nc import NoiseControlSeparateSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_power import PowerButtonSettingsSection
+from openfreebuds_applet.ui.settings_ui.tab_device.gesture_swipe import SwipeGestureSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.voice_language import LanguageSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.tws_auto_pause import AutoPauseSettingsSection
 
@@ -50,6 +51,7 @@ class DeviceSettingsTab(ttk.Frame):
             LongTapSettingsSection,
             LongTapSeparateSettingsSection,
             NoiseControlSeparateSettingsSection,
+            SwipeGestureSettingsSection,
             PowerButtonSettingsSection,
             AutoPauseSettingsSection,
             LanguageSettingsSection,

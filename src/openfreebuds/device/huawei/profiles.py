@@ -9,6 +9,7 @@ from openfreebuds.device.huawei.spp_handlers.gesture_double import DoubleTapConf
 from openfreebuds.device.huawei.spp_handlers.gesture_long import LongTapAction
 from openfreebuds.device.huawei.spp_handlers.gesture_long_separate import SplitLongTapActionConfigHandler
 from openfreebuds.device.huawei.spp_handlers.gesture_power import PowerButtonConfigHandler
+from openfreebuds.device.huawei.spp_handlers.gesture_swipe import SwipeActionHandler
 from openfreebuds.device.huawei.spp_handlers.tws_auto_pause import TwsAutoPauseHandler
 from openfreebuds.device.huawei.spp_handlers.tws_in_ear import TwsInEarHandler
 from openfreebuds.device.huawei.spp_handlers.voice_language import VoiceLanguageHandler
@@ -19,7 +20,7 @@ class FreeLaceProDevice(GenericHuaweiSppDevice):
         super().__init__(address)
 
         # Add cooldown to prevent device hang
-        self.spp_connect_sleep = 1
+        self.spp_connect_sleep = 2
 
         self.handlers = [
             # Drop2b03Handler(),
@@ -33,6 +34,9 @@ class FreeLaceProDevice(GenericHuaweiSppDevice):
 
 
 class FreeBuds4iDevice(GenericHuaweiSppDevice):
+    """
+    HUAWEI FreeBuds 4i
+    """
     def __init__(self, address):
         super().__init__(address)
         self.handlers = [
@@ -43,13 +47,16 @@ class FreeBuds4iDevice(GenericHuaweiSppDevice):
             BatteryHandler(),
             # TouchpadConfigHandler(),
             DoubleTapConfigHandler(),
-            SplitLongTapActionConfigHandler(False),
+            SplitLongTapActionConfigHandler(),
             TwsAutoPauseHandler(),
             VoiceLanguageHandler(),
         ]
 
 
 class FreeBuds5iDevice(GenericHuaweiSppDevice):
+    """
+    HUAWEI FreeBuds 5i
+    """
     def __init__(self, address):
         super().__init__(address)
         self.handlers = [
@@ -59,11 +66,11 @@ class FreeBuds5iDevice(GenericHuaweiSppDevice):
             ProAncHandler(),
             BatteryHandler(),
             DoubleTapConfigHandler(),
-            SplitLongTapActionConfigHandler(False),
+            SplitLongTapActionConfigHandler(with_right=True),
+            SwipeActionHandler(),
             TwsAutoPauseHandler(),
             VoiceLanguageHandler(),
         ]
-
 
 
 class FreeBudsSEDevice(GenericHuaweiSppDevice):

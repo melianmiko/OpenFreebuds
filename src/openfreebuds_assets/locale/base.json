@@ -52,6 +52,8 @@
   "submenu_theme": "Theme:",
   "submenu_language": "Language:",
   "submenu_device_language": "Device language:",
+  "swipe_gesture": "Swipe action",
+  "tap_action_change_volume": "Adjust volume",
   "tap_action_assistant": "Voice assistant",
   "tap_action_next": "Next track",
   "tap_action_off": "Disabled",

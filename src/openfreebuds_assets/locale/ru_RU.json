@@ -52,6 +52,8 @@
   "submenu_theme": "Тема:",
   "submenu_language": "Язык:",
   "submenu_device_language": "Язык устройства:",
+  "swipe_gesture": "Действие при свайпах",
+  "tap_action_change_volume": "Изменение громкости",
   "tap_action_assistant": "Голосовой помощник",
   "tap_action_next": "Следующий трек",
   "tap_action_off": "Отключено",

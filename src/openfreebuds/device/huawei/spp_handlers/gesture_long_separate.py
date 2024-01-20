@@ -41,7 +41,7 @@ class SplitLongTapActionConfigHandler(HuaweiSppHandler):
         ("action", "noise_control_right"),
     ]
 
-    def __init__(self, with_right):
+    def __init__(self, with_right=False):
         self.with_right = with_right
 
     def on_init(self):
@@ -76,7 +76,7 @@ class SplitLongTapActionConfigHandler(HuaweiSppHandler):
     def on_package(self, package: HuaweiSppPackage):
         left = package.find_param(1)
         right = package.find_param(2)
-        available_options = package.find_param(3)
+        # available_options = package.find_param(3)
         if package.command_id == b"+\x17":
             if len(left) == 1:
                 value = int.from_bytes(left, byteorder="big", signed=True)
