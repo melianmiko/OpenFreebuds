@@ -76,6 +76,30 @@ class FreeBuds5iDevice(GenericHuaweiSppDevice):
         ]
 
 
+class FreeBudsPro3Device(GenericHuaweiSppDevice):
+    """
+    HUAWEI FreeBuds Pro 3
+    """
+    def __init__(self, address):
+        super().__init__(address)
+        self.spp_fallback_port = 1
+        self.handlers = [
+            # May work
+            DeviceInfoHandler(),
+            TwsInEarHandler(),
+            AncSettingHandler(w_cancel_lvl=True, w_cancel_dynamic=True, w_voice_boost=True),
+            BatteryHandler(),
+            ConfigSoundQualityHandler(),
+            EqualizerConfigHandler(),
+            # Not tested, no research data
+            TwsAutoPauseHandler(),
+            VoiceLanguageHandler(),
+            DoubleTapConfigHandler(),
+            SplitLongTapActionConfigHandler(with_right=True),
+            SwipeActionHandler(),
+        ]
+
+
 class FreeBudsSEDevice(GenericHuaweiSppDevice):
     def __init__(self, address):
         super().__init__(address)
