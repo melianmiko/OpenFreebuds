@@ -2,7 +2,7 @@ from openfreebuds.device.huawei.generic.spp_device import GenericHuaweiSppDevice
 from openfreebuds.device.huawei.spp_handlers.anc_change import AncChangeDetectionHandler
 from openfreebuds.device.huawei.spp_handlers.anc_control import AncSettingHandler
 from openfreebuds.device.huawei.spp_handlers.battery import BatteryHandler
-from openfreebuds.device.huawei.spp_handlers.config_equalizer import EqualizerConfigHandler
+from openfreebuds.device.huawei.spp_handlers.config_equalizer import BuiltInEqualizerHandler
 from openfreebuds.device.huawei.spp_handlers.config_sound_quality import ConfigSoundQualityHandler
 from openfreebuds.device.huawei.spp_handlers.device_info import DeviceInfoHandler
 from openfreebuds.device.huawei.spp_handlers.drop import DropLogsHandler
@@ -11,6 +11,7 @@ from openfreebuds.device.huawei.spp_handlers.gesture_long import LongTapAction
 from openfreebuds.device.huawei.spp_handlers.gesture_long_separate import SplitLongTapActionConfigHandler
 from openfreebuds.device.huawei.spp_handlers.gesture_power import PowerButtonConfigHandler
 from openfreebuds.device.huawei.spp_handlers.gesture_swipe import SwipeActionHandler
+from openfreebuds.device.huawei.spp_handlers.multi_device_toggle import MultiDeviceToggleHandler
 from openfreebuds.device.huawei.spp_handlers.tws_auto_pause import TwsAutoPauseHandler
 from openfreebuds.device.huawei.spp_handlers.tws_in_ear import TwsInEarHandler
 from openfreebuds.device.huawei.spp_handlers.voice_language import VoiceLanguageHandler
@@ -54,6 +55,23 @@ class FreeBuds4iDevice(GenericHuaweiSppDevice):
         ]
 
 
+class FreeBudsProDevice(GenericHuaweiSppDevice):
+    def __init__(self, address):
+        super().__init__(address)
+        self.handlers = [
+            DeviceInfoHandler(),
+            TwsInEarHandler(),
+            BatteryHandler(),
+            AncSettingHandler(w_cancel_lvl=True, w_cancel_dynamic=True, w_voice_boost=True),
+            # not tested, no information
+            SwipeActionHandler(),
+            TwsInEarHandler(),
+            DoubleTapConfigHandler(),
+            SplitLongTapActionConfigHandler(w_right=True),
+            VoiceLanguageHandler(),
+        ]
+
+
 class FreeBuds5iDevice(GenericHuaweiSppDevice):
     """
     HUAWEI FreeBuds 5i
@@ -64,14 +82,19 @@ class FreeBuds5iDevice(GenericHuaweiSppDevice):
             # DropLogsHandler(),
             DeviceInfoHandler(),
             TwsInEarHandler(),
-            AncSettingHandler(w_cancel_lvl=True),
             BatteryHandler(),
+            AncSettingHandler(w_cancel_lvl=True),
             DoubleTapConfigHandler(),
-            SplitLongTapActionConfigHandler(with_right=True),
+            SplitLongTapActionConfigHandler(w_right=True),
             SwipeActionHandler(),
             TwsAutoPauseHandler(),
             ConfigSoundQualityHandler(),
-            EqualizerConfigHandler(),
+            BuiltInEqualizerHandler(w_presets={
+                1: "default",
+                2: "hardbass",
+                3: "treble",
+            }),
+            MultiDeviceToggleHandler(),
             VoiceLanguageHandler(),
         ]
 
@@ -86,16 +109,22 @@ class FreeBudsPro3Device(GenericHuaweiSppDevice):
         self.handlers = [
             # May work
             DeviceInfoHandler(),
-            TwsInEarHandler(),
             AncSettingHandler(w_cancel_lvl=True, w_cancel_dynamic=True, w_voice_boost=True),
             BatteryHandler(),
             ConfigSoundQualityHandler(),
-            EqualizerConfigHandler(),
-            # Not tested, no research data
+            BuiltInEqualizerHandler(w_presets={
+                5: "default",
+                1: "hardbass",
+                2: "treble",
+                9: "voice",
+            }),
             TwsAutoPauseHandler(),
+            MultiDeviceToggleHandler(),
+            # Not tested, no research data
+            TwsInEarHandler(),
             VoiceLanguageHandler(),
             DoubleTapConfigHandler(),
-            SplitLongTapActionConfigHandler(with_right=True),
+            SplitLongTapActionConfigHandler(w_right=True),
             SwipeActionHandler(),
         ]
 

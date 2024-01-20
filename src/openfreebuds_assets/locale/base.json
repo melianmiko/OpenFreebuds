@@ -70,6 +70,7 @@
   "equalizer_preset_default": "Default",
   "equalizer_preset_hardbass": "Bass-boost",
   "equalizer_preset_treble": "Treble-boost",
+  "equalizer_preset_voice": "Voice",
   "theme_auto": "Auto-detect",
   "theme_dark": "Dark",
   "theme_light": "Light",

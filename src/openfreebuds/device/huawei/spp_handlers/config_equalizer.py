@@ -2,14 +2,8 @@ from openfreebuds.device.huawei.generic.spp_handler import HuaweiSppHandler
 from openfreebuds.device.huawei.generic.spp_package import HuaweiSppPackage
 from openfreebuds.device.huawei.tools import reverse_dict
 
-KNOWN_OPTIONS = {
-    1: "equalizer_preset_default",
-    2: "equalizer_preset_hardbass",
-    3: "equalizer_preset_treble",
-}
 
-
-class EqualizerConfigHandler(HuaweiSppHandler):
+class BuiltInEqualizerHandler(HuaweiSppHandler):
     """
     Built-in equalizer settings handler (5i)
     """
@@ -24,13 +18,18 @@ class EqualizerConfigHandler(HuaweiSppHandler):
         ("config", "equalizer_preset")
     )
 
+    def __init__(self, w_presets=None):
+        self.w_presets = w_presets or {}
+        for i in self.w_presets:
+            self.w_presets[i] = "equalizer_preset_" + self.w_presets[i]
+
     def on_init(self):
         self.device.send_package(HuaweiSppPackage(b"\x2b\x49", [
             (2, b""),
         ]))
 
     def on_prop_changed(self, group: str, prop: str, value):
-        value = reverse_dict(KNOWN_OPTIONS)[value]
+        value = reverse_dict(self.w_presets)[value]
         pkg = HuaweiSppPackage(b"\x2b\x49", [
             (1, value),
         ])
@@ -44,6 +43,6 @@ class EqualizerConfigHandler(HuaweiSppHandler):
         if len(value) == 1:
             value = int.from_bytes(value, byteorder="big", signed=True)
             self.device.put_property("config", "equalizer_preset",
-                                     KNOWN_OPTIONS[value])
+                                     self.w_presets[value])
             self.device.put_property("config", "equalizer_preset_options",
-                                     ",".join(KNOWN_OPTIONS.keys()))
+                                     ",".join(self.w_presets.keys()))

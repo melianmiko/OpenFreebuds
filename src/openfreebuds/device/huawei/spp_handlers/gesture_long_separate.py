@@ -41,8 +41,8 @@ class SplitLongTapActionConfigHandler(HuaweiSppHandler):
         ("action", "noise_control_right"),
     ]
 
-    def __init__(self, with_right=False):
-        self.with_right = with_right
+    def __init__(self, w_right=False):
+        self.w_right = w_right
 
     def on_init(self):
         self.device.send_package(HuaweiSppPackage(b"\x2b\x17", [
@@ -82,7 +82,7 @@ class SplitLongTapActionConfigHandler(HuaweiSppHandler):
                 value = int.from_bytes(left, byteorder="big", signed=True)
                 self.device.put_property("action", "long_tap_left",
                                          KNOWN_LONG_TAP_OPTIONS.get(value, value))
-            if len(right) == 1 and self.with_right:
+            if len(right) == 1 and self.w_right:
                 value = int.from_bytes(right, byteorder="big", signed=True)
                 self.device.put_property("action", "long_tap_right",
                                          KNOWN_LONG_TAP_OPTIONS.get(value, value))
@@ -99,7 +99,7 @@ class SplitLongTapActionConfigHandler(HuaweiSppHandler):
                 value = int.from_bytes(left, byteorder="big", signed=True)
                 self.device.put_property("action", "noise_control_left",
                                          KNOWN_ANC_OPTIONS.get(value, value))
-            if len(right) == 1 and self.with_right:
+            if len(right) == 1 and self.w_right:
                 value = int.from_bytes(right, byteorder="big", signed=True)
                 self.device.put_property("action", "noise_control_right",
                                          KNOWN_ANC_OPTIONS.get(value, value))
