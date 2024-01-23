@@ -6,12 +6,13 @@ from openfreebuds.device.huawei.spp_handlers.config_equalizer import BuiltInEqua
 from openfreebuds.device.huawei.spp_handlers.config_sound_quality import ConfigSoundQualityHandler
 from openfreebuds.device.huawei.spp_handlers.device_info import DeviceInfoHandler
 from openfreebuds.device.huawei.spp_handlers.drop import DropLogsHandler
+from openfreebuds.device.huawei.spp_handlers.dual_connect_devices import DualConnectDevicesHandler
 from openfreebuds.device.huawei.spp_handlers.gesture_double import DoubleTapConfigHandler
 from openfreebuds.device.huawei.spp_handlers.gesture_long import LongTapAction
 from openfreebuds.device.huawei.spp_handlers.gesture_long_separate import SplitLongTapActionConfigHandler
 from openfreebuds.device.huawei.spp_handlers.gesture_power import PowerButtonConfigHandler
 from openfreebuds.device.huawei.spp_handlers.gesture_swipe import SwipeActionHandler
-from openfreebuds.device.huawei.spp_handlers.multi_device_toggle import MultiDeviceToggleHandler
+from openfreebuds.device.huawei.spp_handlers.dual_connect_toggle import DualConnectToggleHandler
 from openfreebuds.device.huawei.spp_handlers.tws_auto_pause import TwsAutoPauseHandler
 from openfreebuds.device.huawei.spp_handlers.tws_in_ear import TwsInEarHandler
 from openfreebuds.device.huawei.spp_handlers.voice_language import VoiceLanguageHandler
@@ -94,7 +95,8 @@ class FreeBuds5iDevice(GenericHuaweiSppDevice):
                 2: "hardbass",
                 3: "treble",
             }),
-            MultiDeviceToggleHandler(),
+            DualConnectToggleHandler(),
+            DualConnectDevicesHandler(),
             VoiceLanguageHandler(),
         ]
 
@@ -119,8 +121,9 @@ class FreeBudsPro3Device(GenericHuaweiSppDevice):
                 9: "voice",
             }),
             TwsAutoPauseHandler(),
-            MultiDeviceToggleHandler(),
+            DualConnectToggleHandler(),
             # Not tested, no research data
+            DualConnectDevicesHandler(),
             TwsInEarHandler(),
             VoiceLanguageHandler(),
             DoubleTapConfigHandler(),

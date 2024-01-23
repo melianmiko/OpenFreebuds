@@ -62,12 +62,11 @@ class GenericHuaweiSppDevice(HuaweiSppDevice):
                 log.warning("Too long read wait, maybe command is ignored")
 
     def on_set_property(self, group: str, prop: str, value):
-        tag = f"{group}__{prop}"
-
-        if tag not in self._on_prop_change:
-            raise ValueError("This property can't be changed")
-
-        self._on_prop_change[tag].on_prop_changed(group, prop, value)
+        if f"{group}__{prop}" in self._on_prop_change:
+            return self._on_prop_change[f"{group}__{prop}"].on_prop_changed(group, prop, value)
+        if f"{group}__" in self._on_prop_change:
+            return self._on_prop_change[f"{group}__"].on_prop_changed(group, prop, value)
+        raise ValueError("This property can't be changed")
 
     # noinspection PyBroadException
     def on_package(self, pkg: bytes):

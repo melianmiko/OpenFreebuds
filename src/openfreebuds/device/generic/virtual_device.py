@@ -56,7 +56,21 @@ class VirtualDevice(BaseDevice):
                 "power_button": "tap_action_switch_device",
                 "power_button_options": "tap_action_off,tap_action_switch_device",
             },
+            "dev_name": {
+                "556677889900": "Galaxy A10",
+                "001122334455": "DESKTOP-1123",
+            },
+            "dev_auto_connect": {
+                "556677889900": False,
+                "001122334455": True,
+            },
+            "dev_connected": {
+                "556677889900": True,
+                "001122334455": False
+            },
             "config": {
+                "dual_connect": True,
+                "preferred_device": "556677889900",
                 "auto_pause": True,
                 "sound_quality_preference": "sqp_quality",
                 "sound_quality_preference_options": "sqp_quality,sqp_connectivity",
@@ -64,6 +78,6 @@ class VirtualDevice(BaseDevice):
                 "equalizer_preset_options": "equalizer_preset_default,equalizer_preset_hardbass",
             },
             "service": {
-                "supported_languages": "en-GB"
+                "supported_languages": "en-GB",
             }
         })

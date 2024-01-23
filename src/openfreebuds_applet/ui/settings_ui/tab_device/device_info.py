@@ -7,6 +7,7 @@ from openfreebuds_applet.ui.settings_ui.tab_device._generic import DeviceSetting
 
 
 class DeviceInfoSettingsSection(DeviceSettingsSection):
+    action_button = t("action_show_info")
     required_props = [
         ("info", "software_ver"),
     ]
@@ -17,8 +18,8 @@ class DeviceInfoSettingsSection(DeviceSettingsSection):
             .grid(row=1, padx=16, pady=4, sticky=tkinter.NW)
         ttk.Label(self, text=self.device.find_property("info", "software_ver")) \
             .grid(row=1, padx=16, pady=4, column=1, sticky=tkinter.NW)
-        ttk.Button(self, text=t("action_show_info"),
-                   command=lambda *args: device_info_dialog.start(self.device))\
-            .grid(row=2, column=0, padx=16, pady=8, sticky="nws")
 
         self.grid_columnconfigure(0, weight=1)
+
+    def on_action_button_click(self):
+        device_info_dialog.start(self.device)

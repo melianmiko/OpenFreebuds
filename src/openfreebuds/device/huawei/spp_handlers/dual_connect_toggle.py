@@ -2,11 +2,11 @@ from openfreebuds.device.huawei.generic.spp_handler import HuaweiSppHandler
 from openfreebuds.device.huawei.generic.spp_package import HuaweiSppPackage
 
 
-class MultiDeviceToggleHandler(HuaweiSppHandler):
+class DualConnectToggleHandler(HuaweiSppHandler):
     """
-    Enable/disable multi-device support (pro 3, maybe 5i)
+    Enable/disable multi-device support (pro 3, 5i)
     """
-    handler_id = "multi_device_toggle"
+    handler_id = "dual_connect_toggle"
     handle_commands = (
         b"\x2b\x2f"
     )
@@ -14,7 +14,7 @@ class MultiDeviceToggleHandler(HuaweiSppHandler):
         b"\x2b\x2e",
     )
     handle_props = (
-        ("multi_device", "enabled"),
+        ("config", "dual_connect"),
     )
 
     def on_init(self):
@@ -34,4 +34,4 @@ class MultiDeviceToggleHandler(HuaweiSppHandler):
 
         if len(value) == 1:
             value = int(value[0])
-            self.device.put_property("multi_device", "enabled", value)
+            self.device.put_property("config", "dual_connect", value == 1)

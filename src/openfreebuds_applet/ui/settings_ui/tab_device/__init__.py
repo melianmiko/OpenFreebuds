@@ -11,6 +11,7 @@ import tkinter.font
 from openfreebuds_applet.ui.settings_ui.tab_device.config_equalizer import EqualizerSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.config_sound_quality import SoundQualitySettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.device_info import DeviceInfoSettingsSection
+from openfreebuds_applet.ui.settings_ui.tab_device.dual_connect_devices import DualConnectDevicesSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_double import DoubleTapSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_double_in_call import DoubleTapInCallSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_long import LongTapSettingsSection
@@ -58,6 +59,7 @@ class DeviceSettingsTab(ttk.Frame):
 
         option_views = [
             DeviceInfoSettingsSection,
+            DualConnectDevicesSettingsSection,
             DoubleTapSettingsSection,
             DoubleTapInCallSettingsSection,
             LongTapSettingsSection,
@@ -72,7 +74,11 @@ class DeviceSettingsTab(ttk.Frame):
             LanguageSettingsSection,
         ]
 
-        y = 20
+        self.button_row = tkinter.Frame(self)
+        self.button_row.grid(row=20, columnspan=2, sticky=tkinter.NSEW, pady=4, padx=8)
+        self.button_row_x = 0
+
+        y = 30
         for Option in option_views:
             category = Option.category_name
             if Option.should_be_visible(self.manager, Option.required_props):
@@ -83,9 +89,18 @@ class DeviceSettingsTab(ttk.Frame):
                         .grid(row=y, column=0, columnspan=2, sticky=tkinter.NW, padx=16, pady=16)
                     self.categories[category] = y + 1
                     y += 20
-                Option((self, self.manager.device))\
-                    .grid(row=self.categories[category], columnspan=2, sticky=tkinter.NSEW)
+                view = Option((self, self.manager.device))
+                if view.action_button is not None:
+                    self.add_action_button(view)
+                view.grid(row=self.categories[category], columnspan=2, sticky=tkinter.NSEW)
                 self.categories[category] += 1
+
+    def add_action_button(self, view):
+        ttk.Button(self.button_row,
+                   text=view.action_button,
+                   command=lambda *args: view.on_action_button_click())\
+            .grid(row=0, column=self.button_row_x, padx=8)
+        self.button_row_x += 1
 
     def _add_device_info(self):
         # Device info

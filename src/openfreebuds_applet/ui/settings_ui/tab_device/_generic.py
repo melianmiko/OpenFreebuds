@@ -8,10 +8,14 @@ from openfreebuds.manager import FreebudsManager
 class DeviceSettingsSection(tkinter.Frame):
     required_props = []
     category_name = "main"
+    action_button = None
 
     def __init__(self, params):
         super().__init__(params[0])
         self.device: BaseDevice = params[1]
+
+    def on_action_button_click(self):
+        pass
 
     @staticmethod
     def should_be_visible(manager: FreebudsManager, required_props):

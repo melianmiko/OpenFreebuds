@@ -56,17 +56,17 @@ class BaseDevice:
     def _rewrite_properties(self, all_props):
         self._prop_storage = all_props
 
-    def put_group(self, group, value):
+    def put_group(self, group, value, silent=False):
         self._prop_storage[group] = value
-        if self.enable_prop_changed_event:
+        if self.enable_prop_changed_event and not silent:
             event_bus.invoke(EVENT_DEVICE_PROP_CHANGED)
 
-    def put_property(self, group, prop, value):
+    def put_property(self, group, prop, value, silent=False):
         if group not in self._prop_storage:
             self._prop_storage[group] = {}
 
         self._prop_storage[group][prop] = value
-        if self.enable_prop_changed_event:
+        if self.enable_prop_changed_event and not silent:
             event_bus.invoke(EVENT_DEVICE_PROP_CHANGED)
 
     def list_properties(self):

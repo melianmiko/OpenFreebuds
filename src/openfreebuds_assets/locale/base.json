@@ -87,6 +87,7 @@
   "category_double_tap": "Double-tap",
   "category_long_tap": "Long-tap",
   "category_gestures_misc": "Other gestures",
+  "action_show_connection_center": "Connection center...",
   "webserver_port": "HTTP port is",
   "prop_server_access": "Allow external connections",
   "server_global_warn": "ATTENTION!\n\nThis feature will allow anyone from your local network to control\nyour FreeBuds device, and also can create a security violence.\nEnable this feature only if you know what you do.\n\nEnable external access to web server?",
