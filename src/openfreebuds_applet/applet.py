@@ -1,4 +1,3 @@
-import logging
 import os
 import signal
 
@@ -9,10 +8,10 @@ from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED, EVENT_DEVICE
 from openfreebuds.device.generic.base import BaseDevice
 from openfreebuds.logger import create_log
 from openfreebuds.manager import FreebudsManager
-from openfreebuds_applet import settings, utils, log_format, base_logger_names
+from openfreebuds_applet import settings, utils
+from openfreebuds_applet.dialog import first_run, device_select
 from openfreebuds_applet.modules import device_autoconfig, ModuleManager
 from openfreebuds_applet.ui import icons, tk_tools
-from openfreebuds_applet.dialog import first_run, device_select
 from openfreebuds_applet.ui.base import QuitingMenu
 from openfreebuds_applet.ui.menu_device import DeviceMenu
 from openfreebuds_applet.ui.menu_no_device import DeviceOfflineMenu, DeviceScanMenu
@@ -25,6 +24,7 @@ class FreebudsApplet:
         super().__init__()
         self.started = False
         self.allow_ui_update = False
+        self._on_device_available_called = False
         self.current_menu_hash = ""
         self.current_icon_hash = ""
 
@@ -151,6 +151,9 @@ class FreebudsApplet:
                 self.apply_menu(self.menu_scan)
                 device_autoconfig.process(self.manager, self.settings)
             elif self.manager.state == self.manager.STATE_CONNECTED:
+                if not self._on_device_available_called:
+                    self.on_device_available()
+                    self._on_device_available_called = True
                 self.apply_menu(self.menu_device)
             else:
                 self.apply_menu(self.menu_offline)
@@ -163,3 +166,6 @@ class FreebudsApplet:
 
         # noinspection PyProtectedMember,PyUnresolvedReferences
         os._exit(0)
+
+    def on_device_available(self):
+        pass

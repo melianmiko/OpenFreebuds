@@ -12,6 +12,7 @@ import openfreebuds_applet
 import openfreebuds_backend
 from openfreebuds import event_bus, cli_io
 from openfreebuds.constants.events import EVENT_MANAGER_STATE_CHANGED, EVENT_DEVICE_PROP_CHANGED
+from openfreebuds.device import BaseDevice
 from openfreebuds.logger import create_log
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t
@@ -32,6 +33,12 @@ def parse_args():
     parser.add_argument("--shell",
                         default=False, action="store_true",
                         help="Start CLI shell instead of applet")
+    parser.add_argument("--settings",
+                        default=False, action="store_true",
+                        help="Show settings dialog after app initialization")
+    parser.add_argument("--connection-center",
+                        default=False, action="store_true",
+                        help="Show connection manager dialog after app initialization")
     parser.add_argument("command",
                         default="", type=str, nargs='?',
                         help="If provided, will send command to httpserver and exit")
@@ -54,7 +61,8 @@ def main():
         return
 
     applet = openfreebuds_applet.create()
-    if is_start_possible(applet):
+    applet.on_device_available = lambda: on_device_available(applet, args)
+    if is_start_possible():
         # Start is allowed, running
         applet.start()
     else:
@@ -62,7 +70,16 @@ def main():
         applet.tray_application.run()
 
 
-def is_start_possible(applet):
+def on_device_available(applet, args):
+    if args.settings:
+        from openfreebuds_applet.ui.settings_ui import open_app_settings
+        open_app_settings(applet)
+    if args.connection_center:
+        from openfreebuds_applet.dialog import connection_center
+        connection_center.start(applet.manager.device)
+
+
+def is_start_possible():
     # Is already running?
     if openfreebuds_backend.is_running():
         tk_tools.message(t("application_running_message"), "Error", _leave)

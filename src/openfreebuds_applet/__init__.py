@@ -4,6 +4,7 @@ base_logger_names = [
     "Applet", "LinuxBackend", "WindowsBackend"
 ]
 
+
 def create():
     from openfreebuds_applet.applet import FreebudsApplet
     return FreebudsApplet()
