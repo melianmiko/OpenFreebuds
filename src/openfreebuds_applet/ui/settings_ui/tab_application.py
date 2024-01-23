@@ -7,6 +7,7 @@ from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED
 from openfreebuds_applet.l18n import t, list_langs, ln, setup_language, setup_auto
 from openfreebuds_applet.settings import SettingsStorage
 from openfreebuds_applet.ui import tk_tools, icons
+from openfreebuds_applet.ui.settings_ui.tab_modules import ModulesSettingsTab
 
 PAD_X_BASE = 16
 PAD_Y_BASE = 4
@@ -65,6 +66,10 @@ class AppSettingsTab(ttk.Frame):
                         variable=self.var_run_at_boot,
                         command=self._toggle_run_at_boot)\
             .grid(column=0, row=3, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE, columnspan=2)
+
+        ttk.Label(self, text=t("settings_tab_modules"), font=label_fnt)\
+            .grid(row=3, pady=16, sticky=tkinter.NW, padx=PAD_X_BASE)
+        ModulesSettingsTab(self, applet).grid(columnspan=2, row=4, sticky=tkinter.NSEW)
 
     def _toggle_run_at_boot(self):
         openfreebuds_backend.set_run_at_boot(self.var_run_at_boot.get())

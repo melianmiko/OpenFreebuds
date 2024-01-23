@@ -24,18 +24,27 @@ from openfreebuds_applet.ui.settings_ui.tab_device.tws_auto_pause import AutoPau
 
 
 class DeviceSettingsTab(ttk.Frame):
-    def __init__(self, parent: tkinter.Toplevel, manager: FreebudsManager, settings: SettingsStorage):
+    def __init__(
+            self,
+            parent: tkinter.Toplevel,
+            manager: FreebudsManager,
+            settings: SettingsStorage,
+            allowed_categories=None,
+            with_header=True
+    ):
         super().__init__(parent)
         device = manager.device
 
         self.manager = manager
         self.device = device
         self.settings = settings
+        self.allowed_categories = allowed_categories
         self.parent = parent
         self.is_recording = False
         self.grid_columnconfigure(0, weight=1)
 
-        self._add_device_info()
+        if with_header:
+            self._add_device_info()
         self._add_device_settings()
 
     def _add_device_settings(self):
@@ -57,9 +66,9 @@ class DeviceSettingsTab(ttk.Frame):
             NoiseControlSeparateSettingsSection,
             SwipeGestureSettingsSection,
             PowerButtonSettingsSection,
-            AutoPauseSettingsSection,
             SoundQualitySettingsSection,
             EqualizerSettingsSection,
+            AutoPauseSettingsSection,
             LanguageSettingsSection,
         ]
 
@@ -67,6 +76,8 @@ class DeviceSettingsTab(ttk.Frame):
         for Option in option_views:
             category = Option.category_name
             if Option.should_be_visible(self.manager, Option.required_props):
+                if self.allowed_categories is not None and category not in self.allowed_categories:
+                    continue
                 if category not in self.categories:
                     ttk.Label(self, text=t(category), font=label_fnt)\
                         .grid(row=y, column=0, columnspan=2, sticky=tkinter.NW, padx=16, pady=16)

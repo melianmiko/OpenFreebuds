@@ -4,7 +4,7 @@ from openfreebuds_applet.ui.settings_ui.tab_device._generic_selectable import Se
 class SoundQualitySettingsSection(SelectableDeviceOption):
     prop_options = ("config", "sound_quality_preference_options")
     prop_primary = ("config", "sound_quality_preference")
-    category_name = "setup_category_config"
+    category_name = "setup_category_sound_quality"
 
     required_props = [
         ("config", "sound_quality_preference"),

@@ -29,10 +29,24 @@ def open_app_settings(applet):
     notebook.grid(column=0, row=0, sticky="nesw")
 
     if applet.settings.address != "":
-        notebook.add(DeviceSettingsTab(tk, applet.manager, applet.settings), text=t("settings_tab_device"))
+        device_main_tab = DeviceSettingsTab(tk, applet.manager, applet.settings,
+                                            allowed_categories=[
+                                                "main",
+                                                "setup_category_sound_quality",
+                                                "setup_category_config",
+                                            ])
+        device_gestures_tab = DeviceSettingsTab(tk, applet.manager, applet.settings,
+                                                with_header=False,
+                                                allowed_categories=[
+                                                    "category_double_tap",
+                                                    "category_long_tap",
+                                                    "category_gestures_misc",
+                                                ])
+        notebook.add(device_main_tab, text=t("settings_tab_device"))
+        notebook.add(device_gestures_tab, text=t("setup_category_gestures"))
 
     notebook.add(AppSettingsTab(notebook, applet), text=t("settings_tab_app"))
-    notebook.add(ModulesSettingsTab(notebook, applet), text=t("settings_tab_modules"))
+    # notebook.add(ModulesSettingsTab(notebook, applet), text=t("settings_tab_modules"))
     notebook.add(tab_about.make_about(notebook, applet), text=t("settings_tab_about"))
 
     tk.tk.eval(f'tk::PlaceWindow {str(tk)} center')

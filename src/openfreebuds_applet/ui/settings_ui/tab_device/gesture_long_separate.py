@@ -5,7 +5,7 @@ class LongTapSeparateSettingsSection(SelectableDeviceOption):
     prop_options = ("action", "long_tap_options")
     prop_primary = ("action", "long_tap_left")
     prop_secondary = ("action", "long_tap_right")
-    category_name = "setup_category_gestures"
+    category_name = "category_long_tap"
 
     required_props = [
         ("action", "long_tap_left"),

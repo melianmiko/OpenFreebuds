@@ -5,7 +5,7 @@ class DoubleTapSettingsSection(SelectableDeviceOption):
     prop_options = ("action", "double_tap_options")
     prop_primary = ("action", "double_tap_left")
     prop_secondary = ("action", "double_tap_right")
-    category_name = "setup_category_gestures"
+    category_name = "category_double_tap"
 
     required_props = [
         ("action", "double_tap_options"),

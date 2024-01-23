@@ -4,7 +4,7 @@ from openfreebuds_applet.ui.settings_ui.tab_device._generic_selectable import Se
 class DoubleTapInCallSettingsSection(SelectableDeviceOption):
     prop_options = ("action", "double_tap_in_call_options")
     prop_primary = ("action", "double_tap_in_call")
-    category_name = "setup_category_gestures"
+    category_name = "category_double_tap"
 
     required_props = [
         ("action", "double_tap_in_call_options"),

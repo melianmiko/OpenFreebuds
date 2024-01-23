@@ -5,7 +5,7 @@ class PowerButtonSettingsSection(SelectableDeviceOption):
     prop_options = ("action", "power_button_options")
     prop_primary = ("action", "power_button")
     prop_primary_label = "conf_action_power_button"
-    category_name = "setup_category_gestures"
+    category_name = "category_gestures_misc"
 
     required_props = [
         ("action", "power_button"),
