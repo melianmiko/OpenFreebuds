@@ -14,6 +14,7 @@ from openfreebuds_applet.ui.settings_ui.tab_device.device_info import DeviceInfo
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_double import DoubleTapSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_double_in_call import DoubleTapInCallSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_long import LongTapSettingsSection
+from openfreebuds_applet.ui.settings_ui.tab_device.gesture_long_in_call import LongTapInCallSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_long_separate import LongTapSeparateSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_long_separate_nc import NoiseControlSeparateSettingsSection
 from openfreebuds_applet.ui.settings_ui.tab_device.gesture_power import PowerButtonSettingsSection
@@ -52,6 +53,7 @@ class DeviceSettingsTab(ttk.Frame):
             DoubleTapInCallSettingsSection,
             LongTapSettingsSection,
             LongTapSeparateSettingsSection,
+            LongTapInCallSettingsSection,
             NoiseControlSeparateSettingsSection,
             SwipeGestureSettingsSection,
             PowerButtonSettingsSection,

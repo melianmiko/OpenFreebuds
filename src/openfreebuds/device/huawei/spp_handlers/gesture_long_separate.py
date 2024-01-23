@@ -14,6 +14,11 @@ KNOWN_ANC_OPTIONS = {
     4: "noise_control_off_an"
 }
 
+KNOWN_LONG_TAP_IN_CALL_OPTIONS = {
+    -1: "tap_action_off",
+    0: "tap_action_answer"
+}
+
 
 class SplitLongTapActionConfigHandler(HuaweiSppHandler):
     """
@@ -39,10 +44,12 @@ class SplitLongTapActionConfigHandler(HuaweiSppHandler):
         ("action", "long_tap_right"),
         ("action", "noise_control_left"),
         ("action", "noise_control_right"),
+        ("action", "noise_control_in_call"),
     ]
 
-    def __init__(self, w_right=False):
+    def __init__(self, w_right=False, w_in_call=False):
         self.w_right = w_right
+        self.w_in_call = w_in_call
 
     def on_init(self):
         self.device.send_package(HuaweiSppPackage(b"\x2b\x17", [
@@ -55,12 +62,22 @@ class SplitLongTapActionConfigHandler(HuaweiSppHandler):
         ]), True)
 
     def on_prop_changed(self, group: str, prop: str, value):
-        p_type = 1 if prop.endswith("left") else 2
+        if "_left" in prop:
+            p_type = 1
+            p_options = KNOWN_LONG_TAP_OPTIONS
+        elif "_right" in prop:
+            p_type = 2
+            p_options = KNOWN_LONG_TAP_OPTIONS
+        elif "_in_call" in prop:
+            p_type = 4
+            p_options = KNOWN_LONG_TAP_IN_CALL_OPTIONS
+        else:
+            return
 
         if prop.startswith("long_tap"):
             # Main action
             pkg = HuaweiSppPackage(b"\x2b\x16", [
-                (p_type, reverse_dict(KNOWN_LONG_TAP_OPTIONS)[value]),
+                (p_type, reverse_dict(p_options)[value]),
             ])
         else:
             # ANC modes
@@ -76,7 +93,7 @@ class SplitLongTapActionConfigHandler(HuaweiSppHandler):
     def on_package(self, package: HuaweiSppPackage):
         left = package.find_param(1)
         right = package.find_param(2)
-        # available_options = package.find_param(3)
+        in_call = package.find_param(4)
         if package.command_id == b"+\x17":
             if len(left) == 1:
                 value = int.from_bytes(left, byteorder="big", signed=True)
@@ -86,14 +103,13 @@ class SplitLongTapActionConfigHandler(HuaweiSppHandler):
                 value = int.from_bytes(right, byteorder="big", signed=True)
                 self.device.put_property("action", "long_tap_right",
                                          KNOWN_LONG_TAP_OPTIONS.get(value, value))
+            if len(in_call) == 1 and self.w_in_call:
+                value = int.from_bytes(right, byteorder="big", signed=True)
+                self.device.put_property("action", "long_tap_in_call",
+                                         KNOWN_LONG_TAP_IN_CALL_OPTIONS.get(value, value))
+                self.device.put_property("action", "long_tap_in_call_options",
+                                         ",".join(KNOWN_LONG_TAP_IN_CALL_OPTIONS.keys()))
             self.device.put_property("action", "long_tap_options", ",".join(KNOWN_LONG_TAP_OPTIONS.values()))
-            # if len(available_options) > 0:
-            #     value = list(struct.unpack(f'{len(available_options)}b', available_options))
-            #     out = []
-            #     for v in value:
-            #         if v in KNOWN_LONG_TAP_OPTIONS:
-            #             out.append(str(v))
-            #     self.device.put_property("action", "long_tap_options", ",".join(out))
         elif package.command_id == b'+\x19':
             if len(left) == 1:
                 value = int.from_bytes(left, byteorder="big", signed=True)

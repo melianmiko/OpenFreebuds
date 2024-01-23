@@ -47,6 +47,8 @@ class VirtualDevice(BaseDevice):
                 # LongTapAction
                 "long_tap": "tap_action_switch_anc",
                 "long_tap_options": "tap_action_off,tap_action_switch_anc",
+                "long_tap_in_call": "tap_action_answer",
+                "long_tap_in_call_options": "tap_action_off,tap_action_answer",
                 # SwipeActionHandler
                 "swipe_gesture": "tap_action_change_volume",
                 "swipe_gesture_options": "tap_action_off,tap_action_change_volume",
