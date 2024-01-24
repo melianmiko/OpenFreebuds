@@ -23,6 +23,7 @@ class GenericHuaweiSppDevice(HuaweiSppDevice):
 
         self.spp_service_uuid = "00001101-0000-1000-8000-00805f9b34fb"
         self.spp_fallback_port = 16
+        self.spp_init_sleep_interval = 0.05
 
         self.handlers: list[HuaweiSppHandler] = []
 
@@ -34,6 +35,7 @@ class GenericHuaweiSppDevice(HuaweiSppDevice):
     def on_init(self):
         # Bind all handlers
         for handler in self.handlers:
+            log.info(f"Attach handler {handler.handler_id}...")
             handler.on_device_ready(self)
 
             # Add to handlers hashtable
@@ -51,6 +53,7 @@ class GenericHuaweiSppDevice(HuaweiSppDevice):
                 self._on_package[command_id] = self._ignore_handler
 
             handler.on_init()
+            time.sleep(self.spp_init_sleep_interval)
 
     def send_package(self, pkg: HuaweiSppPackage, read=False):
         log.debug(f"send {pkg}")

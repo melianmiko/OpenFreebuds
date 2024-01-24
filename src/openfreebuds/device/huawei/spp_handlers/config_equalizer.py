@@ -8,15 +8,15 @@ class BuiltInEqualizerHandler(HuaweiSppHandler):
     Built-in equalizer settings handler (5i)
     """
     handler_id = "config_eq"
-    handle_commands = (
+    handle_commands = [
         b"\x2b\x4a",
-    )
-    ignore_commands = (
+    ]
+    ignore_commands = [
         b"\x2b\x49",
-    )
-    handle_props = (
+    ]
+    handle_props = [
         ("config", "equalizer_preset")
-    )
+    ]
 
     def __init__(self, w_presets=None):
         self.w_presets = w_presets or {}
@@ -24,7 +24,7 @@ class BuiltInEqualizerHandler(HuaweiSppHandler):
             self.w_presets[i] = "equalizer_preset_" + self.w_presets[i]
 
     def on_init(self):
-        self.device.send_package(HuaweiSppPackage(b"\x2b\x49", [
+        self.device.send_package(HuaweiSppPackage(b"\x2b\x4a", [
             (2, b""),
         ]))
 
@@ -45,4 +45,4 @@ class BuiltInEqualizerHandler(HuaweiSppHandler):
             self.device.put_property("config", "equalizer_preset",
                                      self.w_presets[value])
             self.device.put_property("config", "equalizer_preset_options",
-                                     ",".join(self.w_presets.keys()))
+                                     ",".join(self.w_presets.values()))

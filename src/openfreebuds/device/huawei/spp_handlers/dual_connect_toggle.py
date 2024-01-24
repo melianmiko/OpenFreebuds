@@ -7,15 +7,15 @@ class DualConnectToggleHandler(HuaweiSppHandler):
     Enable/disable multi-device support (pro 3, 5i)
     """
     handler_id = "dual_connect_toggle"
-    handle_commands = (
+    handle_commands = [
         b"\x2b\x2f"
-    )
-    ignore_commands = (
+    ]
+    ignore_commands = [
         b"\x2b\x2e",
-    )
-    handle_props = (
+    ]
+    handle_props = [
         ("config", "dual_connect"),
-    )
+    ]
 
     def on_init(self):
         self.device.send_package(HuaweiSppPackage(b"\x2b\x2f", [

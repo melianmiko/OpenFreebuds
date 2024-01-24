@@ -1,3 +1,4 @@
+import time
 import tkinter
 from tkinter import ttk
 
@@ -14,6 +15,7 @@ class ConnCenter(tkinter.Toplevel):
     def __init__(self, device: BaseDevice):
         super().__init__()
 
+        self.btn_refresh = None
         self.btn_unpair = None
         self.cb_auto_connect = None
         self.btn_connect = None
@@ -121,27 +123,31 @@ class ConnCenter(tkinter.Toplevel):
         self.y += 1
 
         self.device_name_view = ttk.Label(box, text=t("prefix_selected_device") + ": N/A")
-        self.device_name_view.grid(row=0, column=0, columnspan=3, sticky=tkinter.NSEW, padx=8, pady=8)
+        self.device_name_view.grid(row=0, column=0, columnspan=4, sticky=tkinter.NSEW, padx=8, pady=8)
 
         self.cb_auto_connect = ttk.Checkbutton(box,
                                                text=t("toggle_device_auto_connect"),
                                                state="disabled",
                                                command=self.on_device_auto_connect_toggle,
                                                variable=self.var_auto_connect)
-        self.cb_auto_connect.grid(row=1, column=0, columnspan=3, sticky=tkinter.NSEW, padx=8, pady=8)
+        self.cb_auto_connect.grid(row=1, column=0, columnspan=4, sticky=tkinter.NSEW, padx=8, pady=8)
 
         ttk.Label(box, text="") \
             .grid(row=2, column=0, sticky=tkinter.NSEW, padx=8)
+        self.btn_refresh = ttk.Button(box,
+                                      text=t("refresh"),
+                                      command=self.do_refresh)
+        self.btn_refresh.grid(row=2, column=1, padx=8, pady=16)
         self.btn_connect = ttk.Button(box,
                                       state="disabled",
                                       text=t("action_connect_short"),
                                       command=self.on_device_connect)
-        self.btn_connect.grid(row=2, column=1, padx=8, pady=16)
+        self.btn_connect.grid(row=2, column=2, padx=8, pady=16)
         self.btn_unpair = ttk.Button(box,
                                      state="disabled",
                                      text=t("action_unpair"),
                                      command=self.on_device_unpair)
-        self.btn_unpair.grid(row=2, column=2, padx=8, pady=16)
+        self.btn_unpair.grid(row=2, column=3, padx=8, pady=16)
 
     def on_preferred_device_select(self, _):
         addr = self.device_names[self.var_preferred_device.get()]
@@ -182,6 +188,11 @@ class ConnCenter(tkinter.Toplevel):
     def on_main_toggle(self):
         value = self.var_main_toggle.get()
         self.device.set_property("config", "dual_connect", value)
+
+    def do_refresh(self):
+        self.device.set_property("config", "refresh_devices", 1)
+        time.sleep(0.5)
+        self.refresh()
 
 
 @tk_tools.ui_thread

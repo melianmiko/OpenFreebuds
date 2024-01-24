@@ -2,6 +2,7 @@ import logging
 import traceback
 
 from openfreebuds.device.generic.base import BaseDevice
+from openfreebuds.device.huawei.generic.spp_package import HuaweiSppPackage
 from openfreebuds.logger import create_log
 
 log = create_log("CLI-IO")
@@ -24,12 +25,15 @@ def dev_command(dev: BaseDevice, cmd: list[str]) -> str:
         elif cmd[0] == "set_str":
             dev.set_property(cmd[1], cmd[2], cmd[3])
             out += "OK\n"
-        elif cmd[0] == "w":
-            ints = []
-            for a in cmd[1:]:
-                ints.append(int(a))
-            out += "Wrote command: " + str(ints) + "\n"
-            dev.send_command(ints, True)
+        elif cmd[0] == "hspp":
+            command = bytes.fromhex(cmd[1])
+            args = []
+            for a in cmd[2:]:
+                p_type, p_value = a.split(":")
+                args.append((int(p_type), bytes.fromhex(p_value)))
+            pkg = HuaweiSppPackage(command, args)
+            out += "Send" + str(pkg) + "\n"
+            dev.send_package(pkg, True)
         else:
             out += "Unknown device command\n"
     except Exception:

@@ -14,7 +14,7 @@ KNOWN_OPTIONS = {
 
 KNOWN_IN_CALL_OPTIONS = {
     -1: "tap_action_off",
-    1: "tap_action_answer",
+    0: "tap_action_answer",
 }
 
 
@@ -32,6 +32,9 @@ class DoubleTapConfigHandler(HuaweiSppHandler):
         ("action", "double_tap_right"),
         ("action", "double_tap_in_call"),
     ]
+
+    def __init__(self, w_in_call=False):
+        self.w_in_call = w_in_call
 
     def on_init(self):
         self.device.send_package(HuaweiSppPackage(b"\x01\x20", [
@@ -59,12 +62,12 @@ class DoubleTapConfigHandler(HuaweiSppHandler):
             for v in value:
                 out.append(str(v) if v not in KNOWN_OPTIONS else KNOWN_OPTIONS[v])
             self.device.put_property("action", "double_tap_options", ",".join(out))
-        if len(in_call) == 1:
-            value = int.from_bytes(right, byteorder="big", signed=True)
+        if len(in_call) == 1 and self.w_in_call:
+            value = int.from_bytes(in_call, byteorder="big", signed=True)
             self.device.put_property("action", "double_tap_in_call",
                                      KNOWN_IN_CALL_OPTIONS.get(value, value))
             self.device.put_property("action", "double_tap_in_call_options",
-                                     ",".join(KNOWN_IN_CALL_OPTIONS.keys()))
+                                     ",".join(KNOWN_IN_CALL_OPTIONS.values()))
 
     def on_prop_changed(self, group: str, prop: str, value):
         if prop == "double_tap_left":

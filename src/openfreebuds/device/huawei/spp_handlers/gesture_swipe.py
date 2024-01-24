@@ -14,15 +14,15 @@ class SwipeActionHandler(HuaweiSppHandler):
     Supported on 5i, maybe also on Pro-devices
     """
     handler_id = "gesture_swipe"
-    handle_commands = (
-        b"\x2b\x1f"
-    )
-    ignore_commands = (
-        b"\x2b\1e"
-    )
-    handle_props = (
+    handle_commands = [
+        b"\x2b\x1f",
+    ]
+    ignore_commands = [
+        b"\x2b\x1e"
+    ]
+    handle_props = [
         ("action", "swipe_gesture"),
-    )
+    ]
 
     def on_init(self):
         self.device.send_package(HuaweiSppPackage(b"\x2b\x1f", [
@@ -49,4 +49,4 @@ class SwipeActionHandler(HuaweiSppHandler):
             self.device.put_property("action", "swipe_gesture",
                                      KNOWN_OPTIONS.get(value, value))
             self.device.put_property("action", "swipe_gesture_options",
-                                     ",".join(KNOWN_OPTIONS.keys()))
+                                     ",".join(KNOWN_OPTIONS.values()))

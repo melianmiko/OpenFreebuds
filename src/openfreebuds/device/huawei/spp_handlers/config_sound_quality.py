@@ -13,15 +13,15 @@ class ConfigSoundQualityHandler(HuaweiSppHandler):
     Sound quality preference option from 5i, and maybe other devices too
     """
     handler_id = "config_sound_quality"
-    handle_commands = (
+    handle_commands = [
         b"\x2b\xa3",
-    )
-    ignore_commands = (
+    ]
+    ignore_commands = [
         b"\x2b\xa2",
-    )
-    handle_props = (
+    ]
+    handle_props = [
         ("config", "sound_quality_preference"),
-    )
+    ]
 
     def on_init(self):
         self.device.send_package(HuaweiSppPackage(b"\x2b\xa3", [
@@ -46,4 +46,4 @@ class ConfigSoundQualityHandler(HuaweiSppHandler):
             self.device.put_property("config", "sound_quality_preference",
                                      KNOWN_OPTIONS[value])
             self.device.put_property("config", "sound_quality_preference_options",
-                                     ",".join(KNOWN_OPTIONS.keys()))
+                                     ",".join(KNOWN_OPTIONS.values()))

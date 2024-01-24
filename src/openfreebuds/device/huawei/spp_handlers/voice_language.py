@@ -24,6 +24,7 @@ class VoiceLanguageHandler(HuaweiSppHandler):
         if package.command_id == b"\x0c\x02":
             if 3 in package.parameters and len(package.parameters[3]) > 1:
                 locales = package.parameters[3].decode("utf8")
+                self.device.put_property("service", "language", "")
                 self.device.put_property("service", "supported_languages", locales)
 
     def on_prop_changed(self, group: str, prop: str, value):

@@ -48,6 +48,7 @@ class AncSettingHandler(HuaweiSppHandler):
     def on_init(self):
         self.device.send_package(HuaweiSppPackage(b"\x2b\x2a", [
             (1, b""),
+            (2, b""),
         ]))
 
     def on_package(self, pkg: HuaweiSppPackage):

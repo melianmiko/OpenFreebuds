@@ -85,7 +85,7 @@ class FreeBuds5iDevice(GenericHuaweiSppDevice):
             TwsInEarHandler(),
             BatteryHandler(),
             AncSettingHandler(w_cancel_lvl=True),
-            DoubleTapConfigHandler(),
+            DoubleTapConfigHandler(w_in_call=True),
             SplitLongTapActionConfigHandler(w_right=True),
             SwipeActionHandler(),
             TwsAutoPauseHandler(),
