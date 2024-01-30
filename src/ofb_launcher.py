@@ -10,9 +10,9 @@ import urllib.request
 
 import openfreebuds_applet
 import openfreebuds_backend
+import psutil
 from openfreebuds import event_bus, cli_io
 from openfreebuds.constants.events import EVENT_MANAGER_STATE_CHANGED, EVENT_DEVICE_PROP_CHANGED
-from openfreebuds.device import BaseDevice
 from openfreebuds.logger import create_log
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t
@@ -43,6 +43,35 @@ def parse_args():
                         default="", type=str, nargs='?',
                         help="If provided, will send command to httpserver and exit")
     return parser.parse_args()
+
+
+def is_running():
+    # This is temporary
+    # This is temporary
+    # This is temporary
+
+    our_pid = os.getpid()
+    for proc in psutil.process_iter(['pid', 'name']):
+        if proc.pid == our_pid:
+            continue
+
+        try:
+            cmdline = proc.cmdline()
+        except psutil.AccessDenied:
+            continue
+
+        win32_running = False
+        if len(cmdline) > 0:
+            win32_running = cmdline[0].endswith("openfreebuds.exe")
+        linux_running = False
+        if len(cmdline) > 1:
+            linux_running = cmdline[1] == "/usr/bin/openfreebuds" or "ofb_launcher.py" in cmdline[1]
+
+        if win32_running or linux_running:
+            log.info(f"Found exiting instance, {proc}")
+            return True
+
+    return False
 
 
 def main():
@@ -81,7 +110,7 @@ def on_device_available(applet, args):
 
 def is_start_possible():
     # Is already running?
-    if openfreebuds_backend.is_running():
+    if is_running():
         tk_tools.message(t("application_running_message"), "Error", _leave)
         return False
 
@@ -101,7 +130,7 @@ def is_start_possible():
 
 
 def do_command(command):
-    if openfreebuds_backend.is_running():
+    if is_running():
         log.debug("App is launched, using HTTP server to process command...")
         _do_command_webserver(command)
     else:

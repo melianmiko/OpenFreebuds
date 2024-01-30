@@ -5,7 +5,8 @@ mmk-updater==0.14.1
 
 pybluez-edge==2022.12.6
 
-Pillow~=9.5.0
+Pillow~=10.2.0
+psutil~=5.9.8
 
 PyGObject==3.44.1; sys_platform == "linux"
 dbus-python==1.3.2; sys_platform == "linux"
