@@ -4,6 +4,7 @@ import argparse
 import logging
 import os
 import socket
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -60,14 +61,13 @@ def is_running():
         except psutil.AccessDenied:
             continue
 
-        win32_running = False
-        if len(cmdline) > 0:
-            win32_running = cmdline[0].endswith("openfreebuds.exe")
-        linux_running = False
-        if len(cmdline) > 1:
-            linux_running = cmdline[1] == "/usr/bin/openfreebuds" or "ofb_launcher.py" in cmdline[1]
+        running = False
+        if sys.platform == "win32" and len(cmdline) > 0:
+            running = cmdline[0].endswith("openfreebuds.exe")
+        elif len(cmdline) > 1:
+            running = cmdline[1] == "/usr/bin/openfreebuds" or "ofb_launcher.py" in cmdline[1]
 
-        if win32_running or linux_running:
+        if running:
             log.info(f"Found exiting instance, {proc}")
             return True
 
