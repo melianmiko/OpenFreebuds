@@ -59,10 +59,6 @@ def do_connect(manager: FreebudsManager):
     log.debug("Trying to force connect device...")
     # noinspection PyBroadException
     try:
-        # spp = HuaweiSPPDevice(manager.device_address)
-        # if not spp.request_interaction():
-        #     log.debug("Can't interact via SPP, try to connect anyway...")
-
         if not openfreebuds_backend.bt_connect(manager.device_address):
             raise Exception("fail")
     except Exception:

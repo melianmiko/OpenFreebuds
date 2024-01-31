@@ -1,4 +1,3 @@
-import logging
 import queue
 import socket
 import threading
@@ -28,6 +27,7 @@ class GenericSppDevice(BaseDevice):
         self.socket = None
 
         self._send_queue = Queue()
+        self._handle_queue = Queue()
 
     def connect(self):
         if self.closed:
@@ -38,6 +38,7 @@ class GenericSppDevice(BaseDevice):
 
             self._run_thread(self._thread_recv)
             self._run_thread(self._thread_send)
+            self._run_thread(self._thread_handle)
             self.on_init()
 
             return True
@@ -52,16 +53,6 @@ class GenericSppDevice(BaseDevice):
         else:
             log.debug("Starting via safe wrapper")
             self.config.SAFE_RUN_WRAPPER(fnc, "SPPDevice", False)
-
-    def request_interaction(self):
-        try:
-            self._connect_socket()
-            time.sleep(1)
-
-            self.socket.close()
-            return True
-        except SocketConnectionError:
-            return False
 
     def close(self, lock=False):
         if self.closed:
@@ -117,6 +108,18 @@ class GenericSppDevice(BaseDevice):
                 log.exception("Send exception, package={}".format(data.hex()))
         log.info("leaving send thread...")
 
+    def _thread_handle(self):
+        log.info("starting handle...")
+
+        while not self.closed:
+            try:
+                data = self._handle_queue.get(timeout=2)
+                self.do_data_handle(data)
+            except queue.Empty:
+                pass
+
+        log.info("Leaving handle...")
+
     def _thread_recv(self):
         log.info("starting recv...")
 
@@ -134,6 +137,9 @@ class GenericSppDevice(BaseDevice):
         self._send_queue.put(data)
 
     def do_socket_read(self):
+        raise Exception("Must be overriden")
+
+    def do_data_handle(self, data: bytes):
         raise Exception("Must be overriden")
 
     def on_init(self):

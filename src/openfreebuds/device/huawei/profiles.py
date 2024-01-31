@@ -59,6 +59,7 @@ class FreeBuds4iDevice(GenericHuaweiSppDevice):
 class FreeBudsProDevice(GenericHuaweiSppDevice):
     def __init__(self, address):
         super().__init__(address)
+        self.spp_fallback_port = 1
         self.handlers = [
             DeviceInfoHandler(),
             TwsInEarHandler(),

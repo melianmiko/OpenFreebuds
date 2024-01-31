@@ -94,8 +94,7 @@ class GenericHuaweiSppDevice(HuaweiSppDevice):
                     self.socket.recv(length)
                 else:
                     pkg = heading + self.socket.recv(length)
-                    self._process_package(pkg)
-                    event_bus.invoke(EVENT_SPP_RECV)
+                    self._handle_queue.put(pkg)
         except TimeoutError:
             # Socket timed out, do nothing
             return False
@@ -105,10 +104,11 @@ class GenericHuaweiSppDevice(HuaweiSppDevice):
 
         return True
 
-    def _process_package(self, pkg: bytes):
+    def do_data_handle(self, pkg: bytes):
         start = time.time()
         self.on_package(pkg)
+        event_bus.invoke(EVENT_SPP_RECV)
         process_time = time.time() - start
 
-        if process_time > 0.1:
+        if process_time > 0.05:
             log.debug("Package processing took {}, too long".format(process_time))
