@@ -9,7 +9,7 @@ PROFILES = {
     "HUAWEI FreeBuds 4i": FreeBuds4iDevice,
     "HUAWEI FreeBuds 5i": FreeBuds5iDevice,
     "HUAWEI FreeBuds Pro 3": FreeBudsPro3Device,
-    "Debug: Virtual device": VirtualDevice
+    # "Debug: Virtual device": VirtualDevice
 }
 
 # (implementation_level, profile)
@@ -26,7 +26,7 @@ SUPPORTED_DEVICES = {
 
     "HUAWEI FreeBuds Pro 3": ("partial", FreeBudsPro3Device),
 
-    "Debug: Virtual device": ("virtual", VirtualDevice),
+    # "Debug: Virtual device": ("virtual", VirtualDevice),
 }
 
 
