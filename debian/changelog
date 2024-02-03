@@ -1,3 +1,18 @@
+openfreebuds (0.12.3-2) bookworm jammy mantic; urgency=medium
+
+  * New: HUAWEI FreeBuds 5i support (full)
+  * New: HUAWEI FreeBuds SE support (full)
+  * New: HUAWEI FreeBuds Pro support (partial)
+  * New: HUAWEI FreeBuds Pro 3 support (partial)
+  * New: Workaround for non-working "Pause when plug off headphone" under Linux (MPRIS-helper)
+  * New: Advanced bug-report log generator, auto-view bugreport when app crashes
+  * Fix: Remove WMI-console dependency (win32)
+  * Fix: Updater crash (win32)
+  * Minor: Move uncommon features to separate modules
+  * Minor: Redesign some UI parts
+
+ -- MelianMiko <support@mmk.pw>  Sat, 03 Feb 2024 12:25:19 +0700
+
 openfreebuds (0.12.3-2) bookworm jammy kinetic lunar; urgency=medium
 
   * Fix update checker crash
