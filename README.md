@@ -1,24 +1,25 @@
-![Last release](https://img.shields.io/github/v/release/melianmiko/openfreebuds)
-![AUR last modified](https://img.shields.io/aur/last-modified/openfreebuds)
-[![Crowdin](https://badges.crowdin.net/openfreebuds/localized.svg)](https://crowdin.com/project/openfreebuds)
-
 <div align="center">
 <img src="docs/logo.png" alt="" />
 <h1>OpenFreebuds</h1>
 <p>Desktop application to manage wireless headphones from HUAWEI/Honor</p>
-<a href="https://mmk.pw/en/openfreebuds"><b>💿 Download binaries</b></a>
-<a href="ttps://crowdin.com/project/openfreebuds">🌍 Suggest translation</a>
+<p>
+<img src="https://img.shields.io/github/v/release/melianmiko/openfreebuds" alt="Last release"/>
+<img src="https://img.shields.io/aur/last-modified/openfreebuds" alt="Last AUR release"/>
+<img src="https://badges.crowdin.net/openfreebuds/localized.svg" alt="Translation level"/>
+</p>
+<p>
+<a href="https://mmk.pw/en/openfreebuds"><b>💿 Download binaries</b></a> | <a href="https://crowdin.com/project/openfreebuds">🌍 Suggest translation</a>
+</p>
 </div>
 
 ![Tray menu preview](docs/preview_0.png)
-
-[TOC]
 
 Features
 ---------
 
 - Dynamic system tray icon that shows current active noise cancellation mode and battery level;
 - Tray menu with battery levels and active noise cancellation settings;
+- Ability to change voice language for some models (4i, 5i);
 - Device settings dialog, eg. change equalizer preset, gesture actions, etc;
 - Built-in HTTP-server for remote control & scripting;
 - Built-in global hotkeys support (for Windows and Xorg-Linux)
@@ -68,8 +69,6 @@ If you want to get full support of your headphones, you can [create a Bluetooth-
 dump from Ai Life, which will contain all requests and responses that is used by official
 app to manage your headset. Then send collected file to me, I'll analyze them and try to
 implement their features in OpenFreebuds.
-
-![Extra dialogs preview](docs/preview_2.png)
 
 Download & install
 -------------
@@ -158,7 +157,7 @@ Bluez sources (libbluetooth-dev), UPX (optional), Gtk3, Git, gcc, make
 >   libgtk-3-0 libbluetooth-dev
 > ```
 
-### Run from source code
+#### Run from source code
 `python3-venv` and `build-essentials` are required, also as big part of libraries listed above.
 ```bash
 python -m venv venv
@@ -167,7 +166,7 @@ pip install -r requirements.txt
 python src/ofb_launcher.py
 ```
 
-### Install
+#### Install
 Grab sources and run `make`:
 ```bash
 git clone https://github.com/melianmiko/OpenFreebuds
@@ -176,10 +175,10 @@ make
 sudo make install # Install
 ```
 
-### Build debian package
+#### Build debian package
 ```bash
 dpkg-buildpackage -b # binary pkg
 dpkg-buildpackage -S # source pkg
 ```
 
-That's all.
+![Extra dialogs preview](docs/preview_2.png)
