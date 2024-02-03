@@ -2,7 +2,7 @@
 !include "x64.nsh"
 
 !define APP_NAME "OpenFreebuds"
-!define APP_VERSION "0.12.3"
+!define APP_VERSION "0.13"
 !define APP_DEVELOPER "MelianMiko"
 !define APP_BUILD_NAME "openfreebuds"
 !define APP_EXE "openfreebuds.exe"
