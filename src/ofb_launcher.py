@@ -58,7 +58,7 @@ def is_running():
 
         try:
             cmdline = proc.cmdline()
-        except psutil.AccessDenied:
+        except psutil.Error:
             continue
 
         running = False
