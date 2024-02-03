@@ -1,7 +1,7 @@
 pystray==0.19.4
 pynput~=1.7.6
 sv-ttk==2.4.5
-mmk-updater==0.14.2
+mmk-updater==0.14.3
 
 pybluez-edge==2022.12.6
 
