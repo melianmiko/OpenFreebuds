@@ -1,7 +1,11 @@
 from openfreebuds.device.generic.base import BaseDevice
 from openfreebuds.device.generic.virtual_device import VirtualDevice
-from openfreebuds.device.huawei.profiles import (FreeLaceProDevice, FreeBuds4iDevice, FreeBudsSEDevice,
-                                                 FreeBudsPro3Device, FreeBuds5iDevice, FreeBudsProDevice)
+from openfreebuds.device.huawei.profiles.buds_4i import FreeBuds4iDevice
+from openfreebuds.device.huawei.profiles.buds_5i import FreeBuds5iDevice
+from openfreebuds.device.huawei.profiles.buds_pro import FreeBudsProDevice
+from openfreebuds.device.huawei.profiles.buds_pro_3 import FreeBudsPro3Device
+from openfreebuds.device.huawei.profiles.buds_se import FreeBudsSEDevice
+from openfreebuds.device.huawei.profiles.lace_pro import FreeLaceProDevice
 
 PROFILES = {
     "HUAWEI FreeBuds SE": FreeBudsSEDevice,
@@ -10,7 +14,6 @@ PROFILES = {
     "HUAWEI FreeBuds 5i": FreeBuds5iDevice,
     "HUAWEI FreeBuds Pro": FreeBudsProDevice,
     "HUAWEI FreeBuds Pro 3": FreeBudsPro3Device,
-    # "Debug: Virtual device": VirtualDevice
 }
 
 # (implementation_level, profile)
@@ -24,8 +27,6 @@ SUPPORTED_DEVICES = {
     "HUAWEI FreeBuds Pro 3": ("partial", FreeBudsPro3Device),
 
     "HONOR Earbuds 2 Lite": ("full", FreeBuds4iDevice),
-
-    # "Debug: Virtual device": ("virtual", VirtualDevice),
 }
 
 
