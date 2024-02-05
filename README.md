@@ -38,25 +38,25 @@ Notes:
 
 Columns mean device model, rows mean feature name.
 
-| **Feature name**                     | **SE** | **Lace Pro** | **4i** | **Pro** | **5i** | **Pro 3** |
-|--------------------------------------|--------|--------------|--------|---------|--------|-----------|
-| Fetch device info                    | 🟡     | 🟢           | 🟢     | 🟡      | 🟢     | 🟡        |
-| Fetch battery level                  | 🟡     | 🟢           | 🟢     | 🟡      | 🟢     | 🟡        |
-| Set double-tap action                | 🟡     | 🟢           | 🟢     | 🔴      | 🟢     | 🔴        |
-| Control noise cancellation           |        | 🟢           | 🟢     | 🟡      | 🟢     | 🟡        |
-| Set long-tap action                  |        | 🟢           | 🟢     | 🔴      | 🟢     | 🔴        |
-| Set preferred ANC modes for gestures |        | 🟢           | 🟢     | 🟡      | 🟢     | 🔴        |
-| Change voice language                |        | 🟢           | 🟢     | 🔴      | 🟢     | 🔴        |
-| Fetch in-ear status                  |        |              | 🟢     | 🔴      | 🟢     | 🔴        |
-| Pause when plug-off setup            |        |              | 🟢     | 🟡      | 🟢     | 🟡        |
-| Swipe action setting                 |        |              |        | 🔴      | 🟢     | 🔴        |
-| Toggle multi-device support          |        |              |        | 🔴      | 🟢     | 🟡        |
-| List and switch between devices      |        |              |        | 🔴      | 🟢     | 🔴        |
-| Set priority device                  |        |              |        | 🔴      | 🟢     | 🔴        |
-| Sound quality preference             |        |              |        |         | 🟢     | 🟡        |
-| Built-in equalizer presets           |        |              |        |         | 🟢     | 🟡        |
-| Low-latency mode (Idk how it works)  |        |              |        |         | 🔴     | 🔴        |
-| Custom equalizer presets             |        |              |        |         |        | 🔴        |
+| **Feature name**                     | **SE** | **Lace Pro** | **4i** | **Pro** | **Pro 2** | **5i** | **Pro 3** |
+|--------------------------------------|--------|--------------|--------|---------|-----------|--------|-----------|
+| Fetch device info                    | 🟡     | 🟢           | 🟢     | 🟡      | 🟢        | 🟢     | 🟡        |
+| Fetch battery level                  | 🟡     | 🟢           | 🟢     | 🟡      | 🟢        | 🟢     | 🟡        |
+| Set double-tap action                | 🟡     | 🟢           | 🟢     | 🔴      | 🔴        | 🟢     | 🔴        |
+| Control noise cancellation           |        | 🟢           | 🟢     | 🟡      | 🟢        | 🟢     | 🟡        |
+| Set long-tap action                  |        | 🟢           | 🟢     | 🔴      | 🟢        | 🟢     | 🔴        |
+| Set preferred ANC modes for gestures |        | 🟢           | 🟢     | 🟡      | 🟢        | 🟢     | 🔴        |
+| Change voice language                |        | 🟢           | 🟢     | 🔴      | 🔴        | 🟢     | 🔴        |
+| Fetch in-ear status                  |        |              | 🟢     | 🔴      | 🟢        | 🟢     | 🔴        |
+| Pause when plug-off setup            |        |              | 🟢     | 🟡      | 🟢        | 🟢     | 🟡        |
+| Swipe action setting                 |        |              |        | 🔴      | 🟢        | 🟢     | 🔴        |
+| Toggle multi-device support          |        |              |        | 🔴      | 🟢        | 🟢     | 🟡        |
+| List and switch between devices      |        |              |        | 🔴      | 🟢        | 🟢     | 🔴        |
+| Set priority device                  |        |              |        | 🔴      | 🟢        | 🟢     | 🔴        |
+| Sound quality preference             |        |              |        |         | 🟢        | 🟢     | 🟡        |
+| Built-in equalizer presets           |        |              |        |         | 🟢        | 🟢     | 🟡        |
+| Low-latency mode (Idk how it works)  |        |              |        |         |           | 🔴     | 🔴        |
+| Custom equalizer presets             |        |              |        |         |           |        | 🔴        |
 
 | Implementation level                               | Marker |
 |----------------------------------------------------|--------|
