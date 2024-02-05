@@ -18,7 +18,7 @@ Use this only if you know what you're doing.
 
 @tk_tools.ui_thread
 def start(manager: FreebudsManager):
-    window = tkinter.Toplevel()
+    window = tkinter.Toplevel(class_="openfreebuds")
     window.wm_title("OpenFreebuds Dev console")
     window.wm_geometry("800x600")
     window.grid_columnconfigure(0, weight=1)

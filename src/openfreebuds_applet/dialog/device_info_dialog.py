@@ -12,7 +12,7 @@ log = create_log("FirstRun")
 
 @tk_tools.ui_thread
 def start(device: BaseDevice):
-    root = tkinter.Toplevel()
+    root = tkinter.Toplevel(class_="openfreebuds")
     root.wm_title("Device info")
     root.geometry("500x400")
     root.wm_resizable(False, False)

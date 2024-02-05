@@ -13,7 +13,7 @@ SETTINGS_SIZES = [550, 650]
 
 @tk_tools.ui_thread
 def open_app_settings(applet):
-    tk = tkinter.Toplevel()
+    tk = tkinter.Toplevel(class_="openfreebuds")
     tk.wm_title(t("settings_title"))
     tk.wm_resizable(False, False)
 

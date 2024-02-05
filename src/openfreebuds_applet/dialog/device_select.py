@@ -16,7 +16,7 @@ log = create_log("DeviceSelectUI")
 
 @tk_tools.ui_thread
 def start(settings: SettingsStorage, manager: FreebudsManager):
-    root = tkinter.Toplevel()
+    root = tkinter.Toplevel(class_="openfreebuds")
     root.wm_title("OpenFreebuds")
     root.wm_resizable(False, False)
     root.grid()
@@ -109,7 +109,7 @@ def start(settings: SettingsStorage, manager: FreebudsManager):
 def setup_manually_ui(address, settings, manager):
     profiles = list(device.PROFILES.keys())
 
-    root = tkinter.Toplevel()
+    root = tkinter.Toplevel(class_="openfreebuds")
     selected = tkinter.StringVar(value=profiles[0])
     address_var = tkinter.StringVar(value=address)
     root.wm_title(t("ui_manual_title"))

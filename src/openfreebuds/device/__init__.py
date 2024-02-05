@@ -38,6 +38,8 @@ def is_supported(name: str):
 
 
 def create(name: str, address: str) -> BaseDevice | None:
+    if address == "00:00:00:00:00:00":
+        return VirtualDevice(address)
     if name not in SUPPORTED_DEVICES:
         return None
 

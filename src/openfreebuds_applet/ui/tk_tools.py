@@ -76,7 +76,7 @@ def set_theme(theme: str):
 @ui_thread
 def message(content, title, callback=None, parent=None):
     callback_used = threading.Event()
-    root = tkinter.Toplevel(parent)
+    root = tkinter.Toplevel(parent, class_="openfreebuds")
     root.wm_title(title)
     root.wm_resizable(False, False)
 
@@ -101,7 +101,7 @@ def message(content, title, callback=None, parent=None):
 
 @ui_thread
 def confirm(content, title, callback=None, parent=None):
-    root = tkinter.Toplevel(parent)
+    root = tkinter.Toplevel(parent, class_="openfreebuds")
     root.wm_title(title)
     root.wm_resizable(False, False)
 

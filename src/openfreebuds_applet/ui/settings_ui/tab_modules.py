@@ -23,7 +23,7 @@ def toggle_module(mod: GenericModule):
 
 @tk_tools.ui_thread
 def module_settings(mod: GenericModule):
-    root = tkinter.Toplevel()
+    root = tkinter.Toplevel(class_="openfreebuds")
     root.wm_title(mod.name)
     root.geometry("450x550")
     root.wm_resizable(False, False)

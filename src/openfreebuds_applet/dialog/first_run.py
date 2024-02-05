@@ -16,7 +16,7 @@ log = create_log("FirstRun")
 
 @tk_tools.ui_thread
 def show(settings: SettingsStorage, manager: FreebudsManager):
-    root = tkinter.Toplevel()
+    root = tkinter.Toplevel(class_="openfreebuds")
     root.wm_title("Welcome")
     root.wm_resizable(False, False)
 
