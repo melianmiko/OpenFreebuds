@@ -44,7 +44,7 @@ class DualConnectDevicesHandler(HuaweiSppHandler):
         is_connected = package.find_param(5)
         is_auto_connect = package.find_param(8)
         is_prior = package.find_param(7)
-        name = package.find_param(9).decode("utf8")
+        name = package.find_param(9).decode("utf8", "ignore")
 
         self.device.put_property("dev_name", mac_addr, name)
         self.device.put_property("dev_auto_connect", mac_addr, is_auto_connect[0] != 0)
