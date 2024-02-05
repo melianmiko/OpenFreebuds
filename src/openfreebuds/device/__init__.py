@@ -3,6 +3,7 @@ from openfreebuds.device.generic.virtual_device import VirtualDevice
 from openfreebuds.device.huawei.profiles.buds_4i import FreeBuds4iDevice
 from openfreebuds.device.huawei.profiles.buds_5i import FreeBuds5iDevice
 from openfreebuds.device.huawei.profiles.buds_pro import FreeBudsProDevice
+from openfreebuds.device.huawei.profiles.buds_pro_2 import FreeBudsPro2Device
 from openfreebuds.device.huawei.profiles.buds_pro_3 import FreeBudsPro3Device
 from openfreebuds.device.huawei.profiles.buds_se import FreeBudsSEDevice
 from openfreebuds.device.huawei.profiles.lace_pro import FreeLaceProDevice
@@ -13,6 +14,7 @@ PROFILES = {
     "HUAWEI FreeBuds 4i": FreeBuds4iDevice,
     "HUAWEI FreeBuds 5i": FreeBuds5iDevice,
     "HUAWEI FreeBuds Pro": FreeBudsProDevice,
+    "HUAWEI FreeBuds Pro 2": FreeBudsPro2Device,
     "HUAWEI FreeBuds Pro 3": FreeBudsPro3Device,
 }
 
@@ -23,7 +25,7 @@ SUPPORTED_DEVICES = {
     "HUAWEI FreeBuds 4i": ("full", FreeBuds4iDevice),
     "HUAWEI FreeBuds 5i": ("full", FreeBuds5iDevice),
     "HUAWEI FreeBuds Pro": ("partial", FreeBudsProDevice),
-    "HUAWEI FreeBuds Pro 2": ("partial", FreeBuds5iDevice),
+    "HUAWEI FreeBuds Pro 2": ("partial", FreeBudsPro2Device),
     "HUAWEI FreeBuds Pro 3": ("partial", FreeBudsPro3Device),
 
     "HONOR Earbuds 2 Lite": ("full", FreeBuds4iDevice),
