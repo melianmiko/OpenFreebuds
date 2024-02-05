@@ -77,6 +77,7 @@
   "long_tap_left": "Долгое касание левого наушника",
   "long_tap_right": "Долгое касание правого наушника",
   "long_tap_in_call": "Долгое касание во время звонка",
+  "setting_context_menu": "Контекстное меню...",
   "noise_control_disabled": "Отключено",
   "noise_control_off_on": "Выкл и шумоподавление",
   "noise_control_off_on_aw": "Все режимы",

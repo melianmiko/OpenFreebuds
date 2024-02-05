@@ -17,6 +17,7 @@ class SettingsStorage:
         self.icon_theme = "auto"
         self.first_run = True
         self.modules = {}
+        self.context_menu_extras = ["equalizer", "dual_connect"]
 
         self._read()
 

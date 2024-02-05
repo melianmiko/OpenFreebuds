@@ -1,3 +1,4 @@
+from openfreebuds_applet.ui.menu_device_extra import EqualizerPresetMenu, DualConnectMenu
 from pystrayx import Menu
 
 from openfreebuds.manager import FreebudsManager
@@ -29,6 +30,13 @@ class DeviceMenu(Menu):
 
         self.include(self.noise_control)
         self.add_separator()
+
+        if "equalizer" in self.settings.context_menu_extras:
+            self.add_submenu(t("equalizer_preset"), EqualizerPresetMenu(self.manager))
+        if "dual_connect" in self.settings.context_menu_extras:
+            self.add_submenu(t("toggle_dual_connect"), DualConnectMenu(self.manager))
+        if len(self.settings.context_menu_extras) > 0:
+            self.add_separator()
 
         self.include(self.footer)
 

@@ -8,7 +8,7 @@ from openfreebuds_applet.ui.settings_ui.tab_application import AppSettingsTab
 from openfreebuds_applet.ui.settings_ui.tab_device import DeviceSettingsTab
 from openfreebuds_applet.ui.settings_ui.tab_modules import ModulesSettingsTab
 
-SETTINGS_SIZES = [550, 650]
+SETTINGS_SIZES = [550, 700]
 
 
 @tk_tools.ui_thread

@@ -77,6 +77,7 @@
   "long_tap_left": "Long tap on left headphone",
   "long_tap_right": "Long tap on right headphone",
   "long_tap_in_call": "Long tap in-call",
+  "setting_context_menu": "Context menu...",
   "noise_control_disabled": "Disabled",
   "noise_control_off_on": "Off and cancellation",
   "noise_control_off_on_aw": "Cycle all modes",

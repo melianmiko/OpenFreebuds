@@ -4,6 +4,7 @@ from tkinter import ttk
 import openfreebuds_backend
 from openfreebuds import event_bus
 from openfreebuds.constants.events import EVENT_UI_UPDATE_REQUIRED
+from openfreebuds_applet.dialog import context_menu_edit
 from openfreebuds_applet.l18n import t, list_langs, ln, setup_language, setup_auto
 from openfreebuds_applet.settings import SettingsStorage
 from openfreebuds_applet.ui import tk_tools, icons
@@ -62,10 +63,14 @@ class AppSettingsTab(ttk.Frame):
         c.bind("<<ComboboxSelected>>", self._icon_theme_changed)
         c.grid(column=1, row=2, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
 
+        c = ttk.Button(main_root, text=t("setting_context_menu"),
+                       command=lambda: self.open_context_menu_edit_dialog())
+        c.grid(column=0, row=3, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
+
         ttk.Checkbutton(main_root, text=t("option_run_at_boot"),
                         variable=self.var_run_at_boot,
                         command=self._toggle_run_at_boot)\
-            .grid(column=0, row=3, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE, columnspan=2)
+            .grid(column=0, row=15, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE, columnspan=2)
 
         ttk.Label(self, text=t("settings_tab_modules"), font=label_fnt)\
             .grid(row=3, pady=16, sticky=tkinter.NW, padx=PAD_X_BASE)
@@ -106,3 +111,5 @@ class AppSettingsTab(ttk.Frame):
             setup_language(lang)
         event_bus.invoke(EVENT_UI_UPDATE_REQUIRED)
 
+    def open_context_menu_edit_dialog(self):
+        context_menu_edit.start(self.settings)
