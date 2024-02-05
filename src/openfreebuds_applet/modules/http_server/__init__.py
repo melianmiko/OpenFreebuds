@@ -20,6 +20,7 @@ class Module(GenericModule):
     name = t("module_http_server")
     description = t("http_server_info")
     order = 1
+    has_settings_ui = True
     def_settings = {
         "enabled": False,
         "external_access": False,

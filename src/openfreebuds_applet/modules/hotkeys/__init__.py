@@ -16,6 +16,7 @@ class Module(GenericModule):
     name = t("settings_tab_hotkeys")
     description = t("hotkeys_info")
     order = 0
+    has_settings_ui = True
     def_settings = {
         "enabled": True,
         "next_mode": "<ctrl>+<alt>+q"

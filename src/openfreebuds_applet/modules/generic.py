@@ -17,6 +17,7 @@ class GenericModule:
     description: str = ""
     order: int = 99
     hidden: bool = False
+    has_settings_ui: bool = False
     crashed: bool = False
     os_filter: list[str] | None = None
     def_settings: dict[str, any] = {
