@@ -3,6 +3,7 @@ openfreebuds (0.13.1-1) bookworm jammy mantic; urgency=medium
   * New: HUAWEI FreeBuds Pro 2 support (add profile, partial)
   * New: add equalizer presets & device switch to context menu (can be disabled in settings)
   * Fix: crash when iterating paired devices in 5i, Pro 2, Pro 3
+  * Fix: disable "Settings" button on non-configrable modules
   * Fix: add correct WM_CLASS for better desktop integration (linux)
   * Fix: missing i18n
 
