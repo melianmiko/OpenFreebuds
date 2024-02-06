@@ -16,6 +16,7 @@ class DualConnectDevicesHandler(HuaweiSppHandler):
     ]
     handle_commands = (
         b"\x2b\x31",
+        b"\x2b\x36",
     )
     ignore_commands = (
         b"\x2b\x32",
@@ -36,7 +37,8 @@ class DualConnectDevicesHandler(HuaweiSppHandler):
         ]))
 
     def on_package(self, package: HuaweiSppPackage):
-        print(package, flush=True)
+        if package.command_id == b"\x2b\x36":
+            return self.on_init()
 
         mac_addr = package.find_param(4).hex()
         if len(mac_addr) < 12:
