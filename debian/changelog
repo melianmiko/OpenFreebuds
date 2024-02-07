@@ -8,7 +8,7 @@ openfreebuds (0.13.1-1) bookworm jammy mantic; urgency=medium
   * Fix: add correct WM_CLASS for better desktop integration (linux)
   * Fix: missing i18n
 
- -- MelianMiko <support@mmk.pw>  Mon, 05 Feb 2024 19:37:14 +0700
+ -- MelianMiko <support@mmk.pw>  Wed, 07 Feb 2024 07:01:58 +0000
 
 openfreebuds (0.13-2) bookworm jammy mantic; urgency=medium
 

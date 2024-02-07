@@ -39,7 +39,7 @@ Notes:
 Columns mean device model, rows mean feature name.
 
 | **Feature name**                     | **SE** | **Lace Pro** | **4i** | **Pro** | **Pro 2** | **5i** | **Pro 3** |
-| ------------------------------------ | ------ | ------------ | ------ | ------- | --------- | ------ | --------- |
+|--------------------------------------|--------|--------------|--------|---------|-----------|--------|-----------|
 | Fetch device info                    | 🟡     | 🟢           | 🟢     | 🟢      | 🟢        | 🟢     | 🟡        |
 | Fetch battery level                  | 🟡     | 🟢           | 🟢     | 🟢      | 🟢        | 🟢     | 🟡        |
 | Set double-tap action                | 🟡     | 🟢           | 🟢     |         | 🔴        | 🟢     | 🔴        |
@@ -96,7 +96,7 @@ sudo apt install openfreebuds
 
 Or grab deb-file from [here](https://deb.mmk.pw/pool/main/o/openfreebuds/).
 
-### Arch-linux
+### Arch linux / Manjaro
 _Requirements_:
 - Ability to install packages from [Arch User Repository](https://aur.archlinux.org/), `yay` is recommended;
 - Bluetooth (4.2 or newer) adapter
@@ -107,8 +107,6 @@ yay -S openfreebuds
 ```
 
 Otherwise, [download and build it manually](https://aur.archlinux.org/packages/openfreebuds).
-
-**Debian, Ubuntu 22.04-23.04**:
 
 Build from source code
 ---------
