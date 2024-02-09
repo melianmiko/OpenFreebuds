@@ -82,6 +82,8 @@ _Requirements:_
 _Process:_ [Download installer](https://mmk.pw/en/openfreebuds), launch them and follow
 on-screen instructions.
 
+As alternative, you can install it via [winget](https://learn.microsoft.com/en-us/windows/package-manager): `winget install MelianMiko.OpenFreebuds`.
+
 ### Debian/Ubuntu and based- Linux distros
 _Requirements_:
 - Debian 12 or Ubuntu 22.04+, or any distro based on them
