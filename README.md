@@ -79,7 +79,12 @@ _Requirements:_
 - Bluetooth (4.2 or newer) adapter with Microsoft-compatible drivers;
 - Administrator privileges
 
-_Process:_ [Download installer](https://mmk.pw/en/openfreebuds), launch them and follow
+_Process_: If you use [Winget](https://learn.microsoft.com/en-us/windows/package-manager/), just install it from there:
+```powershell
+winget install MelianMiko.OpenFreebuds
+```
+
+Otherwise, [download installer](https://mmk.pw/en/openfreebuds), launch it and follow
 on-screen instructions.
 
 ### Debian/Ubuntu and based- Linux distros
