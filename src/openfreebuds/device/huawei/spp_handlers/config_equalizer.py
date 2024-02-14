@@ -43,6 +43,6 @@ class BuiltInEqualizerHandler(HuaweiSppHandler):
         if len(value) == 1:
             value = int.from_bytes(value, byteorder="big", signed=True)
             self.device.put_property("config", "equalizer_preset",
-                                     self.w_presets[value])
+                                     self.w_presets.get(value, "unknown"))
             self.device.put_property("config", "equalizer_preset_options",
                                      ",".join(self.w_presets.values()))
