@@ -1,3 +1,9 @@
+openfreebuds (0.13.2-1) bookworm jammy mantic; urgency=medium
+
+  * Fix: Crash due to unknown equalizer preset
+
+ -- MelianMiko <support@mmk.pw>  Wed, 28 Feb 2024 19:58:38 +0700
+
 openfreebuds (0.13.1-1) bookworm jammy mantic; urgency=medium
 
   * New: HUAWEI FreeBuds Pro 2 support (add profile, partial)
