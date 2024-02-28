@@ -57,12 +57,7 @@ def do_connect(manager: FreebudsManager):
 
     manager.set_paused(True)
     log.debug("Trying to force connect device...")
-    # noinspection PyBroadException
-    try:
-        if not openfreebuds_backend.bt_connect(manager.device_address):
-            raise Exception("fail")
-    except Exception:
-        log.exception("Can't force connect device")
+    if not openfreebuds_backend.bt_connect(manager.device_address):
         tk_tools.message(t("error_force_action_fail"), "OpenFreebuds")
 
     log.debug("Finish force connecting")
@@ -77,12 +72,7 @@ def do_disconnect(manager):
 
     manager.set_paused(True)
     log.debug("Trying to force disconnect device...")
-    # noinspection PyBroadException
-    try:
-        if not openfreebuds_backend.bt_disconnect(manager.device_address):
-            raise Exception("fail")
-    except Exception:
-        log.exception("Can't disconnect device")
+    if not openfreebuds_backend.bt_disconnect(manager.device_address):
         tk_tools.message(t("error_force_action_fail"), "OpenFreebuds")
 
     log.debug("Finish force disconnecting")
