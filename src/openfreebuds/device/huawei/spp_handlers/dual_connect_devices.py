@@ -1,5 +1,20 @@
+import time
+
 from openfreebuds.device.huawei.generic.spp_handler import HuaweiSppHandler
 from openfreebuds.device.huawei.generic.spp_package import HuaweiSppPackage
+from openfreebuds.logger import create_log
+from openfreebuds_applet.utils import async_with_ui
+
+log = create_log("HuaweiHandlers")
+
+
+class PendingDeviceRow:
+    def __init__(self, name: str, mac: str, connected: bool, auto_connect: bool, primary: bool):
+        self.name = name
+        self.mac = mac
+        self.connected = connected
+        self.auto_connected = auto_connect
+        self.primary = primary
 
 
 class DualConnectDevicesHandler(HuaweiSppHandler):
@@ -23,18 +38,29 @@ class DualConnectDevicesHandler(HuaweiSppHandler):
         b"\x2b\x33",
     )
 
-    def on_init(self):
-        self.device.put_group("dev_name", {}, silent=True)
-        self.device.put_group("dev_auto_connect", {}, silent=True)
-        self.device.put_group("dev_connected", {}, silent=True)
-        self.device.put_property("config", "preferred_device", "0" * 12)
+    def __init__(self):
+        self.pending_devices = {}  # type: dict[int, PendingDeviceRow]
+        self.pending_dropped = False
 
-        self.device.send_package(HuaweiSppPackage(b"\x2b\x31", [
-            (1, b""),
-        ]))
-        self.device.send_package(HuaweiSppPackage(b"\x2b\x31", [
-            (1, b""),
-        ]))
+    @async_with_ui("DualConnectDevicesEnumerate")
+    def on_init(self):
+        log.info("Start dual-connect device enumeration...")
+        while True:
+            self.device.put_group("dev_name", {}, silent=True)
+            self.device.put_group("dev_auto_connect", {}, silent=True)
+            self.device.put_group("dev_connected", {}, silent=True)
+            self.device.put_property("config", "preferred_device", "0" * 12)
+            self.pending_dropped = False
+            self.pending_devices = {}
+
+            self.device.send_package(HuaweiSppPackage(b"\x2b\x31", [
+                (1, b""),
+            ]))
+
+            time.sleep(10)
+            if self.pending_dropped:
+                return
+            log.info("Timed out waiting device enumeration, retry...")
 
     def on_package(self, package: HuaweiSppPackage):
         if package.command_id == b"\x2b\x36":
@@ -43,17 +69,36 @@ class DualConnectDevicesHandler(HuaweiSppHandler):
         mac_addr = package.find_param(4).hex()
         if len(mac_addr) < 12:
             return
-        is_connected = package.find_param(5)
-        is_auto_connect = package.find_param(8)
-        is_prior = package.find_param(7)
-        name = package.find_param(9).decode("utf8", "ignore")
 
-        self.device.put_property("dev_name", mac_addr, name)
-        self.device.put_property("dev_auto_connect", mac_addr, is_auto_connect[0] != 0)
-        self.device.put_property("dev_connected", mac_addr, is_connected[0] != 0)
+        dev_count = int.from_bytes(package.find_param(2), byteorder="big", signed=True)
+        dev_index = int.from_bytes(package.find_param(3), byteorder="big", signed=True)
+        self.pending_devices[dev_index] = PendingDeviceRow(mac=mac_addr,
+                                                           name=package.find_param(9).decode("utf8", "ignore"),
+                                                           connected=package.find_param(5) == 1,
+                                                           auto_connect=package.find_param(8) == 1,
+                                                           primary=package.find_param(7) == 1)
 
-        if is_prior[0] == 1:
-            self.device.put_property("config", "preferred_device", mac_addr)
+        if dev_count == len(self.pending_devices.values()):
+            self._process_pending_devices()
+
+    def _process_pending_devices(self):
+        log.info("All devices are received, processing")
+        self.pending_dropped = True
+
+        names, auto_connect, connected = {}, {}, {}
+        preferred = "0" * 12
+
+        for device in self.pending_devices.values():
+            names[device.mac] = device.name
+            auto_connect[device.mac] = device.auto_connected
+            connected[device.mac] = device.connected
+            if device.primary:
+                preferred = device.mac
+
+        self.device.put_group("dev_name", names, silent=True)
+        self.device.put_group("dev_auto_connect", auto_connect, silent=True)
+        self.device.put_group("dev_connected", connected, silent=True)
+        self.device.put_property("config", "preferred_device", preferred)
 
     def on_prop_changed(self, group: str, prop: str, value):
         if group == "dev_auto_connect":

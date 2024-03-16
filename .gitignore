@@ -2,6 +2,7 @@
 *.bak
 *~
 *.swp
+*#
 
 /test.py
 /lib
