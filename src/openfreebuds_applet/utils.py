@@ -5,7 +5,6 @@ import traceback
 
 import openfreebuds_backend
 from openfreebuds.logger import create_log
-from openfreebuds_applet import report_tool
 
 
 def reverse_dict_props(obj):
@@ -59,6 +58,7 @@ def safe_run_wrapper(func, display_name, _):
 
 
 def report_and_exit():
+    from openfreebuds_applet import report_tool
     report_tool.create_and_show("crash")
     # noinspection PyUnresolvedReferences,PyProtectedMember
     os._exit(1)

@@ -30,7 +30,7 @@ def bt_is_connected(address):
             bt_device = await BluetoothDevice.from_host_name_async(host_name)
             return bt_device.connection_status
         except OSError:
-            log.info("Got OSError, looks like Bluetooth isn't available");
+            log.info("Got OSError, looks like Bluetooth isn't available")
             return False
     return asyncio.run(run())
 
