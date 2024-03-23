@@ -1,3 +1,10 @@
+openfreebuds (0.13.3-1) bookworm jammy mantic; urgency=medium
+
+  * Fix: Random crash when enumerating dual-connect devices
+  * Fix: Crash when disabling Bluetooth under windows
+
+ -- MelianMiko <support@mmk.pw>  Sat, 23 Mar 2024 15:18:23 +0700
+
 openfreebuds (0.13.2-1) bookworm jammy mantic; urgency=medium
 
   * Fix: Crash due to unknown equalizer preset
