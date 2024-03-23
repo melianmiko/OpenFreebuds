@@ -74,9 +74,9 @@ class DualConnectDevicesHandler(HuaweiSppHandler):
         dev_index = int.from_bytes(package.find_param(3), byteorder="big", signed=True)
         self.pending_devices[dev_index] = PendingDeviceRow(mac=mac_addr,
                                                            name=package.find_param(9).decode("utf8", "ignore"),
-                                                           connected=package.find_param(5) == 1,
-                                                           auto_connect=package.find_param(8) == 1,
-                                                           primary=package.find_param(7) == 1)
+                                                           connected=package.find_param(5)[0] == 1,
+                                                           auto_connect=package.find_param(8)[0] == 1,
+                                                           primary=package.find_param(7)[0] == 1)
 
         if dev_count == len(self.pending_devices.values()):
             self._process_pending_devices()
