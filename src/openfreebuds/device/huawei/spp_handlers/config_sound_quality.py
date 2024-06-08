@@ -3,8 +3,8 @@ from openfreebuds.device.huawei.generic.spp_package import HuaweiSppPackage
 from openfreebuds.device.huawei.tools import reverse_dict
 
 KNOWN_OPTIONS = {
-    0: "sqp_quality",
-    1: "sqp_connectivity",
+    0: "sqp_connectivity",
+    1: "sqp_quality",
 }
 
 
