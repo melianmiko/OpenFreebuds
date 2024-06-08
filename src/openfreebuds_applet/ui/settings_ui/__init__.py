@@ -14,7 +14,7 @@ SETTINGS_SIZES = [550, 700]
 @tk_tools.ui_thread
 def open_app_settings(applet):
     tk = tkinter.Toplevel(class_="openfreebuds")
-    tk.wm_title(t("settings_title"))
+    tk.wm_title("OpenFreebuds")
     tk.wm_resizable(False, False)
 
     w, h = SETTINGS_SIZES
@@ -32,21 +32,20 @@ def open_app_settings(applet):
         device_main_tab = DeviceSettingsTab(tk, applet.manager, applet.settings,
                                             allowed_categories=[
                                                 "main",
-                                                "setup_category_sound_quality",
-                                                "setup_category_config",
+                                                "Sound preferences",
+                                                "Misc options",
                                             ])
         device_gestures_tab = DeviceSettingsTab(tk, applet.manager, applet.settings,
                                                 with_header=False,
                                                 allowed_categories=[
-                                                    "category_double_tap",
-                                                    "category_long_tap",
-                                                    "category_gestures_misc",
+                                                    "Double-tap",
+                                                    "Long-tap",
+                                                    "Other gestures",
                                                 ])
-        notebook.add(device_main_tab, text=t("settings_tab_device"))
-        notebook.add(device_gestures_tab, text=t("setup_category_gestures"))
+        notebook.add(device_main_tab, text=t("Device"))
+        notebook.add(device_gestures_tab, text=t("Gestures"))
 
-    notebook.add(AppSettingsTab(notebook, applet), text=t("settings_tab_app"))
-    # notebook.add(ModulesSettingsTab(notebook, applet), text=t("settings_tab_modules"))
-    notebook.add(tab_about.make_about(notebook, applet), text=t("settings_tab_about"))
+    notebook.add(AppSettingsTab(notebook, applet), text=t("Application"))
+    notebook.add(tab_about.make_about(notebook, applet), text=t("About"))
 
     tk.tk.eval(f'tk::PlaceWindow {str(tk)} center')

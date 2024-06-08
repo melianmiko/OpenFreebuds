@@ -1,3 +1,4 @@
+from openfreebuds_applet.ui.i18n_mappings import ANC_MODE_MAPPINGS, ANC_LEVEL_MAPPINGS
 from openfreebuds_applet.ui.menu_device_extra import EqualizerPresetMenu, DualConnectMenu
 from pystrayx import Menu
 
@@ -32,9 +33,9 @@ class DeviceMenu(Menu):
         self.add_separator()
 
         if "equalizer" in self.settings.context_menu_extras:
-            self.add_submenu(t("equalizer_preset"), EqualizerPresetMenu(self.manager))
+            self.add_submenu(t("Equalizer"), EqualizerPresetMenu(self.manager))
         if "dual_connect" in self.settings.context_menu_extras:
-            self.add_submenu(t("toggle_dual_connect"), DualConnectMenu(self.manager))
+            self.add_submenu(t("Dual-connection"), DualConnectMenu(self.manager))
         if len(self.settings.context_menu_extras) > 0:
             self.add_separator()
 
@@ -61,15 +62,23 @@ class DevicePowerMenu(Menu):
 
         if "global" in props:
             # Global only view
+            title = t("Battery:")
             value = "--" if props["global"] == 0 else props["global"]
-            self.add_item(t("battery_global").format(value), enabled=False)
+            self.add_item(f"{title} {value}%", enabled=False)
 
     def _build_tws(self, props):
-        for n in ["left", "right", "case"]:
-            battery = props[n]
+        items = [
+            # [key, title]
+            ["left", t("Left headphone:")],
+            ["right", t("Right headphone:")],
+            ["case", t("Battery case:")],
+        ]
+
+        for key, title in items:
+            battery = props[key]
             if battery == 0:
                 battery = "--"
-            value = t("battery_" + n).format(battery)
+            value = f"{title} {battery}%"
             self.add_item(value, enabled=False)
 
 
@@ -91,14 +100,14 @@ class NoiseControlMenu(Menu):
         next_mode = options[(options.index(current) + 1) % len(options)]
 
         for a in options:
-            self.add_item(text=t("noise_mode_{}".format(a)),
+            self.add_item(text=t(ANC_MODE_MAPPINGS.get(a)),
                           action=self.set_mode,
                           args=[a],
                           checked=current == a,
                           default=next_mode == a)
 
         if device.find_property("anc", "level_options", ""):
-            self.add_submenu(t("anc_level"), AncLevelSubmenu(self.manager))
+            self.add_submenu(t("Intensity..."), AncLevelSubmenu(self.manager))
 
     def set_mode(self, val):
         self.manager.device.set_property("anc", "mode", val)
@@ -117,7 +126,7 @@ class AncLevelSubmenu(Menu):
         options = device.find_property("anc", "level_options").split(",")
 
         for val in options:
-            self.add_item(text=t(f"anc_level_{val}"),
+            self.add_item(text=t(ANC_LEVEL_MAPPINGS.get(val)),
                           action=self.set_level,
                           args=[val],
                           checked=current == val)

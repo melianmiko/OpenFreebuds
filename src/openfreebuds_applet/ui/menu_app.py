@@ -18,10 +18,10 @@ class ApplicationMenuPart(Menu):
     def on_build(self):
         self.add_separator()
 
-        self.add_item(t("action_settings"), self.open_settings)
-        self.add_item(t("action_select_device"), self.open_device_picker)
-        self.add_item(t("action_mk_report"), report_tool.create_and_show)
-        self.add_item(t("action_exit"), self.applet.exit)
+        self.add_item(t("Settings..."), self.open_settings)
+        self.add_item(t("Change device..."), self.open_device_picker)
+        self.add_item(t("Bugreport"), report_tool.create_and_show)
+        self.add_item(t("Leave application"), self.applet.exit)
 
     def open_device_picker(self):
         device_select.start(self.applet.settings, self.applet.manager)

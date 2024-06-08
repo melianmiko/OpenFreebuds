@@ -12,7 +12,7 @@ class BatteryHandler(HuaweiSppHandler):
 
     def on_init(self):
         self.device.send_package(HuaweiSppPackage(b"\x01\x08", [
-            (1, b""),
+            (1, b""),   
             (2, b""),
             (3, b"")
         ]), True)

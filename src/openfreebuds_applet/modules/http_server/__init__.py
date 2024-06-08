@@ -17,8 +17,8 @@ log = create_log("Webserver")
 
 class Module(GenericModule):
     ident = "http_server"
-    name = t("module_http_server")
-    description = t("http_server_info")
+    name = t("HTTP-server")
+    description = t("Allows managing OpenFreebuds from other apps or devices")
     order = 1
     has_settings_ui = True
     def_settings = {

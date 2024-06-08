@@ -13,8 +13,11 @@ log = create_log("MprisHelper")
 
 class Module(GenericModule):
     ident = "mpris_helper"
-    name = t("option_mpris_helper")
-    description = t("option_mpris_helper_guide")
+    name = t("MPRIS-helper")
+    description = t("Try this option if auto-pause doesn't work wit your desktop\n"
+                    "environment. Note that only MPRIS-compatible\n"
+                    "media players are supported (mostly all standalone\n"
+                    "player and browsers support this API).")
 
     os_filter = ["linux"]
     def_settings = {

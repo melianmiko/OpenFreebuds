@@ -14,8 +14,8 @@ class QuitingMenu(Menu):
 
     # noinspection PyUnresolvedReferences,PyProtectedMember
     def on_build(self):
-        self.add_item(t("state_quiting"), enabled=False)
-        self.add_item(t("action_kill_app"), action=os._exit, args=[0])
+        self.add_item(t("Exiting..."), enabled=False)
+        self.add_item(t("Force exit"), action=os._exit, args=[0])
 
 
 class HeaderMenuPart(Menu):
@@ -42,9 +42,9 @@ class HeaderMenuPart(Menu):
             self.add_item(text=device_name, enabled=False)
 
             if is_connected:
-                self.add_item(t('action_disconnect'), self.do_disconnect)
+                self.add_item(t('Disconnect'), self.do_disconnect)
             else:
-                self.add_item(t('action_connect'), self.do_connect)
+                self.add_item(t('Connect'), self.do_connect)
 
         self.add_separator()
 
@@ -53,7 +53,7 @@ class HeaderMenuPart(Menu):
         try:
             updater = self.applet.modules.modules["update_check"]
             has_update, new_version = updater.get_result()
-            self.add_item(text=t('action_update').format(new_version),
+            self.add_item(text=f"{t('Update OpenFreebuds')} ({new_version})",
                           action=updater.show_update_message,
                           visible=has_update)
         except Exception:

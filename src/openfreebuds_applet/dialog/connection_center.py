@@ -53,7 +53,7 @@ class ConnCenter(tkinter.Toplevel):
         # Wipe
         self.devices_table.delete(*self.devices_table.get_children())
         self.device_names = {
-            t("preferred_device_auto_config"): "0" * 12,
+            t("Auto"): "0" * 12,
         }
 
         # Iterate and add
@@ -72,7 +72,7 @@ class ConnCenter(tkinter.Toplevel):
         self.y += 1
 
         label_fnt = tkinter.font.Font(weight="bold")
-        ttk.Label(box, text=t("toggle_dual_connect"), font=label_fnt) \
+        ttk.Label(box, text=t("Dual-connection"), font=label_fnt) \
             .grid(row=0, column=0, pady=16, sticky=tkinter.NSEW, padx=16)
         ttk.Checkbutton(box, variable=self.var_main_toggle,
                         style="Switch.TCheckbutton",
@@ -80,7 +80,11 @@ class ConnCenter(tkinter.Toplevel):
             .grid(row=0, column=1, padx=16, pady=4)
 
     def add_preferred_device_select(self):
-        ttk.Label(self, text=t("text_preferred_device_guide"), wraplength=420 - 32) \
+        ttk.Label(self, 
+                  text=t("Select preferred device, that will have higher "
+                         "priority than any other on some requests, like "
+                         "voice assistant activation."),
+                  wraplength=420 - 32) \
             .grid(row=self.y, column=0, pady=8, sticky=tkinter.NSEW, padx=16)
 
         box = ttk.Frame(self)
@@ -88,7 +92,7 @@ class ConnCenter(tkinter.Toplevel):
         box.grid_columnconfigure(0, weight=1)
         self.y += 2
 
-        ttk.Label(box, text=t("select_preferred_device")) \
+        ttk.Label(box, text=t("Preferred device")) \
             .grid(column=0, row=0, sticky="nws", padx=16, pady=4)
         self.preferred_device_picker = ttk.Combobox(box,
                                                     values=list(self.device_names.keys()),
@@ -98,7 +102,7 @@ class ConnCenter(tkinter.Toplevel):
         self.preferred_device_picker.grid(column=1, row=0, sticky=tkinter.NW, padx=16, pady=4)
 
     def add_device_management_table(self):
-        ttk.Label(self, text=t("text_device_table_guide")) \
+        ttk.Label(self, text=t("Manage devices paired with your headset:")) \
             .grid(row=self.y, column=0, pady=8, sticky=tkinter.NSEW, padx=16)
 
         pane = ttk.Panedwindow(self, height=300)
@@ -122,11 +126,11 @@ class ConnCenter(tkinter.Toplevel):
         box.grid_columnconfigure(0, weight=1)
         self.y += 1
 
-        self.device_name_view = ttk.Label(box, text=t("prefix_selected_device") + ": N/A")
+        self.device_name_view = ttk.Label(box, text=t("Selected device") + ": N/A")
         self.device_name_view.grid(row=0, column=0, columnspan=4, sticky=tkinter.NSEW, padx=8, pady=8)
 
         self.cb_auto_connect = ttk.Checkbutton(box,
-                                               text=t("toggle_device_auto_connect"),
+                                               text=t("Auto-connect this device"),
                                                state="disabled",
                                                command=self.on_device_auto_connect_toggle,
                                                variable=self.var_auto_connect)
@@ -135,17 +139,17 @@ class ConnCenter(tkinter.Toplevel):
         ttk.Label(box, text="") \
             .grid(row=2, column=0, sticky=tkinter.NSEW, padx=8)
         self.btn_refresh = ttk.Button(box,
-                                      text=t("refresh"),
+                                      text=t("Refresh"),
                                       command=self.do_refresh)
         self.btn_refresh.grid(row=2, column=1, padx=8, pady=16)
         self.btn_connect = ttk.Button(box,
                                       state="disabled",
-                                      text=t("action_connect_short"),
+                                      text=t("Connect..."),
                                       command=self.on_device_connect)
         self.btn_connect.grid(row=2, column=2, padx=8, pady=16)
         self.btn_unpair = ttk.Button(box,
                                      state="disabled",
-                                     text=t("action_unpair"),
+                                     text=t("Unpair"),
                                      command=self.on_device_unpair)
         self.btn_unpair.grid(row=2, column=3, padx=8, pady=16)
 
@@ -162,10 +166,10 @@ class ConnCenter(tkinter.Toplevel):
         is_connected = self.device.find_property("dev_connected", addr)
         is_auto_connect_enabled = self.device.find_property("dev_auto_connect", addr)
 
-        self.device_name_view.config(text=t("prefix_selected_device") + ": " + name)
+        self.device_name_view.config(text=t("Selected device") + ": " + name)
         self.var_auto_connect.set(is_auto_connect_enabled)
 
-        btn_text_tag = "action_connect_short" if not is_connected else "action_disconnect_short"
+        btn_text_tag = "Connect..." if not is_connected else "Disconnect..."
         self.btn_connect.config(state="normal", text=t(btn_text_tag))
         self.btn_unpair.config(state="normal")
         self.cb_auto_connect.config(state="normal")

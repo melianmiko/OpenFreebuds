@@ -10,8 +10,8 @@ log = create_log("UpdateChecker")
 
 class Module(GenericModule):
     ident = "update_check"
-    name = t("module_updater")
-    description = t("updater_info")
+    name = t("Update checker")
+    description = t("Auto-check for updates and show \"New version\" dialog")
     order = 2
     def_settings = {
         "enabled": True

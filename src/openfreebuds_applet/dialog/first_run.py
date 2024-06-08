@@ -36,14 +36,24 @@ def show(settings: SettingsStorage, manager: FreebudsManager):
         if var_config.get():
             device_select.start(settings, manager)
 
-    ttk.Label(root, text=t("first_run_text"), wraplength=500)\
+    ttk.Label(root,
+              text=t("Welcome,\n\n"
+                     "This application allows you to manage your HUAWEI FreeBuds. "
+                     "There's no main window, app just provide a tray indicator, "
+                     "which you can find on taskbar near other indicators. "
+                     "Right-click them to see a list of options.\n\n"
+                     "Device will be selected automatically, "
+                     "but you can override it. Here's some common "
+                     "settings, you can change it anytime from "
+                     "settings menu:\n"),
+              wraplength=500)\
         .pack(padx=12, pady=12, expand=True)
 
-    ttk.Checkbutton(root, text=t("option_run_at_boot"), variable=var_run_at_boot) \
+    ttk.Checkbutton(root, text=t("Run application on boot"), variable=var_run_at_boot) \
         .pack(padx=12, pady=4, anchor=tkinter.NW)
-    ttk.Checkbutton(root, text=t("first_run_change_device"), variable=var_config) \
+    ttk.Checkbutton(root, text=t("Configure device manually"), variable=var_config) \
         .pack(anchor=tkinter.NW, padx=12, pady=4)
-    ttk.Button(root, text=t("action_begin"), style="Accent.TButton", command=finish) \
+    ttk.Button(root, text=t("Begin"), style="Accent.TButton", command=finish) \
         .pack(anchor=tkinter.NE, padx=12, pady=12)
 
     root.mainloop()

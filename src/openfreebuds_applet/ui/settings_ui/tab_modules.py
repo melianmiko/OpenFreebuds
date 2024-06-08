@@ -66,7 +66,7 @@ class ModulesSettingsTab(ttk.Frame):
         enable_checkbox.grid(column=0, row=0, sticky=tkinter.NSEW)
 
         settings_btn = ttk.Button(fr,
-                                  text=t("button_settings"),
+                                  text=t("Settings"),
                                   state=tkinter.DISABLED if not mod.has_settings_ui else None,
                                   command=lambda: module_settings(mod),
                                   width=12)

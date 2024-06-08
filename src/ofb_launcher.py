@@ -111,12 +111,21 @@ def on_device_available(applet, args):
 def is_start_possible():
     # Is already running?
     if is_running():
-        tk_tools.message(t("application_running_message"), "Error", _leave)
+        tk_tools.message(
+            t("Application already running, check status area.\n\n "
+              "If app don't response, stop it from system task manager, \n"
+              "and then try again."),
+            "Error", _leave)
         return False
 
     # Is python built with AF_BLUETOOTH support?
     if not getattr(socket, "AF_BLUETOOTH", False):
-        tk_tools.message(t("no_af_bluetooth"), "Error", _leave)
+        tk_tools.message(t("Current Python interpreter didn't support Bluetooth.\n\n"
+                           "Some variants of Python 3 are compiled without BT socket\n"
+                           "support, and this application won't work on them. Please\n"
+                           "use standard Python 3.10 or newer to run OFB."),
+                         "Error",
+                         _leave)
         return False
 
     # Is bluetooth adapter accessible
@@ -149,7 +158,10 @@ def _do_command_webserver(command):
 
     except urllib.error.URLError:
         log.exception("Can't do command via HTTP-server")
-        tk_tools.message(t("do_command_server_error").format(command), "Openfreebuds", _leave)
+        tk_tools.message(t("Can't execute command. Check that command is valid and \n"
+                           "that \"Remote control server\" is enabled in OpenFreebuds settings."),
+                         "Openfreebuds",
+                         _leave)
 
 
 def _do_command_offline(command):

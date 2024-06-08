@@ -107,7 +107,7 @@ class DeviceSettingsTab(ttk.Frame):
         label_font = tkinter.font.Font(weight="bold")
         ttk.Label(self, text=self.settings.device_name, font=label_font) \
             .grid(row=0, padx=16, pady=16, sticky=tkinter.NW)
-        ttk.Label(self, text=t("device_info_address")) \
+        ttk.Label(self, text=t("Bluetooth address")) \
             .grid(row=1, padx=16, pady=4, sticky=tkinter.NW)
         ttk.Label(self, text=self.settings.address) \
             .grid(row=1, padx=16, pady=4, column=1, sticky=tkinter.NW)

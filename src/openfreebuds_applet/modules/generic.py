@@ -75,7 +75,7 @@ class GenericModule:
 
     def make_settings_frame(self, parent: tkinter.BaseWidget) -> tkinter.Frame | None:
         f = tkinter.Frame(parent)
-        tkinter.Label(f, text=t("module_no_settings")).pack()
+        tkinter.Label(f, text=t("This module don't have any options")).pack()
         return f
 
 

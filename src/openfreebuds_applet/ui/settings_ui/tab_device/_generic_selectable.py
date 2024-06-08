@@ -9,6 +9,8 @@ from openfreebuds_applet.ui.settings_ui.tab_device._generic import DeviceSetting
 
 class SelectableDeviceOption(DeviceSettingsSection):
     prop_options = ("", "")
+    prop_options_labels = {}
+
     prop_primary = ("", "")
     prop_primary_label = ""
     prop_secondary = ("", "")
@@ -18,7 +20,10 @@ class SelectableDeviceOption(DeviceSettingsSection):
         super().__init__(parent)
 
         self.option_values = self.device.find_property(*self.prop_options).split(",")
-        self.option_values = {v: t(v) for v in self.option_values}
+        self.option_values = {
+            v: t(v) if v not in self.prop_options_labels else t(self.prop_options_labels[v])
+            for v in self.option_values
+        }
         self.rev_option_values = reverse_dict(self.option_values)
 
         val_primary = self.device.find_property(*self.prop_primary)

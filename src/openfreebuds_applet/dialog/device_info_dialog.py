@@ -21,8 +21,8 @@ def start(device: BaseDevice):
 
     table = ttk.Treeview(root, show="headings", columns=["p", "v"])
     table.grid(sticky=tkinter.NSEW)
-    table.heading("p", text=t("table_head_property"))
-    table.heading("v", text=t("table_head_value"))
+    table.heading("p", text=t("Property"))
+    table.heading("v", text=t("Value"))
 
     props = device.find_group("info")
     for key in props:

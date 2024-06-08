@@ -13,8 +13,8 @@ log = create_log("HotkeysTool")
 
 class Module(GenericModule):
     ident = "hotkeys"
-    name = t("settings_tab_hotkeys")
-    description = t("hotkeys_info")
+    name = t("Hotkeys")
+    description = t("Manage OpenFreebuds via keyboard shortcuts")
     order = 0
     has_settings_ui = True
     def_settings = {

@@ -5,7 +5,7 @@ import webbrowser
 from tkinter import ttk
 
 from openfreebuds.logger import create_log
-from openfreebuds_applet.l18n import t
+from openfreebuds_applet.l18n import t, get_current_lang
 from openfreebuds_applet.modules import actions
 from openfreebuds_applet.modules.hotkeys import _recorder
 from openfreebuds_applet.settings import SettingsStorage
@@ -60,7 +60,7 @@ class HotkeysSettings(ttk.Frame):
             .grid(row=self.row_counter, sticky="new", padx=16, pady=8, columnspan=3)
         ttk.Button(self.hotkeys_root, textvariable=variable, command=_on_click) \
             .grid(row=self.row_counter, column=1, sticky=tkinter.NSEW, pady=4)
-        ttk.Button(self.hotkeys_root, text=t("clear"), command=_wipe) \
+        ttk.Button(self.hotkeys_root, text=t("Clear"), command=_wipe) \
             .grid(row=self.row_counter, column=2, sticky=tkinter.NSEW, padx=4, pady=4)
 
         self.row_counter += 2
@@ -105,9 +105,12 @@ class HotkeysSettings(ttk.Frame):
         if not is_available:
             log.warning(av_error)
             self.av_error = av_error
-            ttk.Label(self, text=t("hotkeys_not_available")) \
+            ttk.Label(self, 
+                      text=t("Hotkeys feature isn't available.\n"
+                             "This is some possible solutions:\n\n"
+                             "- On Linux, check that python-xlib package is installed.")) \
                 .grid(row=1, padx=16, pady=16, sticky=tkinter.NW)
-            ttk.Button(self, text=t("show_error"),
+            ttk.Button(self, text=t("Show error"),
                        command=self._show_compat_error_message) \
                 .grid(row=2, padx=16, pady=4, sticky=tkinter.NW)
             return False
@@ -115,9 +118,9 @@ class HotkeysSettings(ttk.Frame):
         is_supported, sp_error = _recorder.test_os_supported()
         if not is_supported:
             log.warning(sp_error)
-            ttk.Label(self, text=t("hotkeys_wayland")) \
+            ttk.Label(self, text=t("Global hotkeys won't work correctly under Wayland.")) \
                 .grid(row=1, padx=16, pady=4, sticky=tkinter.NW, columnspan=4)
-            link = ttk.Label(self, text=t("hotkeys_wayland_link"),
+            link = ttk.Label(self, text=t("Click here for more information"),
                              foreground="#04F", cursor="hand2")
             link.bind("<Button-1>", self.show_wayland_help)
             link.grid(row=2, padx=16, pady=8, sticky=tkinter.NW, columnspan=4)
@@ -126,4 +129,9 @@ class HotkeysSettings(ttk.Frame):
 
     @staticmethod
     def show_wayland_help(_):
-        webbrowser.open(t("hotkeys_wayland_url"))
+        if get_current_lang() == "ru_RU":
+            url = "https://mmk.pw/openfreebuds/help"
+        else:
+            url = "https://mmk.pw/en/openfreebuds/help"
+
+        webbrowser.open(url)

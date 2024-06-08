@@ -11,15 +11,15 @@ from openfreebuds_applet.ui import tk_tools
 class ContextMenuEditDialog(tkinter.Toplevel):
     def __init__(self, settings: SettingsStorage):
         super().__init__(class_="openfreebuds")
-        self.wm_title(t("setting_context_menu"))
+        self.wm_title(t("Context menu..."))
         self.wm_geometry("400x400")
         self.wm_resizable(False, False)
 
         self.settings = settings
         self.vars = {}
 
-        self.add_item("equalizer", t("equalizer_preset"))
-        self.add_item("dual_connect", t("toggle_dual_connect"))
+        self.add_item("equalizer", t("Equalizer"))
+        self.add_item("dual_connect", t("Dual-connection"))
 
     def add_item(self, option_id: str, display_name: str):
         self.vars[option_id] = tkinter.BooleanVar(value=option_id in self.settings.context_menu_extras)

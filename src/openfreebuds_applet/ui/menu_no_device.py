@@ -3,6 +3,7 @@ from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.settings import SettingsStorage
 from openfreebuds_applet.ui.base import HeaderMenuPart
+from openfreebuds_applet.ui.i18n_mappings import MANAGER_STATE_NAMES
 from openfreebuds_applet.ui.menu_app import ApplicationMenuPart
 from pystrayx import Menu
 
@@ -17,9 +18,10 @@ class DeviceOfflineMenu(Menu):
         self.header = HeaderMenuPart(applet)
 
     def on_build(self):
+        state_title = MANAGER_STATE_NAMES[self.manager.state]
+
         self.include(self.header)
-        self.add_item(t("mgr_state_{}".format(self.manager.state)),
-                      enabled=False)
+        self.add_item(t(state_title), enabled=False)
         self.include(self.footer)
 
 
@@ -31,5 +33,5 @@ class DeviceScanMenu(Menu):
         self.footer = ApplicationMenuPart(applet)
 
     def on_build(self):
-        self.add_item(t("state_no_device"), enabled=False)
+        self.add_item(t("Device not selected"), enabled=False)
         self.include(self.footer)

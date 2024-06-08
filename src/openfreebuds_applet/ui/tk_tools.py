@@ -123,9 +123,9 @@ def confirm(content, title, callback=None, parent=None):
 
     ttk.Label(frame, text=content)\
         .grid(padx=16, pady=16, column=0, row=0, columnspan=3)
-    ttk.Button(frame, text=t("yes"), style="Accent.TButton", command=_on_yes)\
+    ttk.Button(frame, text=t("Yes"), style="Accent.TButton", command=_on_yes)\
         .grid(padx=16, pady=12, column=0, row=1)
-    ttk.Button(frame, text=t("no"), command=_on_no)\
+    ttk.Button(frame, text=t("No"), command=_on_no)\
         .grid(padx=0, pady=12, column=1, row=1)
 
     root.tk.eval(f'tk::PlaceWindow {str(root)} center')

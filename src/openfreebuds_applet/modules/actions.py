@@ -52,13 +52,13 @@ def do_connect(manager: FreebudsManager):
         return True
 
     if manager.state == manager.STATE_PAUSED:
-        tk_tools.message(t("error_in_work"), "OpenFreebuds")
+        tk_tools.message(t("Error: operation already started."), "OpenFreebuds")
         return True
 
     manager.set_paused(True)
     log.debug("Trying to force connect device...")
     if not openfreebuds_backend.bt_connect(manager.device_address):
-        tk_tools.message(t("error_force_action_fail"), "OpenFreebuds")
+        tk_tools.message(t("Error: OS can't connect this device."), "OpenFreebuds")
 
     log.debug("Finish force connecting")
     manager.set_paused(False)
@@ -67,13 +67,13 @@ def do_connect(manager: FreebudsManager):
 
 def do_disconnect(manager):
     if manager.state == manager.STATE_PAUSED:
-        tk_tools.message(t("error_in_work"), "OpenFreebuds")
+        tk_tools.message(t("Error: operation already started."), "OpenFreebuds")
         return False
 
     manager.set_paused(True)
     log.debug("Trying to force disconnect device...")
     if not openfreebuds_backend.bt_disconnect(manager.device_address):
-        tk_tools.message(t("error_force_action_fail"), "OpenFreebuds")
+        tk_tools.message(t("Error: OS can't connect this device."), "OpenFreebuds")
 
     log.debug("Finish force disconnecting")
     manager.set_paused(False)
@@ -101,11 +101,11 @@ def get_actions(manager: FreebudsManager):
 
 def get_action_names():
     return {
-        "next_mode": t("action_next_mode"),
-        "mode_normal": t("noise_mode_normal"),
-        "mode_cancellation": t("noise_mode_cancellation"),
-        "mode_awareness": t("noise_mode_awareness"),
-        "connect": t("action_connect"),
-        "disconnect": t("action_disconnect"),
-        "toggle_connect": t("action_toggle_connection")
+        "next_mode": t("Change noise control mode"),
+        "mode_normal": t("Disable noise control"),
+        "mode_cancellation": t("Noise cancelling"),
+        "mode_awareness": t("Awareness"),
+        "connect": t("Connect device"),
+        "disconnect": t("Disconnect device"),
+        "toggle_connect": t("Connect or disconnect")
     }

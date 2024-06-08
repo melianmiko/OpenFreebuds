@@ -23,7 +23,7 @@ def start(settings: SettingsStorage, manager: FreebudsManager):
 
     tk_tools.setup_window(root)
 
-    ttk.Label(root, text=t("action_select_device")) \
+    ttk.Label(root, text=t("Change device...")) \
         .grid(sticky=tkinter.NW, columnspan=10, row=0, column=0, padx=16, pady=16)
 
     pane = ttk.Panedwindow(root, height=300)
@@ -73,33 +73,42 @@ def start(settings: SettingsStorage, manager: FreebudsManager):
         if values[0] != "pin":
             status.config(text=" ")
             return
-        status.config(text=t("address_prefix") + ": " + values[2])
+        status.config(text=t("Address") + ": " + values[2])
 
     # Rebuild list
     # noinspection PyTypeChecker
     def rebuild_treeview():
         treeview.delete(*treeview.get_children())
-        treeview.insert("", "end", text=t("device_autoconfig_mode"), values=("autoconfig", ))
-        treeview.insert("", "end", iid=1, text=t("type_paired"), values=("none", ), open=True)
+        treeview.insert("", "end", text=t("Switch automatically"), values=("autoconfig", ))
+        treeview.insert("", "end", iid=1, text=t("Paired devices"), values=("none", ), open=True)
 
         # List paired
         paired = openfreebuds_backend.bt_list_devices()
         if len(paired) == 0:
-            treeview.insert(1, "end", text=t("no_devices"), values=("none", ))
+            treeview.insert(1,
+                            "end",
+                            text=t("(no devices)"),
+                            values=("none", ))
         for dev in paired:
-            treeview.insert(1, "end", text=dev["name"], values=("pin", dev["name"], dev["address"]))
+            treeview.insert(1,
+                            "end",
+                            text=dev["name"],
+                            values=("pin", dev["name"], dev["address"]))
         
         # Add "manual" option
-        treeview.insert("", "end", text=t("action_manual_connect"), values=("custom", ))
+        treeview.insert("",
+                        "end",
+                        text=t("Device is missing (manual connect)"),
+                        values=("custom", ))
 
     rebuild_treeview()
     treeview.bind("<<TreeviewSelect>>", on_select)
 
-    ttk.Button(root, text=t("connect"), style="Accent.TButton", command=on_confirm) \
+    ttk.Button(root, text=t("Connect"), style="Accent.TButton", command=on_confirm) \
         .grid(sticky=tkinter.NSEW, row=10, column=0, padx=16, pady=16)
-    ttk.Button(root, text=t("refresh"), command=rebuild_treeview) \
+    ttk.Button(root, text=t("Refresh"), command=rebuild_treeview) \
         .grid(sticky=tkinter.NSEW, row=10, column=1, padx=0, pady=16)
-    ttk.Button(root, text=t("cancel"), command=root.destroy) \
+    ttk.Button(root, text=t("Cancel"), command=root.destroy) \
         .grid(sticky=tkinter.NSEW, row=10, column=2, padx=16, pady=16)
     
     root.mainloop()
@@ -112,7 +121,7 @@ def setup_manually_ui(address, settings, manager):
     root = tkinter.Toplevel(class_="openfreebuds")
     selected = tkinter.StringVar(value=profiles[0])
     address_var = tkinter.StringVar(value=address)
-    root.wm_title(t("ui_manual_title"))
+    root.wm_title(t("Manual connect"))
     root.wm_resizable(False, False)
 
     tk_tools.setup_window(root)
@@ -130,26 +139,38 @@ def setup_manually_ui(address, settings, manager):
     frame.grid_columnconfigure(2, weight=1)
 
     # Info
-    info_id = "profile_select_message" if address != "" else "manual_device_setup_message"
-    ttk.Label(frame, text=t(info_id))\
+    if address != "":
+        info = ("This device isn't supported, for yet. But if you want,\n"
+                "you cant force connect them. To do that, select an exiting\n"
+                "profile. Then application will try to apply it to your \n"
+                "device. You can change profile in any time.\n\n"
+                "Notice that this may be dangerous for some kind of devices.\n"
+                "Do it of your risk. You also can share information about your\n"
+                "device and selected profile at GitHub, if you want get offical\n"
+                "support.")
+    else:
+        info = ("Enter bluetooth address of your device and select\n"
+                "their model from list.\n\n"
+                "You can find bluetooth address in system settings.")
+    ttk.Label(frame, text=t(info))\
         .grid(columnspan=3, padx=16, pady=16, sticky=tkinter.NSEW)
 
     # Address input
-    ttk.Label(frame, text=t("ui_manual_hint_address"))\
+    ttk.Label(frame, text=t("Bluetooth address (XX:XX:XX:XX:XX:XX):"))\
         .grid(row=1, columnspan=3, padx=16, pady=4, sticky=tkinter.NSEW)
     ttk.Entry(frame, state=("readonly" if address != "" else "normal"), textvariable=address_var)\
         .grid(row=2, columnspan=3, padx=16, pady=4, sticky=tkinter.NSEW)
 
     # Profile selector
-    ttk.Label(frame, text=t("ui_manual_hint_profile"))\
+    ttk.Label(frame, text=t("Device model (profile):"))\
         .grid(row=5, columnspan=3, padx=16, pady=4, sticky=tkinter.NSEW)
     ttk.Combobox(frame, state="readonly", values=profiles, textvariable=selected)\
         .grid(row=6, columnspan=3, padx=16, pady=4, stick=tkinter.NSEW)
 
     # Buttons
-    ttk.Button(frame, text=t("connect"), command=do_connect, style="Accent.TButton")\
+    ttk.Button(frame, text=t("Connect"), command=do_connect, style="Accent.TButton")\
         .grid(row=10, sticky=tkinter.NW, padx=16, pady=12)
-    ttk.Button(frame, text=t("cancel"), command=do_close) \
+    ttk.Button(frame, text=t("Cancel"), command=do_close) \
         .grid(row=10, column=1, sticky=tkinter.NW, pady=12)
 
     root.mainloop()

@@ -32,6 +32,7 @@ def bt_is_connected(address):
         except OSError:
             log.info("Got OSError, looks like Bluetooth isn't available")
             return False
+
     return asyncio.run(run())
 
 
@@ -39,7 +40,7 @@ def bt_connect(address):
     if not _tools_ready():
         return False
 
-    base_args = [extra_tools_dir + "\\btcom.exe",  "-b\"{}\"".format(address)]
+    base_args = [extra_tools_dir + "\\btcom.exe", "-b\"{}\"".format(address)]
 
     try:
         _run_commands([
@@ -60,7 +61,7 @@ def bt_disconnect(address):
     if not _tools_ready():
         return False
 
-    base_args = [extra_tools_dir + "\\btcom.exe",  "-b\"{}\"".format(address)]
+    base_args = [extra_tools_dir + "\\btcom.exe", "-b\"{}\"".format(address)]
 
     try:
         _run_commands([
@@ -105,6 +106,7 @@ def bt_list_devices():
                 pass
 
         return out
+
     return asyncio.run(run())
 
 
@@ -121,7 +123,17 @@ def _tools_ready():
     if os.path.isdir(extra_tools_dir):
         return True
 
-    response = ctypes.windll.user32.MessageBoxW(None, t("win_tools_message"), "Openfreebuds", 4)
+    response = ctypes.windll.user32.MessageBoxW(
+        None,
+        t("To use this feature, you must install \"Bluetooth Command Line Tools\"\n "
+          "from bluetoothinstaller.com. Without this, you can't use connect/disconnect\n"
+          "features on Windows. Notice that this software is provided \"as is\" and don't\n"
+          "give any warranty of any kind.\n\n"
+          "For more information, visit https://bluetoothinstaller.com\n\n"
+          "Also note, that this tools may not work on newer versions of MS Windows, like ver. 11.\n"
+          "Open browser to download installer?"),
+        "Openfreebuds",
+        4)
     if response == 6:
         webbrowser.open(extra_tools_url)
 

@@ -17,9 +17,9 @@ PAD_Y_BASE = 4
 class AppSettingsTab(ttk.Frame):
     LANGUAGE_OPTIONS = list_langs()
     THEME_OPTIONS = {
-        "auto": t("theme_auto"),
-        "light": t("theme_light"),
-        "dark": t("theme_dark")
+        "auto": t("Auto-detect"),
+        "light": t("Light"),
+        "dark": t("Dark")
     }
 
     def __init__(self, parent, applet):
@@ -36,43 +36,43 @@ class AppSettingsTab(ttk.Frame):
         label_fnt = tkinter.font.Font(weight="bold")
 
         # Main settings
-        ttk.Label(self, text=t("settings_group_main"), font=label_fnt)\
+        ttk.Label(self, text=t("Main settings"), font=label_fnt)\
             .grid(row=1, pady=16, sticky=tkinter.NW, padx=PAD_X_BASE)
         main_root = ttk.Frame(self)
         main_root.grid(columnspan=2, row=2, sticky=tkinter.NSEW)
         main_root.grid_columnconfigure(0, weight=1)
 
-        ttk.Label(main_root, text=t("submenu_language"))\
+        ttk.Label(main_root, text=t("Language:"))\
             .grid(column=0, row=0, sticky="nws", padx=PAD_X_BASE)
         c = ttk.Combobox(main_root, values=list(self.LANGUAGE_OPTIONS.keys()),
                          textvariable=self.var_language, state="readonly")
         c.bind("<<ComboboxSelected>>", self._language_changed)
         c.grid(column=1, row=0, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
 
-        ttk.Label(main_root, text=t("submenu_theme"))\
+        ttk.Label(main_root, text=t("Theme:"))\
             .grid(column=0, row=1, sticky="nws", padx=PAD_X_BASE)
         c = ttk.Combobox(main_root, values=list(self.THEME_OPTIONS.values()),
                          textvariable=self.var_theme, state="readonly")
         c.bind("<<ComboboxSelected>>", self._theme_changed)
         c.grid(column=1, row=1, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
 
-        ttk.Label(main_root, text=t("submenu_icon_theme"))\
+        ttk.Label(main_root, text=t("Icon theme:"))\
             .grid(column=0, row=2, sticky="nws", padx=PAD_X_BASE)
         c = ttk.Combobox(main_root, values=list(self.THEME_OPTIONS.values()),
                          textvariable=self.var_icon_theme, state="readonly")
         c.bind("<<ComboboxSelected>>", self._icon_theme_changed)
         c.grid(column=1, row=2, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
 
-        c = ttk.Button(main_root, text=t("setting_context_menu"),
+        c = ttk.Button(main_root, text=t("Context menu..."),
                        command=lambda: self.open_context_menu_edit_dialog())
         c.grid(column=0, row=3, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE)
 
-        ttk.Checkbutton(main_root, text=t("option_run_at_boot"),
+        ttk.Checkbutton(main_root, text=t("Run application on boot"),
                         variable=self.var_run_at_boot,
                         command=self._toggle_run_at_boot)\
             .grid(column=0, row=15, sticky=tkinter.NW, padx=PAD_X_BASE, pady=PAD_Y_BASE, columnspan=2)
 
-        ttk.Label(self, text=t("settings_tab_modules"), font=label_fnt)\
+        ttk.Label(self, text=t("Modules"), font=label_fnt)\
             .grid(row=3, pady=16, sticky=tkinter.NW, padx=PAD_X_BASE)
         ModulesSettingsTab(self, applet).grid(columnspan=2, row=4, sticky=tkinter.NSEW)
 

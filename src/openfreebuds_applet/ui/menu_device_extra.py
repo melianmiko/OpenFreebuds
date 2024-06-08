@@ -1,5 +1,6 @@
 from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t
+from openfreebuds_applet.ui.i18n_mappings import EQ_PRESET_MAPPING
 from pystrayx import Menu
 
 
@@ -16,7 +17,7 @@ class EqualizerPresetMenu(Menu):
         options = device.find_property("config", "equalizer_preset_options").split(",")
 
         for val in options:
-            self.add_item(text=t(val),
+            self.add_item(text=t(EQ_PRESET_MAPPING.get(val, val)),
                           action=self.set_value,
                           args=[val],
                           checked=current == val)

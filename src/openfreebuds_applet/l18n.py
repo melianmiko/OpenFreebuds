@@ -11,12 +11,13 @@ lc_path = utils.get_assets_path() + "/locale/{}.json"
 log = create_log("FreebudsLocale")
 
 available_langs = [
-    "base", "ru_RU"
+    "en_US",
+    "ru_RU",
 ]
 
 lang_names = {
     "": "Auto",
-    "base": "English",
+    "en_US": "English",
     "en_GB": "English (Britain)",
     "ru_RU": "Русский",
     "zh_CN": "Chinese"
@@ -28,7 +29,6 @@ class Data:
     current_language = "none"
     charset = "utf8"
     lang_strings = {}
-    base_strings = {}
 
 
 def setup_auto():
@@ -49,10 +49,7 @@ def setup_language(langauge):
     Data.loaded = True
     Data.charset = locale.getdefaultlocale()[1]
 
-    with open(lc_path.format("base", encoding="utf-8"), "r") as f:
-        Data.base_strings = json.loads(f.read())
-
-    if langauge != "none":
+    if langauge not in ["none", "en_US"]:
         with open(lc_path.format(langauge), "r", encoding="utf-8") as f:
             Data.lang_strings = json.loads(f.read())
 
@@ -72,16 +69,19 @@ def list_langs():
     return out
 
 
+def get_current_lang():
+    return Data.current_language
+
+
 def t(prop):
+    if Data.current_language == "en_US":
+        return prop
     if not Data.loaded:
         setup_auto()
 
-    value = prop
     if prop in Data.lang_strings:
         value = Data.lang_strings[prop]
-    elif prop in Data.base_strings:
-        value = Data.base_strings[prop]
     else:
-        log.warning("missing in base i18n: " + prop)
+        value = prop
 
     return value

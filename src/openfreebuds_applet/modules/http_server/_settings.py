@@ -16,20 +16,25 @@ class WebServerSettings(tkinter.Frame):
 
         label_fnt = tkinter.font.Font(weight="bold")
 
-        ttk.Label(self, text=t("settings_group_server"), font=label_fnt)\
+        ttk.Label(self, text=t("Remote control server"), font=label_fnt)\
             .grid(row=0, sticky="new", padx=16, pady=16)
-        ttk.Checkbutton(self, text=t("prop_server_access"),
+        ttk.Checkbutton(self, text=t("Allow external connections"),
                         variable=self.var_server_access,
                         command=self._toggle_server_access) \
             .grid(row=1, sticky="new", padx=16, pady=8)
-        ttk.Label(self, text=t("webserver_port") + " " + str(self.module.get_property("port"))) \
+        ttk.Label(self, text=t("HTTP port is") + " " + str(self.module.get_property("port"))) \
             .grid(row=2, sticky="new", padx=16, pady=8)
-        ttk.Label(self, text=t("module_restart_required")) \
+        ttk.Label(self, text=t("Re-enable module to apply changes")) \
             .grid(row=3, sticky="new", padx=16, pady=8)
 
     def _toggle_server_access(self):
         if not self.module.get_property("external_access"):
-            tk_tools.confirm(t("server_global_warn"), "WARNING",
+            tk_tools.confirm(t("ATTENTION!\n\n"
+                               "This feature will allow anyone from your local network to control \n"
+                               "your FreeBuds device, and also can create a security violence.\n"
+                               "Enable this feature only if you know what you do.\n\n"
+                               "Enable external access to web server?"),
+                             "WARNING",
                              self._do_toggle_access, self)
         else:
             self._do_toggle_access(True)
