@@ -7,7 +7,7 @@ from openfreebuds.logger import create_log
 from openfreebuds_applet import utils
 from openfreebuds_applet.settings import SettingsStorage
 
-lc_path = utils.get_assets_path() + "/locale/{}.json"
+lc_path = utils.get_assets_path() + "/i18n/{}/strings.json"
 log = create_log("FreebudsLocale")
 
 available_langs = [
