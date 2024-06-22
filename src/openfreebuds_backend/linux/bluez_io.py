@@ -1,9 +1,9 @@
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
 
-from openfreebuds.logger import create_log
+from openfreebuds.utils.logger import create_logger
 
-log = create_log("LinuxBackend")
+log = create_logger("LinuxBackend")
 DBusGMainLoop(set_as_default=True)
 
 
