@@ -1,9 +1,9 @@
 import logging
 import os
 
-from openfreebuds.logger import create_log
+from openfreebuds.utils.logger import create_logger
 
-log = create_log("DummyPlatform")
+log = create_logger("DummyPlatform")
 
 
 def get_app_storage_path():
