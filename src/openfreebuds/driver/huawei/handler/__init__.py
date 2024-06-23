@@ -1,0 +1,16 @@
+from .action_dual_tap import FbHuaweiActionDoubleTapHandler
+from .action_long_tap import FbHuaweiActionLongTapHandler
+from .action_long_tap import FbHuaweiActionLongTapHandler
+from .action_long_tap_split import FbHuaweiActionLongTapSplitHandler
+from .action_power_button import FbHuaweiActionsPowerButtonHandler
+from .action_swipe_gesture import FbHuaweiActionSwipeGestureHandler
+from .anc import FbHuaweiAncHandler, FbHuaweiAncLegacyChangeHandler
+from .battery import FbHuaweiBatteryHandler
+from .config_auto_pause import FbHuaweiConfigAutoPauseHandler
+from .config_equalizer_preset import FbHuaweiEqualizerPresetHandler
+from .config_sound_quality_preference import FnHuaweiSoundQualityPreferenceHandler
+from .dual_connect import FbHuaweiDualConnectHandler, FbHuaweiDualConnectToggleHandler
+from .info import FbHuaweiInfoHandler
+from .logs import FbHuaweiLogsHandler
+from .service_language import FbHuaweiVoiceLanguageHandler
+from .state_in_ear import FbHuaweiStateInEarHandler

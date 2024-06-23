@@ -1,4 +1,7 @@
+import json
+
 from openfreebuds.exceptions import FbMissingHandlerError
+from openfreebuds.utils.event_bus import Subscription
 from openfreebuds.utils.logger import create_logger
 
 log = create_logger("FbDriverGeneric")
@@ -19,6 +22,7 @@ class FbDriverGeneric:
 
         self.device_address: str = address
         self.started: bool = False
+        self.changes = Subscription()
 
     async def start(self):
         raise NotImplementedError()
@@ -40,7 +44,9 @@ class FbDriverGeneric:
 
         return await self.__set_prop_handlers[target_handler_id].set_property(group, prop, value)
 
-    async def get_property(self, group: str, prop: str, fallback: str) -> str | dict:
+    async def get_property(self, group: str | None, prop: str | None, fallback: str | None = None) -> str | dict:
+        if group is None:
+            return self._store
         if group not in self._store:
             return fallback
         group_data = self._store[group]     # type: dict
@@ -58,4 +64,6 @@ class FbDriverGeneric:
         else:
             if group not in self._store:
                 self._store[group] = {}
+            if not isinstance(value, str):
+                value = json.dumps(value)
             self._store[group][prop] = value
