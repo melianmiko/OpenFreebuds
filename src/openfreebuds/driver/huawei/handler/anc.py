@@ -79,7 +79,7 @@ class FbHuaweiAncHandler(FbDriverHandlerHuawei):
                 new_props["level"] = "voice_boost" if data[0] != 0 else "normal"
                 new_props["level_options"] = "normal,voice_boost"
 
-            self.driver.put_property("anc", None, new_props)
+            await self.driver.put_property("anc", None, new_props)
 
     async def set_property(self, group: str, prop: str, value):
         if prop == "mode":
@@ -108,4 +108,4 @@ class FbHuaweiAncHandler(FbDriverHandlerHuawei):
         resp = await self.driver.send_package(pkg)
         if resp.find_param(2)[0] == 0:
             # Success
-            self.driver.put_property("anc", prop, value)
+            await self.driver.put_property(group, prop, value)

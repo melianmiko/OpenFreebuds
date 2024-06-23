@@ -16,7 +16,7 @@ from openfreebuds import cli_io
 from openfreebuds.utils import event_bus
 from openfreebuds.constants.events import EVENT_MANAGER_STATE_CHANGED, EVENT_DEVICE_PROP_CHANGED
 from openfreebuds.utils.logger import create_log
-from openfreebuds.main import FreebudsManager
+from openfreebuds.manager import FreebudsManager
 from openfreebuds_applet.l18n import t
 from openfreebuds_applet.modules.actions import get_actions
 from openfreebuds_applet.settings import SettingsStorage

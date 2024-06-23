@@ -30,14 +30,14 @@ class FbHuaweiEqualizerPresetHandler(FbDriverHandlerHuawei):
         ])
         resp = await self.driver.send_package(pkg)
         if resp.find_param(2)[0] == 0:
-            self.driver.put_property(group, prop, value)
+            await self.driver.put_property(group, prop, value)
 
     async def on_package(self, package: HuaweiSppPackage):
         value = package.find_param(2)
 
         if len(value) == 1:
             value = int.from_bytes(value, byteorder="big", signed=True)
-            self.driver.put_property("config", "equalizer_preset",
+            await self.driver.put_property("config", "equalizer_preset",
                                      self.w_presets.get(value, "unknown"))
-            self.driver.put_property("config", "equalizer_preset_options",
+            await self.driver.put_property("config", "equalizer_preset_options",
                                      ",".join(self.w_presets.values()))

@@ -25,4 +25,4 @@ class FbHuaweiBatteryHandler(FbDriverHandlerHuawei):
             out["case"] = int(level[2])
         if 3 in package.parameters and len(package.parameters[3]) > 0:
             out["is_charging"] = b"\x01" in package.parameters[3]
-        self.driver.put_property("battery", None, out)
+        await self.driver.put_property("battery", None, out)

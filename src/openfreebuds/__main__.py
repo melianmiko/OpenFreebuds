@@ -1,24 +1,29 @@
 import asyncio
 import logging
 
-from openfreebuds.driver.huawei.generic import FbDriverHuaweiGeneric
-from openfreebuds.driver.huawei.handler.anc import FbHuaweiAncHandler
-from openfreebuds.main import OpenFreebuds
+from openfreebuds import create
+from openfreebuds.utils.logger import create_logger
+
+log = create_logger("OpenFreebudsDaemon")
+
+
+# await openfreebuds.start("HUAWEI FreeBuds 5i" "DC:D4:44:28:6F:AE")
 
 
 async def main():
     logging.basicConfig(level=logging.DEBUG)
-    manager = OpenFreebuds()
-    driver = FbDriverHuaweiGeneric("DC:D4:44:28:6F:AE")
-    driver.handlers = [
-        FbHuaweiAncHandler(w_cancel_lvl=True, w_cancel_dynamic=True),
-    ]
+    openfreebuds = await create()
+    if openfreebuds.role != "standalone":
+        log.error("Can't start: not a primary instance, close all other OpenFreebuds and try again")
+        return
 
-    await manager.start(driver)
-    print("manager ready")
-    await asyncio.sleep(10)
-    await manager.set_property("anc", "mode", "normal")
-    print(manager._driver._store)
+    log.info("Ready to accept connections")
+    try:
+        await asyncio.Event().wait()
+    except (KeyboardInterrupt, asyncio.CancelledError):
+        log.info("Gracefully closing...")
+        await openfreebuds.stop()
+        log.info("Bye bye!")
 
 
 if __name__ == "__main__":
