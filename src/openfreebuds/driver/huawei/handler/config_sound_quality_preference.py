@@ -34,14 +34,14 @@ class FnHuaweiSoundQualityPreferenceHandler(FbDriverHandlerHuawei):
         resp = await self.driver.send_package(pkg)
         if resp.find_param(2)[0] == 0:
             # Success
-            self.driver.put_property(group, prop, value)
+            await self.driver.put_property(group, prop, value)
 
     async def on_package(self, package: HuaweiSppPackage):
         value = package.find_param(2)
 
         if len(value) == 1:
             value = int.from_bytes(value, byteorder="big", signed=True)
-            self.driver.put_property("config", "sound_quality_preference",
+            await self.driver.put_property("config", "sound_quality_preference",
                                      self.options[value])
-            self.driver.put_property("config", "sound_quality_preference_options",
+            await self.driver.put_property("config", "sound_quality_preference_options",
                                      ",".join(self.options.values()))

@@ -85,7 +85,7 @@ class FbHuaweiActionLongTapSplitHandler(FbDriverHandlerHuawei):
 
         resp = await self.driver.send_package(pkg)
         if resp.find_param(2)[0] == 0:
-            self.driver.put_property(group, prop, value)
+            await self.driver.put_property(group, prop, value)
 
     async def on_package(self, package: HuaweiSppPackage):
         left = package.find_param(1)
@@ -94,26 +94,26 @@ class FbHuaweiActionLongTapSplitHandler(FbDriverHandlerHuawei):
         if package.command_id == b"+\x17":
             if len(left) == 1:
                 value = int.from_bytes(left, byteorder="big", signed=True)
-                self.driver.put_property("action", "long_tap_left",
+                await self.driver.put_property("action", "long_tap_left",
                                          self._options_lt.get(value, value))
             if len(right) == 1 and self.w_right:
                 value = int.from_bytes(right, byteorder="big", signed=True)
-                self.driver.put_property("action", "long_tap_right",
+                await self.driver.put_property("action", "long_tap_right",
                                          self._options_lt.get(value, value))
             if len(in_call) == 1 and self.w_in_call:
                 value = int.from_bytes(right, byteorder="big", signed=True)
-                self.driver.put_property("action", "long_tap_in_call",
+                await self.driver.put_property("action", "long_tap_in_call",
                                          self._options_lt_call.get(value, value))
-                self.driver.put_property("action", "long_tap_in_call_options",
+                await self.driver.put_property("action", "long_tap_in_call_options",
                                          ",".join(self._options_lt_call.values()))
-            self.driver.put_property("action", "long_tap_options", ",".join(self._options_lt_call.values()))
+            await self.driver.put_property("action", "long_tap_options", ",".join(self._options_lt_call.values()))
         elif package.command_id == b'+\x19':
             if len(left) == 1:
                 value = int.from_bytes(left, byteorder="big", signed=True)
-                self.driver.put_property("action", "noise_control_left",
+                await self.driver.put_property("action", "noise_control_left",
                                          self._options_anc.get(value, value))
             if len(right) == 1 and self.w_right:
                 value = int.from_bytes(right, byteorder="big", signed=True)
-                self.driver.put_property("action", "noise_control_right",
+                await self.driver.put_property("action", "noise_control_right",
                                          self._options_anc.get(value, value))
-            self.driver.put_property("action", "noise_control_options", ",".join(self._options_anc.values()))
+            await self.driver.put_property("action", "noise_control_options", ",".join(self._options_anc.values()))

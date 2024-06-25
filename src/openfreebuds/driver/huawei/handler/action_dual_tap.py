@@ -45,23 +45,23 @@ class FbHuaweiActionDoubleTapHandler(FbDriverHandlerHuawei):
         available_options = package.find_param(3)
         if len(left) == 1:
             value = int.from_bytes(left, byteorder="big", signed=True)
-            self.driver.put_property("action", "double_tap_left",
+            await self.driver.put_property("action", "double_tap_left",
                                      self._options.get(value, value))
         if len(right) == 1:
             value = int.from_bytes(right, byteorder="big", signed=True)
-            self.driver.put_property("action", "double_tap_right",
+            await self.driver.put_property("action", "double_tap_right",
                                      self._options.get(value, value))
         if len(available_options) > 0:
             value = list(struct.unpack(f'{len(available_options)}b', available_options))
             out = []
             for v in value:
                 out.append(str(v) if v not in self._options else self._options[v])
-            self.driver.put_property("action", "double_tap_options", ",".join(out))
+            await self.driver.put_property("action", "double_tap_options", ",".join(out))
         if len(in_call) == 1 and self.w_in_call:
             value = int.from_bytes(in_call, byteorder="big", signed=True)
-            self.driver.put_property("action", "double_tap_in_call",
+            await self.driver.put_property("action", "double_tap_in_call",
                                      self._options_call.get(value, value))
-            self.driver.put_property("action", "double_tap_in_call_options",
+            await self.driver.put_property("action", "double_tap_in_call_options",
                                      ",".join(self._options_call.values()))
 
     async def set_property(self, group: str, prop: str, value):
@@ -82,4 +82,4 @@ class FbHuaweiActionDoubleTapHandler(FbDriverHandlerHuawei):
         ])
         resp = await self.driver.send_package(pkg)
         if resp.find_param(2)[0] == 0:
-            self.driver.put_property(group, prop, value)
+            await self.driver.put_property(group, prop, value)

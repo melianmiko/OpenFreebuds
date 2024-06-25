@@ -1,5 +1,6 @@
 import asyncio
 import json
+import logging
 import traceback
 
 import aiohttp
@@ -72,6 +73,8 @@ async def _handle_rpc_call(instance, static_folder, request: web.Request, data=N
 
 
 async def run_rpc_server(instance, static_folder):
+    logging.getLogger('aiohttp.access').setLevel(logging.WARNING)
+
     routes = web.RouteTableDef()
 
     @routes.route('*', "/{path}")

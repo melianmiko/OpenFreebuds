@@ -36,9 +36,9 @@ class FbHuaweiActionLongTapHandler(FbDriverHandlerHuawei):
         value = package.find_param(1)
         if len(value) == 1:
             value = int.from_bytes(value, byteorder="big", signed=True)
-            self.driver.put_property("action", "long_tap",
+            await self.driver.put_property("action", "long_tap",
                                      self._options.get(value, value))
-            self.driver.put_property("action", "long_tap_options",
+            await self.driver.put_property("action", "long_tap_options",
                                      ",".join(self._options.values()))
 
     async def set_property(self, group: str, prop: str, value):
@@ -48,4 +48,4 @@ class FbHuaweiActionLongTapHandler(FbDriverHandlerHuawei):
         ])
         resp = await self.driver.send_package(pkg)
         if resp.find_param(2)[0] == 0:
-            self.driver.put_property(group, prop, value)
+            await self.driver.put_property(group, prop, value)

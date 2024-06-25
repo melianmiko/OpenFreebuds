@@ -27,4 +27,4 @@ class FbHuaweiInfoHandler(FbDriverHandlerHuawei):
         out = {}
         for key in package.parameters:
             out[self.descriptor.get(key, f"field_{key}")] = package.parameters[key].decode("utf8")
-        self.driver.put_property("info", None, out)
+        await self.driver.put_property("info", None, out)

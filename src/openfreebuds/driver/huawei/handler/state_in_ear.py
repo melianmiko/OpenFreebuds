@@ -11,9 +11,9 @@ class FbHuaweiStateInEarHandler(FbDriverHandlerHuawei):
     commands = [b'+\x03']
 
     async def on_init(self):
-        self.driver.put_property("state", "in_ear", "false")
+        await self.driver.put_property("state", "in_ear", "false")
 
     async def on_package(self, package: HuaweiSppPackage):
         value = package.find_param(8, 9)
         if len(value) == 1:
-            self.driver.put_property("state", "in_ear", value[0] == 1)
+            await self.driver.put_property("state", "in_ear", value[0] == 1)

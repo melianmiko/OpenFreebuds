@@ -58,7 +58,7 @@ class FbDriverGeneric:
 
         return group_data[prop]
 
-    def put_property(self, group: str, prop: str | None, value: str | dict):
+    async def put_property(self, group: str, prop: str | None, value: str | dict):
         if prop is None:
             self._store[group] = value
         else:
@@ -67,3 +67,5 @@ class FbDriverGeneric:
             if not isinstance(value, str):
                 value = json.dumps(value)
             self._store[group][prop] = value
+
+        await self.changes.send_message("put_property", group, prop, value)

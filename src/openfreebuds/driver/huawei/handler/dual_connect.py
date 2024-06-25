@@ -48,7 +48,7 @@ class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
 
             # Process new records
             log.info("All DC devices listed, processing...")
-            self._process_pending_devices()
+            await self._process_pending_devices()
 
     async def on_package(self, package: HuaweiSppPackage):
         if package.command_id == b"\x2b\x36":
@@ -82,9 +82,9 @@ class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
             resp = await self.on_init()
 
         if resp is not None and resp.find_param(2)[0] == 0:
-            self.driver.put_property(group, prop, value)
+            await self.driver.put_property(group, prop, value)
 
-    def _process_pending_devices(self):
+    async def _process_pending_devices(self):
         names, auto_connect, connected = {}, {}, {}
         preferred = "0" * 12
 
@@ -95,10 +95,10 @@ class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
             if device.primary:
                 preferred = device.mac
 
-        self.driver.put_property("dev_name", None, names)
-        self.driver.put_property("dev_auto_connect", None, auto_connect)
-        self.driver.put_property("dev_connected", None, connected)
-        self.driver.put_property("config", "preferred_device", preferred)
+        await self.driver.put_property("dev_name", None, names)
+        await self.driver.put_property("dev_auto_connect", None, auto_connect)
+        await self.driver.put_property("dev_connected", None, connected)
+        await self.driver.put_property("config", "preferred_device", preferred)
 
     async def _set_preferred(self, mac_addr):
         return await self.driver.send_package(HuaweiSppPackage.change_rq(b"\x2b\x32", [
@@ -144,11 +144,11 @@ class FbHuaweiDualConnectToggleHandler(FbDriverHandlerHuawei):
         ])
         resp = await self.driver.send_package(pkg)
         if resp.find_param(2)[0] == 0:
-            self.driver.put_property(group, prop, value)
+            await self.driver.put_property(group, prop, value)
 
     async def on_package(self, package: HuaweiSppPackage):
         value = package.find_param(1)
 
         if len(value) == 1:
             value = int(value[0])
-            self.driver.put_property("config", "dual_connect", value == 1)
+            await self.driver.put_property("config", "dual_connect", value == 1)

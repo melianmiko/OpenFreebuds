@@ -2,7 +2,10 @@ import asyncio
 from asyncio import Queue, Task
 from uuid import uuid4
 
+from openfreebuds.utils.logger import create_logger
 from openfreebuds.utils.stupid_rpc import rpc
+
+log = create_logger("EventBus")
 
 
 class Subscription:
@@ -11,11 +14,12 @@ class Subscription:
         self._child_subs: dict[str, Task] = {}
         self.role: str = "standalone"
 
-    def send_message(self, kind, *args):
+    @rpc
+    async def send_message(self, kind, *args):
         for kind_filters, queue in self._callbacks.values():
             if kind_filters is not None and kind not in kind_filters:
                 continue
-            queue.put((kind, *args))
+            await queue.put((kind, *args))
 
     def include_subscription(self, callback_id: str, subscription):
         # Include another subscription into them, transfer their messages into us
@@ -25,7 +29,7 @@ class Subscription:
         async def _handler():
             queue = subscription._new_queue(callback_id, None)
             while True:
-                self.send_message(*(await queue.get()))
+                await self.send_message(*(await queue.get()))
 
         t = asyncio.create_task(_handler())
         self._child_subs[callback_id] = t
@@ -42,14 +46,16 @@ class Subscription:
             kind_filters: list[str] | None = None,
     ) -> str:
         if member_id is None:
-            member_id = uuid4()
+            member_id = str(uuid4())
 
         self._new_queue(member_id, kind_filters)
+        log.info(f"Add subscriber {member_id}")
         return member_id
 
     @rpc
     async def wait_for_event(self, member_id: str):
         return await self._callbacks[member_id][1].get()
 
-    def unsubscribe(self, callback_id: str):
+    @rpc
+    async def unsubscribe(self, callback_id: str):
         del self._callbacks[callback_id]

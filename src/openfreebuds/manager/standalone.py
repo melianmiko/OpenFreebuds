@@ -14,13 +14,13 @@ log = create_logger("OpenFreebuds")
 
 class OpenFreebuds(Subscription):
     MAINLOOP_TIMEOUT = 1
-    STATE_NO_DEV = 0
-    STATE_OFFLINE = 1
-    STATE_DISCONNECTED = 2
-    STATE_WAIT = 3
-    STATE_CONNECTED = 4
-    STATE_FAILED = 5
-    STATE_PAUSED = 6
+
+    STATE_STOPPED = 0
+    STATE_DISCONNECTED = 1
+    STATE_WAIT = 2
+    STATE_CONNECTED = 3
+    STATE_FAILED = 4
+    STATE_PAUSED = 5
 
     def __init__(self):
         super().__init__()
@@ -28,7 +28,7 @@ class OpenFreebuds(Subscription):
         self._task = None                           # type: Task | None
         self._paused = False
 
-        self._state = OpenFreebuds.STATE_NO_DEV      # type: int
+        self._state = OpenFreebuds.STATE_STOPPED      # type: int
         self.role: str = "standalone"
         self.server_task: Task | None = None
 
@@ -49,11 +49,14 @@ class OpenFreebuds(Subscription):
 
     @rpc
     async def stop(self):
-        self._task.cancel("stop() requested")
+        if self._task is not None:
+            self._task.cancel("stop() requested")
         if self.server_task is not None:
-            self.server_task.cancel()
+            self.server_task.cancel("stop() requested")
+        if self._driver is not None:
+            await self._driver.stop()
 
-        await self._driver.stop()
+        await self._set_state(OpenFreebuds.STATE_STOPPED)
         self._driver = None
         self._task = None
 
@@ -72,7 +75,7 @@ class OpenFreebuds(Subscription):
 
         while True:
             if not openfreebuds_backend.bt_is_connected(self._driver.device_address):
-                await self._set_state(OpenFreebuds.STATE_OFFLINE)
+                await self._set_state(OpenFreebuds.STATE_DISCONNECTED)
                 if self._driver.started:
                     log.info("Device disconnected from OS, stop driver...")
                     await self._driver.stop()
@@ -102,4 +105,4 @@ class OpenFreebuds(Subscription):
             return
 
         self._state = new_state
-        self.send_message("STATE_CHANGED", new_state)
+        await self.send_message("STATE_CHANGED", new_state)

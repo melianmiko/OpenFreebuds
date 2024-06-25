@@ -31,9 +31,9 @@ class FbHuaweiActionsPowerButtonHandler(FbDriverHandlerHuawei):
         action = package.find_param(1)
         if len(action) == 1:
             value = int.from_bytes(action, byteorder="big", signed=True)
-            self.driver.put_property("action", "power_button",
+            await self.driver.put_property("action", "power_button",
                                      self._options.get(value, value))
-        self.driver.put_property("action", "power_button_options", ",".join(self._options.values()))
+        await self.driver.put_property("action", "power_button_options", ",".join(self._options.values()))
 
     async def set_property(self, group: str, prop: str, value):
         pkg = HuaweiSppPackage.change_rq(b"\x01\x1f", [
@@ -42,4 +42,4 @@ class FbHuaweiActionsPowerButtonHandler(FbDriverHandlerHuawei):
         ])
         resp = await self.driver.send_package(pkg)
         if resp.find_param(2)[0] == 0:
-            self.driver.put_property(group, prop, value)
+            await self.driver.put_property(group, prop, value)
