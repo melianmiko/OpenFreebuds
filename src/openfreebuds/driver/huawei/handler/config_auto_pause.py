@@ -1,3 +1,5 @@
+import json
+
 from openfreebuds.driver.huawei.generic import FbDriverHandlerHuawei
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 
@@ -20,11 +22,11 @@ class FbHuaweiConfigAutoPauseHandler(FbDriverHandlerHuawei):
     async def on_package(self, package: HuaweiSppPackage):
         data = package.find_param(1)
         if len(data) == 1:
-            await self.driver.put_property("config", "auto_pause", data[0] == 1)
+            await self.driver.put_property("config", "auto_pause", json.dumps(data[0] == 1))
 
     async def set_property(self, group: str, prop: str, value):
         resp = await self.driver.send_package(HuaweiSppPackage.change_rq(b"\x2b\x10", [
-            (1, 1 if value else 0)
+            (1, 1 if value == "true" else 0)
         ]))
-        if resp.find_param(2)[0] == 0:
+        if resp.find_param(127) is not None:
             await self.driver.put_property(group, prop, value)

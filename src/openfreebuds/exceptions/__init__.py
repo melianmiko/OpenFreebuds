@@ -1,12 +1,20 @@
-class FbNoDeviceError(Exception):
+class FbError(Exception):
     pass
 
 
-class FbNotSupportedError(Exception):
+class FbNoDeviceError(FbError):
     pass
 
 
-class FbDriverError(Exception):
+class FbPackageChecksumError(FbError):
+    pass
+
+
+class FbNotSupportedError(FbError):
+    pass
+
+
+class FbDriverError(FbError):
     pass
 
 

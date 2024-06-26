@@ -1,4 +1,5 @@
 from openfreebuds.driver.huawei.utils import crc16char, build_table_row
+from openfreebuds.exceptions import FbPackageChecksumError
 
 
 class HuaweiSppPackage:
@@ -84,13 +85,23 @@ class HuaweiSppPackage:
         return result
 
     @staticmethod
-    def from_bytes(data: bytes):
+    def re_checksum(data: bytes):
+        return HuaweiSppPackage.from_bytes(data, validate_checksum=False).to_bytes()
+
+    @staticmethod
+    def from_bytes(data: bytes, validate_checksum=False):
         """
         Create Package from bytes.
         Used to parse incoming data.
         """
         assert data[0] == 90
         assert data[3] == 0
+
+        if validate_checksum:
+            crc_data = data[0:-2]
+            crc_value = data[-2:]
+            if crc16char(crc_data) != crc_value:
+                raise FbPackageChecksumError(f"{crc16char(crc_data)} != {crc_value}")
 
         length = int.from_bytes(data[1:3], byteorder="big")
 
