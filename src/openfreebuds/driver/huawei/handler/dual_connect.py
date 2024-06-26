@@ -35,7 +35,7 @@ class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
         self._pending_devices: dict[int, _PendingDeviceRow] = {}
 
     async def on_init(self):
-        async with asyncio.timeout(3):
+        async with asyncio.timeout(1):
             self._pending_devices = {}
             self._on_all_devices_ready.clear()
 

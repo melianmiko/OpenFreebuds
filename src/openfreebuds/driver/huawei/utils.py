@@ -34,7 +34,7 @@ def crc16char(data):
         s = crc16_tab[((s >> 8) ^ byte) & 255] ^ (s << 8)
         s = s & 0b1111111111111111  # use only 16 bits
 
-    return array("b", s.to_bytes(2, "big"))
+    return s.to_bytes(2, "big")
 
 
 def bytes2array(data):

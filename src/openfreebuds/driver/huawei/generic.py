@@ -2,7 +2,7 @@ import asyncio
 
 from openfreebuds.driver.generic import FbDriverHandlerGeneric, FbDriverSppGeneric
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
-from openfreebuds.exceptions import FbNotReadyError, FbStartupError
+from openfreebuds.exceptions import FbNotReadyError, FbStartupError, FbDriverError, FbPackageChecksumError
 from openfreebuds.utils.logger import create_logger
 
 log = create_logger("FbDriverHuaweiGeneric")
@@ -15,6 +15,9 @@ class FbHuaweiResponseReceiver(asyncio.Event):
 
 
 class FbDriverHuaweiGeneric(FbDriverSppGeneric):
+    INIT_ATTEMPTS = 5
+    INIT_TIMEOUT = 3
+
     def __init__(self, address):
         super().__init__(address)
         self.__pending_responses: dict[bytes, FbHuaweiResponseReceiver] = {}
@@ -26,7 +29,9 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
 
     async def start(self):
         await super().start()
+        await self._start_all_handlers()
 
+    async def _start_all_handlers(self):
         # Bind all handlers
         for handler in self.handlers:
             log.info(f'Attach handler "{handler.handler_id}"')
@@ -38,10 +43,12 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
         # Init all handlers
         for handler in self.handlers:
             attempt = 0
-            while attempt < 3:
+            while attempt < FbDriverHuaweiGeneric.INIT_ATTEMPTS:
                 # noinspection PyBroadException
                 try:
-                    await handler.on_init()
+                    log.debug(f'Initializing {handler.handler_id}...')
+                    async with asyncio.timeout(FbDriverHuaweiGeneric.INIT_TIMEOUT):
+                        await handler.on_init()
                     break
                 except TimeoutError:
                     log.debug(f'Init of "{handler.handler_id}" timed out, attempt={attempt}')
@@ -50,13 +57,16 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
                     log.exception(f'Init of "{handler.handler_id}" failed, attempt={attempt}')
                     attempt += 1
 
+            if attempt == FbDriverHuaweiGeneric.INIT_ATTEMPTS:
+                log.exception(f'Can\'t initialize "{handler.handler_id}". Skipping.')
+
     async def stop(self):
         await super().stop()
         self.__on_package_handlers = {}
 
     async def send_package(self, pkg: HuaweiSppPackage, timeout: int = 5) -> HuaweiSppPackage | None:
         if pkg.response_id == b"":
-            return await self.__send_nowait(pkg)
+            return await self._send_nowait(pkg)
 
         while pkg.response_id in self.__pending_responses:
             log.info(f"Response read conflict with {pkg.response_id}, wait for parent before continue")
@@ -66,7 +76,7 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
         event = FbHuaweiResponseReceiver()
         try:
             self.__pending_responses[pkg.response_id] = event
-            await self.__send_nowait(pkg)
+            await self._send_nowait(pkg)
             async with asyncio.timeout(timeout):
                 await event.wait()
         finally:
@@ -75,19 +85,19 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
             del self.__pending_responses[pkg.response_id]
         return event.package
 
-    async def __send_nowait(self, pkg: HuaweiSppPackage):
+    async def _send_nowait(self, pkg: HuaweiSppPackage):
         if not self._writer:
             raise FbNotReadyError("Can't send package before SPP start")
 
-        log.debug(f"send {pkg}")
+        log.debug(f"TX {pkg.to_bytes().hex()}\n{pkg}")
         self._writer.write(pkg.to_bytes())
         await self._writer.drain()
 
-    async def __handle_raw_pkg(self, pkg):
+    async def _handle_raw_pkg(self, pkg):
         try:
             pkg = HuaweiSppPackage.from_bytes(pkg)
-            log.debug(f"recv {pkg}")
-        except AssertionError:
+            log.debug(f"RX {pkg.to_bytes().hex()}\n{pkg}")
+        except (AssertionError, FbPackageChecksumError):
             log.exception(f"Got non-parsable package {pkg.hex()}, ignoring")
             return
 
@@ -115,7 +125,7 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
                         await reader.read(length)
                     else:
                         pkg = heading + await reader.read(length)
-                        await self.__handle_raw_pkg(pkg)
+                        await self._handle_raw_pkg(pkg)
         except asyncio.TimeoutError:
             # Socket timed out, do nothing
             return False
