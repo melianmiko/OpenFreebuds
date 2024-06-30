@@ -20,7 +20,7 @@ class FbHuaweiActionLongTapHandler(FbDriverHandlerHuawei):
 
     def __init__(self):
         super().__init__()
-        self._options ={
+        self._options = {
             -1: "noise_control_disabled",
             3: "noise_control_off_on",
             5: "noise_control_off_on_aw",
@@ -37,9 +37,9 @@ class FbHuaweiActionLongTapHandler(FbDriverHandlerHuawei):
         if len(value) == 1:
             value = int.from_bytes(value, byteorder="big", signed=True)
             await self.driver.put_property("action", "long_tap",
-                                     self._options.get(value, value))
+                                           self._options.get(value, value))
             await self.driver.put_property("action", "long_tap_options",
-                                     ",".join(self._options.values()))
+                                           ",".join(self._options.values()))
 
     async def set_property(self, group: str, prop: str, value):
         pkg = HuaweiSppPackage.change_rq(b"\x2b\x16", [

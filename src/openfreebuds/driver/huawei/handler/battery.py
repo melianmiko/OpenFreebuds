@@ -1,5 +1,6 @@
 import json
 
+from openfreebuds.driver.huawei.constants import CMD_BATTERY_READ, CMD_BATTERY_NOTIFY
 from openfreebuds.driver.huawei.generic import FbDriverHandlerHuawei
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 
@@ -10,10 +11,10 @@ class FbHuaweiBatteryHandler(FbDriverHandlerHuawei):
     """
 
     handler_id = "battery"
-    commands = [b'\x01\x08', b'\x01\'']
+    commands = [CMD_BATTERY_READ, CMD_BATTERY_NOTIFY]
 
     async def on_init(self):
-        resp = await self.driver.send_package(HuaweiSppPackage.read_rq(b"\x01\x08", [1, 2, 3]))
+        resp = await self.driver.send_package(HuaweiSppPackage.read_rq(CMD_BATTERY_READ, [1, 2, 3]))
         await self.on_package(resp)
 
     async def on_package(self, package: HuaweiSppPackage):
