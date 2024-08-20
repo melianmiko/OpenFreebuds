@@ -10,7 +10,14 @@ _PORT = 19823
 
 
 class RemoteError(Exception):
-    pass
+    def __init__(self, data):
+        super().__init__(data)
+        self.rpc_error_name = data["class"]
+        self.rpc_trace = data["trace"]
+        self.args = data["args"]
+
+    def __str__(self):
+        return f"Got server-side error:\n\n{self.rpc_trace}"
 
 
 def rpc(func):

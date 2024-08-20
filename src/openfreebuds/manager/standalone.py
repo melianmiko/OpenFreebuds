@@ -61,7 +61,9 @@ class OpenFreebuds(Subscription):
         self._task = None
 
     @rpc
-    async def get_property(self, group: str = None, prop: str = None, fallback=None) -> str | dict:
+    async def get_property(self, group: str = None, prop: str = None, fallback=None):
+        if not self._driver:
+            return fallback
         return await self._driver.get_property(group, prop, fallback)
 
     @rpc
@@ -105,4 +107,4 @@ class OpenFreebuds(Subscription):
             return
 
         self._state = new_state
-        await self.send_message("STATE_CHANGED", new_state)
+        await self.send_message("state_changed", new_state)
