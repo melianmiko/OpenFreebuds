@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.11 (OpenFreebuds)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (OpenFreebuds)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Poetry (OpenFreebuds)" project-jdk-type="Python SDK" />
 </project>

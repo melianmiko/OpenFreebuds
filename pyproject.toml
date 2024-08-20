@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "OpenFreebuds"
+version = "0.1.0"
+description = "FOSS Windows/Linux client for HUAWEI FreeBuds headset series"
+authors = ["MelianMiko <support@mmk.pw>"]
+
+[tool.poetry.dependencies]
+python = "~3.12"
+pystray = "0.19.4"
+pynput = ">=1.7.6,<1.8.0"
+sv-ttk = "2.4.5"
+mmk-updater = "0.14.3"
+pybluez-edge = "2022.12.6"
+pillow = ">=10.2.0,<10.3.0"
+aiocmd = ">=0.1.5,<0.2.0"
+psutil = ">=5.9.8,<5.10.0"
+aiohttp = ">=3.9.5,<3.10.0"
+pyinstaller = "6.10.0"
+pytest = ">=8.2.2,<8.3.0"
+dbus-python = { version = "1.3.2", platform = "linux" }
+pygobject = { version = "3.44.1", platform = "linux" }
+winsdk = { version = "1.0.0b10", platform = "win32" }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
