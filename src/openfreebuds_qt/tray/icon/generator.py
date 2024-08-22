@@ -1,31 +1,29 @@
 from PIL import ImageDraw
-from PIL.ImageQt import ImageQt
-from PyQt6.QtGui import QPixmap
 
-from openfreebuds import OpenFreebuds
+from openfreebuds import IOpenFreebuds
 from openfreebuds_qt.tray.icon.base import *
 
 
 def create_tray_icon(theme: str, state: int, battery: int, anc_mode: str) -> Image.Image:
     is_dark = theme == "dark"
 
-    if state == OpenFreebuds.STATE_WAIT or state == OpenFreebuds.STATE_PAUSED:
+    if state == IOpenFreebuds.STATE_WAIT or state == IOpenFreebuds.STATE_PAUSED:
         icon = _combine_mask(ICON_LOADING,
                              foreground=PRESET_DARK_FULL if is_dark else PRESET_LIGHT_FULL,
                              background=PRESET_TRANSPARENT)
         return icon
-    elif state == OpenFreebuds.STATE_DISCONNECTED:
+    elif state == IOpenFreebuds.STATE_DISCONNECTED:
         icon = _combine_mask(ICON_ANC_OFF,
                              foreground=PRESET_DARK_MISSING if is_dark else PRESET_LIGHT_MISSING,
                              background=PRESET_TRANSPARENT)
         return icon
-    elif state == OpenFreebuds.STATE_FAILED:
+    elif state == IOpenFreebuds.STATE_FAILED:
         icon = _combine_mask(ICON_ANC_OFF,
                              foreground=PRESET_DARK_MISSING if is_dark else PRESET_LIGHT_MISSING,
                              background=PRESET_TRANSPARENT)
         icon.alpha_composite(ICON_OVERLAY_ERROR)
         return icon
-    elif state == OpenFreebuds.STATE_STOPPED:
+    elif state == IOpenFreebuds.STATE_STOPPED:
         icon = _combine_mask(ICON_ANC_OFF,
                              foreground=PRESET_DARK_MISSING if is_dark else PRESET_LIGHT_MISSING,
                              background=PRESET_TRANSPARENT)
@@ -82,13 +80,13 @@ def _combine_mask(mask: Image.Image, foreground: Image.Image, background: Image.
 
 
 def _get_hash(state, battery=0, noise_mode=0):
-    if state == OpenFreebuds.STATE_WAIT or state == OpenFreebuds.STATE_PAUSED:
+    if state == IOpenFreebuds.STATE_WAIT or state == IOpenFreebuds.STATE_PAUSED:
         return "state_wait"
-    elif state == OpenFreebuds.STATE_DISCONNECTED:
+    elif state == IOpenFreebuds.STATE_DISCONNECTED:
         return "state_offline"
-    elif state == OpenFreebuds.STATE_FAILED:
+    elif state == IOpenFreebuds.STATE_FAILED:
         return "state_fail"
-    elif state == OpenFreebuds.STATE_STOPPED:
+    elif state == IOpenFreebuds.STATE_STOPPED:
         return "state_no_dev"
 
     return "connected_{}_{}".format(noise_mode, battery)

@@ -22,6 +22,7 @@ pygobject = { version = "3.44.1", platform = "linux" }
 winsdk = { version = "1.0.0b10", platform = "win32" }
 pyqt6 = "^6.7.1"
 qasync = "^0.27.1"
+sdbus = "^0.12.0"
 
 [build-system]
 requires = ["poetry-core"]

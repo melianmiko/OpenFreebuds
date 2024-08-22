@@ -57,5 +57,6 @@ class Subscription:
         return await self._callbacks[member_id][1].get()
 
     @rpc
-    async def unsubscribe(self, callback_id: str):
-        del self._callbacks[callback_id]
+    async def unsubscribe(self, member_id: str):
+        log.info(f"Leave subscriber {member_id}")
+        del self._callbacks[member_id]

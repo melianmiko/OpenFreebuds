@@ -6,7 +6,11 @@ import traceback
 import aiohttp
 from aiohttp import web
 
+from openfreebuds.exceptions import FbServerDeadError
+from openfreebuds.utils.logger import create_logger
+
 _PORT = 19823
+log = create_logger("StupidRPC")
 
 
 class RemoteError(Exception):
@@ -23,7 +27,11 @@ class RemoteError(Exception):
 def rpc(func):
     async def _inner(self, *args, **kwargs):
         if self.role == "client":
-            return await do_rpc_request(func.__name__, *args, **kwargs)
+            while True:
+                try:
+                    return await do_rpc_request(func.__name__, *args, **kwargs)
+                except aiohttp.ClientConnectionError:
+                    raise FbServerDeadError("Server is down, please restart application")
         return await func(self, *args, **kwargs)
 
     return _inner
@@ -103,4 +111,8 @@ async def run_rpc_server(instance, static_folder):
     server = aiohttp.web.TCPSite(runner, port=_PORT)
     await server.start()
 
-    await asyncio.Event().wait()
+    try:
+        await asyncio.Event().wait()
+    except asyncio.CancelledError:
+        log.info("Stopping server...")
+        await server.stop()

@@ -945,6 +945,18 @@ files = [
 ]
 
 [[package]]
+name = "sdbus"
+version = "0.12.0"
+description = "Modern Python D-Bus library. Based on sd-bus from libsystemd."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "sdbus-0.12.0-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:d918c8ad14ef00e589d6752ac0f2b6540a20c625e85000c152376945fca14209"},
+    {file = "sdbus-0.12.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d545e65637536a63898e2366b2a74617aa1a2215b1c16b23475f912e3407838c"},
+    {file = "sdbus-0.12.0.tar.gz", hash = "sha256:c3692d75704438a78adc1439350bc32f30d6b38ad344cfc94773db89c6ce4a89"},
+]
+
+[[package]]
 name = "setuptools"
 version = "73.0.0"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
@@ -1123,4 +1135,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.12"
-content-hash = "258d7403a79f621b8f1981a1159655046c2fe1ec1868123f80f82244f115d970"
+content-hash = "d4292ff06a48b909b8dc0cf51ae6e98e18a56df99001fecbb2f2be7ef5f9a935"

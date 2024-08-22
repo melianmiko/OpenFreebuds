@@ -1,17 +1,12 @@
-from PyQt6.QtWidgets import QWidget, QApplication
+from PyQt6.QtWidgets import QApplication
 
-import openfreebuds
 from openfreebuds_qt.async_qt_loop import qt_app_entrypoint
-from openfreebuds_qt.tray.main import OfbTrayIcon
+from openfreebuds_qt.main import OfbQtMainWindow
 
 
-@qt_app_entrypoint
-async def main(_: QApplication, window: QWidget):
+@qt_app_entrypoint(OfbQtMainWindow)
+async def main(app: QApplication, window: OfbQtMainWindow):
+    window.application = app
+
+    await window.boot()
     window.show()
-
-    manager = await openfreebuds.create()
-
-    tray = OfbTrayIcon(window, manager)
-    await tray.boot()
-
-    tray.show()

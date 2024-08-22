@@ -28,3 +28,15 @@ class FbMissingHandlerError(FbDriverError):
 
 class FbStartupError(FbDriverError):
     pass
+
+
+class FbServerDeadError(FbError):
+    pass
+
+
+class FbAlreadyRunningError(FbError):
+    pass
+
+
+class FbSystemError(FbError):
+    pass

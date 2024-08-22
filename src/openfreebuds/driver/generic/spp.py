@@ -41,9 +41,10 @@ class FbDriverSppGeneric(FbDriverGeneric):
             return
 
         self.__task_recv.cancel()
+        await self.__task_recv
 
         self._writer.close()
-        await self._writer.wait_closed()
+        # await self._writer.wait_closed()
 
         self._writer = None
         self.started = False
