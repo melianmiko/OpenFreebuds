@@ -105,7 +105,5 @@ class FbHuaweiAncHandler(FbDriverHandlerHuawei):
                                              (1, data)
                                          ])
 
-        resp = await self.driver.send_package(pkg)
-        if resp.find_param(2)[0] == 0:
-            # Success
-            await self.driver.put_property(group, prop, value)
+        await self.driver.send_package(pkg)
+        await self.on_init()

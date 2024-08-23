@@ -46,14 +46,15 @@ class OpenFreebuds(IOpenFreebuds):
     @rpc
     async def destroy(self):
         log.info("Destroying core...")
-        await self.stop()
+        await self.stop(IOpenFreebuds.STATE_DESTROYED)
         if self.server_task is not None:
             self.server_task.cancel("stop() requested")
             await self.server_task
         log.info("Bye-bye")
 
     @rpc
-    async def stop(self):
+    async def stop(self, e_state: int = IOpenFreebuds.STATE_STOPPED):
+        await self._set_state(e_state)
         if self._task is None:
             return
 
@@ -64,7 +65,6 @@ class OpenFreebuds(IOpenFreebuds):
         if self._driver is not None:
             await self._driver.stop()
 
-        await self._set_state(OpenFreebuds.STATE_STOPPED)
         self._driver = None
         self._task = None
         self._device_tags = "", ""
@@ -108,6 +108,12 @@ class OpenFreebuds(IOpenFreebuds):
             await self._driver.stop()
 
     async def _mainloop(self):
+        try:
+            await self._mainloop_inner()
+        except asyncio.CancelledError:
+            pass
+
+    async def _mainloop_inner(self):
         log.info(f"Started")
 
         while True:

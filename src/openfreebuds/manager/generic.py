@@ -6,6 +6,7 @@ from openfreebuds.utils.event_bus import Subscription
 class IOpenFreebuds(Subscription):
     MAINLOOP_TIMEOUT = 1
 
+    STATE_DESTROYED = -1
     STATE_STOPPED = 0
     STATE_DISCONNECTED = 1
     STATE_WAIT = 2
