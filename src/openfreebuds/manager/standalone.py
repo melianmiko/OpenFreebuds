@@ -5,10 +5,9 @@ from contextlib import asynccontextmanager
 import openfreebuds_backend
 from openfreebuds.driver import DEVICE_TO_DRIVER_MAP
 from openfreebuds.driver.generic import FbDriverGeneric
+from openfreebuds.exceptions import FbNoDeviceError, FbDriverError, FbNotSupportedError
 from openfreebuds.manager.generic import IOpenFreebuds
 from openfreebuds.shortcuts import OpenFreebudsShortcuts
-from openfreebuds.utils.event_bus import Subscription
-from openfreebuds.exceptions import FbNoDeviceError, FbDriverError, FbNotSupportedError
 from openfreebuds.utils.logger import create_logger
 from openfreebuds.utils.stupid_rpc import rpc
 
@@ -18,13 +17,13 @@ log = create_logger("OpenFreebuds")
 class OpenFreebuds(IOpenFreebuds):
     def __init__(self):
         super().__init__()
-        self._driver = None                         # type: FbDriverGeneric | None
-        self._task = None                           # type: Task | None
-        self._device_tags = "", ""                  # type: tuple[str, str]
+        self._driver = None  # type: FbDriverGeneric | None
+        self._task = None  # type: Task | None
+        self._device_tags = "", ""  # type: tuple[str, str]
         self._paused = False
         self._shortcuts = OpenFreebudsShortcuts(self)
 
-        self._state = OpenFreebuds.STATE_STOPPED      # type: int
+        self._state = OpenFreebuds.STATE_STOPPED  # type: int
         self.role: str = "standalone"
         self.server_task: Task | None = None
 
@@ -42,6 +41,7 @@ class OpenFreebuds(IOpenFreebuds):
         self.include_subscription("inner_driver", self._driver.changes)
         self._task = asyncio.create_task(self._mainloop())
         self._device_tags = device_name, device_address
+        await self.send_message("device_changed")
 
     @rpc
     async def destroy(self):
@@ -63,12 +63,13 @@ class OpenFreebuds(IOpenFreebuds):
         await self._task
 
         if self._driver is not None:
+            log.info("Stopping driver...")
             await self._driver.stop()
 
         self._driver = None
         self._task = None
         self._device_tags = "", ""
-        log.info("Core stopped.")
+        log.info("Stopped")
 
     @rpc
     async def get_device_tags(self):
@@ -128,8 +129,7 @@ class OpenFreebuds(IOpenFreebuds):
                     log.info("Device disconnected from OS, stop driver...")
                     await self._driver.stop()
                     log.info("Driver stopped")
-                await asyncio.sleep(2)
-                log.info("Wait for device appear...")
+                await asyncio.sleep(10)
                 continue
 
             if not self._driver.started:

@@ -1,23 +1,49 @@
+import json
 from configparser import ConfigParser
 
 import openfreebuds_backend
 from openfreebuds_qt.constants import STORAGE_PATH
 
 
-class _Data:
-    instance: ConfigParser = None
+CONFIG_PATH = STORAGE_PATH / "openfreebuds_qt.json"
 
 
-def get_openfreebuds_qt_config():
-    if _Data.instance is None:
-        _Data.instance = ConfigParser()
-        _Data.instance.read(STORAGE_PATH / "openfreebuds_qt.ini")
-    return _Data.instance
+class OfbQtConfigParser:
+    instance = None
 
+    def __init__(self):
+        self.data = {}
+        if CONFIG_PATH.is_file():
+            with open(CONFIG_PATH, "r") as f:
+                self.data = json.loads(f.read())
 
-def get_tray_icon_theme():
-    config = get_openfreebuds_qt_config()
-    value = config.get("theme", "tray_icon", fallback="auto")
-    if value != "auto":
-        return value
-    return "dark" if openfreebuds_backend.is_dark_theme() else "light"
+    @staticmethod
+    def get_instance():
+        if OfbQtConfigParser.instance is None:
+            OfbQtConfigParser.instance = OfbQtConfigParser()
+        return OfbQtConfigParser.instance
+
+    def get(self, section: str, key: str, fallback: any = None):
+        try:
+            return self.data[section][key]
+        except KeyError:
+            return fallback
+
+    def set(self, section: str, key: str, value: any):
+        if section not in self.data:
+            self.data[section] = {}
+        self.data[section][key] = value
+
+    def save(self):
+        with open(CONFIG_PATH, "w") as f:
+            f.write(json.dumps(self.data, ensure_ascii=False, indent=4))
+
+    def set_device_data(self, name: str, address: str):
+        self.set("device", "name", name)
+        self.set("device", "address", address)
+
+    def get_tray_icon_theme(self):
+        value = self.get("ui", "tray_icon_theme", "auto")
+        if value != "auto":
+            return value
+        return "dark" if openfreebuds_backend.is_dark_theme() else "light"

@@ -117,9 +117,10 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
 
     async def _loop_recv_inner(self, reader: asyncio.StreamReader):
         while True:
-            result = await self.__recv_pacakge(reader)
-            if result is None:
-                raise FbStartupError
+            try:
+                await self.__recv_pacakge(reader)
+            except asyncio.CancelledError:
+                return
 
     async def __recv_pacakge(self, reader: asyncio.StreamReader):
         try:
@@ -137,7 +138,7 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
             return False
         except (ConnectionResetError, ConnectionAbortedError, OSError):
             # Something bad happened, exiting...
-            return None
+            raise FbStartupError("Recv loop failure")
 
         return True
 

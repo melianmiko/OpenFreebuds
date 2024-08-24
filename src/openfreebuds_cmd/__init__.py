@@ -1,8 +1,6 @@
-import traceback
-
 from aiocmd.aiocmd import PromptToolkitCmd
 
-from openfreebuds import OpenFreebuds
+from openfreebuds import IOpenFreebuds
 
 
 def to_fixed(string, length):
@@ -10,7 +8,7 @@ def to_fixed(string, length):
 
 
 class OpenFreebudsCmd(PromptToolkitCmd):
-    manager: OpenFreebuds = None
+    manager: IOpenFreebuds = None
 
     def __init__(self):
         super().__init__(ignore_sigint=False)
@@ -36,7 +34,7 @@ class OpenFreebudsCmd(PromptToolkitCmd):
     async def do_status(self):
         state = await self.manager.get_state()
         print("State:", state)
-        if state != OpenFreebuds.STATE_CONNECTED:
+        if state != IOpenFreebuds.STATE_CONNECTED:
             return
 
         store = await self.manager.get_property(None, None)

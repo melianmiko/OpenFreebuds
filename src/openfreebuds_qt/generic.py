@@ -1,10 +1,10 @@
-from PyQt6.QtWidgets import QWidget
+from PyQt6.QtWidgets import QMainWindow
 
 from openfreebuds import IOpenFreebuds
 from openfreebuds_qt.tray.generic import IOfbTrayIcon
 
 
-class IOfbQtMainWindow(QWidget):
+class IOfbQtMainWindow(QMainWindow):
     ofb: IOpenFreebuds
     tray: IOfbTrayIcon
 

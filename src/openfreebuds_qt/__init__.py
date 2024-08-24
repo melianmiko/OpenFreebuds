@@ -8,7 +8,7 @@ from openfreebuds_qt.main import OfbQtMainWindow
 
 @qt_app_entrypoint(OfbQtMainWindow)
 async def main(app: QApplication, window: OfbQtMainWindow):
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
     window.application = app
 
     await window.boot()

@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import pprint
 
 from sdbus import sd_bus_open_system, SdBusBaseError
 
@@ -63,31 +64,27 @@ async def bt_disconnect(address):
         return False
 
 
-def bt_list_devices():
+async def bt_list_devices():
     scan_results = []
 
     try:
-        system = dbus.SystemBus()
-        bluez = dbus.Interface(system.get_object("org.bluez", "/"),
-                               "org.freedesktop.DBus.ObjectManager")
-
-        all_objects = bluez.GetManagedObjects()
+        proxy = BluezProxy.new_proxy("org.bluez",
+                                     object_path="/",
+                                     bus=system_bus)
+        all_objects = await proxy.get_managed_objects()
 
         for path in all_objects:
             if "org.bluez.Device1" in all_objects[path]:
-                device = dbus.Interface(system.get_object("org.bluez", path),
-                                        "org.freedesktop.DBus.Properties")
-                props = _dbus_to_python(device.GetAll("org.bluez.Device1"))
-
-                if props.get("Name", "") == "" and not props.get("Paired", False):
+                props = all_objects[path]["org.bluez.Device1"]
+                if not props.get("Paired", ("", False))[1]:
                     continue
 
                 scan_results.append({
-                    "name": props.get("Name", ""),
-                    "address": props.get("Address", "Unknown address"),
-                    "connected": props.get("Connected", False)
+                    "name": props.get("Name", ('', ''))[1],
+                    "address": props.get("Address", ('', ''))[1],
+                    "connected": props.get("Connected", ('', ''))[1],
                 })
-    except dbus.exceptions.DBusException:
+    except SdBusBaseError:
         log.exception("Failed to list devices")
 
     return scan_results
@@ -110,4 +107,4 @@ async def _dbus_find_bt_device(address):
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    asyncio.run(bt_is_connected("DC:D4:44:28:6F:AE"))
+    asyncio.run(bt_list_devices())

@@ -28,7 +28,7 @@ class FbDriverSppGeneric(FbDriverGeneric):
             reader, writer = await asyncio.open_connection(sock=sock)
         except (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError, OSError, ValueError):
             log.exception("Driver startup failed")
-            raise FbStartupError()
+            raise FbStartupError("Driver startup failed")
 
         self.__task_recv = asyncio.create_task(self._loop_recv(reader))
         self._writer = writer
@@ -40,8 +40,10 @@ class FbDriverSppGeneric(FbDriverGeneric):
         if not self.started:
             return
 
-        self.__task_recv.cancel()
-        await self.__task_recv
+        if self.__task_recv:
+            self.__task_recv.cancel()
+            await self.__task_recv
+            self.__task_recv = None
 
         self._writer.close()
         # await self._writer.wait_closed()
