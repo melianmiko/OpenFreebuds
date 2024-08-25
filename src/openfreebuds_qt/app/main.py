@@ -9,6 +9,7 @@ from openfreebuds_qt.app.helper.setting_tab_helper import OfbQtSettingsTabHelper
 from openfreebuds_qt.app.module.choose_device import OfbQtChooseDeviceModule
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.app.module.empty_module import OfbEmptyModule
+from openfreebuds_qt.app.module.gestures import OfbQtGesturesModule
 
 log = create_logger("OfbQtSettingsUi")
 
@@ -30,7 +31,7 @@ class OfbQtSettingsUi:
         self.device_section = self.tabs.add_section("Device-related")
         self._attach_module("Device info", OfbEmptyModule(self.tabs.root))
         self._attach_module("Dual-connect", OfbEmptyModule(self.tabs.root))
-        self._attach_module("Gestures", OfbEmptyModule(self.tabs.root))
+        self._attach_module("Gestures", OfbQtGesturesModule(self.tabs.root, self.ofb))
         self._attach_module("Audio quality", OfbEmptyModule(self.tabs.root))
         self._attach_module("Other settings", OfbEmptyModule(self.tabs.root))
 
@@ -70,7 +71,10 @@ class OfbQtSettingsUi:
             self.device_section.set_visible(visible)
 
         for mod in self._ui_modules:
-            await mod.update_ui(event)
+            try:
+                await mod.update_ui(event)
+            except Exception:
+                log.exception(f"Failed to update UI {mod}")
 
     async def _update_loop(self):
         """

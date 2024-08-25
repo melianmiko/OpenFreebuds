@@ -110,12 +110,6 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
             log.info(f"Got unsupported package\n{str(pkg)}")
 
     async def _loop_recv(self, reader: asyncio.StreamReader):
-        try:
-            await self._loop_recv_inner(reader)
-        except asyncio.CancelledError:
-            pass
-
-    async def _loop_recv_inner(self, reader: asyncio.StreamReader):
         while True:
             try:
                 await self.__recv_pacakge(reader)

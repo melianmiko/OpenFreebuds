@@ -4,6 +4,7 @@ import signal
 from typing import Optional
 
 from PyQt6.QtWidgets import QApplication
+from qasync import asyncSlot
 
 import openfreebuds
 from openfreebuds.utils.logger import create_logger
@@ -37,6 +38,10 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbQtMainWindow):
     def retranslate_ui(self):
         self.retranslateUi(self)
         self.settings.retranslate_ui()
+
+    @asyncSlot()
+    async def on_exit(self):
+        await self.exit()
 
     async def exit(self, ret_code: int = 0):
         await self.tray.close()

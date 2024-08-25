@@ -4,6 +4,7 @@ import socket
 from openfreebuds.driver.generic import FbDriverGeneric
 from openfreebuds.exceptions import FbStartupError
 from openfreebuds.utils.logger import create_logger
+from contextlib import suppress
 
 log = create_logger("FbDriverSppGeneric")
 
@@ -42,7 +43,8 @@ class FbDriverSppGeneric(FbDriverGeneric):
 
         if self.__task_recv:
             self.__task_recv.cancel()
-            await self.__task_recv
+            with suppress(Exception):
+                await self.__task_recv
             self.__task_recv = None
 
         self._writer.close()

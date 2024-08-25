@@ -32,6 +32,11 @@ class OfbQtSettingsTabHelper:
         self.tabs_root = tabs_root
         self.root = body_root
 
+        self.root_layout = QBoxLayout(QBoxLayout.Direction.Down)
+        self.root_layout.setContentsMargins(0, 0, 0, 0)
+        self.root_layout.setSpacing(0)
+        self.root.setLayout(self.root_layout)
+
         self.tabs_layout = QBoxLayout(QBoxLayout.Direction.Down)
         self.tabs_layout.setContentsMargins(0, 0, 0, 0)
         self.tabs_layout.setSpacing(0)
@@ -85,6 +90,7 @@ class OfbQtSettingsTabHelper:
         entry.list_item.label.keyPressEvent = _kbd_activate
         self.tabs_layout.addWidget(entry.list_item)
         self._sections[section].items.append(entry)
+        self.root_layout.addWidget(content)
         content.setVisible(False)
 
         return entry

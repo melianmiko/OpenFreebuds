@@ -29,6 +29,7 @@ class OfbQtChooseDeviceModule(Ui_OfbQtDeviceSelectModule, OfbQtCommonModule):
         if event.kind_match("device_changed"):
             is_auto_config = self.config.get("device", "auto_setup", True)
             self.manual_setup_root.setVisible(not is_auto_config)
+            self.auto_setup_root.setVisible(is_auto_config)
             self.auto_config_checkbox.setChecked(is_auto_config)
             await self._update_list()
 
