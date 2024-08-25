@@ -25,6 +25,9 @@ class OfbQtChooseDeviceModule(Ui_OfbQtDeviceSelectModule, OfbQtCommonModule):
 
         self._connect_task: Optional[asyncio.Task] = None
 
+    def retranslate_ui(self):
+        self.retranslateUi(self)
+
     async def update_ui(self, event: OfbCoreEvent):
         if event.kind_match("device_changed"):
             is_auto_config = self.config.get("device", "auto_setup", True)

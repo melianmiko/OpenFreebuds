@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>OfbQtSoundQualityModule</class>
+ <widget class="QWidget" name="OfbQtSoundQualityModule">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>475</width>
+    <height>623</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Sound quality</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="spacing">
+    <number>8</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Configure sound-related device settings.</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="sq_root">
+     <property name="title">
+      <string>Sound quality preference:</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QRadioButton" name="sq_radio_sound">
+        <property name="text">
+         <string>Prioritize sound quality</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Device will prefer losless audio codecs, like LDAC.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="sq_radio_connection">
+        <property name="text">
+         <string>Prioritize connection quality</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Device will prefer audio codes with better compression, like AAC</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="eq_root">
+     <property name="title">
+      <string>Equalizer</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Preset:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="eq_preset_box"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>eq_preset_box</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>OfbQtSoundQualityModule</receiver>
+   <slot>on_eq_preset_change(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>347</x>
+     <y>228</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>237</x>
+     <y>311</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sq_radio_connection</sender>
+   <signal>pressed()</signal>
+   <receiver>OfbQtSoundQualityModule</receiver>
+   <slot>on_sq_set_connectivity()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>237</x>
+     <y>129</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>237</x>
+     <y>311</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sq_radio_sound</sender>
+   <signal>pressed()</signal>
+   <receiver>OfbQtSoundQualityModule</receiver>
+   <slot>on_sq_set_quality()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>237</x>
+     <y>77</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>237</x>
+     <y>311</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>on_eq_preset_change(int)</slot>
+  <slot>on_sq_set_quality()</slot>
+  <slot>on_sq_set_connectivity()</slot>
+ </slots>
+</ui>

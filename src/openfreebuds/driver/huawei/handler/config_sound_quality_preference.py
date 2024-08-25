@@ -31,10 +31,8 @@ class FnHuaweiSoundQualityPreferenceHandler(FbDriverHandlerHuawei):
             (1, value),
         ])
 
-        resp = await self.driver.send_package(pkg)
-        if resp.find_param(2)[0] == 0:
-            # Success
-            await self.driver.put_property(group, prop, value)
+        await self.driver.send_package(pkg)
+        await self.on_init()
 
     async def on_package(self, package: HuaweiSppPackage):
         value = package.find_param(2)

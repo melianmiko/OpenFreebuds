@@ -22,6 +22,7 @@ class FbDriverHuawei5i(FbDriverHuaweiGeneric):
                 1: "default",
                 2: "hardbass",
                 3: "treble",
+                9: "voices",
             }),
             FbHuaweiDualConnectHandler(),
             FbHuaweiDualConnectToggleHandler(),

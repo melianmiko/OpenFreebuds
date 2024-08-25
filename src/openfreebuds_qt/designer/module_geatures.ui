@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>336</width>
+    <width>418</width>
     <height>532</height>
    </rect>
   </property>
@@ -23,25 +23,35 @@
    <property name="spacing">
     <number>16</number>
    </property>
-   <item row="2" column="1">
-    <widget class="QComboBox" name="double_left">
-     <property name="sizeIncrement">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
+   <item row="5" column="0">
+    <widget class="QLabel" name="long_label">
+     <property name="text">
+      <string>Long-tap</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="power_label">
+   <item row="7" column="1" colspan="2">
+    <widget class="QComboBox" name="power_left"/>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="triple_label">
      <property name="text">
-      <string>Power button double-tap</string>
+      <string>Triple-tap</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="double_in_call_label">
+     <property name="text">
+      <string>Double-tap in call</string>
      </property>
     </widget>
    </item>
    <item row="8" column="1" colspan="2">
     <widget class="QComboBox" name="swipe_left"/>
+   </item>
+   <item row="4" column="1">
+    <widget class="QComboBox" name="triple_left"/>
    </item>
    <item row="1" column="1">
     <widget class="QLabel" name="label_2">
@@ -59,23 +69,20 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="triple_label">
+   <item row="7" column="0">
+    <widget class="QLabel" name="power_label">
      <property name="text">
-      <string>Triple-tap</string>
+      <string>Power button double-tap</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="1" colspan="2">
-    <widget class="QComboBox" name="double_in_call_left"/>
-   </item>
-   <item row="6" column="1" colspan="2">
-    <widget class="QComboBox" name="long_anc_left"/>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="double_label">
+   <item row="0" column="0" colspan="3">
+    <widget class="QLabel" name="label">
      <property name="text">
-      <string>Double-tap</string>
+      <string>Customize device touch panel(s) and button(s) behaviour. This settings are stored inside your device and will work also if OpenFreebuds is closed.</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -86,8 +93,8 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="2">
-    <widget class="QComboBox" name="long_right"/>
+   <item row="3" column="1" colspan="2">
+    <widget class="QComboBox" name="double_in_call_left"/>
    </item>
    <item row="9" column="1">
     <spacer name="verticalSpacer">
@@ -102,21 +109,37 @@
      </property>
     </spacer>
    </item>
-   <item row="4" column="1">
-    <widget class="QComboBox" name="triple_left"/>
-   </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="long_label">
+   <item row="2" column="0">
+    <widget class="QLabel" name="double_label">
      <property name="text">
-      <string>Long-tap</string>
+      <string>Double-tap</string>
      </property>
     </widget>
    </item>
    <item row="5" column="1">
     <widget class="QComboBox" name="long_left"/>
    </item>
+   <item row="5" column="2">
+    <widget class="QComboBox" name="long_right"/>
+   </item>
+   <item row="4" column="2">
+    <widget class="QComboBox" name="triple_right"/>
+   </item>
    <item row="2" column="2">
     <widget class="QComboBox" name="double_right"/>
+   </item>
+   <item row="2" column="1">
+    <widget class="QComboBox" name="double_left">
+     <property name="sizeIncrement">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1" colspan="2">
+    <widget class="QComboBox" name="long_anc_left"/>
    </item>
    <item row="1" column="2">
     <widget class="QLabel" name="label_3">
@@ -134,33 +157,10 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="2">
-    <widget class="QComboBox" name="triple_right"/>
-   </item>
    <item row="6" column="0">
     <widget class="QLabel" name="long_anc_label">
      <property name="text">
       <string>Preferred modes</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="1" colspan="2">
-    <widget class="QComboBox" name="power_left"/>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="double_in_call_label">
-     <property name="text">
-      <string>Double-tap in call</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="3">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Customize device touch panel(s) and button(s) behaviour. This settings are stored inside your device and will work also if OpenFreebuds is closed.</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
      </property>
     </widget>
    </item>

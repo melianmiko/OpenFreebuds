@@ -40,7 +40,7 @@ EQ_PRESET_MAPPING = {
     "equalizer_preset_default": "Default",
     "equalizer_preset_hardbass": "Bass-boost",
     "equalizer_preset_treble": "Treble-boost",
-    "equalizer_preset_voice": "Voice",
+    "equalizer_preset_voices": "Voices",
 }
 
 NOISE_CONTROL_OPTION_MAPPING = {

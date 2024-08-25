@@ -8,8 +8,10 @@ from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.app.helper.setting_tab_helper import OfbQtSettingsTabHelper
 from openfreebuds_qt.app.module.choose_device import OfbQtChooseDeviceModule
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
+from openfreebuds_qt.app.module.device_info import OfbQtDeviceInfoModule
 from openfreebuds_qt.app.module.empty_module import OfbEmptyModule
 from openfreebuds_qt.app.module.gestures import OfbQtGesturesModule
+from openfreebuds_qt.app.module.sound_quality import OfbQtSoundQualityModule
 
 log = create_logger("OfbQtSettingsUi")
 
@@ -29,10 +31,10 @@ class OfbQtSettingsUi:
 
         # Device-related modules
         self.device_section = self.tabs.add_section("Device-related")
-        self._attach_module("Device info", OfbEmptyModule(self.tabs.root))
+        self._attach_module("Device info", OfbQtDeviceInfoModule(self.tabs.root, self.ofb))
         self._attach_module("Dual-connect", OfbEmptyModule(self.tabs.root))
         self._attach_module("Gestures", OfbQtGesturesModule(self.tabs.root, self.ofb))
-        self._attach_module("Audio quality", OfbEmptyModule(self.tabs.root))
+        self._attach_module("Sound quality", OfbQtSoundQualityModule(self.tabs.root, self.ofb))
         self._attach_module("Other settings", OfbEmptyModule(self.tabs.root))
 
         # Addon-related modules

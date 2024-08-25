@@ -15,9 +15,6 @@ class FbHuaweiResponseReceiver(asyncio.Event):
 
 
 class FbDriverHuaweiGeneric(FbDriverSppGeneric):
-    INIT_ATTEMPTS = 5
-    INIT_TIMEOUT = 3
-
     def __init__(self, address):
         super().__init__(address)
         self.__pending_responses: dict[bytes, FbHuaweiResponseReceiver] = {}
@@ -42,23 +39,7 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
 
         # Init all handlers
         for handler in self.handlers:
-            attempt = 0
-            while attempt < FbDriverHuaweiGeneric.INIT_ATTEMPTS:
-                # noinspection PyBroadException
-                try:
-                    log.debug(f'Initializing {handler.handler_id}...')
-                    async with asyncio.timeout(FbDriverHuaweiGeneric.INIT_TIMEOUT):
-                        await handler.on_init()
-                    break
-                except TimeoutError:
-                    log.debug(f'Init of "{handler.handler_id}" timed out, attempt={attempt}')
-                    attempt += 1
-                except Exception:
-                    log.exception(f'Init of "{handler.handler_id}" failed, attempt={attempt}')
-                    attempt += 1
-
-            if attempt == FbDriverHuaweiGeneric.INIT_ATTEMPTS:
-                log.exception(f'Can\'t initialize "{handler.handler_id}". Skipping.')
+            await handler.init()
 
     async def stop(self):
         await super().stop()
@@ -133,6 +114,8 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
         except (ConnectionResetError, ConnectionAbortedError, OSError):
             # Something bad happened, exiting...
             raise FbStartupError("Recv loop failure")
+        except Exception:
+            log.exception("Failure while handling package")
 
         return True
 
@@ -148,6 +131,29 @@ class FbDriverHandlerHuawei(FbDriverHandlerGeneric):
     commands: list[bytes] = []
     ignore_commands: list[bytes] = []
     driver: FbDriverHuaweiGeneric = None
+
+    init_timeout: int = 3
+    init_attempt: int = 0
+    init_attempt_max: int = 5
+
+    async def init(self):
+        self.init_attempt = 0
+        while self.init_attempt < self.init_attempt_max:
+            # noinspection PyBroadException
+            try:
+                log.debug(f'Initializing {self.handler_id}...')
+                async with asyncio.timeout(self.init_timeout):
+                    await self.on_init()
+                break
+            except TimeoutError:
+                log.debug(f'Init of "{self.handler_id}" timed out, attempt={self.init_attempt}')
+                self.init_attempt += 1
+            except Exception:
+                log.exception(f'Init of "{self.handler_id}" failed, attempt={self.init_attempt}')
+                self.init_attempt += 1
+
+        if self.init_attempt == self.init_attempt_max:
+            log.exception(f'Can\'t initialize "{self.handler_id}". Skipping.')
 
     async def on_init(self):
         pass

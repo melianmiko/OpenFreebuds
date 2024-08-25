@@ -56,7 +56,7 @@ class HuaweiSppPackage:
             out += "\n"
         return out
 
-    def find_param(self, *args, **kwargs):
+    def find_param(self, *args, **kwargs) -> bytes:
         """
         Get parameter value by one of provided types
         """

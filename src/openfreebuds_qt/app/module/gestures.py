@@ -8,6 +8,7 @@ from openfreebuds import IOpenFreebuds
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
+from openfreebuds_qt.app.qt_utils import fill_combo_box
 from openfreebuds_qt.designer.module_geatures import Ui_OfbQtGesturesModule
 from openfreebuds_qt.i18n_mappings import GESTURE_ACTION_MAPPINGS, NOISE_CONTROL_OPTION_MAPPING
 
@@ -122,19 +123,9 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
             row.set_visible(True)
             row.set_right_available(right_available)
 
-            self._fill_combo_box(row.left_combo, row.options, row.ui_names_map, actions[current_id])
+            fill_combo_box(row.left_combo, row.options, row.ui_names_map, actions[current_id])
             if right_available:
-                self._fill_combo_box(row.right_combo, row.options, row.ui_names_map, actions[right_id])
-
-    def _fill_combo_box(self, box: QComboBox, options: list[str], name_map: dict[str, str], current: str):
-        box.blockSignals(True)
-        box.clear()
-        box.addItems([self.tr(name_map.get(i, i)) for i in options])
-        for index, value in enumerate(options):
-            box.setItemData(index, value)
-
-        box.setCurrentIndex(options.index(current))
-        box.blockSignals(False)
+                fill_combo_box(row.right_combo, row.options, row.ui_names_map, actions[right_id])
 
     def setup_gesture_ui(self, row: _UiRow):
         @asyncSlot(int)

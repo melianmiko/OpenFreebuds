@@ -26,7 +26,7 @@
    <string>OpenFreebuds</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">#body_content {
+   <string notr="true">#tabs_list_content {
 background-color: palette(base);
 }</string>
   </property>
@@ -103,7 +103,7 @@ background-color: palette(base);
         </sizepolicy>
        </property>
        <property name="autoFillBackground">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
       </widget>
      </widget>

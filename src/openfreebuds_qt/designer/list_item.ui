@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>40</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,19 +18,20 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QLabel {
-padding: 8px 12px;
+	padding: 8px 12px;
+	background: palette(base);
 }
 
-QLabel:hover,
-QLabel[itemActive=&quot;true&quot;] {
-  background: palette(mid);
+QLabel:hover {
+	background: palette(alternate-base );
 }
 
-QLabel[itemActive=&quot;true&quot;]:focus,
+QLabel[itemActive=&quot;true&quot;],
+QLabel:hover[itemActive=&quot;true&quot;],
 QLabel:focus {
-  background: palette(highlight);
-}
-</string>
+	background: palette(highlight);
+	color: palette(highlighted-text);
+}</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">

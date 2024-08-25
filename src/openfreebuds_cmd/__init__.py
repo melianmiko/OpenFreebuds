@@ -1,3 +1,5 @@
+import json
+
 from aiocmd.aiocmd import PromptToolkitCmd
 
 from openfreebuds import IOpenFreebuds
@@ -45,6 +47,10 @@ class OpenFreebudsCmd(PromptToolkitCmd):
                     print("  ", prop)
                     for opt in store[group][prop].split(","):
                         print("    - ", opt)
+                elif group == "dual_connect_devices":
+                    print("  ", prop)
+                    for key, value in json.loads(store[group][prop]).items():
+                        print("    - ", to_fixed(key, 15), value)
                 else:
                     print("  ", to_fixed(prop, 30),
                           store[group][prop])
