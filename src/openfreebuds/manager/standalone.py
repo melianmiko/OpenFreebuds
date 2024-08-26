@@ -3,6 +3,7 @@ from asyncio import Task
 from contextlib import asynccontextmanager
 
 import openfreebuds_backend
+from openfreebuds.constants import OfbEventKind
 from openfreebuds.driver import DEVICE_TO_DRIVER_MAP
 from openfreebuds.driver.generic import FbDriverGeneric
 from openfreebuds.exceptions import FbNoDeviceError, FbDriverError, FbNotSupportedError
@@ -41,7 +42,7 @@ class OpenFreebuds(IOpenFreebuds):
         self.include_subscription("inner_driver", self._driver.changes)
         self._task = asyncio.create_task(self._mainloop())
         self._device_tags = device_name, device_address
-        await self.send_message("device_changed")
+        await self.send_message(OfbEventKind.DEVICE_CHANGED)
 
     @rpc
     async def destroy(self):
@@ -155,4 +156,4 @@ class OpenFreebuds(IOpenFreebuds):
             return
 
         self._state = new_state
-        await self.send_message("state_changed", new_state)
+        await self.send_message(OfbEventKind.STATE_CHANGED, new_state)

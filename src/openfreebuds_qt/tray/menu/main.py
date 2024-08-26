@@ -3,7 +3,7 @@ from typing import Optional
 from PyQt6.QtGui import QAction
 from qasync import asyncSlot
 
-from openfreebuds import IOpenFreebuds
+from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.generic import IOfbQtMainWindow
 from openfreebuds_qt.i18n_mappings import ANC_MODE_MAPPINGS, BATTERY_PROP_MAPPINGS
@@ -62,12 +62,12 @@ class OfbQtTrayMenu(OfbTrayMenu):
                                           callback=self.do_exit)
 
     async def on_core_event(self, event: OfbCoreEvent):
-        if event.kind_match("device_changed"):
+        if event.kind_match(OfbEventKind.DEVICE_CHANGED):
             device_name, _ = await self.ofb.get_device_tags()
             self.device_name_action.setText(device_name)
             self.device_name_action.setVisible(True)
 
-        if event.kind_match("state_changed"):
+        if event.kind_match(OfbEventKind.STATE_CHANGED):
             state = await self.ofb.get_state()
             self.is_connected = state == IOpenFreebuds.STATE_CONNECTED
 

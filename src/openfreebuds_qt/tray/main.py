@@ -5,14 +5,14 @@ from PIL import ImageQt
 from PyQt6.QtGui import QIcon
 from qasync import asyncSlot
 
-from openfreebuds import IOpenFreebuds
+from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds.exceptions import FbServerDeadError
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
-from openfreebuds_qt.config import OfbQtConfigParser
+from openfreebuds_qt.config.main import OfbQtConfigParser
 from openfreebuds_qt.generic import IOfbQtMainWindow
 from openfreebuds_qt.tray.generic import IOfbTrayIcon
-from openfreebuds_qt.tray.icon import create_tray_icon
+from openfreebuds_qt.icon import create_tray_icon
 from openfreebuds_qt.tray.menu import OfbQtTrayMenu
 
 UI_UPDATE_GROUPS = ["anc", "battery"]
@@ -43,7 +43,7 @@ class OfbTrayIcon(IOfbTrayIcon):
 
     @asyncSlot()
     async def _on_click(self):
-        if self.ofb.get_state() == self.ofb.STATE_CONNECTED:
+        if await self.ofb.get_state() == self.ofb.STATE_CONNECTED:
             await self.ofb.run_shortcut(self.config.get("ui", "tray_shortcut", "anc_next"))
 
     async def boot(self):
@@ -93,7 +93,7 @@ class OfbTrayIcon(IOfbTrayIcon):
         """
         Create tooltip text for tray icon
         """
-        if event.is_changed("battery") or event.kind_match("device_changed") or self._last_tooltip == "":
+        if event.is_changed("battery") or event.kind_match(OfbEventKind.DEVICE_CHANGED) or self._last_tooltip == "":
             device_name, _ = await self.ofb.get_device_tags()
             battery = await self.ofb.get_property("battery", "global", "--")
             self._last_tooltip = f"{device_name}: {battery}%"
@@ -112,9 +112,12 @@ class OfbTrayIcon(IOfbTrayIcon):
         try:
             while True:
                 kind, *args = await self.ofb.wait_for_event(member_id)
-                if kind == "state_changed" and args[0] == IOpenFreebuds.STATE_DESTROYED:
+                if kind == OfbEventKind.QT_BRING_SETTINGS_UP:
+                    self.root.show()
+                    self.root.activateWindow()
+                if kind == OfbEventKind.STATE_CHANGED and args[0] == IOpenFreebuds.STATE_DESTROYED:
                     raise FbServerDeadError("Server going to exit")
-                if kind == "state_changed" or (kind == "put_property" and args[0] in UI_UPDATE_GROUPS):
+                if kind == OfbEventKind.STATE_CHANGED or (kind == OfbEventKind.PROPERTY_CHANGED and args[0] in UI_UPDATE_GROUPS):
                     await self._update_ui(OfbCoreEvent(kind, *args))
         except asyncio.CancelledError:
             await self.ofb.unsubscribe(member_id)

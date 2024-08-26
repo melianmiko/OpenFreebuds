@@ -3,6 +3,19 @@ name = "OpenFreebuds"
 version = "0.1.0"
 description = "FOSS Windows/Linux client for HUAWEI FreeBuds headset series"
 authors = ["MelianMiko <support@mmk.pw>"]
+packages = [
+    { include = "openfreebuds", from = "src" },
+    { include = "openfreebuds_qt", from = "src" },
+    { include = "openfreebuds_backend", from = "src" },
+    { include = "openfreebuds_cmd", from = "src" },
+]
+include = [
+    { path = "src/openfreebuds_assets", format = ["sdist", "wheel"] }
+]
+
+[tool.poetry.scripts]
+openfreebuds_qt = 'openfreebuds_qt:main'
+openfreebuds_cmd = 'openfreebuds_cmd:main'
 
 [tool.poetry.dependencies]
 python = "~3.12"

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>850</width>
     <height>500</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>700</width>
+    <width>800</width>
     <height>400</height>
    </size>
   </property>
@@ -92,7 +92,7 @@ background-color: palette(base);
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>558</width>
+         <width>608</width>
          <height>476</height>
         </rect>
        </property>
@@ -115,7 +115,7 @@ background-color: palette(base);
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>850</width>
      <height>22</height>
     </rect>
    </property>

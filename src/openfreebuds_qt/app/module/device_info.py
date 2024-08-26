@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QTableWidgetItem
 
-from openfreebuds import IOpenFreebuds
+from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.designer.device_info import Ui_OfbQtDeviceInfoModule
@@ -17,7 +17,7 @@ class OfbQtDeviceInfoModule(Ui_OfbQtDeviceInfoModule, OfbQtCommonModule):
         self.retranslateUi(self)
 
     async def update_ui(self, event: OfbCoreEvent):
-        if event.is_changed("info") or event.kind_match("device_changed"):
+        if event.is_changed("info") or event.kind_match(OfbEventKind.DEVICE_CHANGED):
             device_name, device_address = await self.ofb.get_device_tags()
             info: dict[str, str] = await self.ofb.get_property("info")
             if info is None:

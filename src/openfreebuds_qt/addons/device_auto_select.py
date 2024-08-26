@@ -4,7 +4,7 @@ from typing import Optional
 from openfreebuds import IOpenFreebuds, is_device_supported
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_backend import bt_list_devices
-from openfreebuds_qt.config import OfbQtConfigParser
+from openfreebuds_qt.config.main import OfbQtConfigParser
 
 log = create_logger("OfbQtDeviceAutoSelect")
 

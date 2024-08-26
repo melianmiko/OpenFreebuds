@@ -5,7 +5,7 @@ import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 
-import version_info
+from openfreebuds_qt import version_info
 
 
 def main():

@@ -7,11 +7,13 @@ from PyQt6.QtWidgets import QApplication
 from qasync import asyncSlot
 
 import openfreebuds
+from openfreebuds import IOpenFreebuds
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.addons.device_auto_select import OfbQtDeviceAutoSelect
 from openfreebuds_qt.app.helper.setting_tab_helper import OfbQtSettingsTabHelper
 from openfreebuds_qt.app.main import OfbQtSettingsUi
-from openfreebuds_qt.config import OfbQtConfigParser
+from openfreebuds_qt.config.config_lock import ConfigLock
+from openfreebuds_qt.config.main import OfbQtConfigParser
 from openfreebuds_qt.designer.main_window import Ui_OfbMainWindowDesign
 from openfreebuds_qt.generic import IOfbQtMainWindow
 from openfreebuds_qt.tray.main import OfbTrayIcon
@@ -52,22 +54,22 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbQtMainWindow):
 
         self.application.closeAllWindows()
         self.application.exit(ret_code)
+        ConfigLock.release()
 
     async def boot(self):
-        self.ofb = await openfreebuds.create()
         self.tray = OfbTrayIcon(self)
         self.settings = OfbQtSettingsUi(self.tabs, self.ofb)
         self.auto_select = OfbQtDeviceAutoSelect(self.ofb)
 
         if self.ofb.role == "standalone":
-            await self._restore_device()
+            await self.restore_device()
             await self.auto_select.boot()
 
         await self.tray.boot()
         await self.settings.boot()
         self.tray.show()
 
-    async def _restore_device(self):
+    async def restore_device(self):
         name = self.config.get("device", "name", None)
         address = self.config.get('device', "address", None)
         if address is not None:

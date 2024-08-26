@@ -10,10 +10,11 @@ from openfreebuds_qt.app.widget.list_header import OfbQListHeader
 
 class OfbQtSettingsTabHelper:
     class Entry:
-        def __init__(self, parent: QWidget, label: str, content: QWidget):
+        def __init__(self, parent: QWidget, label: str, content: QWidget, section):
             self.label = label
             self.list_item = OfbQListItem(parent, parent.tr(label))
             self.content = content
+            self.section: OfbQtSettingsTabHelper.Section = section
 
     class Section:
         def __init__(self, parent: QWidget, label: str, index: int):
@@ -59,6 +60,10 @@ class OfbQtSettingsTabHelper:
 
         self._active_entry = new_active
 
+    @property
+    def active_tab(self):
+        return self._active_entry
+
     def retranslate_ui(self):
         for section in self._sections:
             if section.list_item is not None:
@@ -71,7 +76,8 @@ class OfbQtSettingsTabHelper:
         tab = len(self._sections[section].items)
         entry = OfbQtSettingsTabHelper.Entry(parent=self.tabs_root,
                                              label=label,
-                                             content=content)
+                                             content=content,
+                                             section=self._sections[section])
 
         @pyqtSlot()
         def _activate(*_):

@@ -5,14 +5,14 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QListWidgetItem
 from qasync import asyncSlot
 
-from openfreebuds import IOpenFreebuds, is_device_supported
+from openfreebuds import IOpenFreebuds, is_device_supported, OfbEventKind
 from openfreebuds_backend import bt_list_devices
 from openfreebuds_qt.addons.device_auto_select import OfbQtDeviceAutoSelect
 from openfreebuds_qt.app.dialog.manual_connect import OfbQtManualConnectDialog
 from openfreebuds_qt.app.dialog.porifle_picker import OfbQtProfilePickerDialog
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
-from openfreebuds_qt.config import OfbQtConfigParser
+from openfreebuds_qt.config.main import OfbQtConfigParser
 from openfreebuds_qt.designer.module_device_select import Ui_OfbQtDeviceSelectModule
 
 
@@ -29,7 +29,7 @@ class OfbQtChooseDeviceModule(Ui_OfbQtDeviceSelectModule, OfbQtCommonModule):
         self.retranslateUi(self)
 
     async def update_ui(self, event: OfbCoreEvent):
-        if event.kind_match("device_changed"):
+        if event.kind_match(OfbEventKind.DEVICE_CHANGED):
             is_auto_config = self.config.get("device", "auto_setup", True)
             self.manual_setup_root.setVisible(not is_auto_config)
             self.auto_setup_root.setVisible(is_auto_config)

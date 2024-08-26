@@ -2,13 +2,14 @@ import asyncio
 import sys
 from typing import Optional
 
-from openfreebuds import IOpenFreebuds
+from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.app.helper.setting_tab_helper import OfbQtSettingsTabHelper
 from openfreebuds_qt.app.module.choose_device import OfbQtChooseDeviceModule
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.app.module.device_info import OfbQtDeviceInfoModule
+from openfreebuds_qt.app.module.dual_connect import OfbQtDualConnectModule
 from openfreebuds_qt.app.module.empty_module import OfbEmptyModule
 from openfreebuds_qt.app.module.gestures import OfbQtGesturesModule
 from openfreebuds_qt.app.module.sound_quality import OfbQtSoundQualityModule
@@ -32,7 +33,7 @@ class OfbQtSettingsUi:
         # Device-related modules
         self.device_section = self.tabs.add_section("Device-related")
         self._attach_module("Device info", OfbQtDeviceInfoModule(self.tabs.root, self.ofb))
-        self._attach_module("Dual-connect", OfbEmptyModule(self.tabs.root))
+        self._attach_module("Dual-connect", OfbQtDualConnectModule(self.tabs.root, self.ofb))
         self._attach_module("Gestures", OfbQtGesturesModule(self.tabs.root, self.ofb))
         self._attach_module("Sound quality", OfbQtSoundQualityModule(self.tabs.root, self.ofb))
         self._attach_module("Other settings", OfbEmptyModule(self.tabs.root))
@@ -64,13 +65,13 @@ class OfbQtSettingsUi:
         await self._update_ui(OfbCoreEvent(None))
 
     async def _update_ui(self, event: OfbCoreEvent):
-        if event.kind_match("device_changed"):
+        if event.kind_match(OfbEventKind.DEVICE_CHANGED):
             device_name, _ = await self.ofb.get_device_tags()
             self.device_section.list_item.setText(device_name)
 
-        if event.kind_match("state_changed"):
+        if event.kind_match(OfbEventKind.STATE_CHANGED):
             visible = await self.ofb.get_state() == IOpenFreebuds.STATE_CONNECTED
-            self.device_section.set_visible(visible)
+            self._device_section_set_visible(visible)
 
         for mod in self._ui_modules:
             try:
@@ -94,3 +95,8 @@ class OfbQtSettingsUi:
         except asyncio.CancelledError:
             await self.ofb.unsubscribe(member_id)
             log.info("Settings UI update loop finished")
+
+    def _device_section_set_visible(self, visible):
+        self.device_section.set_visible(visible)
+        if not visible and self.tabs.active_tab.section == self.device_section:
+            self.tabs.set_active_tab(0, 0)

@@ -13,7 +13,7 @@ class _PendingDeviceRow:
     def __init__(self, package: HuaweiSppPackage):
         self.name = package.find_param(9).decode("utf8", "ignore")
         self.auto_connect = package.find_param(8)[0] == 1
-        self.primary = package.find_param(7)[0] == 1
+        self.preferred = package.find_param(7)[0] == 1
         self.mac = package.find_param(4).hex()
 
         conn_state = package.find_param(5)[0]
@@ -24,7 +24,7 @@ class _PendingDeviceRow:
         return json.dumps({
             "name": self.name,
             "auto_connect": self.auto_connect,
-            "primary": self.primary,
+            "preferred": self.preferred,
             "connected": self.connected,
             "playing": self.playing,
         })
@@ -35,11 +35,11 @@ class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
     properties = [
         ("dual_connect_devices", ""),
         ("config", "preferred_device"),
-        ("config", "refresh_devices"),
     ]
     commands = [b"\x2b\x31", b"\x2b\x36"]
     ignore_commands = [b"\x2b\x32", b"\x2b\x33"]
     init_timeout = 1
+    init_attempt_max = 10
 
     def __init__(self):
         super().__init__()
@@ -87,29 +87,32 @@ class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
         if dev_count == len(self._pending_devices.values()) and self._on_ready:
             self._on_ready.set()
 
-    async def set_property(self, group: str, prop: str, value: str):
-        if group == "dev_auto_connect":
-            resp = await self._set_auto_connect(prop, value == "true")
-        elif group == "dev_connected":
-            resp = await self._set_connected(prop, value == "true")
-        elif group == "dev_name" and value == "":
-            resp = await self._unpair(prop)
-        elif prop == "preferred_device":
-            resp = await self._set_preferred(value)
+    async def set_property(self, group: str, payload: str, value: str):
+        address, prop, *_ = *payload.split(":"), "", ""
+        if prop == "auto_connect":
+            await self._set_auto_connect(address, value == "true")
+        elif prop == "connected":
+            await self._set_connected(address, value == "true")
+        elif prop == "name" and value == "":
+            await self._unpair(address)
+        elif payload == "preferred_device":
+            await self._set_preferred(value)
+        elif payload == "refresh":
+            pass
         else:
-            self._task_re_init = asyncio.create_task(self.init())
+            log.warning(f"Unknown request-prop {group}//{payload} = {value}")
             return
 
-        if resp is not None and resp.find_param(2)[0] == 0:
-            await self.driver.put_property(group, prop, value)
+        self._task_re_init = asyncio.create_task(self.init())
 
     async def _process_pending_devices(self):
         devices = {}
         preferred = "0" * 12
 
-        for device in self._pending_devices.values():
+        for index in range(len(self._pending_devices.keys())):
+            device = self._pending_devices[index]
             devices[device.mac] = str(device)
-            if device.primary:
+            if device.preferred:
                 preferred = device.mac
 
         await self.driver.put_property("dual_connect_devices", None, devices)
@@ -154,12 +157,12 @@ class FbHuaweiDualConnectToggleHandler(FbDriverHandlerHuawei):
         await self.on_package(resp)
 
     async def set_property(self, group: str, prop: str, value):
+        log.info(f"Set {value}")
         pkg = HuaweiSppPackage.change_rq(b"\x2b\x2e", [
-            (1, 1 if value else 0),
+            (1, 1 if value == "true" else 0),
         ])
-        resp = await self.driver.send_package(pkg)
-        if resp.find_param(2)[0] == 0:
-            await self.driver.put_property(group, prop, value)
+        await self.driver.send_package(pkg)
+        await self.init()
 
     async def on_package(self, package: HuaweiSppPackage):
         value = package.find_param(1)

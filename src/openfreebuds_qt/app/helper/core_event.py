@@ -1,5 +1,7 @@
 from typing import Optional
 
+from openfreebuds import OfbEventKind
+
 
 class OfbCoreEvent:
     def __init__(self, kind: Optional[str], *args):
@@ -12,7 +14,7 @@ class OfbCoreEvent:
     def is_changed(self, group: str, prop: str = None):
         if self._kind is None:
             return True
-        if self._kind != "put_property":
+        if self._kind != OfbEventKind.PROPERTY_CHANGED:
             return False
         ch_group, ch_prop, *_ = (*self.args, "", "")
         if ch_group == "":

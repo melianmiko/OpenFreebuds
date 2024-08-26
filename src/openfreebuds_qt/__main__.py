@@ -1,5 +1,3 @@
-import asyncio
-
-from . import main
+from .launcher import main
 
 main()

@@ -1,5 +1,6 @@
 import json
 
+from openfreebuds.constants import OfbEventKind
 from openfreebuds.exceptions import FbMissingHandlerError
 from openfreebuds.utils.event_bus import Subscription
 from openfreebuds.utils.logger import create_logger
@@ -39,10 +40,14 @@ class FbDriverGeneric:
 
     async def set_property(self, group: str, prop: str, value: str):
         target_handler_id = f"{group}//{prop}"
-        if target_handler_id not in self.__set_prop_handlers:
-            raise FbMissingHandlerError(f"No handler for {target_handler_id}")
+        if target_handler_id in self.__set_prop_handlers:
+            return await self.__set_prop_handlers[target_handler_id].set_property(group, prop, value)
 
-        return await self.__set_prop_handlers[target_handler_id].set_property(group, prop, value)
+        group_handler_id = f"{group}//"
+        if group_handler_id in self.__set_prop_handlers:
+            return await self.__set_prop_handlers[group_handler_id].set_property(group, prop, value)
+
+        raise FbMissingHandlerError(f"No handler for {target_handler_id}")
 
     async def get_property(self, group: str | None, prop: str | None, fallback: str | None = None) -> str | dict:
         if group is None:
@@ -68,4 +73,4 @@ class FbDriverGeneric:
                 value = json.dumps(value)
             self._store[group][prop] = value
 
-        await self.changes.send_message("put_property", group, prop, value)
+        await self.changes.send_message(OfbEventKind.PROPERTY_CHANGED, group, prop, value)
