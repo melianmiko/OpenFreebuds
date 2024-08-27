@@ -1,3 +1,26 @@
+** 🚧🚧🚧 This `next` branch  isn't ready for everyday use. **
+
+That's an absolutely new OpenFreebuds implementation, rewritten
+from scratch to asyncio & Qt6. Currently it's still in progress
+and a lot of features are missing, and only supported device
+is FreeBuds 5i. Stay turned, in some day this version will 
+become main.
+
+If you want to test, do this at your own risk:
+
+```shell
+poetry install
+poetry run pyuic6 openfreebuds_qt/designer
+poetry run python -m openfreebuds_qt -v
+```
+
+Don't send bugreports, I know that it's absolutely broken.
+But, at least, it should show a tray icon and main window
+in Win10-11 or KDE.
+
+---
+
+
 <div align="center">
 <img src="docs/logo.png" alt="" />
 <h1>OpenFreebuds</h1>

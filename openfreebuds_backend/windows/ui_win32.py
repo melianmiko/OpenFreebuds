@@ -1,5 +1,6 @@
 import threading
 import tkinter.simpledialog
+import winreg
 
 # noinspection PyUnresolvedReferences
 from winsdk.windows.ui.viewmanagement import UISettings, UIColorType
@@ -22,3 +23,15 @@ def is_dark_theme():
     color_type = UIColorType.BACKGROUND
     color_value = theme.get_color_value(color_type)
     return color_value.r == 0
+
+
+def is_dark_taskbar():
+    with winreg.OpenKey(
+        winreg.HKEY_CURRENT_USER,
+        r'Software\Microsoft\Windows\CurrentVersion\Themes\Personalize'
+    ) as key:
+        try:
+            value, _ = winreg.QueryValueEx(key, "SystemUsesLightTheme")
+            return value == 0
+        except (FileNotFoundError, OSError):
+            return False

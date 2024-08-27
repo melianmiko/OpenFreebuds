@@ -54,8 +54,11 @@ class FbDriverSppGeneric(FbDriverGeneric):
         self.started = False
         log.info("Stopped")
 
+    def healthy(self):
+        return self.started and not self.__task_recv.done()
+
     async def _loop_recv(self, reader):
-        log.info(f"Init recv task with {reader}")
+        log.debug(f"Init recv task with {reader}")
         await asyncio.sleep(60)
 
     async def __get_sdp_result(self):

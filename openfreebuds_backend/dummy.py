@@ -26,22 +26,17 @@ def set_run_at_boot(val):
     logging.info("run_at_boot " + str(val))
 
 
-def bt_is_connected(address):
+async def bt_is_connected(address):
     logging.info("is_connected " + address)
     return False
 
 
-def bt_device_exists(address):
-    logging.info("exists " + address)
-    return False
-
-
-def bt_connect(address):
+async def bt_connect(address):
     log.info("dummy_connect " + address)
     return False
 
 
-def bt_disconnect(address):
+async def bt_disconnect(address):
     log.info("dummy_disconnect " + address)
     return False
 
@@ -54,6 +49,10 @@ def ask_string(message, callback):
     logging.info("ask_str" + message)
     if callback:
         callback(None)
+
+
+def is_dark_taskbar():
+    return False
 
 
 def is_dark_theme():

@@ -2,7 +2,9 @@ import asyncio
 from typing import Optional
 
 from PIL import ImageQt
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
+from PyQt6.QtWidgets import QSystemTrayIcon
 from qasync import asyncSlot
 
 from openfreebuds import IOpenFreebuds, OfbEventKind
@@ -41,9 +43,12 @@ class OfbTrayIcon(IOfbTrayIcon):
         self.menu = OfbQtTrayMenu(self, self.root, self.ofb)
         self.setContextMenu(self.menu)
 
-    @asyncSlot()
-    async def _on_click(self):
-        if await self.ofb.get_state() == self.ofb.STATE_CONNECTED:
+    @asyncSlot(QSystemTrayIcon.ActivationReason)
+    async def _on_click(self, reason):
+        if (
+            reason == self.ActivationReason.Trigger
+            and await self.ofb.get_state() == self.ofb.STATE_CONNECTED
+        ):
             await self.ofb.run_shortcut(self.config.get("ui", "tray_shortcut", "anc_next"))
 
     async def boot(self):

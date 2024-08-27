@@ -100,7 +100,7 @@ async def run_rpc_server(instance, static_folder):
         return await _handle_rpc_call(instance, static_folder, request, data)
 
     @routes.get("/ping")
-    def ping():
+    def ping(_):
         return web.Response(text="pong")
 
     app = web.Application()

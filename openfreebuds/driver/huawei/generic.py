@@ -2,7 +2,7 @@ import asyncio
 
 from openfreebuds.driver.generic import FbDriverHandlerGeneric, FbDriverSppGeneric
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
-from openfreebuds.exceptions import FbNotReadyError, FbStartupError, FbDriverError, FbPackageChecksumError
+from openfreebuds.exceptions import FbNotReadyError, FbPackageChecksumError
 from openfreebuds.utils.logger import create_logger
 
 log = create_logger("FbDriverHuaweiGeneric")
@@ -31,7 +31,7 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
     async def _start_all_handlers(self):
         # Bind all handlers
         for handler in self.handlers:
-            log.info(f'Attach handler "{handler.handler_id}"')
+            log.debug(f'Attach handler "{handler.handler_id}"')
             handler.driver = self
 
             self._add_set_property_handler(handler)
@@ -50,7 +50,7 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
             return await self._send_nowait(pkg)
 
         while pkg.response_id in self.__pending_responses:
-            log.info(f"Response read conflict with {pkg.response_id}, wait for parent before continue")
+            log.debug(f"Response read conflict with {pkg.response_id}, wait for parent before continue")
             await self.__pending_responses[pkg.response_id].wait()
             await asyncio.sleep(0.5)
 
@@ -94,30 +94,28 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
         while True:
             try:
                 await self.__recv_pacakge(reader)
-            except asyncio.CancelledError:
+            except asyncio.TimeoutError:
+                pass
+            except (asyncio.CancelledError, ConnectionResetError, ConnectionAbortedError, OSError):
+                log.debug(f"Stop recv loop due to connection failure")
                 return
+            except Exception:
+                log.exception("Unknown exception in recv loop")
+                await asyncio.sleep(2)
 
     async def __recv_pacakge(self, reader: asyncio.StreamReader):
-        try:
-            async with asyncio.timeout(2):
-                heading = await reader.read(4)
-                if heading[0:2] == b"Z\x00":
-                    length = heading[2]
-                    if length < 4:
-                        await reader.read(length)
-                    else:
-                        pkg = heading + await reader.read(length)
-                        await self._handle_raw_pkg(pkg)
-        except asyncio.TimeoutError:
-            # Socket timed out, do nothing
-            return False
-        except (ConnectionResetError, ConnectionAbortedError, OSError):
-            # Something bad happened, exiting...
-            raise FbStartupError("Recv loop failure")
-        except Exception:
-            log.exception("Failure while handling package")
-
-        return True
+        async with asyncio.timeout(5):
+            heading = await reader.read(4)
+            if len(heading) == 0:
+                log.debug("Got empty package, seems like socked is closed")
+                raise ConnectionResetError
+            if heading[0:2] == b"Z\x00":
+                length = heading[2]
+                if length < 4:
+                    await reader.read(length)
+                else:
+                    pkg = heading + await reader.read(length)
+                    await self._handle_raw_pkg(pkg)
 
     def _add_on_package_handler(self, handler):
         for pkg_id in handler.commands:

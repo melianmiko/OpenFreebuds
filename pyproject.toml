@@ -18,7 +18,7 @@ openfreebuds_qt = 'openfreebuds_qt:main'
 openfreebuds_cmd = 'openfreebuds_cmd:main'
 
 [tool.poetry.dependencies]
-python = "~3.12"
+python = ">=3.10,<3.13"
 pillow = "^10.4.0"
 aiocmd = ">=0.1.5,<0.2.0"
 psutil = "^6.0.0"
@@ -28,7 +28,7 @@ pygobject = { version = "^3.48.1", platform = "linux" }
 winsdk = { version = "1.0.0b10", platform = "win32" }
 pyqt6 = "^6.7.1"
 qasync = "^0.27.1"
-sdbus = "^0.12.0"
+sdbus = { version = "^0.12.0", platform = "linux" }
 
 [tool.poetry.group.goodies.dependencies]
 pynput = ">=1.7.6,<1.8.0"

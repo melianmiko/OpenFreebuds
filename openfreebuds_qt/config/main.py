@@ -1,6 +1,6 @@
 import json
 
-import openfreebuds_backend
+from openfreebuds_backend import is_dark_taskbar
 from openfreebuds_qt.constants import STORAGE_PATH
 
 CONFIG_PATH = STORAGE_PATH / "openfreebuds_qt.json"
@@ -44,4 +44,4 @@ class OfbQtConfigParser:
         value = self.get("ui", "tray_icon_theme", "auto")
         if value != "auto":
             return value
-        return "dark" if openfreebuds_backend.is_dark_theme() else "light"
+        return "dark" if not is_dark_taskbar() else "light"

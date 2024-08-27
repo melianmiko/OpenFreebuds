@@ -31,6 +31,9 @@ class FbDriverGeneric:
     async def stop(self):
         self.__set_prop_handlers = {}
 
+    def healthy(self):
+        return self.started
+
     def _add_set_property_handler(self, handler: FbDriverHandlerGeneric):
         for group, prop in handler.properties:
             target_handler_id = f"{group}//{prop}"

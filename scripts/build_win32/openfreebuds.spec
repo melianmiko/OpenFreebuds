@@ -5,15 +5,13 @@ block_cipher = None
 
 
 a = Analysis(
-    ['src\\ofb_launcher.py'],
+    ["..\\..\\openfreebuds_qt\\launcher.py"],
     pathex=[],
     binaries=[],
-    datas=[('.\\src\\openfreebuds_assets', 'openfreebuds_assets'), ('.\\venv\\Lib\\site-packages\\sv_ttk', 'sv_ttk')],
-    hiddenimports=[
-        'openfreebuds_applet.modules.hotkeys',
-        'openfreebuds_applet.modules.http_server',
-        'openfreebuds_applet.modules.update_check',
+    datas=[
+        ('..\\..\\openfreebuds_assets', 'openfreebuds_assets'), 
     ],
+    hiddenimports=[],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -35,13 +33,13 @@ exe = EXE(
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=False,
+    console=True,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['src\\openfreebuds_assets\\icon.ico'],
+    icon=['..\\..\\openfreebuds_assets\\icon.ico'],
 )
 coll = COLLECT(
     exe,

@@ -93,11 +93,12 @@ class OfbQtTrayMenu(OfbTrayMenu):
 
     async def _update_battery(self, battery: dict):
         battery_is_tws = "case" in battery
-        if battery_is_tws is not self.battery_is_tws:
+        if battery_is_tws != self.battery_is_tws:
             self.battery_actions["left"].setVisible(battery_is_tws)
             self.battery_actions["right"].setVisible(battery_is_tws)
             self.battery_actions["case"].setVisible(battery_is_tws)
             self.battery_actions["global"].setVisible(not battery_is_tws)
+            self.battery_is_tws = battery_is_tws
 
         for code in battery:
             if code in self.battery_actions:

@@ -46,7 +46,7 @@ class OpenFreebuds(IOpenFreebuds):
 
     @rpc
     async def destroy(self):
-        log.info("Destroying core...")
+        log.debug("Destroying core...")
         await self.stop(IOpenFreebuds.STATE_DESTROYED)
         if self.server_task is not None:
             self.server_task.cancel("stop() requested")
@@ -59,12 +59,12 @@ class OpenFreebuds(IOpenFreebuds):
         if self._task is None:
             return
 
-        log.info("Stopping core...")
+        log.debug("Stopping core...")
         self._task.cancel("stop() requested")
         await self._task
 
         if self._driver is not None:
-            log.info("Stopping driver...")
+            log.debug("Stopping driver...")
             await self._driver.stop()
 
         self._driver = None
@@ -103,7 +103,7 @@ class OpenFreebuds(IOpenFreebuds):
 
     @rpc
     async def _set_paused(self, value: bool):
-        log.info(f"Core pause value={value}")
+        log.debug(f"Core pause value={value}")
         self._paused = value
         await self._set_state(OpenFreebuds.STATE_PAUSED)
         if value and self._driver.started:
@@ -116,20 +116,18 @@ class OpenFreebuds(IOpenFreebuds):
             pass
 
     async def _mainloop_inner(self):
-        log.info(f"Started")
+        log.debug(f"Started mainloop task")
 
         while True:
             if self._paused:
-                log.info("Core paused...")
                 await asyncio.sleep(2)
                 continue
 
             if not await openfreebuds_backend.bt_is_connected(self._driver.device_address):
                 await self._set_state(OpenFreebuds.STATE_DISCONNECTED)
                 if self._driver.started:
-                    log.info("Device disconnected from OS, stop driver...")
+                    log.info("Device disconnected from OS")
                     await self._driver.stop()
-                    log.info("Driver stopped")
                 await asyncio.sleep(10)
                 continue
 
@@ -143,6 +141,10 @@ class OpenFreebuds(IOpenFreebuds):
                     await self._set_state(OpenFreebuds.STATE_FAILED)
                     await asyncio.sleep(5)
                     continue
+
+            if not self._driver.healthy():
+                log.warning("Driver health check failed, restarting them")
+                await self._driver.stop()
 
             await asyncio.sleep(2)
 

@@ -26,10 +26,6 @@ async def bt_is_connected(address):
         return False
 
 
-def bt_device_exists(address):
-    return bt_is_connected(address) is not None
-
-
 async def bt_connect(address):
     try:
         path = await _dbus_find_bt_device(address)

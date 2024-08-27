@@ -50,7 +50,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbQtMainWindow):
 
         if self.ofb.role == "standalone":
             await self.auto_select.close()
-            await self.ofb.stop()
+            await self.ofb.destroy()
 
         self.application.closeAllWindows()
         self.application.exit(ret_code)
