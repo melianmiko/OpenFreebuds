@@ -21,7 +21,6 @@ async def create():
         await test_online()
         instance.role = "client"
     except ClientConnectorError:
-        log.info("SERVER ROLE")
         instance.server_task = asyncio.create_task(run_rpc_server(instance, ""))
 
     return instance

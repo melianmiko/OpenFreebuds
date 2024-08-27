@@ -1,3 +1,4 @@
+# TODO: Rewrite this trash
 name: Make test binaries
 on: [push]
 jobs:

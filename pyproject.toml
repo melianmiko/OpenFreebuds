@@ -4,13 +4,13 @@ version = "0.1.0"
 description = "FOSS Windows/Linux client for HUAWEI FreeBuds headset series"
 authors = ["MelianMiko <support@mmk.pw>"]
 packages = [
-    { include = "openfreebuds", from = "src" },
-    { include = "openfreebuds_qt", from = "src" },
-    { include = "openfreebuds_backend", from = "src" },
-    { include = "openfreebuds_cmd", from = "src" },
+    { include = "openfreebuds" },
+    { include = "openfreebuds_qt" },
+    { include = "openfreebuds_backend" },
+    { include = "openfreebuds_cmd" },
 ]
 include = [
-    { path = "src/openfreebuds_assets", format = ["sdist", "wheel"] }
+    { path = "openfreebuds_assets", format = ["sdist", "wheel"] },
 ]
 
 [tool.poetry.scripts]
@@ -19,23 +19,23 @@ openfreebuds_cmd = 'openfreebuds_cmd:main'
 
 [tool.poetry.dependencies]
 python = "~3.12"
-pystray = "0.19.4"
-pynput = ">=1.7.6,<1.8.0"
-sv-ttk = "2.4.5"
-mmk-updater = "0.14.3"
-pybluez-edge = "2022.12.6"
-pillow = ">=10.2.0,<10.3.0"
+pillow = "^10.4.0"
 aiocmd = ">=0.1.5,<0.2.0"
-psutil = ">=5.9.8,<5.10.0"
-aiohttp = ">=3.9.5,<3.10.0"
+psutil = "^6.0.0"
+aiohttp = "^3.10.5"
 pyinstaller = "6.10.0"
-pytest = ">=8.2.2,<8.3.0"
-dbus-python = { version = "1.3.2", platform = "linux" }
-pygobject = { version = "3.44.1", platform = "linux" }
+pygobject = { version = "^3.48.1", platform = "linux" }
 winsdk = { version = "1.0.0b10", platform = "win32" }
 pyqt6 = "^6.7.1"
 qasync = "^0.27.1"
 sdbus = "^0.12.0"
+
+[tool.poetry.group.goodies.dependencies]
+pynput = ">=1.7.6,<1.8.0"
+pybluez-edge = "2022.12.6"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.2"
 
 [build-system]
 requires = ["poetry-core"]
