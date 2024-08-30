@@ -6,9 +6,27 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>249</height>
+    <width>417</width>
+    <height>208</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>417</width>
+    <height>208</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>417</width>
+    <height>208</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Manual connect</string>
@@ -16,6 +34,12 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QLabel" name="label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
       <string>Enter bluetooth address of your device and select their model from list. You can find bluetooth address in system settings.</string>
      </property>
@@ -40,7 +64,7 @@
    <item>
     <widget class="QLineEdit" name="address_field">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>

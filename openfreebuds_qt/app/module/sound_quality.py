@@ -10,9 +10,8 @@ from openfreebuds_qt.i18n_mappings import EQ_PRESET_MAPPING
 
 
 class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
-    def __init__(self, parent: QWidget, ofb: IOpenFreebuds):
-        super().__init__(parent)
-        self.ofb = ofb
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self._eq_last_options: list[str] = []
 
         self.setupUi(self)

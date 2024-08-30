@@ -14,36 +14,39 @@ from openfreebuds_qt.app.module.dual_connect import OfbQtDualConnectModule
 from openfreebuds_qt.app.module.empty_module import OfbEmptyModule
 from openfreebuds_qt.app.module.gestures import OfbQtGesturesModule
 from openfreebuds_qt.app.module.sound_quality import OfbQtSoundQualityModule
+from openfreebuds_qt.app.qt_utils import qt_error_handler
+from openfreebuds_qt.generic import IOfbQtContext
 
 log = create_logger("OfbQtSettingsUi")
 
 
 class OfbQtSettingsUi:
-    def __init__(self, tabs_helper: OfbQtSettingsTabHelper, ofb: IOpenFreebuds):
+    def __init__(self, tabs_helper: OfbQtSettingsTabHelper, context: IOfbQtContext):
         self.tabs = tabs_helper
-        self.ofb = ofb
+        self.ctx = context
+        self.ofb = context.ofb
         self._ui_update_task: Optional[asyncio.Task] = None
         self._ui_modules: list[OfbQtCommonModule] = []
 
         # App-related modules
-        self._attach_module("About Openfreebuds...", OfbEmptyModule(self.tabs.root))
-        self._attach_module("User interface", OfbEmptyModule(self.tabs.root))
-        if self.ofb.role == "standalone":
-            self._attach_module("Select device", OfbQtChooseDeviceModule(self.tabs.root, self.ofb))
+        self._attach_module("About Openfreebuds...", OfbEmptyModule(self.tabs.root, self.ctx))
+        self._attach_module("User interface", OfbEmptyModule(self.tabs.root, self.ctx))
+        if self.ctx.ofb.role == "standalone":
+            self._attach_module("Select device", OfbQtChooseDeviceModule(self.tabs.root, self.ctx))
 
         # Device-related modules
         self.device_section = self.tabs.add_section("Device-related")
-        self._attach_module("Device info", OfbQtDeviceInfoModule(self.tabs.root, self.ofb))
-        self._attach_module("Dual-connect", OfbQtDualConnectModule(self.tabs.root, self.ofb))
-        self._attach_module("Gestures", OfbQtGesturesModule(self.tabs.root, self.ofb))
-        self._attach_module("Sound quality", OfbQtSoundQualityModule(self.tabs.root, self.ofb))
-        self._attach_module("Other settings", OfbQtDeviceOtherSettingsModule(self.tabs.root, self.ofb))
+        self._attach_module("Device info", OfbQtDeviceInfoModule(self.tabs.root, self.ctx))
+        self._attach_module("Dual-connect", OfbQtDualConnectModule(self.tabs.root, self.ctx))
+        self._attach_module("Gestures", OfbQtGesturesModule(self.tabs.root, self.ctx))
+        self._attach_module("Sound quality", OfbQtSoundQualityModule(self.tabs.root, self.ctx))
+        self._attach_module("Other settings", OfbQtDeviceOtherSettingsModule(self.tabs.root, self.ctx))
 
         # Addon-related modules
         self.tabs.add_section("Extras")
-        self._attach_module("Keyboard shortcuts", OfbEmptyModule(self.tabs.root))
+        self._attach_module("Keyboard shortcuts", OfbEmptyModule(self.tabs.root, self.ctx))
         if sys.platform == "linux":
-            self._attach_module("Linux-related", OfbEmptyModule(self.tabs.root))
+            self._attach_module("Linux-related", OfbEmptyModule(self.tabs.root, self.ctx))
 
         self.tabs.finalize_list()
 
@@ -86,16 +89,17 @@ class OfbQtSettingsUi:
         for changes to perform settings UI update
         """
 
-        member_id = await self.ofb.subscribe()
-        log.info(f"Settings UI update loop started, member_id={member_id}")
+        async with qt_error_handler("OfbQtSettings_UpdateLoop", self.ctx):
+            member_id = await self.ctx.ofb.subscribe()
+            log.info(f"Settings UI update loop started, member_id={member_id}")
 
-        try:
-            while True:
-                kind, *args = await self.ofb.wait_for_event(member_id)
-                await self._update_ui(OfbCoreEvent(kind, *args))
-        except asyncio.CancelledError:
-            await self.ofb.unsubscribe(member_id)
-            log.info("Settings UI update loop finished")
+            try:
+                while True:
+                    kind, *args = await self.ofb.wait_for_event(member_id)
+                    await self._update_ui(OfbCoreEvent(kind, *args))
+            except asyncio.CancelledError:
+                await self.ofb.unsubscribe(member_id)
+                log.info("Settings UI update loop finished")
 
     def _device_section_set_visible(self, visible):
         self.device_section.set_visible(visible)

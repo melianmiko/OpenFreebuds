@@ -4,6 +4,6 @@ from openfreebuds_qt.app.module.common import OfbQtCommonModule
 
 
 class OfbEmptyModule(OfbQtCommonModule):
-    def __init__(self, parent: QWidget):
-        super().__init__(parent)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         QLabel("Not implemented yet", self)

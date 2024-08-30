@@ -5,7 +5,7 @@ from qasync import asyncSlot
 
 from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
-from openfreebuds_qt.generic import IOfbQtMainWindow
+from openfreebuds_qt.generic import IOfbQtContext
 from openfreebuds_qt.i18n_mappings import ANC_MODE_MAPPINGS, BATTERY_PROP_MAPPINGS
 from openfreebuds_qt.tray.generic import IOfbTrayIcon
 from openfreebuds_qt.tray.menu.generic import OfbTrayMenu
@@ -13,10 +13,10 @@ from openfreebuds_qt.tray.menu.submenu import OfbDeviceAncLevelTrayMenu
 
 
 class OfbQtTrayMenu(OfbTrayMenu):
-    def __init__(self, tray: IOfbTrayIcon, root: IOfbQtMainWindow, ofb: IOpenFreebuds):
-        super().__init__(root, ofb)
+    def __init__(self, tray: IOfbTrayIcon, context: IOfbQtContext, ofb: IOpenFreebuds):
+        super().__init__(context, ofb)
 
-        self.root: IOfbQtMainWindow = root
+        self.ctx: IOfbQtContext = context
         self.tray: IOfbTrayIcon = tray
         self.is_connected: bool = False
         self.first_time_render: bool = True
@@ -138,10 +138,10 @@ class OfbQtTrayMenu(OfbTrayMenu):
         await self.ofb.run_shortcut("connect")
 
     def do_settings(self):
-        if self.root.isVisible():
-            self.root.activateWindow()
-        self.root.show()
+        if self.ctx.isVisible():
+            self.ctx.activateWindow()
+        self.ctx.show()
 
     @asyncSlot()
     async def do_exit(self):
-        await self.root.exit(0)
+        await self.ctx.exit(0)

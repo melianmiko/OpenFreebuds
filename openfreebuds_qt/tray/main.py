@@ -2,7 +2,6 @@ import asyncio
 from typing import Optional
 
 from PIL import ImageQt
-from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QSystemTrayIcon
 from qasync import asyncSlot
@@ -11,10 +10,11 @@ from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds.exceptions import FbServerDeadError
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
+from openfreebuds_qt.app.qt_utils import qt_error_handler
 from openfreebuds_qt.config.main import OfbQtConfigParser
-from openfreebuds_qt.generic import IOfbQtMainWindow
-from openfreebuds_qt.tray.generic import IOfbTrayIcon
+from openfreebuds_qt.generic import IOfbQtContext
 from openfreebuds_qt.icon import create_tray_icon
+from openfreebuds_qt.tray.generic import IOfbTrayIcon
 from openfreebuds_qt.tray.menu import OfbQtTrayMenu
 
 UI_UPDATE_GROUPS = ["anc", "battery"]
@@ -26,21 +26,21 @@ class OfbTrayIcon(IOfbTrayIcon):
     OpenFreebuds Tray icon implementation
     """
 
-    def __init__(self, root: IOfbQtMainWindow):
-        super().__init__(root)
+    def __init__(self, context: IOfbQtContext):
+        super().__init__(context)
 
         self._last_tooltip = ""
 
         # noinspection PyUnresolvedReferences
         self.activated.connect(self._on_click)
 
-        self.root = root
-        self.ofb = root.ofb
+        self.ctx = context
+        self.ofb = context.ofb
         self.config = OfbQtConfigParser.get_instance()
 
         self.ui_update_task: Optional[asyncio.Task] = None
 
-        self.menu = OfbQtTrayMenu(self, self.root, self.ofb)
+        self.menu = OfbQtTrayMenu(self, self.ctx, self.ofb)
         self.setContextMenu(self.menu)
 
     @asyncSlot(QSystemTrayIcon.ActivationReason)
@@ -49,16 +49,19 @@ class OfbTrayIcon(IOfbTrayIcon):
             reason == self.ActivationReason.Trigger
             and await self.ofb.get_state() == self.ofb.STATE_CONNECTED
         ):
-            await self.ofb.run_shortcut(self.config.get("ui", "tray_shortcut", "anc_next"))
+            async with qt_error_handler("OfbTrayIcon_OnClick", self.ctx):
+                tray_shortcut = self.config.get("ui", "tray_shortcut", "anc_next")
+                await self.ofb.run_shortcut(tray_shortcut)
 
     async def boot(self):
         """
         Will start UI update loop and perform other preparations on boot
         """
-        if self.ui_update_task is None:
-            self.ui_update_task = asyncio.create_task(self._update_loop())
+        async with qt_error_handler("OfbTrayIcon_Boot", self.ctx):
+            if self.ui_update_task is None:
+                self.ui_update_task = asyncio.create_task(self._update_loop())
 
-        await self._update_ui(OfbCoreEvent(None))
+            await self._update_ui(OfbCoreEvent(None))
 
     async def close(self):
         """
@@ -111,22 +114,24 @@ class OfbTrayIcon(IOfbTrayIcon):
         for changes to perform tray UI update when something changes.
         """
 
-        member_id = await self.ofb.subscribe()
-        log.info(f"Tray update loop started, member_id={member_id}")
+        async with qt_error_handler("OfbTrayIcon_EventLoop", self.ctx):
+            member_id = await self.ofb.subscribe()
+            log.info(f"Tray update loop started, member_id={member_id}")
 
-        try:
-            while True:
-                kind, *args = await self.ofb.wait_for_event(member_id)
-                if kind == OfbEventKind.QT_BRING_SETTINGS_UP:
-                    self.root.show()
-                    self.root.activateWindow()
-                if kind == OfbEventKind.STATE_CHANGED and args[0] == IOpenFreebuds.STATE_DESTROYED:
-                    raise FbServerDeadError("Server going to exit")
-                if kind == OfbEventKind.STATE_CHANGED or (kind == OfbEventKind.PROPERTY_CHANGED and args[0] in UI_UPDATE_GROUPS):
-                    await self._update_ui(OfbCoreEvent(kind, *args))
-        except asyncio.CancelledError:
-            await self.ofb.unsubscribe(member_id)
-        except FbServerDeadError:
-            log.info("Server is dead, exiting now...")
-            self.ui_update_task = None
-            await self.root.exit(1)
+            try:
+                while True:
+                    kind, *args = await self.ofb.wait_for_event(member_id)
+                    event = OfbCoreEvent(kind, *args)
+                    if event.kind_match(OfbEventKind.QT_BRING_SETTINGS_UP):
+                        self.ctx.show()
+                        self.ctx.activateWindow()
+                    if event.kind_match(OfbEventKind.STATE_CHANGED) and args[0] == IOpenFreebuds.STATE_DESTROYED:
+                        raise FbServerDeadError("Server going to exit")
+                    if event.kind_match(OfbEventKind.STATE_CHANGED) or event.is_prop_group_in(UI_UPDATE_GROUPS):
+                        await self._update_ui(event)
+            except asyncio.CancelledError:
+                await self.ofb.unsubscribe(member_id)
+            except FbServerDeadError:
+                log.info("Server is dead, exiting now...")
+                self.ui_update_task = None
+                await self.ctx.exit(1)

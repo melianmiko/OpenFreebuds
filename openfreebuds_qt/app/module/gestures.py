@@ -50,12 +50,10 @@ class _UiRow:
 
 
 class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
-    def __init__(self, parent: QWidget, ofb: IOpenFreebuds):
-        super().__init__(parent)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
         self._ui_rows: list[_UiRow] = []
-
-        self.ofb: IOpenFreebuds = ofb
 
         self.setupUi(self)
         self.setup_gesture_ui(_UiRow(grid=self.gridLayout,

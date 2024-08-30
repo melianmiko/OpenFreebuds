@@ -12,33 +12,32 @@ from openfreebuds_qt.app.dialog.manual_connect import OfbQtManualConnectDialog
 from openfreebuds_qt.app.dialog.porifle_picker import OfbQtProfilePickerDialog
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
+from openfreebuds_qt.app.qt_utils import qt_error_handler
 from openfreebuds_qt.config.main import OfbQtConfigParser
 from openfreebuds_qt.designer.module_device_select import Ui_OfbQtDeviceSelectModule
 
 
 class OfbQtChooseDeviceModule(Ui_OfbQtDeviceSelectModule, OfbQtCommonModule):
-    def __init__(self, parent: QWidget, ofb: IOpenFreebuds):
-        super().__init__(parent)
-        self.ofb = ofb
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.config = OfbQtConfigParser.get_instance()
         self.setupUi(self)
 
         self._connect_task: Optional[asyncio.Task] = None
 
-    def retranslate_ui(self):
-        self.retranslateUi(self)
-
     async def update_ui(self, event: OfbCoreEvent):
-        if event.kind_match(OfbEventKind.DEVICE_CHANGED):
-            is_auto_config = self.config.get("device", "auto_setup", True)
-            self.manual_setup_root.setVisible(not is_auto_config)
-            self.auto_setup_root.setVisible(is_auto_config)
-            self.auto_config_checkbox.setChecked(is_auto_config)
-            await self._update_list()
+        async with qt_error_handler("OfbQtChooseDeviceModule_UpdateUi", self.ctx):
+            if event.kind_match(OfbEventKind.DEVICE_CHANGED):
+                is_auto_config = self.config.get("device", "auto_setup", True)
+                self.manual_setup_root.setVisible(not is_auto_config)
+                self.auto_setup_root.setVisible(is_auto_config)
+                self.auto_config_checkbox.setChecked(is_auto_config)
+                await self._update_list()
 
     @asyncSlot()
     async def on_refresh_list(self):
-        await self._update_list()
+        async with qt_error_handler("OfbQtChooseDeviceModule_ManualRefresh", self.ctx):
+            await self._update_list()
 
     async def _update_list(self):
         device_name, device_addr = await self.ofb.get_device_tags()
@@ -54,39 +53,42 @@ class OfbQtChooseDeviceModule(Ui_OfbQtDeviceSelectModule, OfbQtCommonModule):
 
     @asyncSlot(QListWidgetItem)
     async def on_device_select(self, item: QListWidgetItem):
-        address = item.data(Qt.ItemDataRole.UserRole)
-        name = item.text()
+        async with qt_error_handler("OfbQtChooseDeviceModule_SelectDevice", self.ctx):
+            address = item.data(Qt.ItemDataRole.UserRole)
+            name = item.text()
 
-        if not is_device_supported(name):
-            result, name = await OfbQtProfilePickerDialog(self).get_user_response()
-            if not result:
-                return
+            if not is_device_supported(name):
+                result, name = await OfbQtProfilePickerDialog(self).get_user_response()
+                if not result:
+                    return
 
-        # noinspection PyAsyncCall
-        self._connect_task = asyncio.create_task(
-            self.ofb.start(name, address)
-        )
-        self.config.set_device_data(name, address)
-        self.config.save()
+            # noinspection PyAsyncCall
+            self._connect_task = asyncio.create_task(
+                self.ofb.start(name, address)
+            )
+            self.config.set_device_data(name, address)
+            self.config.save()
 
     @asyncSlot()
     async def on_manual_config(self):
-        result, name, address = await OfbQtManualConnectDialog(self).get_user_response()
-        if not result:
-            return
+        async with qt_error_handler("OfbQtChooseDeviceModule_ManualSetup", self.ctx):
+            result, name, address = await OfbQtManualConnectDialog(self).get_user_response()
+            if not result:
+                return
 
-        await self.ofb.start(name, address)
-        self.config.set_device_data(name, address)
-        self.config.save()
+            await self.ofb.start(name, address)
+            self.config.set_device_data(name, address)
+            self.config.save()
 
     @asyncSlot(bool)
     async def on_auto_config_toggle(self, value):
-        self.config.set("device", "auto_setup", value)
-        self.config.save()
-        await self.update_ui(OfbCoreEvent(None, []))
+        async with qt_error_handler("OfbQtChooseDeviceModule_AutoConfigToggle", self.ctx):
+            self.config.set("device", "auto_setup", value)
+            self.config.save()
+            await self.update_ui(OfbCoreEvent(None, []))
 
-        if value is True:
-            await OfbQtDeviceAutoSelect.trigger(self.ofb)
+            if value is True:
+                await OfbQtDeviceAutoSelect.trigger(self.ofb)
 
     def retranslate_ui(self):
         self.retranslateUi(self)
