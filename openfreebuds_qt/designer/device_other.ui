@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>OfbQtDeviceOtherSettingsModule</class>
+ <widget class="QWidget" name="OfbQtDeviceOtherSettingsModule">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>664</width>
+    <height>530</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Other settings</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="auto_pause_root">
+     <property name="title">
+      <string>Interaction</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QCheckBox" name="auto_pause_toggle">
+        <property name="text">
+         <string>Wear detection</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>32</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Pause audio or switch device when earphones are removed</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="service_language_root">
+     <property name="title">
+      <string>Service</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Device language:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="service_language_box"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>service_language_box</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>OfbQtDeviceOtherSettingsModule</receiver>
+   <slot>on_language_select(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>488</x>
+     <y>149</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>331</x>
+     <y>264</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>auto_pause_toggle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OfbQtDeviceOtherSettingsModule</receiver>
+   <slot>on_auto_pause_toggle(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>331</x>
+     <y>52</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>331</x>
+     <y>264</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>on_auto_pause_toggle(bool)</slot>
+  <slot>on_language_select(int)</slot>
+ </slots>
+</ui>

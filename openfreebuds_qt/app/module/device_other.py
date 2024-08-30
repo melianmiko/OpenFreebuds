@@ -1,0 +1,57 @@
+import json
+
+from PyQt6.QtWidgets import QWidget
+from qasync import asyncSlot
+
+from openfreebuds import IOpenFreebuds, OfbEventKind
+from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
+from openfreebuds_qt.app.module.common import OfbQtCommonModule
+from openfreebuds_qt.app.qt_utils import blocked_signals
+from openfreebuds_qt.designer.device_other import Ui_OfbQtDeviceOtherSettingsModule
+from openfreebuds_qt.i18n_mappings import LANGUAGE_OPTION_MAPPING
+
+
+class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCommonModule):
+    def __init__(self, parent: QWidget, ofb: IOpenFreebuds):
+        super().__init__(parent)
+
+        self.ofb: IOpenFreebuds = ofb
+        self.lang_options: list[str] = []
+
+        self.setupUi(self)
+
+    async def update_ui(self, event: OfbCoreEvent):
+        if event.kind_match(OfbEventKind.DEVICE_CHANGED):
+            # Visibility setup
+            auto_pause_visible = await self.ofb.get_property("config", "auto_pause") is not None
+            service_language_visible = await self.ofb.get_property("service", "language") is not None
+
+            self.auto_pause_root.setVisible(auto_pause_visible)
+            self.service_language_root.setVisible(service_language_visible)
+
+            self.list_item.setVisible(auto_pause_visible or service_language_visible)
+
+        if event.is_changed("config", "auto_pause"):
+            with blocked_signals(self.auto_pause_toggle):
+                self.auto_pause_toggle.setChecked(await self.ofb.get_property("config", "auto_pause") == "true")
+
+        if event.is_changed("service", "language_options"):
+            options = await self.ofb.get_property("service", "language_options")
+            if options is not None:
+                self.lang_options = options.split(",")
+                with blocked_signals(self.service_language_box):
+                    self.service_language_box.addItems(
+                        [LANGUAGE_OPTION_MAPPING.get(o, o) for o in self.lang_options]
+                    )
+                    self.service_language_box.setCurrentIndex(-1)
+
+    def retranslate_ui(self):
+        self.retranslateUi(self)
+
+    @asyncSlot(bool)
+    async def on_auto_pause_toggle(self, value: bool):
+        await self.ofb.set_property("config", "auto_pause", json.dumps(value))
+
+    @asyncSlot(int)
+    async def on_language_select(self, index: int):
+        await self.ofb.set_property("service", "language", self.lang_options[index])

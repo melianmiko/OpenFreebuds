@@ -8,7 +8,7 @@ class FbHuaweiVoiceLanguageHandler(FbDriverHandlerHuawei):
     """
 
     handler_id = "voice_language"
-    handle_props = [
+    properties = [
         ("service", "language")
     ]
     handle_commands = [b'\x0c\x02']
@@ -22,13 +22,11 @@ class FbHuaweiVoiceLanguageHandler(FbDriverHandlerHuawei):
         if 3 in package.parameters and len(package.parameters[3]) > 1:
             locales = package.parameters[3].decode("utf8")
             await self.driver.put_property("service", "language", "")
-            await self.driver.put_property("service", "supported_languages", locales)
+            await self.driver.put_property("service", "language_options", locales)
 
-    async def on_prop_changed(self, group: str, prop: str, value):
+    async def set_property(self, group: str, prop: str, value):
         lang_bytes = value.encode("utf8")
-        resp = await self.driver.send_package(HuaweiSppPackage.change_rq(b"\x0c\x01", [
+        await self.driver.send_package(HuaweiSppPackage.change_rq(b"\x0c\x01", [
             (1, lang_bytes),
             (2, 1)
         ]))
-        if resp.find_param(2)[0] == 0:
-            await self.driver.put_property(group, prop, value)

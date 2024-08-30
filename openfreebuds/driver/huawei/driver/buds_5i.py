@@ -24,7 +24,7 @@ class FbDriverHuawei5i(FbDriverHuaweiGeneric):
                 3: "treble",
                 9: "voices",
             }),
-            FbHuaweiDualConnectHandler(),
-            FbHuaweiDualConnectToggleHandler(),
             FbHuaweiVoiceLanguageHandler(),
+            FbHuaweiDualConnectToggleHandler(),
+            FbHuaweiDualConnectHandler(),
         ]

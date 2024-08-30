@@ -70,7 +70,7 @@ background-color: palette(base);
          <x>0</x>
          <y>0</y>
          <width>238</width>
-         <height>476</height>
+         <height>498</height>
         </rect>
        </property>
       </widget>
@@ -93,7 +93,7 @@ background-color: palette(base);
          <x>0</x>
          <y>0</y>
          <width>608</width>
-         <height>476</height>
+         <height>498</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -109,23 +109,6 @@ background-color: palette(base);
      </widget>
     </item>
    </layout>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>850</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuControl">
-    <property name="title">
-     <string>Control</string>
-    </property>
-    <addaction name="actionExit"/>
-   </widget>
-   <addaction name="menuControl"/>
   </widget>
   <action name="actionExit">
    <property name="text">

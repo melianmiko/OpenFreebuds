@@ -17,6 +17,11 @@ BATTERY_PROP_MAPPINGS = {
     "global": "Battery:",
 }
 
+LANGUAGE_OPTION_MAPPING = {
+    "en-GB": "English (British)",
+    "zh-CN": "Chinese"
+}
+
 ANC_MODE_MAPPINGS = {
     "normal": "Disable noise control",
     "cancellation": "Noise cancelling",

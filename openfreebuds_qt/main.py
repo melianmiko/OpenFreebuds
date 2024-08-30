@@ -1,13 +1,8 @@
-import asyncio
-import os
-import signal
 from typing import Optional
 
 from PyQt6.QtWidgets import QApplication
 from qasync import asyncSlot
 
-import openfreebuds
-from openfreebuds import IOpenFreebuds
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.addons.device_auto_select import OfbQtDeviceAutoSelect
 from openfreebuds_qt.app.helper.setting_tab_helper import OfbQtSettingsTabHelper

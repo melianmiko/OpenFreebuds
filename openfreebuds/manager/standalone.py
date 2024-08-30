@@ -42,7 +42,6 @@ class OpenFreebuds(IOpenFreebuds):
         self.include_subscription("inner_driver", self._driver.changes)
         self._task = asyncio.create_task(self._mainloop())
         self._device_tags = device_name, device_address
-        await self.send_message(OfbEventKind.DEVICE_CHANGED)
 
     @rpc
     async def destroy(self):
@@ -117,6 +116,7 @@ class OpenFreebuds(IOpenFreebuds):
 
     async def _mainloop_inner(self):
         log.debug(f"Started mainloop task")
+        last_device_address = ""
 
         while True:
             if self._paused:
@@ -137,6 +137,9 @@ class OpenFreebuds(IOpenFreebuds):
                 try:
                     await self._driver.start()
                     await self._set_state(OpenFreebuds.STATE_CONNECTED)
+                    if last_device_address != self._device_tags[1]:
+                        await self.send_message(OfbEventKind.DEVICE_CHANGED)
+                        last_device_address = self._device_tags[1]
                 except FbDriverError:
                     await self._set_state(OpenFreebuds.STATE_FAILED)
                     await asyncio.sleep(5)
