@@ -2,7 +2,7 @@ from openfreebuds.driver.huawei.generic import FbDriverHuaweiGeneric
 from openfreebuds.driver.huawei.handler import *
 
 
-class FbDriverHuaweiPro(FbDriverHuaweiGeneric):
+class FbDriverHuaweiPro2(FbDriverHuaweiGeneric):
     """
     HUAWEI FreeBuds Pro 2
     """

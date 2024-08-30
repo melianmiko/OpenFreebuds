@@ -53,7 +53,3 @@ def ask_string(message, callback):
 
 def is_dark_taskbar():
     return False
-
-
-def is_dark_theme():
-    return False

@@ -36,7 +36,7 @@ def ask_string(message, callback):
     GLib.idle_add(show_async)
 
 
-def is_dark_theme():
+def is_dark_taskbar():
     from gi.repository import Gtk
     settings = Gtk.Settings()
     defaults = settings.get_default()
