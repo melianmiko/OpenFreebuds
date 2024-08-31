@@ -64,7 +64,7 @@ class FbHuaweiAbstractTapActionHandler(FbDriverHandlerHuawei):
         elif prop == f"{self.prop_prefix}_right":
             p_type = 2
             p_options = self._options
-        elif prop == f"{self.prop_prefix}_call":
+        elif prop == f"{self.prop_prefix}_in_call":
             p_type = 4
             p_options = self._options_call
         else:

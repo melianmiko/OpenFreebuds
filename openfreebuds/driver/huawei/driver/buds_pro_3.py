@@ -30,4 +30,5 @@ class FbDriverHuaweiPro3(FbDriverHuaweiGeneric):
             FbHuaweiActionDoubleTapHandler(),
             FbHuaweiActionLongTapSplitHandler(w_right=True),
             FbHuaweiActionSwipeGestureHandler(),
+            OfbHuaweiLowLatencyPreferenceHandler(),
         ]

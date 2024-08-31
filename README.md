@@ -78,7 +78,7 @@ Columns mean device model, rows mean feature name.
 | Swipe action setting                 |        |              |        |         | 🟢        | 🟢     | 🔴        |
 | Sound quality preference             |        |              |        |         | 🟢        | 🟢     | 🟡        |
 | Built-in equalizer presets           |        |              |        |         | 🟢        | 🟢     | 🟡        |
-| Low-latency mode (Idk how it works)  |        |              |        |         |           | 🔴     | 🔴        |
+| Low-latency mode (Idk how it works)  |        |              |        |         |           | 🟢     | 🟡        |
 | Custom equalizer presets             |        |              |        |         |           |        | 🔴        |
 
 | Implementation level                               | Marker |

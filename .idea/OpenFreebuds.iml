@@ -13,7 +13,7 @@
       <excludeFolder url="file://$MODULE_DIR$/src/openfreebuds.bak" />
       <excludeFolder url="file://$MODULE_DIR$/src/openfreebuds_applet.bak" />
     </content>
-    <orderEntry type="jdk" jdkName="Poetry (OpenFreebuds)" jdkType="Python SDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">

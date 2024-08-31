@@ -15,3 +15,4 @@ from .info import FbHuaweiInfoHandler
 from .logs import FbHuaweiLogsHandler
 from .service_language import FbHuaweiVoiceLanguageHandler
 from .state_in_ear import FbHuaweiStateInEarHandler
+from .low_latency import OfbHuaweiLowLatencyPreferenceHandler

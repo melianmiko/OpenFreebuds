@@ -19,6 +19,7 @@ class FbDriverHuawei5i(FbDriverHuaweiGeneric):
             FbHuaweiActionSwipeGestureHandler(),
             FbHuaweiConfigAutoPauseHandler(),
             FnHuaweiSoundQualityPreferenceHandler(),
+            OfbHuaweiLowLatencyPreferenceHandler(),
             FbHuaweiEqualizerPresetHandler(w_presets={
                 1: "default",
                 2: "hardbass",

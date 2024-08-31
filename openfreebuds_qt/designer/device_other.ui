@@ -47,6 +47,32 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="low_latency_root">
+     <property name="title">
+      <string>Networking</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QCheckBox" name="low_latency_toggle">
+        <property name="text">
+         <string>Enable low-latency mode</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Will try to reduce audio latency when using headphones in enviroments with high network load. This option is disabled when your earphones are disconnected. Applies only for current device.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="service_language_root">
      <property name="title">
       <string>Service</string>
@@ -114,9 +140,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>low_latency_toggle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OfbQtDeviceOtherSettingsModule</receiver>
+   <slot>on_low_latency_toggle(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>331</x>
+     <y>148</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>331</x>
+     <y>264</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>on_auto_pause_toggle(bool)</slot>
   <slot>on_language_select(int)</slot>
+  <slot>on_low_latency_toggle(bool)</slot>
  </slots>
 </ui>
