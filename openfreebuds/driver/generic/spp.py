@@ -1,10 +1,10 @@
 import asyncio
 import socket
+from contextlib import suppress
 
 from openfreebuds.driver.generic import FbDriverGeneric
 from openfreebuds.exceptions import FbStartupError
 from openfreebuds.utils.logger import create_logger
-from contextlib import suppress
 
 log = create_logger("FbDriverSppGeneric")
 
@@ -14,7 +14,6 @@ class FbDriverSppGeneric(FbDriverGeneric):
         super().__init__(address)
         self.__task_recv: asyncio.Task | None = None
 
-        self._spp_service_uuid: str = ""
         self._spp_service_port: int = 16
         self._spp_connect_delay: int = 0
         self._writer: asyncio.StreamWriter | None = None
@@ -31,7 +30,7 @@ class FbDriverSppGeneric(FbDriverGeneric):
             sock.settimeout(2)
             await asyncio.sleep(self._spp_connect_delay)
 
-            sock.connect(await self.__get_sdp_result())
+            sock.connect((self.device_address, self._spp_service_port))
             reader, writer = await asyncio.open_connection(sock=sock)
         except (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError, OSError, ValueError):
             log.exception("Driver startup failed")
@@ -66,23 +65,3 @@ class FbDriverSppGeneric(FbDriverGeneric):
     async def _loop_recv(self, reader):
         log.debug(f"Init recv task with {reader}")
         await asyncio.sleep(60)
-
-    async def __get_sdp_result(self):
-        try:
-            import bluetooth
-            service_data = bluetooth.find_service(address=self.device_address,
-                                                  uuid=self._spp_service_uuid)
-
-            assert len(service_data) > 0
-            host = service_data[0]['host']
-            port = service_data[0]['port']
-            log.info(f"Found serial port {host}:{port} from UUID")
-        except (AssertionError, NameError, ImportError, ValueError) as e:
-            log.error(f"\n\nCan't fetch service info from device, err: {e}\n"
-                      "Looks like pybluez didn't installed or didn't work as expected.\n"
-                      f"Using built-in port number {self._spp_service_port}\n  ")
-
-            host = self.device_address
-            port = self._spp_service_port
-
-        return host, port

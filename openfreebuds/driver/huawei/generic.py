@@ -20,7 +20,7 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
         self.__pending_responses: dict[bytes, FbHuaweiResponseReceiver] = {}
         self.__on_package_handlers: dict[bytes, FbDriverHandlerHuawei] = {}
 
-        self._spp_service_uuid = "00001101-0000-1000-8000-00805f9b34fb"
+        # self._spp_service_uuid = "00001101-0000-1000-8000-00805f9b34fb"
 
         self.handlers: list[FbDriverHandlerHuawei] = []
 

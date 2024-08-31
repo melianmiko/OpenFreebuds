@@ -627,20 +627,6 @@ files = [
 test = ["enum34", "ipaddress", "mock", "pywin32", "wmi"]
 
 [[package]]
-name = "pybluez-edge"
-version = "2022.12.6"
-description = "Bluetooth Python extension module"
-optional = false
-python-versions = ">=3.10"
-files = [
-    {file = "pybluez-edge-2022.12.6.tar.gz", hash = "sha256:fd5bd20f8cc856cc3deb5e9f11c96307a581deb8dd651355172a9cb8398d0a29"},
-    {file = "pybluez_edge-2022.12.6-cp311-cp311-win_amd64.whl", hash = "sha256:5fb63a31c3db82a7670f62208be3bbed08324451e41be05fb4906c03c3da7ea2"},
-]
-
-[package.extras]
-ble = ["gattlib"]
-
-[[package]]
 name = "pycairo"
 version = "1.26.1"
 description = "Python interface for cairo"
@@ -1187,4 +1173,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "760547bcae95ed8ed99525a52b737502b302cf36abc77ab26174e73f19b23b1a"
+content-hash = "26a5b37e67265db40ea5be2659fa1c435f4d46d6d83aef0b9ec87e64a0d789f9"
