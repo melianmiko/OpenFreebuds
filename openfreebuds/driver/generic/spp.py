@@ -19,6 +19,12 @@ class FbDriverSppGeneric(FbDriverGeneric):
         self._spp_connect_delay: int = 0
         self._writer: asyncio.StreamWriter | None = None
 
+    async def get_health_report(self):
+        return {
+            **(await super().get_health_report()),
+            "recv_task_alive": not self.__task_recv.done(),
+        }
+
     async def start(self):
         try:
             sock = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)

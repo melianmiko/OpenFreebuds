@@ -20,6 +20,9 @@ class IOpenFreebuds(Subscription):
     async def start(self, device_name: str, device_address: str):
         raise NotImplementedError("Not implemented")
 
+    async def get_health_report(self):
+        raise NotImplementedError("Not implemented")
+
     async def destroy(self):
         raise NotImplementedError("Not implemented")
 

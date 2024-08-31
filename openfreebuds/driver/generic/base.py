@@ -31,6 +31,14 @@ class FbDriverGeneric:
     async def stop(self):
         self.__set_prop_handlers = {}
 
+    async def get_health_report(self):
+        return {
+            "started": self.started,
+            "address": self.device_address,
+            "store_content": self._store,
+            "available_store_handlers": list(self.__set_prop_handlers.keys())
+        }
+
     def healthy(self):
         return self.started
 

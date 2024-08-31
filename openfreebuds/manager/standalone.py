@@ -33,6 +33,19 @@ class OpenFreebuds(IOpenFreebuds):
         return self._state
 
     @rpc
+    async def get_health_report(self):
+        driver_report = {} if not self._driver else await self._driver.get_health_report()
+
+        return {
+            **driver_report,
+            "device_name": self._device_tags[0],
+            "paused": self._paused,
+            "state": self._state,
+            "server_task_alive": not self.server_task.done(),
+            "main_task_alive": not self._task.done()
+        }
+
+    @rpc
     async def start(self, device_name: str, device_address: str):
         await self.stop()
         if device_name not in DEVICE_TO_DRIVER_MAP:

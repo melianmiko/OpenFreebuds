@@ -28,6 +28,14 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
         await super().start()
         await self._start_all_handlers()
 
+    async def get_health_report(self):
+        return {
+            **(await super().get_health_report()),
+            "spp_port": self._spp_service_port,
+            "pending_responses_count": len(self.__pending_responses.values()),
+            "handlers": [h.get_report() for h in self.handlers],
+        }
+
     async def _start_all_handlers(self):
         # Bind all handlers
         for handler in self.handlers:
@@ -133,6 +141,14 @@ class FbDriverHandlerHuawei(FbDriverHandlerGeneric):
     init_timeout: int = 3
     init_attempt: int = 0
     init_attempt_max: int = 5
+    init_success: bool = False
+
+    def get_report(self):
+        return {
+            "id": self.handler_id,
+            "success": self.init_success,
+            "attempts": self.init_attempt,
+        }
 
     async def init(self):
         self.init_attempt = 0
@@ -150,7 +166,8 @@ class FbDriverHandlerHuawei(FbDriverHandlerGeneric):
                 log.exception(f'Init of "{self.handler_id}" failed, attempt={self.init_attempt}')
                 self.init_attempt += 1
 
-        if self.init_attempt == self.init_attempt_max:
+        self.init_success = self.init_attempt != self.init_attempt_max
+        if not self.init_success:
             log.exception(f'Can\'t initialize "{self.handler_id}". Skipping.')
 
     async def on_init(self):

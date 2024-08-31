@@ -30,6 +30,10 @@ class OpenFreebudsCmd(PromptToolkitCmd):
     async def do_set(self, group, prop, value):
         await self.manager.set_property(group, prop, value)
 
+    async def do_core_health(self):
+        report = await self.manager.get_health_report()
+        print(json.dumps(report, indent=4, ensure_ascii=False))
+
     async def do_status(self):
         state = await self.manager.get_state()
         print("State:", state)
