@@ -5,6 +5,7 @@ from qasync import asyncSlot
 
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.addons.device_auto_select import OfbQtDeviceAutoSelect
+from openfreebuds_qt.addons.report_tool import OfbQtReportTool
 from openfreebuds_qt.app.dialog.manual_connect import OfbQtManualConnectDialog
 from openfreebuds_qt.app.helper.setting_tab_helper import OfbQtSettingsTabHelper
 from openfreebuds_qt.app.main import OfbQtSettingsUi
@@ -45,7 +46,9 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbQtContext):
 
     # noinspection PyUnresolvedReferences
     def _fill_extras_menu(self):
+        self.extra_menu.addAction(self.tr("Bugreport...")).triggered.connect(self.on_bugreport)
         self.extra_menu.addAction(self.tr("Temporary replace device")).triggered.connect(self.temporary_change_device)
+        self.extra_menu.addSeparator()
         self.extra_menu.addAction(self.tr("Close application")).triggered.connect(self.on_exit)
 
     async def exit(self, ret_code: int = 0):
@@ -91,6 +94,10 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbQtContext):
     def retranslate_ui(self):
         self.retranslateUi(self)
         self.settings.retranslate_ui()
+
+    @asyncSlot()
+    async def on_bugreport(self):
+        await OfbQtReportTool(self).create_and_show()
 
     @asyncSlot()
     async def on_exit(self):

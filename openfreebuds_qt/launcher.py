@@ -9,6 +9,7 @@ from openfreebuds import OfbEventKind, IOpenFreebuds
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.async_qt_loop import qt_app_entrypoint
 from openfreebuds_qt.config.config_lock import ConfigLock
+from openfreebuds_qt.constants import IGNORED_LOG_TAGS
 from openfreebuds_qt.main import OfbQtMainWindow
 from openfreebuds_qt.version_info import VERSION
 
@@ -23,6 +24,9 @@ parser = ArgumentParser(
 parser.add_argument("-v", "--verbose",
                     action="store_true",
                     help="Verbose log output")
+parser.add_argument("-l", "--dont-ignore-logs",
+                    action="store_true",
+                    help="Don't exclude third-party libraries logs")
 parser.add_argument('-c', '--client',
                     action="store_true",
                     help="Client-mode, allows to start multiple app instances from the same user")
@@ -35,7 +39,12 @@ parser.add_argument("shortcut",
 async def main(app: QApplication, window: OfbQtMainWindow):
     try:
         args = parser.parse_args()
+
         logging.basicConfig(level=logging.DEBUG if args.verbose else logging.WARN)
+        if not args.dont_ignore_logs:
+            for tag in IGNORED_LOG_TAGS:
+                logging.getLogger(tag).disabled = True
+
         ofb = await openfreebuds.create()
 
         window.ofb = ofb

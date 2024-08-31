@@ -4,6 +4,7 @@ from PyQt6.QtGui import QAction
 from qasync import asyncSlot
 
 from openfreebuds import IOpenFreebuds, OfbEventKind
+from openfreebuds_qt.addons.report_tool import OfbQtReportTool
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.generic import IOfbQtContext
 from openfreebuds_qt.i18n_mappings import ANC_MODE_MAPPINGS, BATTERY_PROP_MAPPINGS
@@ -58,6 +59,8 @@ class OfbQtTrayMenu(OfbTrayMenu):
         self.footer_section = self.new_section()
         self.settings_action = self.add_item(self.tr("Settings..."),
                                              callback=self.do_settings)
+        self.settings_action = self.add_item(self.tr("Bugreport..."),
+                                             callback=self.do_bugreport)
         self.leave_action = self.add_item(self.tr("Leave application"),
                                           callback=self.do_exit)
 
@@ -141,6 +144,10 @@ class OfbQtTrayMenu(OfbTrayMenu):
         if self.ctx.isVisible():
             self.ctx.activateWindow()
         self.ctx.show()
+
+    @asyncSlot()
+    async def do_bugreport(self):
+        await OfbQtReportTool(self.ctx).create_and_show()
 
     @asyncSlot()
     async def do_exit(self):

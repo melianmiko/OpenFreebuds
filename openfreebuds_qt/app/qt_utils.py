@@ -6,6 +6,7 @@ from contextlib import contextmanager, asynccontextmanager, suppress
 from PyQt6.QtWidgets import QComboBox, QWidget, QMessageBox
 
 from openfreebuds.utils.logger import create_logger
+from openfreebuds_qt.addons.report_tool import OfbQtReportTool
 from openfreebuds_qt.app.dialog.error_dialog import OfbQtErrorDialog
 from openfreebuds_qt.generic import IOfbQtContext
 
@@ -13,23 +14,22 @@ log = create_logger("OfbQtUtils")
 
 
 @asynccontextmanager
-async def qt_error_handler(identifier, root: IOfbQtContext):
+async def qt_error_handler(identifier, ctx: IOfbQtContext):
     # noinspection PyBroadException
     try:
-        if getattr(root, "exit", None) is None:
+        if getattr(ctx, "exit", None) is None:
             raise Exception(f"QtErrorHandler for {identifier} missing root context link")
         yield
     except Exception:
         log.exception(f"Got exception for {identifier}")
 
         exception = traceback.format_exc()
-        await OfbQtErrorDialog(root).get_user_response(exception)
-
-        # TODO: Bugreport
+        await OfbQtErrorDialog(ctx).get_user_response(exception)
+        await OfbQtReportTool(ctx).create_and_show()
 
         with suppress(Exception):
             async with asyncio.Timeout(5):
-                await root.exit(1)
+                await ctx.exit(1)
 
         # Kill process
         # noinspection PyProtectedMember,PyUnresolvedReferences

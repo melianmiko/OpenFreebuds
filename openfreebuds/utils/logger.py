@@ -9,11 +9,11 @@ handler.setLevel(logging.DEBUG)
 handler.setFormatter(logging.Formatter(log_format))
 
 
-def get_full():
+def get_full_log():
     return _full_log.getvalue()
 
 
 def create_logger(tag: str):
     logger = logging.getLogger(tag)
-    # logger.addHandler(handler)
+    logger.addHandler(handler)
     return logger

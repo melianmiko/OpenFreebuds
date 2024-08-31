@@ -78,14 +78,14 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
         if not self._writer:
             raise FbNotReadyError("Can't send package before SPP start")
 
-        log.debug(f"TX {pkg.to_bytes().hex()}\n{pkg}")
+        log.debug(f"TX {pkg}")
         self._writer.write(pkg.to_bytes())
         await self._writer.drain()
 
     async def _handle_raw_pkg(self, pkg):
         try:
             pkg = HuaweiSppPackage.from_bytes(pkg)
-            log.debug(f"RX {pkg.to_bytes().hex()}\n{pkg}")
+            log.debug(f"RX {pkg}")
         except (AssertionError, FbPackageChecksumError):
             log.exception(f"Got non-parsable package {pkg.hex()}, ignoring")
             return
@@ -96,7 +96,7 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
         elif pkg.command_id in self.__on_package_handlers:
             await self.__on_package_handlers[pkg.command_id].on_package(pkg)
         else:
-            log.info(f"Got unsupported package\n{str(pkg)}")
+            log.warn(f"Got unsupported package\n{str(pkg)}")
 
     async def _loop_recv(self, reader: asyncio.StreamReader):
         while True:
@@ -155,15 +155,13 @@ class FbDriverHandlerHuawei(FbDriverHandlerGeneric):
         while self.init_attempt < self.init_attempt_max:
             # noinspection PyBroadException
             try:
-                log.debug(f'Initializing {self.handler_id}...')
+                log.debug(f'Init {self.handler_id}, attempt={self.init_attempt}...')
                 async with asyncio.timeout(self.init_timeout):
                     await self.on_init()
                 break
             except TimeoutError:
-                log.debug(f'Init of "{self.handler_id}" timed out, attempt={self.init_attempt}')
                 self.init_attempt += 1
             except Exception:
-                log.exception(f'Init of "{self.handler_id}" failed, attempt={self.init_attempt}')
                 self.init_attempt += 1
 
         self.init_success = self.init_attempt != self.init_attempt_max

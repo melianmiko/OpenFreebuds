@@ -9,7 +9,7 @@ from openfreebuds.driver.generic import FbDriverGeneric
 from openfreebuds.exceptions import FbNoDeviceError, FbDriverError, FbNotSupportedError
 from openfreebuds.manager.generic import IOpenFreebuds
 from openfreebuds.shortcuts import OpenFreebudsShortcuts
-from openfreebuds.utils.logger import create_logger
+from openfreebuds.utils.logger import create_logger, get_full_log
 from openfreebuds.utils.stupid_rpc import rpc
 
 log = create_logger("OpenFreebuds")
@@ -31,6 +31,10 @@ class OpenFreebuds(IOpenFreebuds):
     @rpc
     async def get_state(self) -> int:
         return self._state
+
+    @rpc
+    async def get_logs(self) -> str:
+        return get_full_log()
 
     @rpc
     async def get_health_report(self):
