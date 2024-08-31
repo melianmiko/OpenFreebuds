@@ -344,9 +344,9 @@
   </connection>
   <connection>
    <sender>current_device_prefered</sender>
-   <signal>stateChanged(int)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>OfbQtDualConnectModule</receiver>
-   <slot>on_set_preferred(int)</slot>
+   <slot>on_set_preferred(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>449</x>
@@ -425,7 +425,7 @@
  </connections>
  <slots>
   <slot>on_connect_toggle()</slot>
-  <slot>on_set_preferred(int)</slot>
+  <slot>on_set_preferred(bool)</slot>
   <slot>on_device_select(int)</slot>
   <slot>on_refresh()</slot>
   <slot>on_unpair()</slot>

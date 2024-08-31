@@ -1,4 +1,5 @@
 from .action_dual_tap import FbHuaweiActionDoubleTapHandler
+from .action_triple_tap import FbHuaweiActionTripleTapHandler
 from .action_long_tap import FbHuaweiActionLongTapHandler
 from .action_long_tap import FbHuaweiActionLongTapHandler
 from .action_long_tap_split import FbHuaweiActionLongTapSplitHandler

@@ -111,7 +111,6 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
             current_id = f"{row.settings_prefix}_left" if row.is_separate else row.settings_prefix
             right_id = f"{row.settings_prefix}_right"
             if current_id not in actions or options_id not in actions:
-                log.info(f"Row {row.settings_prefix} unavailable")
                 row.set_visible(False)
                 continue
 
@@ -130,14 +129,12 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
         async def _on_change_left(index: int):
             ident = f"{row.settings_prefix}_left" if row.is_separate else row.settings_prefix
             value = row.options[index]
-            log.info(f"SET {ident} -> {value}")
             await self.ofb.set_property("action", ident, value)
 
         @asyncSlot(int)
         async def _on_change_right(index: int):
             ident = f"{row.settings_prefix}_right"
             value = row.options[index]
-            log.info(f"SET {ident} -> {value}")
             await self.ofb.set_property("action", ident, value)
 
         row.left_combo.currentIndexChanged[int].connect(_on_change_left)

@@ -8,6 +8,10 @@ class HuaweiSppPackage:
         return HuaweiSppPackage(cmd=cmd, resp=cmd, parameters=parameters)
 
     @staticmethod
+    def change_rq_nowait(cmd: bytes, parameters: list[tuple[int, bytes | int]]):
+        return HuaweiSppPackage(cmd=cmd, parameters=parameters)
+
+    @staticmethod
     def read_rq(cmd: bytes, parameters: list[int]):
         return HuaweiSppPackage(cmd=cmd,
                                 resp=cmd,

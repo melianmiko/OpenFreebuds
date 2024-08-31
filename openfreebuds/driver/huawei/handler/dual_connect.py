@@ -9,6 +9,14 @@ from openfreebuds.utils.logger import create_logger
 log = create_logger("FbHuaweiDualConnectHandler")
 
 
+class _CommandID:
+    CONNECT = 1
+    DISCONNECT = 2
+    UNPAIR = 3
+    ENABLE_AUTO = 4
+    DISABLE_AUTO = 5
+
+
 class _PendingDeviceRow:
     def __init__(self, package: HuaweiSppPackage):
         self.name = package.find_param(9).decode("utf8", "ignore")
@@ -39,13 +47,14 @@ class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
     commands = [b"\x2b\x31", b"\x2b\x36"]
     ignore_commands = [b"\x2b\x32", b"\x2b\x33"]
     init_timeout = 1
-    init_attempt_max = 10
+    init_attempt_max = 6
 
     def __init__(self):
         super().__init__()
 
         self._on_ready: Optional[asyncio.Event] = None
         self._pending_devices: dict[int, _PendingDeviceRow] = {}
+        self._devices_count: int = 999
         self._task_re_init: Optional[asyncio.Task] = None
 
     async def on_init(self):
@@ -54,6 +63,7 @@ class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
 
         if self.init_attempt == 0:
             self._pending_devices = {}
+            self._devices_count = 999
 
         # Ask for enumerating
         try:
@@ -61,7 +71,7 @@ class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
             await self.driver.send_package(HuaweiSppPackage(b"\x2b\x31", [
                 (1, b""),
             ]))
-            log.info("Start enumerating devices...")
+            # log.info("Start enumerating devices...")
             await self._on_ready.wait()
         finally:
             self._on_ready = None
@@ -79,22 +89,26 @@ class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
         if len(mac_addr) < 12:
             return
 
-        dev_count = int.from_bytes(package.find_param(2), byteorder="big", signed=True)
         dev_index = int.from_bytes(package.find_param(3), byteorder="big", signed=True)
+        self._devices_count = int.from_bytes(package.find_param(2), byteorder="big", signed=True)
         self._pending_devices[dev_index] = _PendingDeviceRow(package)
-        log.info(f"Ready {dev_index}")
 
-        if dev_count == len(self._pending_devices.values()) and self._on_ready:
+        is_ready = (self._devices_count == len(self._pending_devices.values())
+                    or self.init_attempt == self.init_attempt_max - 1)
+
+        if is_ready and self._on_ready:
             self._on_ready.set()
 
     async def set_property(self, group: str, payload: str, value: str):
         address, prop, *_ = *payload.split(":"), "", ""
         if prop == "auto_connect":
-            await self._set_auto_connect(address, value == "true")
+            cmd = _CommandID.ENABLE_AUTO if value == "true" else _CommandID.DISABLE_AUTO
+            await self._exec_command(cmd, address)
         elif prop == "connected":
-            await self._set_connected(address, value == "true")
+            cmd = _CommandID.CONNECT if value == "true" else _CommandID.DISCONNECT
+            await self._exec_command(cmd, address)
         elif prop == "name" and value == "":
-            await self._unpair(address)
+            await self._exec_command(_CommandID.UNPAIR, address)
         elif payload == "preferred_device":
             await self._set_preferred(value)
         elif payload == "refresh":
@@ -109,7 +123,9 @@ class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
         devices = {}
         preferred = "0" * 12
 
-        for index in range(len(self._pending_devices.keys())):
+        for index in range(self._devices_count):
+            if index not in self._pending_devices:
+                continue
             device = self._pending_devices[index]
             devices[device.mac] = str(device)
             if device.preferred:
@@ -119,25 +135,14 @@ class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
         await self.driver.put_property("config", "preferred_device", preferred)
 
     async def _set_preferred(self, mac_addr):
-        return await self.driver.send_package(HuaweiSppPackage.change_rq(b"\x2b\x32", [
+        return await self.driver.send_package(HuaweiSppPackage.change_rq_nowait(b"\x2b\x32", [
             (1, bytes.fromhex(mac_addr)),
         ]))
 
-    async def _set_auto_connect(self, mac_addr: str, value: bool):
-        p_type = 4 if value else 5
-        return await self.driver.send_package(HuaweiSppPackage.change_rq(b"\x2b\x33", [
-            (p_type, bytes.fromhex(mac_addr)),
-        ]))
-
-    async def _set_connected(self, mac_addr: str, value: bool):
-        p_type = 1 if value else 2
-        return await self.driver.send_package(HuaweiSppPackage.change_rq(b"\x2b\x33", [
-            (p_type, bytes.fromhex(mac_addr)),
-        ]))
-
-    async def _unpair(self, mac_addr: str):
-        return await self.driver.send_package(HuaweiSppPackage.change_rq(b"\x2b\x33", [
-            (3, bytes.fromhex(mac_addr)),
+    async def _exec_command(self, cmd_id: int, address: str):
+        log.debug(f"Executing DC manage command {cmd_id} for {address}")
+        return await self.driver.send_package(HuaweiSppPackage.change_rq_nowait(b"\x2b\x33", [
+            (cmd_id, bytes.fromhex(address)),
         ]))
 
 
@@ -157,7 +162,6 @@ class FbHuaweiDualConnectToggleHandler(FbDriverHandlerHuawei):
         await self.on_package(resp)
 
     async def set_property(self, group: str, prop: str, value):
-        log.info(f"Set {value}")
         pkg = HuaweiSppPackage.change_rq(b"\x2b\x2e", [
             (1, 1 if value == "true" else 0),
         ])

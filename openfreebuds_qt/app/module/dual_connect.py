@@ -1,8 +1,9 @@
 import json
 
 from PIL import ImageQt
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QWidget, QListWidgetItem, QMessageBox
+from PyQt6.QtWidgets import QWidget, QListWidgetItem, QMessageBox, QCheckBox
 from qasync import asyncSlot
 
 from openfreebuds import IOpenFreebuds, OfbEventKind
@@ -83,16 +84,23 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
                 await self.ofb.set_property(
                     "dual_connect_devices",
                     f"{addr}:connected",
-                    json.dumps(data["connected"])
+                    json.dumps(not data["connected"])
                 )
             except Exception:
                 log.exception(f"Trying to switch connection state of {addr}")
                 self.button_toggle_connect.setEnabled(True)
 
-    @asyncSlot(int)
-    async def on_set_preferred(self, state: int):
-        # TODO: Set preferred
-        pass
+    def _update_current_device_view(self, addr: str, data: dict):
+        self.current_device_name.setText(data['name'])
+        self.current_device_address.setText(format_mac_address(addr))
+        with blocked_signals(self.current_device_prefered):
+            self.current_device_prefered.setChecked(data["preferred"])
+        self.button_toggle_connect.setText(self.tr("Disconnect" if data["connected"] else "Connect"))
+
+    @asyncSlot(bool)
+    async def on_set_preferred(self, state: bool):
+        addr = "000000000000" if not state else self._all_data[self._current_index][0]
+        await self.ofb.set_property("config", "preferred_device", addr)
 
     @asyncSlot(int)
     async def on_device_select(self, index: int):
@@ -102,13 +110,6 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
         addr, data = self._all_data[index]
         self._current_index = index
         self._update_current_device_view(addr, data)
-
-    def _update_current_device_view(self, addr: str, data: dict):
-        self.current_device_name.setText(data['name'])
-        self.current_device_address.setText(format_mac_address(addr))
-        with blocked_signals(self.current_device_prefered):
-            self.current_device_prefered.setChecked(data["preferred"])
-        self.button_toggle_connect.setText(self.tr("Disconnect" if data["connected"] else "Connect"))
 
     @asyncSlot()
     async def on_refresh(self):
@@ -123,7 +124,7 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
     @asyncSlot()
     async def on_unpair(self):
         async with qt_error_handler("OfbQtDualConnectModule_Unpair", self.ctx):
-            _, data = self._all_data[self._current_index]
+            addr, data = self._all_data[self._current_index]
             box = QMessageBox(
                 QMessageBox.Icon.Question,
                 self.tr("Unpair device"),
@@ -133,5 +134,4 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
             )
             box.setModal(True)
             if await exec_msg_box_async(box) == QMessageBox.StandardButton.Ok:
-                # TODO: Unpair
-                pass
+                await self.ofb.set_property("dual_connect_devices", f"{addr}:name", "")
