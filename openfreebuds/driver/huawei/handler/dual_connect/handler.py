@@ -1,44 +1,16 @@
 import asyncio
-import json
 from typing import Optional
 
-from openfreebuds.driver.huawei.generic import FbDriverHandlerHuawei
+from openfreebuds.driver.huawei.driver.generic import OfbDriverHandlerHuawei
+from openfreebuds.driver.huawei.handler.dual_connect.constants import OfbHuaweiDualConnCommand
+from openfreebuds.driver.huawei.handler.dual_connect.models import OfbHuaweiDualConnectRow
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 from openfreebuds.utils.logger import create_logger
 
-log = create_logger("FbHuaweiDualConnectHandler")
+log = create_logger("OfbHuaweiDualConnectHandler")
 
 
-class _CommandID:
-    CONNECT = 1
-    DISCONNECT = 2
-    UNPAIR = 3
-    ENABLE_AUTO = 4
-    DISABLE_AUTO = 5
-
-
-class _PendingDeviceRow:
-    def __init__(self, package: HuaweiSppPackage):
-        self.name = package.find_param(9).decode("utf8", "ignore")
-        self.auto_connect = package.find_param(8)[0] == 1
-        self.preferred = package.find_param(7)[0] == 1
-        self.mac = package.find_param(4).hex()
-
-        conn_state = package.find_param(5)[0]
-        self.connected = conn_state > 0
-        self.playing = conn_state == 9
-
-    def __str__(self):
-        return json.dumps({
-            "name": self.name,
-            "auto_connect": self.auto_connect,
-            "preferred": self.preferred,
-            "connected": self.connected,
-            "playing": self.playing,
-        })
-
-
-class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
+class OfbHuaweiDualConnectHandler(OfbDriverHandlerHuawei):
     handler_id = "dual_connect_devices"
     properties = [
         ("dual_connect_devices", ""),
@@ -53,7 +25,7 @@ class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
         super().__init__()
 
         self._on_ready: Optional[asyncio.Event] = None
-        self._pending_devices: dict[int, _PendingDeviceRow] = {}
+        self._pending_devices: dict[int, OfbHuaweiDualConnectRow] = {}
         self._devices_count: int = 999
         self._task_re_init: Optional[asyncio.Task] = None
 
@@ -91,7 +63,7 @@ class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
 
         dev_index = int.from_bytes(package.find_param(3), byteorder="big", signed=True)
         self._devices_count = int.from_bytes(package.find_param(2), byteorder="big", signed=True)
-        self._pending_devices[dev_index] = _PendingDeviceRow(package)
+        self._pending_devices[dev_index] = OfbHuaweiDualConnectRow(package)
 
         is_ready = (self._devices_count == len(self._pending_devices.values())
                     or self.init_attempt == self.init_attempt_max - 1)
@@ -102,13 +74,13 @@ class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
     async def set_property(self, group: str, payload: str, value: str):
         address, prop, *_ = *payload.split(":"), "", ""
         if prop == "auto_connect":
-            cmd = _CommandID.ENABLE_AUTO if value == "true" else _CommandID.DISABLE_AUTO
+            cmd = OfbHuaweiDualConnCommand.ENABLE_AUTO if value == "true" else OfbHuaweiDualConnCommand.DISABLE_AUTO
             await self._exec_command(cmd, address)
         elif prop == "connected":
-            cmd = _CommandID.CONNECT if value == "true" else _CommandID.DISCONNECT
+            cmd = OfbHuaweiDualConnCommand.CONNECT if value == "true" else OfbHuaweiDualConnCommand.DISCONNECT
             await self._exec_command(cmd, address)
         elif prop == "name" and value == "":
-            await self._exec_command(_CommandID.UNPAIR, address)
+            await self._exec_command(OfbHuaweiDualConnCommand.UNPAIR, address)
         elif payload == "preferred_device":
             await self._set_preferred(value)
         elif payload == "refresh":
@@ -144,33 +116,3 @@ class FbHuaweiDualConnectHandler(FbDriverHandlerHuawei):
         return await self.driver.send_package(HuaweiSppPackage.change_rq_nowait(b"\x2b\x33", [
             (cmd_id, bytes.fromhex(address)),
         ]))
-
-
-class FbHuaweiDualConnectToggleHandler(FbDriverHandlerHuawei):
-    """
-    Enable/disable multi-device support (pro 3, 5i)
-    """
-    handler_id = "dual_connect_toggle"
-    commands = [b"\x2b\x2f"]
-    ignore_commands = [b"\x2b\x2e"]
-    properties = [
-        ("config", "dual_connect"),
-    ]
-
-    async def on_init(self):
-        resp = await self.driver.send_package(HuaweiSppPackage.read_rq(b"\x2b\x2f", [1]))
-        await self.on_package(resp)
-
-    async def set_property(self, group: str, prop: str, value):
-        pkg = HuaweiSppPackage.change_rq(b"\x2b\x2e", [
-            (1, 1 if value == "true" else 0),
-        ])
-        await self.driver.send_package(pkg)
-        await self.init()
-
-    async def on_package(self, package: HuaweiSppPackage):
-        value = package.find_param(1)
-
-        if len(value) == 1:
-            value = int(value[0])
-            await self.driver.put_property("config", "dual_connect", "true" if value == 1 else "false")

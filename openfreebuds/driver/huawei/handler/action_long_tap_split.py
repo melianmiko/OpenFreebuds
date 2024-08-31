@@ -1,11 +1,11 @@
 from openfreebuds.driver.huawei.constants import CMD_LONG_TAP_SPLIT_READ_BASE, CMD_LONG_TAP_SPLIT_READ_ANC, \
     CMD_LONG_TAP_SPLIT_WRITE_BASE, CMD_LONG_TAP_SPLIT_WRITE_ANC
-from openfreebuds.driver.huawei.generic import FbDriverHandlerHuawei
+from openfreebuds.driver.huawei.driver.generic import OfbDriverHandlerHuawei
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 from openfreebuds.utils import reverse_dict
 
 
-class FbHuaweiActionLongTapSplitHandler(FbDriverHandlerHuawei):
+class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
     """
     Long tap ANC mode cycle setting.
 

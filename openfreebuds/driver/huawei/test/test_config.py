@@ -1,7 +1,7 @@
 import pytest
 
-from openfreebuds.driver.huawei.fixtures import FbDriverHuaweiGenericFixture
-from openfreebuds.driver.huawei.handler import FbHuaweiConfigAutoPauseHandler
+from openfreebuds.driver.huawei.driver.debug import FbDriverHuaweiGenericFixture
+from openfreebuds.driver.huawei.handler import OfbHuaweiConfigAutoPauseHandler
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 
 
@@ -14,7 +14,7 @@ async def test_auto_pause():
 
     driver = FbDriverHuaweiGenericFixture(
         handlers=[
-            FbHuaweiConfigAutoPauseHandler()
+            OfbHuaweiConfigAutoPauseHandler()
         ],
         package_response_model={
             get_auto_pause_rq: [get_auto_pause_resp],

@@ -1,18 +1,18 @@
-from .action_dual_tap import FbHuaweiActionDoubleTapHandler
-from .action_triple_tap import FbHuaweiActionTripleTapHandler
-from .action_long_tap import FbHuaweiActionLongTapHandler
-from .action_long_tap import FbHuaweiActionLongTapHandler
-from .action_long_tap_split import FbHuaweiActionLongTapSplitHandler
-from .action_power_button import FbHuaweiActionsPowerButtonHandler
-from .action_swipe_gesture import FbHuaweiActionSwipeGestureHandler
-from .anc import FbHuaweiAncHandler, FbHuaweiAncLegacyChangeHandler
-from .battery import FbHuaweiBatteryHandler
-from .config_auto_pause import FbHuaweiConfigAutoPauseHandler
-from .config_equalizer_preset import FbHuaweiEqualizerPresetHandler
-from .config_sound_quality_preference import FnHuaweiSoundQualityPreferenceHandler
-from .dual_connect import FbHuaweiDualConnectHandler, FbHuaweiDualConnectToggleHandler
-from .info import FbHuaweiInfoHandler
-from .logs import FbHuaweiLogsHandler
-from .service_language import FbHuaweiVoiceLanguageHandler
-from .state_in_ear import FbHuaweiStateInEarHandler
+from .action_dual_tap import OfbHuaweiActionDoubleTapHandler
+from .action_triple_tap import OfbHuaweiActionTripleTapHandler
+from .action_long_tap import OfbHuaweiActionLongTapHandler
+from .action_long_tap import OfbHuaweiActionLongTapHandler
+from .action_long_tap_split import OfbHuaweiActionLongTapSplitHandler
+from .action_power_button import OfbHuaweiActionsPowerButtonHandler
+from .action_swipe_gesture import OfbHuaweiActionSwipeGestureHandler
+from .anc import OfbHuaweiAncHandler, OfbHuaweiAncLegacyChangeHandler
+from .battery import OfbHuaweiBatteryHandler
+from .config_auto_pause import OfbHuaweiConfigAutoPauseHandler
+from .config_equalizer_preset import OfbHuaweiEqualizerPresetHandler
+from .config_sound_quality_preference import OfnHuaweiSoundQualityPreferenceHandler
+from .dual_connect import OfbHuaweiDualConnectHandler, OfbHuaweiDualConnectToggleHandler
+from .info import OfbHuaweiInfoHandler
+from .logs import OfbHuaweiLogsHandler
+from .service_language import OfbHuaweiVoiceLanguageHandler
+from .state_in_ear import OfbHuaweiStateInEarHandler
 from .low_latency import OfbHuaweiLowLatencyPreferenceHandler

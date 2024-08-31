@@ -3,7 +3,7 @@ import logging
 
 from aiohttp import ClientConnectorError
 
-from openfreebuds.manager.standalone import OpenFreebuds
+from openfreebuds.manager.standalone import OfbManager
 from openfreebuds.utils.logger import create_logger
 from openfreebuds.utils.stupid_rpc import test_online, run_rpc_server
 
@@ -15,7 +15,7 @@ async def create():
     """
     Create a new manager instance, or connect to exiting if it's already spawned
     """
-    instance = OpenFreebuds()
+    instance = OfbManager()
 
     try:
         await test_online()

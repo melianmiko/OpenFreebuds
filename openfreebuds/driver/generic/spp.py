@@ -2,14 +2,14 @@ import asyncio
 import socket
 from contextlib import suppress
 
-from openfreebuds.driver.generic import FbDriverGeneric
+from openfreebuds.driver.generic import OfbDriverGeneric
 from openfreebuds.exceptions import FbStartupError
 from openfreebuds.utils.logger import create_logger
 
-log = create_logger("FbDriverSppGeneric")
+log = create_logger("OfbDriverSppGeneric")
 
 
-class FbDriverSppGeneric(FbDriverGeneric):
+class OfbDriverSppGeneric(OfbDriverGeneric):
     def __init__(self, address):
         super().__init__(address)
         self.__task_recv: asyncio.Task | None = None

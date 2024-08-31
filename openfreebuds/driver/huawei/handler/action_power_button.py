@@ -1,10 +1,10 @@
 from openfreebuds.driver.huawei.constants import CMD_DUAL_TAP_READ, CMD_DUAL_TAP_WRITE
-from openfreebuds.driver.huawei.generic import FbDriverHandlerHuawei
+from openfreebuds.driver.huawei.driver.generic import OfbDriverHandlerHuawei
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 from openfreebuds.utils import reverse_dict
 
 
-class FbHuaweiActionsPowerButtonHandler(FbDriverHandlerHuawei):
+class OfbHuaweiActionsPowerButtonHandler(OfbDriverHandlerHuawei):
     """
     Power button double tap config handler
     """

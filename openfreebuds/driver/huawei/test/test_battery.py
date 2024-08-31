@@ -1,7 +1,7 @@
 import pytest
 
-from openfreebuds.driver.huawei.fixtures import FbDriverHuaweiGenericFixture
-from openfreebuds.driver.huawei.handler import FbHuaweiBatteryHandler
+from openfreebuds.driver.huawei.driver.debug import FbDriverHuaweiGenericFixture
+from openfreebuds.driver.huawei.handler import OfbHuaweiBatteryHandler
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 
 GET_BATTERY_RQ = bytes.fromhex("5a0009000108010002000300fbb9")
@@ -12,7 +12,7 @@ GET_BATTERY_RESP_LEGACY = bytes.fromhex("5a0009000108010140030100ed2e")
 async def create_driver(resp):
     driver = FbDriverHuaweiGenericFixture(
         handlers=[
-            FbHuaweiBatteryHandler()
+            OfbHuaweiBatteryHandler()
         ],
         package_response_model={
             GET_BATTERY_RQ: [resp]

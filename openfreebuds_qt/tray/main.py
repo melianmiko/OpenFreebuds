@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import QSystemTrayIcon
 from qasync import asyncSlot
 
 from openfreebuds import IOpenFreebuds, OfbEventKind
-from openfreebuds.exceptions import FbServerDeadError
+from openfreebuds.exceptions import OfbServerDeadError
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.app.qt_utils import qt_error_handler
@@ -126,12 +126,12 @@ class OfbTrayIcon(IOfbTrayIcon):
                         self.ctx.show()
                         self.ctx.activateWindow()
                     if event.kind_match(OfbEventKind.STATE_CHANGED) and args[0] == IOpenFreebuds.STATE_DESTROYED:
-                        raise FbServerDeadError("Server going to exit")
+                        raise OfbServerDeadError("Server going to exit")
                     if event.kind_match(OfbEventKind.STATE_CHANGED) or event.is_prop_group_in(UI_UPDATE_GROUPS):
                         await self._update_ui(event)
             except asyncio.CancelledError:
                 await self.ofb.unsubscribe(member_id)
-            except FbServerDeadError:
+            except OfbServerDeadError:
                 log.info("Server is dead, exiting now...")
                 self.ui_update_task = None
                 await self.ctx.exit(1)

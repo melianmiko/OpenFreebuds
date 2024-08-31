@@ -93,6 +93,9 @@ class OfbQtSettingsUi:
             member_id = await self.ctx.ofb.subscribe()
             log.info(f"Settings UI update loop started, member_id={member_id}")
 
+            # First-time force update everyting
+            await self._update_ui(OfbCoreEvent(None))
+
             try:
                 while True:
                     kind, *args = await self.ofb.wait_for_event(member_id)

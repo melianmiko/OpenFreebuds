@@ -5,19 +5,19 @@ from openfreebuds.exceptions import FbMissingHandlerError
 from openfreebuds.utils.event_bus import Subscription
 from openfreebuds.utils.logger import create_logger
 
-log = create_logger("FbDriverGeneric")
+log = create_logger("OfbDriverGeneric")
 
 
-class FbDriverHandlerGeneric:
+class OfbDriverHandlerGeneric:
     properties: list[tuple[str, str]] = []
 
     async def set_property(self, group: str, prop: str, value: str):
         raise NotImplementedError()
 
 
-class FbDriverGeneric:
+class OfbDriverGeneric:
     def __init__(self, address: str):
-        self.__set_prop_handlers: dict[str, FbDriverHandlerGeneric] = {}
+        self.__set_prop_handlers: dict[str, OfbDriverHandlerGeneric] = {}
 
         self._store: dict[str, dict[str, str]] = {}
 
@@ -42,7 +42,7 @@ class FbDriverGeneric:
     def healthy(self):
         return self.started
 
-    def _add_set_property_handler(self, handler: FbDriverHandlerGeneric):
+    def _add_set_property_handler(self, handler: OfbDriverHandlerGeneric):
         for group, prop in handler.properties:
             target_handler_id = f"{group}//{prop}"
             if target_handler_id in self.__set_prop_handlers:

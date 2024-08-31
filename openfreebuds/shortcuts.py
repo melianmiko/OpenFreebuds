@@ -1,12 +1,12 @@
 import openfreebuds_backend
-from openfreebuds.exceptions import FbAlreadyRunningError, FbSystemError, FbNotSupportedError
+from openfreebuds.exceptions import OfbAlreadyRunningError, OfbSystemError, OfbNotSupportedError
 from openfreebuds.manager.generic import IOpenFreebuds
 from openfreebuds.utils.logger import create_logger
 
-log = create_logger("OpenFreebudsShortcuts")
+log = create_logger("OfbShortcuts")
 
 
-class OpenFreebudsShortcuts:
+class OfbShortcuts:
     def __init__(self, ofb: IOpenFreebuds):
         self.ofb = ofb
 
@@ -25,7 +25,7 @@ class OpenFreebudsShortcuts:
             log.exception(f"Failed to execute name={name}, args={args}")
             raise e
 
-        raise FbNotSupportedError(f"Unknown shortcut {name}")
+        raise OfbNotSupportedError(f"Unknown shortcut {name}")
 
     async def list_available(self):
         return [x for x, y in [
@@ -48,23 +48,23 @@ class OpenFreebudsShortcuts:
         if state == IOpenFreebuds.STATE_DISCONNECTED:
             return True
         if state == IOpenFreebuds.STATE_PAUSED:
-            raise FbAlreadyRunningError()
+            raise OfbAlreadyRunningError()
 
         _, device_addr = await self.ofb.get_device_tags()
         log.info("Trigger device disconnect")
         async with self.ofb.locked_device():
             if not await openfreebuds_backend.bt_disconnect(device_addr):
-                raise FbSystemError()
+                raise OfbSystemError()
 
     async def do_connect(self):
         state = await self.ofb.get_state()
         if state == IOpenFreebuds.STATE_CONNECTED:
             return True
         if state == IOpenFreebuds.STATE_PAUSED:
-            raise FbAlreadyRunningError()
+            raise OfbAlreadyRunningError()
 
         log.info("Trigger device connect")
         _, device_addr = await self.ofb.get_device_tags()
         # async with self.ofb.locked_device():
         if not await openfreebuds_backend.bt_connect(device_addr):
-            raise FbSystemError()
+            raise OfbSystemError()

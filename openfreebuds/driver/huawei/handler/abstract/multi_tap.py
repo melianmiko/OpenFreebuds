@@ -1,11 +1,11 @@
 import struct
 
-from openfreebuds.driver.huawei.generic import FbDriverHandlerHuawei
+from openfreebuds.driver.huawei.driver.generic import OfbDriverHandlerHuawei
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 from openfreebuds.utils import reverse_dict
 
 
-class FbHuaweiAbstractTapActionHandler(FbDriverHandlerHuawei):
+class OfbHuaweiAbstractTapActionHandler(OfbDriverHandlerHuawei):
     def __init__(self, w_in_call=False):
         self.prop_prefix = ""
         self.cmd_read = b""

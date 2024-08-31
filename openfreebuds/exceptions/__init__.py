@@ -1,42 +1,42 @@
-class FbError(Exception):
+class OfbError(Exception):
     pass
 
 
-class FbNoDeviceError(FbError):
+class OfbNoDeviceError(OfbError):
     pass
 
 
-class FbPackageChecksumError(FbError):
+class OfbPackageChecksumError(OfbError):
     pass
 
 
-class FbNotSupportedError(FbError):
+class OfbNotSupportedError(OfbError):
     pass
 
 
-class FbDriverError(FbError):
+class OfbDriverError(OfbError):
     pass
 
 
-class FbNotReadyError(FbDriverError):
+class FbNotReadyError(OfbDriverError):
     pass
 
 
-class FbMissingHandlerError(FbDriverError):
+class FbMissingHandlerError(OfbDriverError):
     pass
 
 
-class FbStartupError(FbDriverError):
+class FbStartupError(OfbDriverError):
     pass
 
 
-class FbServerDeadError(FbError):
+class OfbServerDeadError(OfbError):
     pass
 
 
-class FbAlreadyRunningError(FbError):
+class OfbAlreadyRunningError(OfbError):
     pass
 
 
-class FbSystemError(FbError):
+class OfbSystemError(OfbError):
     pass

@@ -5,26 +5,26 @@ from contextlib import asynccontextmanager
 import openfreebuds_backend
 from openfreebuds.constants import OfbEventKind
 from openfreebuds.driver import DEVICE_TO_DRIVER_MAP
-from openfreebuds.driver.generic import FbDriverGeneric
-from openfreebuds.exceptions import FbNoDeviceError, FbDriverError, FbNotSupportedError
+from openfreebuds.driver.generic import OfbDriverGeneric
+from openfreebuds.exceptions import OfbNoDeviceError, OfbDriverError, OfbNotSupportedError
 from openfreebuds.manager.generic import IOpenFreebuds
-from openfreebuds.shortcuts import OpenFreebudsShortcuts
+from openfreebuds.shortcuts import OfbShortcuts
 from openfreebuds.utils.logger import create_logger, get_full_log
 from openfreebuds.utils.stupid_rpc import rpc
 
-log = create_logger("OpenFreebuds")
+log = create_logger("OfbManager")
 
 
-class OpenFreebuds(IOpenFreebuds):
+class OfbManager(IOpenFreebuds):
     def __init__(self):
         super().__init__()
-        self._driver = None  # type: FbDriverGeneric | None
+        self._driver = None  # type: OfbDriverGeneric | None
         self._task = None  # type: Task | None
         self._device_tags = "", ""  # type: tuple[str, str]
         self._paused = False
-        self._shortcuts = OpenFreebudsShortcuts(self)
+        self._shortcuts = OfbShortcuts(self)
 
-        self._state = OpenFreebuds.STATE_STOPPED  # type: int
+        self._state = IOpenFreebuds.STATE_STOPPED  # type: int
         self.role: str = "standalone"
         self.server_task: Task | None = None
 
@@ -53,7 +53,7 @@ class OpenFreebuds(IOpenFreebuds):
     async def start(self, device_name: str, device_address: str):
         await self.stop()
         if device_name not in DEVICE_TO_DRIVER_MAP:
-            raise FbNotSupportedError(f"Unknown device {device_name}")
+            raise OfbNotSupportedError(f"Unknown device {device_name}")
 
         self._driver = DEVICE_TO_DRIVER_MAP[device_name](device_address)
         self.include_subscription("inner_driver", self._driver.changes)
@@ -101,7 +101,7 @@ class OpenFreebuds(IOpenFreebuds):
     @rpc
     async def set_property(self, group: str, prop: str, value: str):
         if self._driver is None:
-            raise FbNoDeviceError("Attempt to write prop without device")
+            raise OfbNoDeviceError("Attempt to write prop without device")
         await self._driver.set_property(group, prop, value)
 
     @rpc
@@ -121,7 +121,7 @@ class OpenFreebuds(IOpenFreebuds):
     async def _set_paused(self, value: bool):
         log.debug(f"Core pause value={value}")
         self._paused = value
-        await self._set_state(OpenFreebuds.STATE_PAUSED)
+        await self._set_state(IOpenFreebuds.STATE_PAUSED)
         if value and self._driver.started:
             await self._driver.stop()
 
@@ -141,7 +141,7 @@ class OpenFreebuds(IOpenFreebuds):
                 continue
 
             if not await openfreebuds_backend.bt_is_connected(self._driver.device_address):
-                await self._set_state(OpenFreebuds.STATE_DISCONNECTED)
+                await self._set_state(IOpenFreebuds.STATE_DISCONNECTED)
                 if self._driver.started:
                     log.info("Device disconnected from OS")
                     await self._driver.stop()
@@ -150,15 +150,15 @@ class OpenFreebuds(IOpenFreebuds):
 
             if not self._driver.started:
                 log.info("Trying bring driver up...")
-                await self._set_state(OpenFreebuds.STATE_WAIT)
+                await self._set_state(IOpenFreebuds.STATE_WAIT)
                 try:
                     await self._driver.start()
-                    await self._set_state(OpenFreebuds.STATE_CONNECTED)
+                    await self._set_state(IOpenFreebuds.STATE_CONNECTED)
                     if last_device_address != self._device_tags[1]:
                         await self.send_message(OfbEventKind.DEVICE_CHANGED)
                         last_device_address = self._device_tags[1]
-                except FbDriverError:
-                    await self._set_state(OpenFreebuds.STATE_FAILED)
+                except OfbDriverError:
+                    await self._set_state(IOpenFreebuds.STATE_FAILED)
                     await asyncio.sleep(5)
                     continue
 
@@ -168,7 +168,7 @@ class OpenFreebuds(IOpenFreebuds):
 
             await asyncio.sleep(2)
 
-    async def _use_device_driver(self, driver: FbDriverGeneric):
+    async def _use_device_driver(self, driver: OfbDriverGeneric):
         if self._driver:
             await self._driver.stop()
         self._driver = driver

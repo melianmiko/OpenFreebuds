@@ -1,8 +1,8 @@
-from openfreebuds.driver.huawei.generic import FbDriverHuaweiGeneric
+from openfreebuds.driver.huawei.driver.generic import OfbDriverHuaweiGeneric
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 
 
-class FbDriverHuaweiGenericLoggable(FbDriverHuaweiGeneric):
+class OfbDriverHuaweiGenericLoggable(OfbDriverHuaweiGeneric):
     def __init__(self, address):
         super().__init__(address)
         self.package_log: list[tuple[str, bytes]] = []
@@ -16,7 +16,7 @@ class FbDriverHuaweiGenericLoggable(FbDriverHuaweiGeneric):
         self.package_log.append(("send", pkg.to_bytes()))
 
 
-class FbDriverHuaweiGenericFixture(FbDriverHuaweiGenericLoggable):
+class FbDriverHuaweiGenericFixture(OfbDriverHuaweiGenericLoggable):
     def __init__(self, handlers, package_response_model):
         super().__init__("")
         self.handlers = handlers

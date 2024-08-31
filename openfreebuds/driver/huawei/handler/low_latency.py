@@ -1,11 +1,11 @@
 import asyncio
 
 from openfreebuds.driver.huawei.constants import CMD_LOW_LATENCY
-from openfreebuds.driver.huawei.generic import FbDriverHandlerHuawei
+from openfreebuds.driver.huawei.driver.generic import OfbDriverHandlerHuawei
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 
 
-class OfbHuaweiLowLatencyPreferenceHandler(FbDriverHandlerHuawei):
+class OfbHuaweiLowLatencyPreferenceHandler(OfbDriverHandlerHuawei):
     """
     Low latency toggle handler
     """

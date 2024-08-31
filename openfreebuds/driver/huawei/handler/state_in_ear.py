@@ -1,8 +1,8 @@
-from openfreebuds.driver.huawei.generic import FbDriverHandlerHuawei
+from openfreebuds.driver.huawei.driver.generic import OfbDriverHandlerHuawei
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 
 
-class FbHuaweiStateInEarHandler(FbDriverHandlerHuawei):
+class OfbHuaweiStateInEarHandler(OfbDriverHandlerHuawei):
     """
     TWS in-ear state detection handler
     """

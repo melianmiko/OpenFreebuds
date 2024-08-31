@@ -1,10 +1,10 @@
 from contextlib import suppress
 
-from openfreebuds.driver.huawei.generic import FbDriverHandlerHuawei
+from openfreebuds.driver.huawei.driver.generic import OfbDriverHandlerHuawei
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 
 
-class FbHuaweiInfoHandler(FbDriverHandlerHuawei):
+class OfbHuaweiInfoHandler(OfbDriverHandlerHuawei):
     """
     Device info handler
     """

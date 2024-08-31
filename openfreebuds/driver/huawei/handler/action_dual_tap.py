@@ -1,8 +1,8 @@
 from openfreebuds.driver.huawei.constants import CMD_DUAL_TAP_READ, CMD_DUAL_TAP_WRITE
-from openfreebuds.driver.huawei.handler.abstract.multi_tap import FbHuaweiAbstractTapActionHandler
+from openfreebuds.driver.huawei.handler.abstract.multi_tap import OfbHuaweiAbstractTapActionHandler
 
 
-class FbHuaweiActionDoubleTapHandler(FbHuaweiAbstractTapActionHandler):
+class OfbHuaweiActionDoubleTapHandler(OfbHuaweiAbstractTapActionHandler):
     """
     Double tap config handler
     """

@@ -1,9 +1,9 @@
 import pytest
 
-from openfreebuds.driver.huawei.fixtures import FbDriverHuaweiGenericFixture
-from openfreebuds.driver.huawei.handler import (FbHuaweiActionDoubleTapHandler,
-                                                FbHuaweiActionLongTapSplitHandler,
-                                                FbHuaweiActionSwipeGestureHandler)
+from openfreebuds.driver.huawei.driver.debug import FbDriverHuaweiGenericFixture
+from openfreebuds.driver.huawei.handler import (OfbHuaweiActionDoubleTapHandler,
+                                                OfbHuaweiActionLongTapSplitHandler,
+                                                OfbHuaweiActionSwipeGestureHandler)
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 
 
@@ -17,7 +17,7 @@ async def test_swipe_tap():
 
     driver = FbDriverHuaweiGenericFixture(
         handlers=[
-            FbHuaweiActionSwipeGestureHandler()
+            OfbHuaweiActionSwipeGestureHandler()
         ],
         package_response_model={
             get_swipe: [resp_swipe],
@@ -49,7 +49,7 @@ async def test_double_tap():
 
     driver = FbDriverHuaweiGenericFixture(
         handlers=[
-            FbHuaweiActionDoubleTapHandler(w_in_call=True)
+            OfbHuaweiActionDoubleTapHandler(w_in_call=True)
         ],
         package_response_model={
             get_double_tap: [resp_double_tap],
@@ -98,7 +98,7 @@ async def test_long_tap():
 
     driver = FbDriverHuaweiGenericFixture(
         handlers=[
-            FbHuaweiActionLongTapSplitHandler(w_right=True, w_in_call=True)
+            OfbHuaweiActionLongTapSplitHandler(w_right=True, w_in_call=True)
         ],
         package_response_model={
             get_long_tap_base: [resp_long_tap_base],

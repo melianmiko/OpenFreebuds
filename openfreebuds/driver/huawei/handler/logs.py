@@ -1,7 +1,7 @@
-from openfreebuds.driver.huawei.generic import FbDriverHandlerHuawei
+from openfreebuds.driver.huawei.driver.generic import OfbDriverHandlerHuawei
 
 
-class FbHuaweiLogsHandler(FbDriverHandlerHuawei):
+class OfbHuaweiLogsHandler(OfbDriverHandlerHuawei):
     """
     Ignore hardware logging
     """

@@ -1,9 +1,9 @@
-from openfreebuds.driver.huawei.generic import FbDriverHandlerHuawei
+from openfreebuds.driver.huawei.driver.generic import OfbDriverHandlerHuawei
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 from openfreebuds.utils import reverse_dict
 
 
-class FbHuaweiEqualizerPresetHandler(FbDriverHandlerHuawei):
+class OfbHuaweiEqualizerPresetHandler(OfbDriverHandlerHuawei):
     """
     Built-in equalizer settings handler (5i)
     """

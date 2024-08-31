@@ -1,9 +1,9 @@
-from openfreebuds.driver.huawei.generic import FbDriverHandlerHuawei
+from openfreebuds.driver.huawei.driver.generic import OfbDriverHandlerHuawei
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 from openfreebuds.utils import reverse_dict
 
 
-class FbHuaweiAncLegacyChangeHandler(FbDriverHandlerHuawei):
+class OfbHuaweiAncLegacyChangeHandler(OfbDriverHandlerHuawei):
     """
     This handler wait for 2b03 command package to
     detect ANC mode change via on-device button
@@ -19,7 +19,7 @@ class FbHuaweiAncLegacyChangeHandler(FbDriverHandlerHuawei):
             ]))
 
 
-class FbHuaweiAncHandler(FbDriverHandlerHuawei):
+class OfbHuaweiAncHandler(OfbDriverHandlerHuawei):
     """
     ANC mode switching handler.
     """

@@ -1,5 +1,5 @@
 from openfreebuds.driver.huawei.utils import crc16char, build_table_row
-from openfreebuds.exceptions import FbPackageChecksumError
+from openfreebuds.exceptions import OfbPackageChecksumError
 
 
 class HuaweiSppPackage:
@@ -105,7 +105,7 @@ class HuaweiSppPackage:
             crc_data = data[0:-2]
             crc_value = data[-2:]
             if crc16char(crc_data) != crc_value:
-                raise FbPackageChecksumError(f"{crc16char(crc_data)} != {crc_value}")
+                raise OfbPackageChecksumError(f"{crc16char(crc_data)} != {crc_value}")
 
         length = int.from_bytes(data[1:3], byteorder="big")
 

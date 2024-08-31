@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import QApplication
 
 import openfreebuds
 from openfreebuds import OfbEventKind, IOpenFreebuds
-from openfreebuds.utils.logger import create_logger
+from openfreebuds.utils.logger import create_logger, screen_handler, setup_logging
 from openfreebuds_qt.async_qt_loop import qt_app_entrypoint
 from openfreebuds_qt.config.config_lock import ConfigLock
 from openfreebuds_qt.constants import IGNORED_LOG_TAGS
@@ -37,10 +37,16 @@ parser.add_argument("shortcut",
 
 @qt_app_entrypoint(OfbQtMainWindow)
 async def main(app: QApplication, window: OfbQtMainWindow):
+    app.setApplicationName("OpenFreebuds")
+    app.setDesktopFileName("openfreebuds")
+
     try:
         args = parser.parse_args()
+        setup_logging(args.verbose)
 
-        logging.basicConfig(level=logging.DEBUG if args.verbose else logging.WARN)
+        if not args.verbose:
+            screen_handler.setLevel(logging.WARN)
+
         if not args.dont_ignore_logs:
             for tag in IGNORED_LOG_TAGS:
                 logging.getLogger(tag).disabled = True
@@ -59,7 +65,6 @@ async def main(app: QApplication, window: OfbQtMainWindow):
 
         log.info(f"Starting OfbQtMainWindow, ofb_role={ofb.role}, config_owned={ConfigLock.owned}")
         await window.boot()
-        window.show()
     except SystemExit as e:
         app.exit(e.args[0])
         ConfigLock.release()

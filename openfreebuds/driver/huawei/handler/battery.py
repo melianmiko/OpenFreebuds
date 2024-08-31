@@ -1,11 +1,11 @@
 import json
 
 from openfreebuds.driver.huawei.constants import CMD_BATTERY_READ, CMD_BATTERY_NOTIFY
-from openfreebuds.driver.huawei.generic import FbDriverHandlerHuawei
+from openfreebuds.driver.huawei.driver.generic import OfbDriverHandlerHuawei
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 
 
-class FbHuaweiBatteryHandler(FbDriverHandlerHuawei):
+class OfbHuaweiBatteryHandler(OfbDriverHandlerHuawei):
     """
     Battery read handler
     """

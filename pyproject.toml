@@ -11,6 +11,7 @@ packages = [
 ]
 include = [
     { path = "openfreebuds_assets", format = ["sdist", "wheel"] },
+    { path = "openfreebuds_qt/designer/*.py", format = ["wheel"] },
 ]
 
 [tool.poetry.scripts]

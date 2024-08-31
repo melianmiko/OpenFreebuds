@@ -1,11 +1,11 @@
 import json
 
 from openfreebuds.driver.huawei.constants import CMD_AUTO_PAUSE_READ, CMD_AUTO_PAUSE_WRITE
-from openfreebuds.driver.huawei.generic import FbDriverHandlerHuawei
+from openfreebuds.driver.huawei.driver.generic import OfbDriverHandlerHuawei
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 
 
-class FbHuaweiConfigAutoPauseHandler(FbDriverHandlerHuawei):
+class OfbHuaweiConfigAutoPauseHandler(OfbDriverHandlerHuawei):
     """
     TWS pause when plug off config handler
     """

@@ -1,28 +1,28 @@
 import asyncio
 
-from openfreebuds.driver.generic import FbDriverHandlerGeneric, FbDriverSppGeneric
+from openfreebuds.driver.generic import OfbDriverHandlerGeneric, OfbDriverSppGeneric
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
-from openfreebuds.exceptions import FbNotReadyError, FbPackageChecksumError
+from openfreebuds.exceptions import FbNotReadyError, OfbPackageChecksumError
 from openfreebuds.utils.logger import create_logger
 
-log = create_logger("FbDriverHuaweiGeneric")
+log = create_logger("OfbDriverHuaweiGeneric")
 
 
-class FbHuaweiResponseReceiver(asyncio.Event):
+class OfbHuaweiResponseReceiver(asyncio.Event):
     def __init__(self):
         super().__init__()
         self.package: HuaweiSppPackage | None = None
 
 
-class FbDriverHuaweiGeneric(FbDriverSppGeneric):
+class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
     def __init__(self, address):
         super().__init__(address)
-        self.__pending_responses: dict[bytes, FbHuaweiResponseReceiver] = {}
-        self.__on_package_handlers: dict[bytes, FbDriverHandlerHuawei] = {}
+        self.__pending_responses: dict[bytes, OfbHuaweiResponseReceiver] = {}
+        self.__on_package_handlers: dict[bytes, OfbDriverHandlerHuawei] = {}
 
         # self._spp_service_uuid = "00001101-0000-1000-8000-00805f9b34fb"
 
-        self.handlers: list[FbDriverHandlerHuawei] = []
+        self.handlers: list[OfbDriverHandlerHuawei] = []
 
     async def start(self):
         await super().start()
@@ -62,7 +62,7 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
             await self.__pending_responses[pkg.response_id].wait()
             await asyncio.sleep(0.5)
 
-        event = FbHuaweiResponseReceiver()
+        event = OfbHuaweiResponseReceiver()
         try:
             self.__pending_responses[pkg.response_id] = event
             await self._send_nowait(pkg)
@@ -86,7 +86,7 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
         try:
             pkg = HuaweiSppPackage.from_bytes(pkg)
             log.debug(f"RX {pkg}")
-        except (AssertionError, FbPackageChecksumError):
+        except (AssertionError, OfbPackageChecksumError):
             log.exception(f"Got non-parsable package {pkg.hex()}, ignoring")
             return
 
@@ -132,11 +132,11 @@ class FbDriverHuaweiGeneric(FbDriverSppGeneric):
             self.__on_package_handlers[pkg_id] = _empty_handler
 
 
-class FbDriverHandlerHuawei(FbDriverHandlerGeneric):
+class OfbDriverHandlerHuawei(OfbDriverHandlerGeneric):
     handler_id: str = ""
     commands: list[bytes] = []
     ignore_commands: list[bytes] = []
-    driver: FbDriverHuaweiGeneric = None
+    driver: OfbDriverHuaweiGeneric = None
 
     init_timeout: int = 3
     init_attempt: int = 0
@@ -175,4 +175,4 @@ class FbDriverHandlerHuawei(FbDriverHandlerGeneric):
         pass
 
 
-_empty_handler = FbDriverHandlerHuawei()
+_empty_handler = OfbDriverHandlerHuawei()

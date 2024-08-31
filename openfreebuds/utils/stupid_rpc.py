@@ -6,7 +6,7 @@ import traceback
 import aiohttp
 from aiohttp import web
 
-from openfreebuds.exceptions import FbServerDeadError
+from openfreebuds.exceptions import OfbServerDeadError
 from openfreebuds.utils.logger import create_logger
 
 _PORT = 19823
@@ -31,7 +31,7 @@ def rpc(func):
                 try:
                     return await do_rpc_request(func.__name__, *args, **kwargs)
                 except aiohttp.ClientConnectionError:
-                    raise FbServerDeadError("Server is down, please restart application")
+                    raise OfbServerDeadError("Server is down, please restart application")
         return await func(self, *args, **kwargs)
 
     return _inner

@@ -7,4 +7,5 @@ IGNORED_LOG_TAGS = [
     "qasync._QEventLoop",
     "qasync.QThreadExecutor",
     "qasync._QThreadWorker",
+    "qasync._windows._EventWorker",
 ]

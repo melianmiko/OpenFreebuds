@@ -1,8 +1,8 @@
-from openfreebuds.driver.huawei.generic import FbDriverHandlerHuawei
+from openfreebuds.driver.huawei.driver.generic import OfbDriverHandlerHuawei
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 
 
-class FbHuaweiVoiceLanguageHandler(FbDriverHandlerHuawei):
+class OfbHuaweiVoiceLanguageHandler(OfbDriverHandlerHuawei):
     """
     Device voice language read/write handler.
     """

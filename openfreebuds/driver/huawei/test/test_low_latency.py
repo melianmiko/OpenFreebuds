@@ -1,6 +1,6 @@
 import pytest
 
-from openfreebuds.driver.huawei.fixtures import FbDriverHuaweiGenericFixture
+from openfreebuds.driver.huawei.driver.debug import FbDriverHuaweiGenericFixture
 from openfreebuds.driver.huawei.handler import OfbHuaweiLowLatencyPreferenceHandler
 
 
