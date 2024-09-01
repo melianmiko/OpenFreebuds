@@ -13,6 +13,7 @@ from openfreebuds_qt.app.module.device_other import OfbQtDeviceOtherSettingsModu
 from openfreebuds_qt.app.module.dual_connect import OfbQtDualConnectModule
 from openfreebuds_qt.app.module.empty_module import OfbEmptyModule
 from openfreebuds_qt.app.module.gestures import OfbQtGesturesModule
+from openfreebuds_qt.app.module.hotkeys_module import OfbQtHotkeysModule
 from openfreebuds_qt.app.module.sound_quality import OfbQtSoundQualityModule
 from openfreebuds_qt.app.qt_utils import qt_error_handler
 from openfreebuds_qt.generic import IOfbQtContext
@@ -44,11 +45,12 @@ class OfbQtSettingsUi:
 
         # Addon-related modules
         self.tabs.add_section("Extras")
-        self._attach_module("Keyboard shortcuts", OfbEmptyModule(self.tabs.root, self.ctx))
+        self._attach_module("Keyboard shortcuts", OfbQtHotkeysModule(self.tabs.root, self.ctx))
         if sys.platform == "linux":
             self._attach_module("Linux-related", OfbEmptyModule(self.tabs.root, self.ctx))
 
         self.tabs.finalize_list()
+        self.tabs.set_active_tab(0, 2)
 
     def on_show(self):
         self._ui_update_task = asyncio.create_task(self._update_loop())
@@ -93,7 +95,7 @@ class OfbQtSettingsUi:
             member_id = await self.ctx.ofb.subscribe()
             log.info(f"Settings UI update loop started, member_id={member_id}")
 
-            # First-time force update everyting
+            # First-time force update everything
             await self._update_ui(OfbCoreEvent(None))
 
             try:
@@ -107,4 +109,4 @@ class OfbQtSettingsUi:
     def _device_section_set_visible(self, visible):
         self.device_section.set_visible(visible)
         if not visible and self.tabs.active_tab.section == self.device_section:
-            self.tabs.set_active_tab(0, 0)
+            self.tabs.set_active_tab(0, 2)

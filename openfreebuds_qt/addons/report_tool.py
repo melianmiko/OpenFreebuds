@@ -1,6 +1,7 @@
 import json
 import platform
 import sys
+from contextlib import suppress
 
 import openfreebuds_backend
 from openfreebuds.utils.logger import get_full_log
@@ -56,15 +57,18 @@ class OfbQtReportTool:
             f"config_lock_owned={ConfigLock.owned}",
         )
 
-        self.header("Configuration file")
-        self.append(json.dumps(self.config.data, indent=2))
+        with suppress(Exception):
+            self.header("Configuration file")
+            self.append(json.dumps(self.config.data, indent=2))
 
-        self.header("Core health report")
-        self.append(json.dumps(await self.ctx.ofb.get_health_report(), indent=2))
+        with suppress(Exception):
+            self.header("Core health report")
+            self.append(json.dumps(await self.ctx.ofb.get_health_report(), indent=2))
 
         if self.ctx.ofb.role != "standalone":
             self.header("Core server log")
-            self.append(await self.ctx.ofb.get_logs())
+            with suppress(Exception):
+                self.append(await self.ctx.ofb.get_logs())
 
         self.header("Current process log")
         self.append(get_full_log())

@@ -1,10 +1,10 @@
-import gi
+import logging
 
-from openfreebuds.utils.logger import create_logger
+import gi
 
 gi.require_version("Gtk", "3.0")
 
-log = create_logger("LinuxBackend")
+log = logging.getLogger("OfbLinuxBackend")
 
 
 # noinspection PyPackageRequirements

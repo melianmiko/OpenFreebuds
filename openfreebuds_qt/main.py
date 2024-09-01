@@ -5,6 +5,7 @@ from qasync import asyncSlot
 
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.addons.device_auto_select import OfbQtDeviceAutoSelect
+from openfreebuds_qt.addons.hotkeys.service import OfbQtHotkeyService
 from openfreebuds_qt.addons.report_tool import OfbQtReportTool
 from openfreebuds_qt.app.dialog.manual_connect import OfbQtManualConnectDialog
 from openfreebuds_qt.app.helper.setting_tab_helper import OfbQtSettingsTabHelper
@@ -67,6 +68,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbQtContext):
             self.tray = OfbTrayIcon(self)
             self.settings = OfbQtSettingsUi(self.tabs, self)
             self.auto_select = OfbQtDeviceAutoSelect(self.ofb)
+            OfbQtHotkeyService.get_instance(self.ofb).start()
 
             if self.ofb.role == "standalone" and setup_device:
                 await self.restore_device()

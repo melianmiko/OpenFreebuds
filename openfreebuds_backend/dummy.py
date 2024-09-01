@@ -1,9 +1,7 @@
 import logging
 import os
 
-from openfreebuds.utils.logger import create_logger
-
-log = create_logger("DummyPlatform")
+log = logging.getLogger("OfbDummyBackend")
 
 
 def get_app_storage_path():
@@ -11,11 +9,11 @@ def get_app_storage_path():
 
 
 def open_in_file_manager(path):
-    logging.info("open_dir " + path)
+    log.info("open_dir " + path)
 
 
 def open_file(path):
-    logging.info("open_file " + path)
+    log.info("open_file " + path)
 
 
 def is_run_at_boot():
@@ -23,11 +21,11 @@ def is_run_at_boot():
 
 
 def set_run_at_boot(val):
-    logging.info("run_at_boot " + str(val))
+    log.info("run_at_boot " + str(val))
 
 
 async def bt_is_connected(address):
-    logging.info("is_connected " + address)
+    log.info("is_connected " + address)
     return False
 
 

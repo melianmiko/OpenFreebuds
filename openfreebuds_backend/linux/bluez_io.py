@@ -1,13 +1,11 @@
 import asyncio
 import logging
-import pprint
 
 from sdbus import sd_bus_open_system, SdBusBaseError
 
-from openfreebuds.utils.logger import create_logger
 from openfreebuds_backend.linux.dbus import BluezDevice1Proxy, BluezProxy
 
-log = create_logger("LinuxBackend")
+log = logging.getLogger("OfbLinuxBackend")
 system_bus = sd_bus_open_system()
 
 

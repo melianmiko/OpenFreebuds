@@ -1,10 +1,9 @@
+import logging
 import os
 import pathlib
 import subprocess
 
-from openfreebuds.utils.logger import create_logger
-
-log = create_logger("LinuxBackend")
+log = logging.getLogger("OfbLinuxBackend")
 
 
 def get_app_storage_path():

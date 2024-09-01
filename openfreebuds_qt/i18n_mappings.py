@@ -56,12 +56,13 @@ NOISE_CONTROL_OPTION_MAPPING = {
     "noise_control_off_an": "Off and awareness",
 }
 
-MANAGER_STATE_NAMES = [
-    "Device don't exist",
-    "Device don't connected",
-    "Waiting for connect...",
-    "Connecting...",
-    "Connected",
-    "Failed to connect",
-    "Waiting for OS operation...",
-]
+OFB_SHORTCUT_NAME_MAPPING = {
+    "connect": "Connect device",
+    "disconnect": "Disconnect device",
+    "toggle_connect": "Connect/disconnect device",
+    "next_mode": "Next noise control mode",
+    "mode_normal": "Disable noise control",
+    "mode_cancellation": "Enable noise cancellation",
+    "mode_awareness": "Enable awareness mode",
+    "enable_low_latency": "Enable low-latency mode",
+}

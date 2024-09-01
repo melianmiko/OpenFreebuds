@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QWidget, QTableWidgetItem
+from PyQt6.QtWidgets import QTableWidgetItem
 
-from openfreebuds import IOpenFreebuds, OfbEventKind
+from openfreebuds import OfbEventKind
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.app.qt_utils import qt_error_handler

@@ -35,10 +35,10 @@ async def qt_error_handler(identifier, ctx: IOfbQtContext):
 
         exception = traceback.format_exc()
         await OfbQtErrorDialog(ctx).get_user_response(exception)
-        await OfbQtReportTool(ctx).create_and_show()
 
         with suppress(Exception):
             async with asyncio.Timeout(5):
+                await OfbQtReportTool(ctx).create_and_show()
                 await ctx.exit(1)
 
         # Kill process

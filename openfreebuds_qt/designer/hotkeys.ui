@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>OfbQtHotkeysModule</class>
+ <widget class="QWidget" name="OfbQtHotkeysModule">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>557</width>
+    <height>445</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Hotkeys...</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QCheckBox" name="shortcuts_toggle">
+     <property name="text">
+      <string>Enable global keyboard shortcuts</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Here you can configure system-wide keyboard shortcuts for OpenFreebuds</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="table">
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>200</number>
+     </attribute>
+     <attribute name="horizontalHeaderStretchLastSection">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="verticalHeaderDefaultSectionSize">
+      <number>21</number>
+     </attribute>
+     <row/>
+     <column>
+      <property name="text">
+       <string>Action</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Shortcut</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Hint: to remove already assigned shortcut, press Esc while recording a new one.</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>table</sender>
+   <signal>cellClicked(int,int)</signal>
+   <receiver>OfbQtHotkeysModule</receiver>
+   <slot>on_edit_shortcut(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>278</x>
+     <y>248</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>278</x>
+     <y>222</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shortcuts_toggle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OfbQtHotkeysModule</receiver>
+   <slot>on_toggle_enabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>278</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>278</x>
+     <y>222</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>on_edit_shortcut(int,int)</slot>
+  <slot>on_toggle_enabled(bool)</slot>
+ </slots>
+</ui>

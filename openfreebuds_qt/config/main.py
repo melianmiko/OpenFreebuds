@@ -1,4 +1,5 @@
 import json
+from typing import Optional
 
 from openfreebuds_backend import is_dark_taskbar
 from openfreebuds_qt.constants import STORAGE_PATH
@@ -21,8 +22,10 @@ class OfbQtConfigParser:
             OfbQtConfigParser.instance = OfbQtConfigParser()
         return OfbQtConfigParser.instance
 
-    def get(self, section: str, key: str, fallback: any = None):
+    def get(self, section: str, key: Optional[str] = None, fallback: any = None):
         try:
+            if key is None:
+                return self.data[section]
             return self.data[section][key]
         except KeyError:
             return fallback
@@ -31,6 +34,11 @@ class OfbQtConfigParser:
         if section not in self.data:
             self.data[section] = {}
         self.data[section][key] = value
+
+    def remove(self, section: str, key: str):
+        if section not in self.data or key not in self.data[section]:
+            return
+        del self.data[section][key]
 
     def save(self):
         with open(CONFIG_PATH, "w") as f:
