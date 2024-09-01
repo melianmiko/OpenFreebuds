@@ -1,7 +1,7 @@
 from typing import Optional
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QKeySequence
+from PyQt6.QtGui import QKeySequence, QIcon
 from PyQt6.QtWidgets import QMenu
 from qasync import asyncSlot
 
@@ -15,6 +15,7 @@ from openfreebuds_qt.app.main import OfbQtSettingsUi
 from openfreebuds_qt.app.qt_utils import qt_error_handler
 from openfreebuds_qt.config.config_lock import ConfigLock
 from openfreebuds_qt.config.main import OfbQtConfigParser
+from openfreebuds_qt.constants import ASSETS_PATH
 from openfreebuds_qt.designer.main_window import Ui_OfbMainWindowDesign
 from openfreebuds_qt.generic import IOfbQtContext
 from openfreebuds_qt.icon.qt_icon import get_qt_icon_colored
@@ -34,6 +35,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbQtContext):
 
         self.setupUi(self)
         self.retranslateUi(self)
+        self.setWindowIcon(QIcon(str(ASSETS_PATH / "icon.png")))
 
         # Extras button
         self.extra_options_button.setIcon(

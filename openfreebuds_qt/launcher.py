@@ -113,4 +113,4 @@ async def _run_shortcut(shortcut: str, ofb: IOpenFreebuds, window: OfbQtMainWind
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

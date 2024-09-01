@@ -10,7 +10,4 @@ class OfbEventKind:
     QT_BRING_SETTINGS_UP = "qt::show_settings"
 
 
-APP_ROOT = Path(os.path.dirname(os.path.realpath(__file__)))
-if not getattr(sys, 'frozen', False):
-    # Source code, go upper
-    APP_ROOT = APP_ROOT.parent
+APP_ROOT = Path(os.path.dirname(os.path.realpath(__file__))).parent

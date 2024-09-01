@@ -9,7 +9,7 @@ def get_assets_path() -> Path:
     if (APP_ROOT / "openfreebuds_qt" / "assets").is_dir():
         return APP_ROOT / "openfreebuds_qt" / "assets"
 
-    raise Exception("assets dir not found")
+    raise Exception(f"Assets not found, root={APP_ROOT}")
 
 
 def get_app_storage_dir():
