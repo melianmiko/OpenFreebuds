@@ -30,6 +30,11 @@ parser.add_argument("-l", "--dont-ignore-logs",
 parser.add_argument('-c', '--client',
                     action="store_true",
                     help="Client-mode, allows to start multiple app instances from the same user")
+parser.add_argument('-s', '--settings',
+                    action="store_true",
+                    help="Open settings after launch")
+parser.add_argument('--virtual-device',
+                    help="Use virtual debug device, for UI testing")
 parser.add_argument("shortcut",
                     nargs="?", default="",
                     help="Execute shortcut operation in using OpenFreebuds")
@@ -42,16 +47,8 @@ async def main(app: QApplication, window: OfbQtMainWindow):
 
     try:
         args = parser.parse_args()
-        setup_logging(args.verbose)
-
-        if not args.verbose:
-            screen_handler.setLevel(logging.WARN)
-
-        if not args.dont_ignore_logs:
-            for tag in IGNORED_LOG_TAGS:
-                logging.getLogger(tag).disabled = True
-
-        ofb = await openfreebuds.create()
+        await _stage_setup_logging(args)
+        ofb, initialized = await _stage_setup_ofb(args)
 
         window.ofb = ofb
         window.application = app
@@ -61,17 +58,43 @@ async def main(app: QApplication, window: OfbQtMainWindow):
             return await _run_shortcut(args.shortcut, ofb, window, app)
 
         if ofb.role == "client" and not ConfigLock.owned and not args.client:
-            return await _bring_window_up(ofb, app)
+            return await _trigger_settings(ofb, app)
 
         log.info(f"Starting OfbQtMainWindow, ofb_role={ofb.role}, config_owned={ConfigLock.owned}")
-        await window.boot()
+        await window.boot(not initialized)
+        if args.settings:
+            window.show()
     except SystemExit as e:
         app.exit(e.args[0])
         ConfigLock.release()
         return
 
 
-async def _bring_window_up(ofb: IOpenFreebuds, app: QApplication):
+async def _stage_setup_logging(args):
+    setup_logging(args.verbose)
+
+    if not args.verbose:
+        screen_handler.setLevel(logging.WARN)
+
+    if not args.dont_ignore_logs:
+        for tag in IGNORED_LOG_TAGS:
+            logging.getLogger(tag).disabled = True
+
+
+async def _stage_setup_ofb(args):
+    ofb = await openfreebuds.create()
+
+    if args.virtual_device:
+        log.info(f"Will boot with virtual device: {args.virtual_device}")
+        await ofb.start("Debug: Virtual device", args.virtual_device)
+        initialized = True
+    else:
+        initialized = False
+
+    return ofb, initialized
+
+
+async def _trigger_settings(ofb: IOpenFreebuds, app: QApplication):
     print("Already running, will only bring settings window up")
     print("If you really need another instance, add --client")
     await ofb.send_message(OfbEventKind.QT_BRING_SETTINGS_UP)

@@ -140,7 +140,7 @@ class OfbManager(IOpenFreebuds):
                 await asyncio.sleep(2)
                 continue
 
-            if not await openfreebuds_backend.bt_is_connected(self._driver.device_address):
+            if not await self._driver.is_device_online():
                 await self._set_state(IOpenFreebuds.STATE_DISCONNECTED)
                 if self._driver.started:
                     log.info("Device disconnected from OS")

@@ -1,0 +1,23 @@
+{
+  "info": {
+    "software_ver": "NotHarmonyOS 0.0.0",
+    "device_submodel": "idk",
+    "device_model": "idk",
+    "is_debug": true
+  },
+  "state": {
+    "in_ear": "false"
+  },
+  "battery": {
+    "global": 90,
+    "left": 90,
+    "right": 90,
+    "case": 85,
+    "is_charging": "false"
+  },
+  "action": {
+    "double_tap_left": "tap_action_off",
+    "double_tap_right": "tap_action_off",
+    "double_tap_options": "tap_action_pause,tap_action_prev,tap_action_next,tap_action_assistant,tap_action_off"
+  }
+}

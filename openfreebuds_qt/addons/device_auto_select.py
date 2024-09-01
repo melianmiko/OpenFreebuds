@@ -20,6 +20,8 @@ class OfbQtDeviceAutoSelect:
         self._task = asyncio.create_task(self._mainloop())
 
     async def close(self):
+        if self._task is None:
+            return
         self._task.cancel()
         await self._task
         self._task = None

@@ -10,7 +10,8 @@ packages = [
     { include = "openfreebuds_cmd" },
 ]
 include = [
-    { path = "openfreebuds_assets", format = ["sdist", "wheel"] },
+    { path = "openfreebuds/assets", format = ["sdist", "wheel"] },
+    { path = "openfreebuds_qt/assets", format = ["sdist", "wheel"] },
     { path = "openfreebuds_qt/designer/*.py", format = ["wheel"] },
 ]
 

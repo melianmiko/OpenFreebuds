@@ -1,5 +1,5 @@
-from openfreebuds.driver.huawei import OfbDriverHuawei5I, OfbDriverHuaweiSe, OfbDriverHuaweiLacePro, OfbDriverHuawei4I, \
-    OfbDriverHuaweiPro, OfbDriverHuaweiPro2, OfbDriverHuaweiPro3
+from openfreebuds.driver.generic_debug import *
+from openfreebuds.driver.huawei import *
 
 DEVICE_TO_DRIVER_MAP = {
     "HUAWEI FreeBuds 5i": OfbDriverHuawei5I,
@@ -9,4 +9,5 @@ DEVICE_TO_DRIVER_MAP = {
     "HUAWEI FreeBuds Pro": OfbDriverHuaweiPro,
     "HUAWEI FreeBuds Pro 2": OfbDriverHuaweiPro2,
     "HUAWEI FreeBuds Pro 3": OfbDriverHuaweiPro3,
+    "Debug: Virtual device": OfbFileDeviceDriver,
 }

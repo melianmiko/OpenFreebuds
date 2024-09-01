@@ -62,13 +62,13 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbQtContext):
         self.application.exit(ret_code)
         ConfigLock.release()
 
-    async def boot(self):
+    async def boot(self, setup_device: bool = True):
         async with qt_error_handler("OfbQtMain_Boot", self):
             self.tray = OfbTrayIcon(self)
             self.settings = OfbQtSettingsUi(self.tabs, self)
             self.auto_select = OfbQtDeviceAutoSelect(self.ofb)
 
-            if self.ofb.role == "standalone":
+            if self.ofb.role == "standalone" and setup_device:
                 await self.restore_device()
                 await self.auto_select.boot()
 

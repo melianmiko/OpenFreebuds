@@ -9,7 +9,8 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
-        ('..\\..\\openfreebuds_assets', 'openfreebuds_assets'), 
+        ('..\\..\\openfreebuds\\assets', 'openfreebuds\\assets'),
+        ('..\\..\\openfreebuds_qt\\assets', 'openfreebuds_qt\\assets'),
     ],
     hiddenimports=[],
     hookspath=[],

@@ -1,9 +1,11 @@
 import json
+from typing import Optional
 
 from openfreebuds.constants import OfbEventKind
 from openfreebuds.exceptions import FbMissingHandlerError
 from openfreebuds.utils.event_bus import Subscription
 from openfreebuds.utils.logger import create_logger
+from openfreebuds_backend import bt_is_connected
 
 log = create_logger("OfbDriverGeneric")
 
@@ -24,6 +26,9 @@ class OfbDriverGeneric:
         self.device_address: str = address
         self.started: bool = False
         self.changes = Subscription()
+
+    async def is_device_online(self):
+        return await bt_is_connected(self.device_address)
 
     async def start(self):
         raise NotImplementedError()
@@ -74,8 +79,11 @@ class OfbDriverGeneric:
 
         return group_data[prop]
 
-    async def put_property(self, group: str, prop: str | None, value: str | dict):
-        if prop is None:
+    async def put_property(self, group: Optional[str], prop: Optional[str], value: str | dict):
+        if group is None:
+            log.info("Reassigned entire store, this should happen only in debug drviers")
+            self._store = value
+        elif prop is None:
             self._store[group] = value
         else:
             if group not in self._store:
