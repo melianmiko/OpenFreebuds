@@ -1,3 +1,6 @@
+import os
+import sys
+
 from PyQt6.QtWidgets import QTableWidgetItem
 from qasync import asyncSlot
 
@@ -33,6 +36,10 @@ class OfbQtHotkeysModule(Ui_OfbQtHotkeysModule, OfbQtCommonModule):
         for index, shortcut in enumerate(self.all_shortcuts):
             self.table.setItem(index, 0, QTableWidgetItem(OFB_SHORTCUT_NAME_MAPPING.get(shortcut, shortcut)))
             self.table.setItem(index, 1, QTableWidgetItem(self.config.get("hotkeys", shortcut, "Disabled")))
+
+    @staticmethod
+    def available():
+        return sys.platform != "linux" or os.environ.get("XDG_SESSION_TYPE", "") != "wayland"
 
     @asyncSlot(bool)
     async def on_toggle_enabled(self, value: bool):

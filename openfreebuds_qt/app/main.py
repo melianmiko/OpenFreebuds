@@ -1,4 +1,5 @@
 import asyncio
+import os
 import sys
 from typing import Optional
 
@@ -14,6 +15,7 @@ from openfreebuds_qt.app.module.dual_connect import OfbQtDualConnectModule
 from openfreebuds_qt.app.module.empty_module import OfbEmptyModule
 from openfreebuds_qt.app.module.gestures import OfbQtGesturesModule
 from openfreebuds_qt.app.module.hotkeys_module import OfbQtHotkeysModule
+from openfreebuds_qt.app.module.linux_related import OfbQtLinuxExtrasModule
 from openfreebuds_qt.app.module.sound_quality import OfbQtSoundQualityModule
 from openfreebuds_qt.app.qt_utils import qt_error_handler
 from openfreebuds_qt.generic import IOfbQtContext
@@ -34,6 +36,10 @@ class OfbQtSettingsUi:
         self._attach_module("User interface", OfbEmptyModule(self.tabs.root, self.ctx))
         if self.ctx.ofb.role == "standalone":
             self._attach_module("Select device", OfbQtChooseDeviceModule(self.tabs.root, self.ctx))
+        if OfbQtHotkeysModule.available():
+            self._attach_module("Keyboard shortcuts", OfbQtHotkeysModule(self.tabs.root, self.ctx))
+        if sys.platform == "linux":
+            self._attach_module("Linux-related", OfbQtLinuxExtrasModule(self.tabs.root, self.ctx))
 
         # Device-related modules
         self.device_section = self.tabs.add_section("Device-related")
@@ -43,14 +49,10 @@ class OfbQtSettingsUi:
         self._attach_module("Sound quality", OfbQtSoundQualityModule(self.tabs.root, self.ctx))
         self._attach_module("Other settings", OfbQtDeviceOtherSettingsModule(self.tabs.root, self.ctx))
 
-        # Addon-related modules
-        self.tabs.add_section("Extras")
-        self._attach_module("Keyboard shortcuts", OfbQtHotkeysModule(self.tabs.root, self.ctx))
-        if sys.platform == "linux":
-            self._attach_module("Linux-related", OfbEmptyModule(self.tabs.root, self.ctx))
-
+        # Finish
+        self.default_tab = 0, 1
         self.tabs.finalize_list()
-        self.tabs.set_active_tab(0, 2)
+        self.tabs.set_active_tab(*self.default_tab)
 
     def on_show(self):
         self._ui_update_task = asyncio.create_task(self._update_loop())
@@ -109,4 +111,4 @@ class OfbQtSettingsUi:
     def _device_section_set_visible(self, visible):
         self.device_section.set_visible(visible)
         if not visible and self.tabs.active_tab.section == self.device_section:
-            self.tabs.set_active_tab(0, 2)
+            self.tabs.set_active_tab(*self.default_tab)

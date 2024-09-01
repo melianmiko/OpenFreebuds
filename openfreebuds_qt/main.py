@@ -1,5 +1,7 @@
 from typing import Optional
 
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QKeySequence
 from PyQt6.QtWidgets import QMenu
 from qasync import asyncSlot
 
@@ -45,12 +47,27 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbQtContext):
         self.tabs = OfbQtSettingsTabHelper(self.tabs_list_content, self.body_content)
         self.config = OfbQtConfigParser.get_instance()
 
-    # noinspection PyUnresolvedReferences
     def _fill_extras_menu(self):
-        self.extra_menu.addAction(self.tr("Bugreport...")).triggered.connect(self.on_bugreport)
-        self.extra_menu.addAction(self.tr("Temporary replace device")).triggered.connect(self.temporary_change_device)
+        bugreport_action = self.extra_menu.addAction(self.tr("Bugreport..."))
+        bugreport_action.setShortcut("F2")
+        # noinspection PyUnresolvedReferences
+        bugreport_action.triggered.connect(self.on_bugreport)
+
+        temp_device_action = self.extra_menu.addAction(self.tr("Temporary replace device"))
+        temp_device_action.setShortcut("Ctrl+D")
+        # noinspection PyUnresolvedReferences
+        temp_device_action.triggered.connect(self.temporary_change_device)
+
         self.extra_menu.addSeparator()
-        self.extra_menu.addAction(self.tr("Close application")).triggered.connect(self.on_exit)
+        hide_action = self.extra_menu.addAction(self.tr("Close this window"))
+        hide_action.setShortcut(QKeySequence('Ctrl+W'))
+        # noinspection PyUnresolvedReferences
+        hide_action.triggered.connect(self.hide)
+
+        exit_action = self.extra_menu.addAction(self.tr("Exit OpenFreebuds"))
+        exit_action.setShortcut(QKeySequence('Ctrl+Q'))
+        # noinspection PyUnresolvedReferences
+        exit_action.triggered.connect(self.on_exit)
 
     async def exit(self, ret_code: int = 0):
         await self.tray.close()
