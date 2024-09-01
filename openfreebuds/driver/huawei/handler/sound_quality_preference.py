@@ -8,10 +8,10 @@ class OfnHuaweiSoundQualityPreferenceHandler(OfbDriverHandlerHuawei):
     Sound quality preference option from 5i, and maybe other devices too
     """
     handler_id = "config_sound_quality"
-    commands = [ b"\x2b\xa3" ]
-    ignore_commands = [ b"\x2b\xa2" ]
+    commands = [b"\x2b\xa3"]
+    ignore_commands = [b"\x2b\xa2"]
     properties = [
-        ("config", "sound_quality_preference"),
+        ("sound", "quality_preference"),
     ]
 
     def __init__(self):
@@ -39,7 +39,7 @@ class OfnHuaweiSoundQualityPreferenceHandler(OfbDriverHandlerHuawei):
 
         if len(value) == 1:
             value = int.from_bytes(value, byteorder="big", signed=True)
-            await self.driver.put_property("config", "sound_quality_preference",
-                                     self.options[value])
-            await self.driver.put_property("config", "sound_quality_preference_options",
-                                     ",".join(self.options.values()))
+            await self.driver.put_property("sound", "quality_preference",
+                                           self.options[value])
+            await self.driver.put_property("sound", "quality_preference_options",
+                                           ",".join(self.options.values()))

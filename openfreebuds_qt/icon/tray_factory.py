@@ -1,3 +1,5 @@
+from typing import Optional
+
 from PIL import Image
 
 from openfreebuds import IOpenFreebuds
@@ -24,7 +26,7 @@ PRESET_DARK_EMPTY = Image.new("RGBA", ICON_SIZE, color="#00000077")
 PRESET_DARK_FULL = Image.new("RGBA", ICON_SIZE, color="#000000FF")
 
 
-def create_tray_icon(theme: str, state: int, battery: int, anc_mode: str) -> Image.Image:
+def create_tray_icon(theme: str, state: int, battery: int, anc_mode: Optional[str]) -> Image.Image:
     is_dark = theme == "dark"
 
     if state == IOpenFreebuds.STATE_WAIT or state == IOpenFreebuds.STATE_PAUSED:

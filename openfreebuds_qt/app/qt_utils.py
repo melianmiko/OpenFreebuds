@@ -3,7 +3,7 @@ import os
 import traceback
 from contextlib import contextmanager, asynccontextmanager, suppress
 
-from PyQt6.QtWidgets import QComboBox, QWidget, QMessageBox
+from PyQt6.QtWidgets import QComboBox, QWidget, QMessageBox, QBoxLayout
 
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.addons.report_tool import OfbQtReportTool
@@ -11,6 +11,16 @@ from openfreebuds_qt.app.dialog.error_dialog import OfbQtErrorDialog
 from openfreebuds_qt.generic import IOfbQtContext
 
 log = create_logger("OfbQtUtils")
+
+
+def widget_with_layout(parent: QWidget, direction: QBoxLayout.Direction):
+    root = QWidget(parent)
+    root_layout = QBoxLayout(direction)
+    root_layout.setContentsMargins(0, 0, 0, 0)
+    root_layout.setSpacing(0)
+    root.setLayout(root_layout)
+    parent.layout().addWidget(root)
+    return root, root_layout
 
 
 @asynccontextmanager

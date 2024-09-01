@@ -48,7 +48,7 @@ class OpenFreebudsCmd(PromptToolkitCmd):
                     print("  ", prop)
                     for opt in store[group][prop].split(","):
                         print("    - ", opt)
-                elif group == "dual_connect_devices":
+                elif group == "dual_connect":
                     print("  ", prop)
                     for key, value in json.loads(store[group][prop]).items():
                         print("    - ", to_fixed(key, 15), value)

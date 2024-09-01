@@ -9,10 +9,10 @@ from .anc import OfbHuaweiAncHandler, OfbHuaweiAncLegacyChangeHandler
 from .battery import OfbHuaweiBatteryHandler
 from .config_auto_pause import OfbHuaweiConfigAutoPauseHandler
 from .config_equalizer_preset import OfbHuaweiEqualizerPresetHandler
-from .config_sound_quality_preference import OfnHuaweiSoundQualityPreferenceHandler
-from .dual_connect import OfbHuaweiDualConnectHandler, OfbHuaweiDualConnectToggleHandler
+from .sound_quality_preference import OfnHuaweiSoundQualityPreferenceHandler
 from .info import OfbHuaweiInfoHandler
 from .logs import OfbHuaweiLogsHandler
 from .service_language import OfbHuaweiVoiceLanguageHandler
 from .state_in_ear import OfbHuaweiStateInEarHandler
 from .low_latency import OfbHuaweiLowLatencyPreferenceHandler
+from .dual_connect import OfbHuaweiDualConnectHandler

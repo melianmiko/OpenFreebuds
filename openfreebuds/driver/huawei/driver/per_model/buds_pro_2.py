@@ -23,7 +23,6 @@ class OfbDriverHuaweiPro2(OfbDriverHuaweiGeneric):
                 2: "hardbass",
                 3: "treble",
             }),
-            OfbHuaweiDualConnectToggleHandler(),
             OfbHuaweiDualConnectHandler(),
             OfbHuaweiVoiceLanguageHandler(),
         ]

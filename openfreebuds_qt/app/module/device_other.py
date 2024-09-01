@@ -47,6 +47,7 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                 if options is not None:
                     self.lang_options = options.split(",")
                     with blocked_signals(self.service_language_box):
+                        self.service_language_box.clear()
                         self.service_language_box.addItems(
                             [LANGUAGE_OPTION_MAPPING.get(o, o) for o in self.lang_options]
                         )

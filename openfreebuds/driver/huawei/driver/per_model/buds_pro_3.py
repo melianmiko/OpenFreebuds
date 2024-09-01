@@ -22,7 +22,6 @@ class OfbDriverHuaweiPro3(OfbDriverHuaweiGeneric):
                 9: "voice",
             }),
             OfbHuaweiConfigAutoPauseHandler(),
-            OfbHuaweiDualConnectToggleHandler(),
             # Not tested, no research data
             OfbHuaweiDualConnectHandler(),
             OfbHuaweiStateInEarHandler(),

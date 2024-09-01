@@ -16,5 +16,4 @@ class OfbDriverHuaweiPro(OfbDriverHuaweiGeneric):
             OfbHuaweiActionLongTapSplitHandler(w_right=True),
             OfbHuaweiVoiceLanguageHandler(),
             OfbHuaweiDualConnectHandler(),
-            OfbHuaweiDualConnectToggleHandler(),
         ]

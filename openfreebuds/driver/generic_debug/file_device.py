@@ -1,3 +1,4 @@
+import asyncio
 import json
 
 from openfreebuds.constants import APP_ROOT
@@ -23,6 +24,7 @@ class OfbFileDeviceDriver(OfbDriverGeneric):
             await self.put_property(None, None, json.loads(f.read()))
             log.info(f"Loaded store from {self._profile_file}.json")
 
+        await asyncio.sleep(1)
         self.started = True
 
     async def stop(self):

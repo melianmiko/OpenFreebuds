@@ -1,33 +1,38 @@
+import logging
 from typing import Optional
 
 from PyQt6.QtCore import pyqtSlot, Qt
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtWidgets import QWidget, QBoxLayout
 
+from openfreebuds_qt.app.qt_utils import widget_with_layout
 from openfreebuds_qt.app.widget import OfbQListItem
 from openfreebuds_qt.app.widget.list_header import OfbQListHeader
 
 
 class OfbQtSettingsTabHelper:
     class Entry:
-        def __init__(self, parent: QWidget, label: str, content: QWidget, section):
+        def __init__(self, label: str, content: QWidget, section):
             self.label = label
-            self.list_item = OfbQListItem(parent, parent.tr(label))
+            self.list_item = OfbQListItem(section.root, section.root.tr(label))
             self.content = content
             self.section: OfbQtSettingsTabHelper.Section = section
+
+            section.root_layout.addWidget(self.list_item)
+            section.items.append(self)
 
     class Section:
         def __init__(self, parent: QWidget, label: str, index: int):
             self.label = label
-            self.list_item: Optional[OfbQListHeader] = OfbQListHeader(parent, parent.tr(label)) if label else None
             self.items: list[OfbQtSettingsTabHelper.Entry] = []
             self.index: int = index
 
+            self.root, self.root_layout = widget_with_layout(parent, QBoxLayout.Direction.Down)
+            self.list_item: OfbQListHeader = OfbQListHeader(self.root, self.root.tr(label)) if label else None
+            self.root_layout.addWidget(self.list_item)
+
         def set_visible(self, visible: bool):
-            if self.list_item is not None:
-                self.list_item.setVisible(visible)
-            for w in self.items:
-                w.list_item.setVisible(visible)
+            self.root.setVisible(visible)
 
     def __init__(self, tabs_root: QWidget, body_root: QWidget):
         self.tabs_root = tabs_root
@@ -72,16 +77,15 @@ class OfbQtSettingsTabHelper:
                 item.list_item.label.setText(self.root.tr(item.label))
 
     def add_tab(self, label: str, content: QWidget):
-        section = len(self._sections) - 1
-        tab = len(self._sections[section].items)
-        entry = OfbQtSettingsTabHelper.Entry(parent=self.tabs_root,
-                                             label=label,
+        section_num = len(self._sections) - 1
+        tab = len(self._sections[section_num].items)
+        entry = OfbQtSettingsTabHelper.Entry(label=label,
                                              content=content,
-                                             section=self._sections[section])
+                                             section=self._sections[section_num])
 
         @pyqtSlot()
         def _activate(*_):
-            self.set_active_tab(section, tab)
+            self.set_active_tab(section_num, tab)
 
         @pyqtSlot()
         def _kbd_activate(e: QKeyEvent):
@@ -94,8 +98,7 @@ class OfbQtSettingsTabHelper:
 
         entry.list_item.label.mousePressEvent = _activate
         entry.list_item.label.keyPressEvent = _kbd_activate
-        self.tabs_layout.addWidget(entry.list_item)
-        self._sections[section].items.append(entry)
+        # self.tabs_layout.addWidget(entry.list_item)
         self.root_layout.addWidget(content)
         content.setVisible(False)
 
@@ -104,7 +107,7 @@ class OfbQtSettingsTabHelper:
     def add_section(self, label: str):
         section = len(self._sections)
         entry = OfbQtSettingsTabHelper.Section(self.tabs_root, label=label, index=section)
-        self.tabs_layout.addWidget(entry.list_item)
+        # self.tabs_layout.addWidget(entry.list_item)
         self._sections.append(entry)
         return entry
 

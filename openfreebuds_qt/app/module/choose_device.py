@@ -68,6 +68,8 @@ class OfbQtChooseDeviceModule(Ui_OfbQtDeviceSelectModule, OfbQtCommonModule):
             )
             self.config.set_device_data(name, address)
             self.config.save()
+            await asyncio.sleep(0.5)
+            await self._update_list()
 
     @asyncSlot()
     async def on_manual_config(self):

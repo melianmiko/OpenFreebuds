@@ -4,7 +4,7 @@ from typing import Optional
 from PyQt6.QtWidgets import QWidget, QLabel, QComboBox, QGridLayout
 from qasync import asyncSlot
 
-from openfreebuds import IOpenFreebuds
+from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
@@ -99,7 +99,7 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
                                      is_separate=False))
 
     async def update_ui(self, event: OfbCoreEvent):
-        if not event.is_changed("action"):
+        if not event.is_changed("action") and not event.kind_match(OfbEventKind.DEVICE_CHANGED):
             return
 
         actions = await self.ofb.get_property("action")

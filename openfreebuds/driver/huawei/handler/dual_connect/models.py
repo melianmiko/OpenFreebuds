@@ -1,5 +1,3 @@
-import json
-
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 
 
@@ -14,11 +12,11 @@ class OfbHuaweiDualConnectRow:
         self.connected = conn_state > 0
         self.playing = conn_state == 9
 
-    def __str__(self):
-        return json.dumps({
+    def to_dict(self):
+        return {
             "name": self.name,
             "auto_connect": self.auto_connect,
             "preferred": self.preferred,
             "connected": self.connected,
             "playing": self.playing,
-        })
+        }

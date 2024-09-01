@@ -1,12 +1,10 @@
 import json
 
 from PIL import ImageQt
-from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QWidget, QListWidgetItem, QMessageBox, QCheckBox
+from PyQt6.QtWidgets import QListWidgetItem, QMessageBox
 from qasync import asyncSlot
 
-from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
@@ -31,32 +29,23 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
 
     async def update_ui(self, event: OfbCoreEvent):
         async with qt_error_handler("OfbQtDualConnectModule_UpdateUi", self.ctx):
-            # Setup visibility depending on device modules
-            if event.kind_match(OfbEventKind.STATE_CHANGED):
-                state = await self.ofb.get_state()
-                if state == IOpenFreebuds.STATE_CONNECTED:
-                    available = await self.ofb.get_property("config", "dual_connect")
-                    self.list_item.setVisible(available is not None)
+            # Setup visibility
+            data = await self.ofb.get_property("dual_connect")
+            self.list_item.setVisible(data is not None)
+            if (not event.is_changed("dual_connect")
+                    or not data
+                    or "devices" not in data):
+                return
 
             # Setup global toggle
-            if event.is_changed("config", "dual_connect"):
+            if event.is_changed("dual_connect", "enabled"):
                 with blocked_signals(self.global_toggle):
-                    self.global_toggle.setChecked(
-                        await self.ofb.get_property("config", "dual_connect") == "true"
-                    )
+                    self.global_toggle.setChecked(data["enabled"] == "true")
 
             # Setup devices list
-            if not event.is_changed("dual_connect_devices"):
-                return
-
             self._all_data = []
             self.devices_list.clear()
-            devices = await self.ofb.get_property("dual_connect_devices")
-            if devices is None:
-                return
-
-            for addr, data_raw in devices.items():
-                data = json.loads(data_raw)
+            for addr, data in json.loads(data["devices"]).items():
                 icon = create_dual_connect_icon(is_connected=data["connected"],
                                                 is_playing=data["playing"],
                                                 is_primary=data["preferred"])
@@ -82,7 +71,7 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
             try:
                 self.button_toggle_connect.setEnabled(False)
                 await self.ofb.set_property(
-                    "dual_connect_devices",
+                    "dual_connect",
                     f"{addr}:connected",
                     json.dumps(not data["connected"])
                 )
@@ -100,7 +89,7 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
     @asyncSlot(bool)
     async def on_set_preferred(self, state: bool):
         addr = "000000000000" if not state else self._all_data[self._current_index][0]
-        await self.ofb.set_property("config", "preferred_device", addr)
+        await self.ofb.set_property("dual_connect", "preferred_device", addr)
 
     @asyncSlot(int)
     async def on_device_select(self, index: int):
@@ -114,12 +103,12 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
     @asyncSlot()
     async def on_refresh(self):
         self.refresh_button.setEnabled(False)
-        await self.ofb.set_property("dual_connect_devices", "refresh", "1")
+        await self.ofb.set_property("dual_connect", "refresh", "1")
 
     @asyncSlot()
     async def on_set_global_toggle(self):
         async with qt_error_handler("OfbQtDualConnectModule_GlobalToggle", self.ctx):
-            await self.ofb.set_property("config", "dual_connect", json.dumps(self.global_toggle.isChecked()))
+            await self.ofb.set_property("dual_connect", "enabled", json.dumps(self.global_toggle.isChecked()))
 
     @asyncSlot()
     async def on_unpair(self):
@@ -134,4 +123,4 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
             )
             box.setModal(True)
             if await exec_msg_box_async(box) == QMessageBox.StandardButton.Ok:
-                await self.ofb.set_property("dual_connect_devices", f"{addr}:name", "")
+                await self.ofb.set_property("dual_connect", f"{addr}:name", "")

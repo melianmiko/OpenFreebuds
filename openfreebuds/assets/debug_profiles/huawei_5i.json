@@ -1,59 +1,59 @@
 {
-    "info": {
-      "software_ver": "HarmonyOS 0.0.0",
-      "device_submodel": "BTFT0014-000145",
-      "device_model": "BTFT0014",
-      "is_debug": true
-    },
-    "state": {
-      "in_ear": "false"
-    },
-    "battery": {
-      "global": 90,
-      "left": 90,
-      "right": 90,
-      "case": 85,
-      "is_charging": "false"
-    },
-    "anc": {
-      "mode": "normal",
-      "mode_options": "normal,cancellation,awareness"
-    },
-    "action": {
-      "double_tap_left": "tap_action_off",
-      "double_tap_right": "tap_action_off",
-      "double_tap_options": "tap_action_pause,tap_action_prev,tap_action_next,tap_action_assistant,tap_action_off",
-      "double_tap_in_call": "tap_action_off",
-      "double_tap_in_call_options": "tap_action_off,tap_action_answer",
-      "triple_tap_left": "tap_action_off",
-      "triple_tap_right": "tap_action_off",
-      "triple_tap_options": "tap_action_prev,tap_action_next,tap_action_off",
-      "long_tap_left": "tap_action_off",
-      "long_tap_right": "tap_action_off",
-      "long_tap_options": "tap_action_off,tap_action_switch_anc",
-      "noise_control_left": "noise_control_off_on_aw",
-      "noise_control_right": "noise_control_off_on_aw",
-      "noise_control_options": "noise_control_off_on,noise_control_off_on_aw,noise_control_on_aw,noise_control_off_aw",
-      "swipe_gesture": "tap_action_change_volume",
-      "swipe_gesture_options": "tap_action_off,tap_action_change_volume"
-    },
-    "config": {
-      "auto_pause": "false",
-      "sound_quality_preference": "sqp_quality",
-      "sound_quality_preference_options": "sqp_connectivity,sqp_quality",
-      "low_latency": "false",
-      "equalizer_preset": "equalizer_preset_default",
-      "equalizer_preset_options": "equalizer_preset_default,equalizer_preset_hardbass,equalizer_preset_treble,equalizer_preset_voices",
-      "dual_connect": "true",
-      "preferred_device": "dba7f2d384e4"
-    },
-    "service": {
-      "language": "",
-      "language_options": "zh-CN,en-GB"
-    },
-    "dual_connect_devices": {
-      "010000000000": "{\"name\": \"Device 1\", \"auto_connect\": true, \"preferred\": false, \"connected\": true, \"playing\": true}",
-      "020000000000": "{\"name\": \"Device 2\", \"auto_connect\": false, \"preferred\": false, \"connected\": false, \"playing\": false}",
-      "030000000000": "{\"name\": \"Device 3\", \"auto_connect\": true, \"preferred\": true, \"connected\": true, \"playing\": false}"
-    }
+  "info": {
+    "software_ver": "HarmonyOS 0.0.0",
+    "device_submodel": "BTFT0014-000145",
+    "device_model": "BTFT0014",
+    "is_debug": true
+  },
+  "state": {
+    "in_ear": "false"
+  },
+  "battery": {
+    "global": 90,
+    "left": 90,
+    "right": 90,
+    "case": 85,
+    "is_charging": "false"
+  },
+  "anc": {
+    "mode": "normal",
+    "mode_options": "normal,cancellation,awareness"
+  },
+  "action": {
+    "double_tap_left": "tap_action_off",
+    "double_tap_right": "tap_action_off",
+    "double_tap_options": "tap_action_pause,tap_action_prev,tap_action_next,tap_action_assistant,tap_action_off",
+    "double_tap_in_call": "tap_action_off",
+    "double_tap_in_call_options": "tap_action_off,tap_action_answer",
+    "triple_tap_left": "tap_action_off",
+    "triple_tap_right": "tap_action_off",
+    "triple_tap_options": "tap_action_prev,tap_action_next,tap_action_off",
+    "long_tap_left": "tap_action_off",
+    "long_tap_right": "tap_action_off",
+    "long_tap_options": "tap_action_off,tap_action_switch_anc",
+    "noise_control_left": "noise_control_off_on_aw",
+    "noise_control_right": "noise_control_off_on_aw",
+    "noise_control_options": "noise_control_off_on,noise_control_off_on_aw,noise_control_on_aw,noise_control_off_aw",
+    "swipe_gesture": "tap_action_change_volume",
+    "swipe_gesture_options": "tap_action_off,tap_action_change_volume"
+  },
+  "sound": {
+    "quality_preference": "sqp_quality",
+    "quality_preference_options": "sqp_connectivity,sqp_quality",
+    "equalizer_preset": "equalizer_preset_default",
+    "equalizer_preset_options": "equalizer_preset_default,equalizer_preset_hardbass,equalizer_preset_treble,equalizer_preset_voices"
+  },
+  "config": {
+    "auto_pause": "false",
+    "low_latency": "false"
+  },
+  "service": {
+    "language": "",
+    "language_options": "zh-CN,en-GB"
+  },
+  "dual_connect": {
+    "enabled": "true",
+    "preferred_device": "dba7f2d384e4",
+    "devices": "{\"010000000000\":{\"name\":\"Device 1\",\"auto_connect\":true,\"preferred\":false,\"connected\":true,\"playing\":true},\"020000000000\":{\"name\":\"Device 2\",\"auto_connect\":false,\"preferred\":false,\"connected\":false,\"playing\":false},\"030000000000\":{\"name\":\"Device 3\",\"auto_connect\":true,\"preferred\":true,\"connected\":true,\"playing\":false}}"
   }
+}

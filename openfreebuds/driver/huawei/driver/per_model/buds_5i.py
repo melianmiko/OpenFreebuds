@@ -27,6 +27,5 @@ class OfbDriverHuawei5I(OfbDriverHuaweiGeneric):
                 9: "voices",
             }),
             OfbHuaweiVoiceLanguageHandler(),
-            OfbHuaweiDualConnectToggleHandler(),
             OfbHuaweiDualConnectHandler(),
         ]

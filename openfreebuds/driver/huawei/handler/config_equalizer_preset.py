@@ -9,7 +9,7 @@ class OfbHuaweiEqualizerPresetHandler(OfbDriverHandlerHuawei):
     """
     handler_id = "config_eq"
     properties = [
-        ("config", "equalizer_preset")
+        ("sound", "equalizer_preset")
     ]
     commands = [b"\x2b\x4a"]
     ignore_commands = [b"\x2b\x49"]
@@ -36,7 +36,7 @@ class OfbHuaweiEqualizerPresetHandler(OfbDriverHandlerHuawei):
 
         if len(value) == 1:
             value = int.from_bytes(value, byteorder="big", signed=True)
-            await self.driver.put_property("config", "equalizer_preset",
+            await self.driver.put_property("sound", "equalizer_preset",
                                      self.w_presets.get(value, f"unknown_{value}"))
-            await self.driver.put_property("config", "equalizer_preset_options",
+            await self.driver.put_property("sound", "equalizer_preset_options",
                                      ",".join(self.w_presets.values()))
