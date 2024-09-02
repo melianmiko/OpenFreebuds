@@ -9,3 +9,6 @@ IGNORED_LOG_TAGS = [
     "qasync._QThreadWorker",
     "qasync._windows._EventWorker",
 ]
+
+LINK_WEBSITE = "https://mmk.pw/en/openfreebuds/"
+LINK_GITHUB = "https://github.com/melianmiko/OpenFreebuds/"

@@ -7,6 +7,7 @@ from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.app.helper.setting_tab_helper import OfbQtSettingsTabHelper
+from openfreebuds_qt.app.module.about import OfbQtAboutModule
 from openfreebuds_qt.app.module.choose_device import OfbQtChooseDeviceModule
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.app.module.device_info import OfbQtDeviceInfoModule
@@ -32,7 +33,7 @@ class OfbQtSettingsUi:
         self._ui_modules: list[OfbQtCommonModule] = []
 
         # App-related modules
-        self._attach_module("About Openfreebuds...", OfbEmptyModule(self.tabs.root, self.ctx))
+        self._attach_module("About Openfreebuds...", OfbQtAboutModule(self.tabs.root, self.ctx))
         self._attach_module("User interface", OfbEmptyModule(self.tabs.root, self.ctx))
         if self.ctx.ofb.role == "standalone":
             self._attach_module("Select device", OfbQtChooseDeviceModule(self.tabs.root, self.ctx))

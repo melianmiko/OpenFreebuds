@@ -1,6 +1,6 @@
+import sys
 from typing import Optional
 
-from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QKeySequence, QIcon
 from PyQt6.QtWidgets import QMenu
 from qasync import asyncSlot
@@ -23,6 +23,7 @@ from openfreebuds_qt.tray.main import OfbTrayIcon
 
 log = create_logger("OfbQtMainWindow")
 
+WIN32_BODY_STYLE = "QPushButton, QComboBox { padding: 6px 12px; }"
 
 class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbQtContext):
     settings: OfbQtSettingsUi
@@ -35,7 +36,11 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbQtContext):
 
         self.setupUi(self)
         self.retranslateUi(self)
+
+        # Win32 staff
         self.setWindowIcon(QIcon(str(ASSETS_PATH / "icon.png")))
+        if sys.platform == "win32":
+            self.body_content.setStyleSheet(WIN32_BODY_STYLE)
 
         # Extras button
         self.extra_options_button.setIcon(

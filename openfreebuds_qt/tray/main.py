@@ -50,7 +50,7 @@ class OfbTrayIcon(IOfbTrayIcon):
             and await self.ofb.get_state() == self.ofb.STATE_CONNECTED
         ):
             async with qt_error_handler("OfbTrayIcon_OnClick", self.ctx):
-                tray_shortcut = self.config.get("ui", "tray_shortcut", "anc_next")
+                tray_shortcut = self.config.get("ui", "tray_shortcut", "next_mode")
                 await self.ofb.run_shortcut(tray_shortcut)
 
     async def boot(self):
