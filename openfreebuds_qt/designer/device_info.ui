@@ -17,10 +17,34 @@
    <property name="verticalSpacing">
     <number>8</number>
    </property>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label_3">
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Firmware version:</string>
+      <string>Bluetooth address:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="device_address">
+     <property name="text">
+      <string notr="true">00:00:00:00:00:00</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>All available device information fields:</string>
+     </property>
+     <property name="margin">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLabel" name="device_firmware">
+     <property name="text">
+      <string notr="true">0.0.0</string>
      </property>
     </widget>
    </item>
@@ -34,6 +58,13 @@
      </property>
      <property name="text">
       <string>Device name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Firmware version:</string>
      </property>
     </widget>
    </item>
@@ -92,55 +123,24 @@
      </column>
      <item row="0" column="0">
       <property name="text">
-       <string>Test 1</string>
+       <string notr="true">Test 1</string>
       </property>
      </item>
      <item row="0" column="1">
       <property name="text">
-       <string>1</string>
+       <string notr="true">1</string>
       </property>
      </item>
      <item row="1" column="0">
       <property name="text">
-       <string>Test 2</string>
+       <string notr="true">Test 2</string>
       </property>
      </item>
      <item row="1" column="1">
       <property name="text">
-       <string>2</string>
+       <string notr="true">2</string>
       </property>
      </item>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Bluetooth address:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QLabel" name="device_firmware">
-     <property name="text">
-      <string>0.0.0</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QLabel" name="device_address">
-     <property name="text">
-      <string>00:00:00:00:00:00</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>All available device information fields:</string>
-     </property>
-     <property name="margin">
-      <number>0</number>
-     </property>
     </widget>
    </item>
   </layout>

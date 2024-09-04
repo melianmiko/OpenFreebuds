@@ -1,5 +1,3 @@
-import logging
-
 from qasync import asyncSlot
 
 from openfreebuds.utils.logger import create_logger
@@ -7,7 +5,6 @@ from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.app.qt_utils import fill_combo_box
 from openfreebuds_qt.designer.sound_quality import Ui_OfbQtSoundQualityModule
-from openfreebuds_qt.i18n_mappings import EQ_PRESET_MAPPING
 
 log = create_logger("OfbQtSoundQualityModule")
 
@@ -15,6 +12,14 @@ log = create_logger("OfbQtSoundQualityModule")
 class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.eq_preset_option_names = {
+            "equalizer_preset_default": self.tr("Default"),
+            "equalizer_preset_hardbass": self.tr("Bass-boost"),
+            "equalizer_preset_treble": self.tr("Treble-boost"),
+            "equalizer_preset_voices": self.tr("Voices"),
+        }
+
         self._eq_last_options: list[str] = []
 
         self.setupUi(self)
@@ -45,7 +50,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
             self.eq_root.setVisible(value is not None and options is not None)
             if options is not None:
                 self._eq_last_options = list(options.split(","))
-                fill_combo_box(self.eq_preset_box, self._eq_last_options, EQ_PRESET_MAPPING, value)
+                fill_combo_box(self.eq_preset_box, self._eq_last_options, self.eq_preset_option_names, value)
 
     @asyncSlot()
     async def on_sq_set_connectivity(self):

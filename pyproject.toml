@@ -13,6 +13,7 @@ include = [
     { path = "openfreebuds/assets", format = ["sdist", "wheel"] },
     { path = "openfreebuds_qt/assets", format = ["sdist", "wheel"] },
     { path = "openfreebuds_qt/designer/*.py", format = ["wheel"] },
+    { path = "openfreebuds_qt/i18n/*.qm", format = ["wheel"] },
 ]
 
 [tool.poetry.scripts]

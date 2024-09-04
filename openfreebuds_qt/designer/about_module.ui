@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>542</width>
-    <height>482</height>
+    <height>498</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -65,7 +65,7 @@
             </font>
            </property>
            <property name="text">
-            <string>OpenFreebuds</string>
+            <string notr="true">OpenFreebuds</string>
            </property>
           </widget>
          </item>
@@ -84,14 +84,14 @@
             </font>
            </property>
            <property name="text">
-            <string>v0.99</string>
+            <string notr="true">v0.99</string>
            </property>
           </widget>
          </item>
          <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
+            <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -117,7 +117,7 @@
       <item>
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>by melianmiko</string>
+         <string notr="true">by melianmiko</string>
         </property>
        </widget>
       </item>
@@ -156,7 +156,7 @@
          <item>
           <spacer name="horizontalSpacer_2">
            <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
+            <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -174,6 +174,11 @@
         <property name="headerHidden">
          <bool>true</bool>
         </property>
+        <column>
+         <property name="text">
+          <string notr="true">1</string>
+         </property>
+        </column>
        </widget>
       </item>
      </layout>

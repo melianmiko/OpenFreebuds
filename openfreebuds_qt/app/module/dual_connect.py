@@ -116,7 +116,7 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
             box = QMessageBox(
                 QMessageBox.Icon.Question,
                 self.tr("Unpair device"),
-                self.tr("Do you really want to unpair {} from your headphones?").format(data["name"]),
+                self.tr("Do you really want to unpair %1 from your headphones?").replace("%1", data["name"]),
                 QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel,
                 self
             )

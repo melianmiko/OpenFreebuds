@@ -17,7 +17,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Media playback contol</string>
+      <string>Media playback control</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -49,7 +49,7 @@
       <item>
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Looks like you're using Wayland desktop environment. Due to that OpenFreebuds built'in global hotkeys won't work. If you want to use keyboard shortcuts, setup them from your desktop environment settings.</string>
+         <string>Looks like you're using Wayland desktop environment. Due to that OpenFreebuds built-in global hotkeys won't work. If you want to use keyboard shortcuts, setup them from your desktop environment settings.</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>

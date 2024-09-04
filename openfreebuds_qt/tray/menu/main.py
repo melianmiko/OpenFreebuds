@@ -4,18 +4,17 @@ from PyQt6.QtGui import QAction
 from qasync import asyncSlot
 
 from openfreebuds import IOpenFreebuds, OfbEventKind
-from openfreebuds_backend import OfbBackendDependencyMissingError
+from openfreebuds_backend.exception import OfbBackendDependencyMissingError
 from openfreebuds_qt.addons.report_tool import OfbQtReportTool
 from openfreebuds_qt.app.dialog.dependency_missing import OfbQtDependencyMissingDialog
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.generic import IOfbQtContext
-from openfreebuds_qt.i18n_mappings import ANC_MODE_MAPPINGS, BATTERY_PROP_MAPPINGS
 from openfreebuds_qt.tray.generic import IOfbTrayIcon
-from openfreebuds_qt.tray.menu.generic import OfbTrayMenu
+from openfreebuds_qt.tray.menu.generic import OfbQtTrayMenuCommon
 from openfreebuds_qt.tray.menu.submenu import OfbDeviceAncLevelTrayMenu
 
 
-class OfbQtTrayMenu(OfbTrayMenu):
+class OfbQtTrayMenu(OfbQtTrayMenuCommon):
     def __init__(self, tray: IOfbTrayIcon, context: IOfbQtContext, ofb: IOpenFreebuds):
         super().__init__(context, ofb)
 
@@ -23,6 +22,19 @@ class OfbQtTrayMenu(OfbTrayMenu):
         self.tray: IOfbTrayIcon = tray
         self.is_connected: bool = False
         self.first_time_render: bool = True
+
+        # Translation data
+        self.battery_option_names = {
+            "left": self.tr("Left headphone:"),
+            "right": self.tr("Right headphone:"),
+            "case": self.tr("Battery case:"),
+            "global": self.tr("Battery:"),
+        }
+        self.anc_mode_option_names = {
+            "normal": self.tr("Disable noise control"),
+            "cancellation": self.tr("Noise cancelling"),
+            "awareness": self.tr("Awareness"),
+        }
 
         # Header items
         self.device_name_action = self.add_item("OpenFreebuds",
@@ -50,8 +62,8 @@ class OfbQtTrayMenu(OfbTrayMenu):
         # ANC settings
         self.anc_section = self.new_section()
         self.anc_mode_actions: dict[str, QAction] = {}
-        for code in ANC_MODE_MAPPINGS:
-            self._add_anc_mode_option(code, ANC_MODE_MAPPINGS[code])
+        for code in self.anc_mode_option_names:
+            self._add_anc_mode_option(code, self.anc_mode_option_names[code])
         self.anc_level_submenu = OfbDeviceAncLevelTrayMenu(self, ofb)
         self.anc_level_action = self.add_menu(self.anc_level_submenu)
         self.anc_level_action.setVisible(False)
@@ -108,7 +120,7 @@ class OfbQtTrayMenu(OfbTrayMenu):
         for code in battery:
             if code in self.battery_actions:
                 self.battery_actions[code].setText(
-                    f"{self.tr(BATTERY_PROP_MAPPINGS[code])} {battery[code]}%"
+                    f"{self.battery_option_names[code]} {battery[code]}%"
                 )
 
     async def _update_anc(self, anc: dict):
@@ -129,7 +141,7 @@ class OfbQtTrayMenu(OfbTrayMenu):
         async def _set_anc(_):
             await self.ofb.set_property("anc", "mode", code)
 
-        self.anc_mode_actions[code] = self.add_item(text=self.tr(display_name),
+        self.anc_mode_actions[code] = self.add_item(text=display_name,
                                                     callback=_set_anc,
                                                     visible=False,
                                                     checked=False)

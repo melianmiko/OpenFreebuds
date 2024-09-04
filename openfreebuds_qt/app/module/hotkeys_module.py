@@ -8,16 +8,15 @@ from openfreebuds.shortcuts import OfbShortcuts
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.addons.hotkeys.recorder import OfbQtHotkeyRecorder
 from openfreebuds_qt.addons.hotkeys.service import OfbQtHotkeyService
-from openfreebuds_qt.app.module.common import OfbQtCommonModule
+from openfreebuds_qt.app.module.common_with_shortcuts import OfbQtCommonWithShortcutsModule
 from openfreebuds_qt.app.qt_utils import qt_error_handler, blocked_signals
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.designer.hotkeys import Ui_OfbQtHotkeysModule
-from openfreebuds_qt.i18n_mappings import OFB_SHORTCUT_NAME_MAPPING
 
 log = create_logger("OfbQtHotkeysModule")
 
 
-class OfbQtHotkeysModule(Ui_OfbQtHotkeysModule, OfbQtCommonModule):
+class OfbQtHotkeysModule(Ui_OfbQtHotkeysModule, OfbQtCommonWithShortcutsModule):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -34,7 +33,7 @@ class OfbQtHotkeysModule(Ui_OfbQtHotkeysModule, OfbQtCommonModule):
         self.table.setEnabled(self.config.get("hotkeys", "enabled", False))
         self.table.setRowCount(len(self.all_shortcuts))
         for index, shortcut in enumerate(self.all_shortcuts):
-            self.table.setItem(index, 0, QTableWidgetItem(OFB_SHORTCUT_NAME_MAPPING.get(shortcut, shortcut)))
+            self.table.setItem(index, 0, QTableWidgetItem(self.shortcut_names.get(shortcut, shortcut)))
             self.table.setItem(index, 1, QTableWidgetItem(self.config.get("hotkeys", shortcut, "Disabled")))
 
     @staticmethod

@@ -33,22 +33,22 @@ class OfbQtSettingsUi:
         self._ui_modules: list[OfbQtCommonModule] = []
 
         # App-related modules
-        self._attach_module("About Openfreebuds...", OfbQtAboutModule(self.tabs.root, self.ctx))
-        self._attach_module("User interface", OfbEmptyModule(self.tabs.root, self.ctx))
+        self._attach_module(self.ctx.tr("About OpenFreebuds..."), OfbQtAboutModule(self.tabs.root, self.ctx))
+        self._attach_module(self.ctx.tr("User interface"), OfbEmptyModule(self.tabs.root, self.ctx))
         if self.ctx.ofb.role == "standalone":
-            self._attach_module("Select device", OfbQtChooseDeviceModule(self.tabs.root, self.ctx))
+            self._attach_module(self.ctx.tr("Select device"), OfbQtChooseDeviceModule(self.tabs.root, self.ctx))
         if OfbQtHotkeysModule.available():
-            self._attach_module("Keyboard shortcuts", OfbQtHotkeysModule(self.tabs.root, self.ctx))
+            self._attach_module(self.ctx.tr("Keyboard shortcuts"), OfbQtHotkeysModule(self.tabs.root, self.ctx))
         if sys.platform == "linux":
-            self._attach_module("Linux-related", OfbQtLinuxExtrasModule(self.tabs.root, self.ctx))
+            self._attach_module(self.ctx.tr("Linux-related"), OfbQtLinuxExtrasModule(self.tabs.root, self.ctx))
 
         # Device-related modules
         self.device_section = self.tabs.add_section("Device-related")
-        self._attach_module("Device info", OfbQtDeviceInfoModule(self.tabs.root, self.ctx))
-        self._attach_module("Dual-connect", OfbQtDualConnectModule(self.tabs.root, self.ctx))
-        self._attach_module("Gestures", OfbQtGesturesModule(self.tabs.root, self.ctx))
-        self._attach_module("Sound quality", OfbQtSoundQualityModule(self.tabs.root, self.ctx))
-        self._attach_module("Other settings", OfbQtDeviceOtherSettingsModule(self.tabs.root, self.ctx))
+        self._attach_module(self.ctx.tr("Device info"), OfbQtDeviceInfoModule(self.tabs.root, self.ctx))
+        self._attach_module(self.ctx.tr("Dual-connect"), OfbQtDualConnectModule(self.tabs.root, self.ctx))
+        self._attach_module(self.ctx.tr("Gestures"), OfbQtGesturesModule(self.tabs.root, self.ctx))
+        self._attach_module(self.ctx.tr("Sound quality"), OfbQtSoundQualityModule(self.tabs.root, self.ctx))
+        self._attach_module(self.ctx.tr("Other settings"), OfbQtDeviceOtherSettingsModule(self.tabs.root, self.ctx))
 
         # Finish
         self.default_tab = 0, 1

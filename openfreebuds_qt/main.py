@@ -1,8 +1,9 @@
 import sys
 from typing import Optional
 
+from PyQt6.QtCore import QTranslator, QLibraryInfo, QLocale
 from PyQt6.QtGui import QKeySequence, QIcon
-from PyQt6.QtWidgets import QMenu
+from PyQt6.QtWidgets import QMenu, QApplication
 from qasync import asyncSlot
 
 from openfreebuds.utils.logger import create_logger
@@ -15,9 +16,10 @@ from openfreebuds_qt.app.main import OfbQtSettingsUi
 from openfreebuds_qt.app.qt_utils import qt_error_handler
 from openfreebuds_qt.config.config_lock import ConfigLock
 from openfreebuds_qt.config.main import OfbQtConfigParser
-from openfreebuds_qt.constants import ASSETS_PATH
+from openfreebuds_qt.constants import ASSETS_PATH, I18N_PATH
 from openfreebuds_qt.designer.main_window import Ui_OfbMainWindowDesign
 from openfreebuds_qt.generic import IOfbQtContext
+from openfreebuds_qt.i18n import list_available_locales
 from openfreebuds_qt.icon.qt_icon import get_qt_icon_colored
 from openfreebuds_qt.tray.main import OfbTrayIcon
 
@@ -28,14 +30,21 @@ WIN32_BODY_STYLE = "QPushButton, QComboBox { padding: 6px 12px; }"
 class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbQtContext):
     settings: OfbQtSettingsUi
 
-    def __init__(self):
+    def __init__(self, app: QApplication):
         super().__init__()
 
+        self.app = app
         self._exit_started: bool = False
         self.auto_select: Optional[OfbQtDeviceAutoSelect] = None
 
+        self.config = OfbQtConfigParser.get_instance()
+
+        # Qt settings
+        self.translator = QTranslator()
+        self.qt_translator = QTranslator()
+        self.setup_qt()
+
         self.setupUi(self)
-        self.retranslateUi(self)
 
         # Win32 staff
         self.setWindowIcon(QIcon(str(ASSETS_PATH / "icon.png")))
@@ -52,7 +61,24 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbQtContext):
         self._fill_extras_menu()
 
         self.tabs = OfbQtSettingsTabHelper(self.tabs_list_content, self.body_content)
-        self.config = OfbQtConfigParser.get_instance()
+
+    def setup_qt(self):
+        locale = self.config.get("ui", "language", "auto")
+        available_locales = list_available_locales()
+
+        if locale == "auto":
+            locale = QLocale.system().name()
+        if locale not in available_locales:
+            locale = locale.split("_")[0]
+            if locale not in available_locales:
+                locale = "en"
+
+        self.translator.load(str(I18N_PATH / f"{locale}.qm"))
+        self.app.installTranslator(self.translator)
+
+        self.qt_translator.load("qtbase_" + locale,
+                        QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath))
+        self.app.installTranslator(self.qt_translator)
 
     def _fill_extras_menu(self):
         bugreport_action = self.extra_menu.addAction(self.tr("Bugreport..."))

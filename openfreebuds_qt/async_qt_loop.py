@@ -1,8 +1,7 @@
 import asyncio
 import sys
-from contextlib import asynccontextmanager
 
-from PyQt6.QtWidgets import QApplication, QWidget
+from PyQt6.QtWidgets import QApplication
 from qasync import QEventLoop
 
 
@@ -16,7 +15,7 @@ def qt_app_entrypoint(WidgetClass):
             app_close_event = asyncio.Event()
             app.aboutToQuit.connect(app_close_event.set)
 
-            widget = WidgetClass()
+            widget = WidgetClass(app)
             event_loop.create_task(callback(app, widget))
             event_loop.run_until_complete(app_close_event.wait())
             event_loop.close()

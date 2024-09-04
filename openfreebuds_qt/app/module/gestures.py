@@ -1,16 +1,15 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from PyQt6.QtWidgets import QWidget, QLabel, QComboBox, QGridLayout
+from PyQt6.QtWidgets import QLabel, QComboBox, QGridLayout
 from qasync import asyncSlot
 
-from openfreebuds import IOpenFreebuds, OfbEventKind
+from openfreebuds import OfbEventKind
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.app.qt_utils import fill_combo_box
 from openfreebuds_qt.designer.module_geatures import Ui_OfbQtGesturesModule
-from openfreebuds_qt.i18n_mappings import GESTURE_ACTION_MAPPINGS, NOISE_CONTROL_OPTION_MAPPING
 
 log = create_logger("OfbQtGesturesModule")
 
@@ -53,47 +52,67 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.gesture_names = {
+            "tap_action_answer": self.tr("Answer to call"),
+            "tap_action_change_volume": self.tr("Adjust volume"),
+            "tap_action_assistant": self.tr("Voice assistant"),
+            "tap_action_next": self.tr("Next track"),
+            "tap_action_off": self.tr("Disabled"),
+            "tap_action_pause": self.tr("Play/pause"),
+            "tap_action_prev": self.tr("Prev track"),
+            "tap_action_switch_device": self.tr("Switch device"),
+            "tap_action_switch_anc": self.tr("Switch noise control mode"),
+        }
+
+        self.anc_pref_names = {
+            "noise_control_disabled": self.tr("Disabled"),
+            "noise_control_off_on": self.tr("Off and cancellation"),
+            "noise_control_off_on_aw": self.tr("Cycle all modes"),
+            "noise_control_on_aw": self.tr("Cancellation and awareness"),
+            "noise_control_off_an": self.tr("Off and awareness"),
+        }
+
         self._ui_rows: list[_UiRow] = []
 
         self.setupUi(self)
         self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
                                      settings_prefix="double_tap",
-                                     ui_names_map=GESTURE_ACTION_MAPPINGS,
+                                     ui_names_map=self.gesture_names,
                                      label=self.double_label,
                                      left_combo=self.double_left,
                                      right_combo=self.double_right))
         self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
                                      settings_prefix="double_tap_in_call",
-                                     ui_names_map=GESTURE_ACTION_MAPPINGS,
+                                     ui_names_map=self.gesture_names,
                                      label=self.double_in_call_label,
                                      left_combo=self.double_in_call_left,
                                      is_separate=False))
         self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
                                      settings_prefix="triple_tap",
-                                     ui_names_map=GESTURE_ACTION_MAPPINGS,
+                                     ui_names_map=self.gesture_names,
                                      label=self.triple_label,
                                      left_combo=self.triple_left,
                                      right_combo=self.triple_right))
         self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
                                      settings_prefix="long_tap",
-                                     ui_names_map=GESTURE_ACTION_MAPPINGS,
+                                     ui_names_map=self.gesture_names,
                                      label=self.long_label,
                                      left_combo=self.long_left,
                                      right_combo=self.long_right))
         self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
                                      settings_prefix="noise_control",
-                                     ui_names_map=NOISE_CONTROL_OPTION_MAPPING,
+                                     ui_names_map=self.anc_pref_names,
                                      label=self.long_anc_label,
                                      left_combo=self.long_anc_left))
         self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
                                      settings_prefix="power_button",
-                                     ui_names_map=GESTURE_ACTION_MAPPINGS,
+                                     ui_names_map=self.gesture_names,
                                      label=self.power_label,
                                      left_combo=self.power_left,
                                      is_separate=False))
         self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
                                      settings_prefix="swipe_gesture",
-                                     ui_names_map=GESTURE_ACTION_MAPPINGS,
+                                     ui_names_map=self.gesture_names,
                                      label=self.swipe_label,
                                      left_combo=self.swipe_left,
                                      is_separate=False))

@@ -5,6 +5,7 @@ WHEEL_FILE := $(shell find ${PWD} -maxdepth 1 -name '*.whl')
 
 all:
 	cd ../.. && pyuic6 openfreebuds_qt/designer
+	cd ../.. && /usr/lib/qt6/bin/lrelease openfreebuds_qt/i18n
 	cd ../.. && poetry build
 	cp ../../dist/openfreebuds* .
 

@@ -7,7 +7,7 @@ from openfreebuds import IOpenFreebuds
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 
 
-class OfbTrayMenu(QMenu):
+class OfbQtTrayMenuCommon(QMenu):
     def __init__(self, parent: QWidget, ofb: IOpenFreebuds):
         super().__init__(parent)
         self._sections: list[list[QAction]] = [[]]

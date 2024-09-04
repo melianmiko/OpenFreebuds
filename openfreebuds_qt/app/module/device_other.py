@@ -1,14 +1,17 @@
 import json
 
-from PyQt6.QtWidgets import QWidget
 from qasync import asyncSlot
 
-from openfreebuds import IOpenFreebuds, OfbEventKind
+from openfreebuds import OfbEventKind
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.app.qt_utils import blocked_signals, qt_error_handler
 from openfreebuds_qt.designer.device_other import Ui_OfbQtDeviceOtherSettingsModule
-from openfreebuds_qt.i18n_mappings import LANGUAGE_OPTION_MAPPING
+
+LANGUAGE_OPTION_MAPPING = {
+    "en-GB": "English (British)",
+    "zh-CN": "Chinese"
+}
 
 
 class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCommonModule):

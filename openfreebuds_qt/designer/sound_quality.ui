@@ -40,7 +40,7 @@
       <item>
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>Device will prefer losless audio codecs, like LDAC.</string>
+         <string>Device will prefer loseless audio codecs, like LDAC.</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>

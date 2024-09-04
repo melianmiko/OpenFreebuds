@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>DualConnect</string>
+   <string>Dual connect</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">
@@ -98,17 +98,7 @@
         </property>
         <item>
          <property name="text">
-          <string>New Item</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>New Item</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>New Item</string>
+          <string notr="true">New Item</string>
          </property>
         </item>
        </widget>
@@ -227,14 +217,14 @@
          <item row="0" column="1">
           <widget class="QLabel" name="current_device_name">
            <property name="text">
-            <string>Xiomi Galaxy S99 Plus Pro Max LE</string>
+            <string notr="true">Xiomi Galaxy S99 Plus Pro Max LE</string>
            </property>
           </widget>
          </item>
          <item row="1" column="1">
           <widget class="QLabel" name="current_device_address">
            <property name="text">
-            <string>11:22:33:44:55:66</string>
+            <string notr="true">11:22:33:44:55:66</string>
            </property>
           </widget>
          </item>
@@ -244,7 +234,7 @@
       <item>
        <widget class="QCheckBox" name="current_device_prefered">
         <property name="text">
-         <string>Prefered device</string>
+         <string>Preferred device</string>
         </property>
        </widget>
       </item>
