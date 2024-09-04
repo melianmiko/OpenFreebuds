@@ -1,8 +1,7 @@
-import ctypes
+import asyncio
 import logging
 import os
 import subprocess
-import webbrowser
 
 # noinspection PyUnresolvedReferences,PyPackageRequirements
 from winsdk.windows.devices.bluetooth import BluetoothDevice
@@ -12,6 +11,7 @@ from winsdk.windows.devices.enumeration import DeviceInformation, DeviceInformat
 from winsdk.windows.networking import HostName
 
 from openfreebuds_backend.errors import BluetoothNotAvailableError
+from openfreebuds_backend.exception import OfbBackendDependencyMissingError
 
 extra_tools_dir = 'C:\\Program Files (x86)\\Bluetooth Command Line Tools\\bin'
 extra_tools_url = "https://bluetoothinstaller.com/bluetooth-command-line-tools/BluetoothCLTools-1.2.0.56.exe"
@@ -32,17 +32,17 @@ async def bt_is_connected(address):
 
 
 async def bt_connect(address):
-    if not _tools_ready():
-        return False
+    if not os.path.isdir(extra_tools_dir):
+        raise OfbBackendDependencyMissingError("Bluetooth Command Line Tools required", extra_tools_url)
 
     base_args = [extra_tools_dir + "\\btcom.exe", "-b\"{}\"".format(address)]
 
     try:
-        _run_commands([
+        await _run_commands([
             base_args + ["-r", "-s111e"],
             base_args + ["-r", "-s110b"]
         ])
-        _run_commands([
+        await _run_commands([
             base_args + ["-c", "-s111e"],
             base_args + ["-c", "-s110b"]
         ])
@@ -53,16 +53,17 @@ async def bt_connect(address):
 
 
 async def bt_disconnect(address):
-    if not _tools_ready():
-        return False
+    if not os.path.isdir(extra_tools_dir):
+        raise OfbBackendDependencyMissingError("Bluetooth Command Line Tools required", extra_tools_url)
 
     base_args = [extra_tools_dir + "\\btcom.exe", "-b\"{}\"".format(address)]
 
     try:
-        _run_commands([
+        await _run_commands([
             base_args + ["-r", "-s111e"],
             base_args + ["-r", "-s110b"]
         ])
+        await asyncio.sleep(1)
         return True
     except subprocess.CalledProcessError:
         log.exception("Can't disconnect device")
@@ -91,31 +92,7 @@ async def bt_list_devices():
     return out
 
 
-def _run_commands(commands):
-    processes = []
-    for cmd in commands:
-        r = subprocess.Popen(cmd, startupinfo=no_console)
-        processes.append(r)
-    for a in processes:
-        a.wait()
-
-
-def _tools_ready():
-    if os.path.isdir(extra_tools_dir):
-        return True
-
-    response = ctypes.windll.user32.MessageBoxW(
-        None,
-        ("To use this feature, you must install \"Bluetooth Command Line Tools\"\n "
-          "from bluetoothinstaller.com. Without this, you can't use connect/disconnect\n"
-          "features on Windows. Notice that this software is provided \"as is\" and don't\n"
-          "give any warranty of any kind.\n\n"
-          "For more information, visit https://bluetoothinstaller.com\n\n"
-          "Also note, that this tools may not work on newer versions of MS Windows, like ver. 11.\n"
-          "Open browser to download installer?"),
-        "Openfreebuds",
-        4)
-    if response == 6:
-        webbrowser.open(extra_tools_url)
-
-    return response
+async def _run_commands(commands):
+    await asyncio.gather(
+        *[asyncio.create_subprocess_exec(*cmd, startupinfo=no_console) for cmd in commands]
+    )

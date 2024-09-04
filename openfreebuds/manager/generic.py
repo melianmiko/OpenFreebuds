@@ -41,7 +41,7 @@ class IOpenFreebuds(Subscription):
     async def set_property(self, group: str, prop: str, value: str):
         raise NotImplementedError("Not implemented")
 
-    async def run_shortcut(self, *args):
+    async def run_shortcut(self, *args, no_catch: bool = False):
         raise NotImplementedError("Not implemented")
 
     @asynccontextmanager

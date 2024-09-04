@@ -105,9 +105,9 @@ class OfbManager(IOpenFreebuds):
         await self._driver.set_property(group, prop, value)
 
     @rpc
-    async def run_shortcut(self, *args):
+    async def run_shortcut(self, *args, no_catch: bool = False):
         log.info(f"Execute shortcut action {args}")
-        return await self._shortcuts.execute(*args)
+        return await self._shortcuts.execute(*args, no_catch=no_catch)
 
     @asynccontextmanager
     async def locked_device(self):

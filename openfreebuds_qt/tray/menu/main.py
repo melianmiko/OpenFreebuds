@@ -4,7 +4,9 @@ from PyQt6.QtGui import QAction
 from qasync import asyncSlot
 
 from openfreebuds import IOpenFreebuds, OfbEventKind
+from openfreebuds_backend import OfbBackendDependencyMissingError
 from openfreebuds_qt.addons.report_tool import OfbQtReportTool
+from openfreebuds_qt.app.dialog.dependency_missing import OfbQtDependencyMissingDialog
 from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
 from openfreebuds_qt.generic import IOfbQtContext
 from openfreebuds_qt.i18n_mappings import ANC_MODE_MAPPINGS, BATTERY_PROP_MAPPINGS
@@ -134,11 +136,17 @@ class OfbQtTrayMenu(OfbTrayMenu):
 
     @asyncSlot()
     async def do_disconnect(self):
-        await self.ofb.run_shortcut("disconnect")
+        try:
+            await self.ofb.run_shortcut("disconnect", no_catch=True)
+        except OfbBackendDependencyMissingError as e:
+            await OfbQtDependencyMissingDialog(self.ctx, list(e.args)).get_user_response()
 
     @asyncSlot()
     async def do_connect(self):
-        await self.ofb.run_shortcut("connect")
+        try:
+            await self.ofb.run_shortcut("connect", no_catch=True)
+        except OfbBackendDependencyMissingError as e:
+            await OfbQtDependencyMissingDialog(self.ctx, list(e.args)).get_user_response()
 
     def do_settings(self):
         if self.ctx.isVisible():

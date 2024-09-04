@@ -37,7 +37,7 @@ class OfbShortcuts:
         setattr(self, f"do_{shortcut}", _do)
         setattr(self, f"is_{shortcut}_available", _validate)
 
-    async def execute(self, shortcut, *args):
+    async def execute(self, shortcut, *args, no_catch: bool = False):
         # noinspection PyBroadException
         if shortcut not in self.all_handlers:
             raise OfbNotSupportedError(f"Unknown shortcut {shortcut}")
@@ -49,8 +49,10 @@ class OfbShortcuts:
                 return
 
             return await handler(*args)
-        except Exception:
+        except Exception as e:
             log.exception(f"While triggering shortcut {shortcut}")
+            if no_catch:
+                raise e
 
     @staticmethod
     def all():
