@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>850</width>
-    <height>499</height>
+    <width>950</width>
+    <height>550</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>800</width>
+    <width>900</width>
     <height>400</height>
    </size>
   </property>
@@ -104,7 +104,7 @@
             <x>0</x>
             <y>0</y>
             <width>218</width>
-            <height>456</height>
+            <height>507</height>
            </rect>
           </property>
           <property name="autoFillBackground">
@@ -191,8 +191,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>628</width>
-         <height>497</height>
+         <width>728</width>
+         <height>548</height>
         </rect>
        </property>
        <property name="sizePolicy">

@@ -13,7 +13,6 @@ include = [
     { path = "openfreebuds/assets", format = ["sdist", "wheel"] },
     { path = "openfreebuds_qt/assets", format = ["sdist", "wheel"] },
     { path = "openfreebuds_qt/designer/*.py", format = ["wheel"] },
-    { path = "openfreebuds_qt/i18n/*.qm", format = ["wheel"] },
 ]
 
 [tool.poetry.scripts]
@@ -33,7 +32,6 @@ pyqt6 = "^6.7.1"
 qasync = "^0.27.1"
 sdbus = { version = "^0.12.0", platform = "linux" }
 pynput = "^1.7.7"
-poetry-plugin-export = "^1.8.0"
 
 [tool.poetry.group.goodies.dependencies]
 pynput = ">=1.7.6,<1.8.0"

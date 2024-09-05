@@ -2,7 +2,7 @@ from PIL import Image
 from PyQt6.QtWidgets import QApplication
 
 from openfreebuds_qt.constants import ASSETS_PATH
-from openfreebuds_qt.icon.utils import image_combine_mask
+from openfreebuds_qt.utils.draw import image_combine_mask
 
 ICON_SIZE = (32, 32)
 

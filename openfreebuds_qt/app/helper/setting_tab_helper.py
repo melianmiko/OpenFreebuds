@@ -1,11 +1,10 @@
-import logging
 from typing import Optional
 
 from PyQt6.QtCore import pyqtSlot, Qt
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtWidgets import QWidget, QBoxLayout
 
-from openfreebuds_qt.app.qt_utils import widget_with_layout
+from openfreebuds_qt.utils.qt_utils import widget_with_layout
 from openfreebuds_qt.app.widget import OfbQListItem
 from openfreebuds_qt.app.widget.list_header import OfbQListHeader
 

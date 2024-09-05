@@ -2,13 +2,13 @@ from typing import Optional
 
 from PyQt6.QtWidgets import QWidget
 
-from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
+from openfreebuds_qt.utils.core_event import OfbCoreEvent
 from openfreebuds_qt.app.widget import OfbQListItem
-from openfreebuds_qt.generic import IOfbQtContext
+from openfreebuds_qt.generic import IOfbQtApplication
 
 
 class OfbQtCommonModule(QWidget):
-    def __init__(self, parent: QWidget, context: IOfbQtContext):
+    def __init__(self, parent: QWidget, context: IOfbQtApplication):
         super().__init__(parent)
         self.ctx = context
         self.ofb = context.ofb

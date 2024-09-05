@@ -9,13 +9,11 @@ from qasync import asyncSlot
 from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds.exceptions import OfbServerDeadError
 from openfreebuds.utils.logger import create_logger
-from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
-from openfreebuds_qt.app.qt_utils import qt_error_handler
 from openfreebuds_qt.config.main import OfbQtConfigParser
-from openfreebuds_qt.generic import IOfbQtContext
-from openfreebuds_qt.icon import create_tray_icon
-from openfreebuds_qt.tray.generic import IOfbTrayIcon
+from openfreebuds_qt.generic import IOfbQtApplication
+from openfreebuds_qt.generic import IOfbTrayIcon
 from openfreebuds_qt.tray.menu import OfbQtTrayMenu
+from openfreebuds_qt.utils import OfbCoreEvent, qt_error_handler, create_tray_icon
 
 UI_UPDATE_GROUPS = ["anc", "battery"]
 log = create_logger("OfbTrayIcon")
@@ -26,8 +24,8 @@ class OfbTrayIcon(IOfbTrayIcon):
     OpenFreebuds Tray icon implementation
     """
 
-    def __init__(self, context: IOfbQtContext):
-        super().__init__(context)
+    def __init__(self, context: IOfbQtApplication):
+        super().__init__(None)
 
         self._last_tooltip = ""
 
@@ -123,8 +121,8 @@ class OfbTrayIcon(IOfbTrayIcon):
                     kind, *args = await self.ofb.wait_for_event(member_id)
                     event = OfbCoreEvent(kind, *args)
                     if event.kind_match(OfbEventKind.QT_BRING_SETTINGS_UP):
-                        self.ctx.show()
-                        self.ctx.activateWindow()
+                        self.ctx.main_window.show()
+                        self.ctx.main_window.activateWindow()
                     if event.kind_match(OfbEventKind.STATE_CHANGED) and args[0] == IOpenFreebuds.STATE_DESTROYED:
                         raise OfbServerDeadError("Server going to exit")
                     if event.kind_match(OfbEventKind.STATE_CHANGED) or event.is_prop_group_in(UI_UPDATE_GROUPS):

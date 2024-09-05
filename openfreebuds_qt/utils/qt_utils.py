@@ -6,9 +6,9 @@ from contextlib import contextmanager, asynccontextmanager, suppress
 from PyQt6.QtWidgets import QComboBox, QWidget, QMessageBox, QBoxLayout
 
 from openfreebuds.utils.logger import create_logger
-from openfreebuds_qt.addons.report_tool import OfbQtReportTool
+from openfreebuds_qt.utils.report_tool import OfbQtReportTool
 from openfreebuds_qt.app.dialog.error_dialog import OfbQtErrorDialog
-from openfreebuds_qt.generic import IOfbQtContext
+from openfreebuds_qt.generic import IOfbQtApplication
 
 log = create_logger("OfbQtUtils")
 
@@ -24,17 +24,17 @@ def widget_with_layout(parent: QWidget, direction: QBoxLayout.Direction):
 
 
 @asynccontextmanager
-async def qt_error_handler(identifier, ctx: IOfbQtContext):
+async def qt_error_handler(identifier, ctx: IOfbQtApplication):
     # noinspection PyBroadException
     try:
         if getattr(ctx, "exit", None) is None:
-            raise Exception(f"QtErrorHandler for {identifier} missing root context link")
+            raise Exception(f"QtErrorHandler for {identifier} missing root context link, got {ctx}")
         yield
     except Exception:
         log.exception(f"Got exception for {identifier}")
 
         exception = traceback.format_exc()
-        await OfbQtErrorDialog(ctx).get_user_response(exception)
+        await OfbQtErrorDialog(ctx.main_window).get_user_response(exception)
 
         with suppress(Exception):
             async with asyncio.Timeout(5):

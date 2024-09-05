@@ -5,6 +5,7 @@ from openfreebuds_qt.constants import I18N_PATH
 
 log = create_logger("OfbQtLocale")
 
+
 @functools.cache
 def list_available_locales():
     locales = []

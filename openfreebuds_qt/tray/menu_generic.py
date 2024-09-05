@@ -4,7 +4,7 @@ from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QMenu, QWidget
 
 from openfreebuds import IOpenFreebuds
-from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
+from openfreebuds_qt.utils.core_event import OfbCoreEvent
 
 
 class OfbQtTrayMenuCommon(QMenu):

@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QWidget
 
 from openfreebuds.driver import DEVICE_TO_DRIVER_MAP
-from openfreebuds_qt.app.dialog.async_dialog import OfbQtAsyncDialog
+from openfreebuds_qt.utils.async_dialog import OfbQtAsyncDialog
 from openfreebuds_qt.designer.dialog_manual_connect import Ui_Dialog
 
 

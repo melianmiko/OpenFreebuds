@@ -1,16 +1,16 @@
+import openfreebuds_backend
 from openfreebuds import APP_ROOT
-from openfreebuds_qt._constants_factory import get_assets_path, get_app_storage_dir
 
-ASSETS_PATH = get_assets_path()
-STORAGE_PATH = get_app_storage_dir()
-
-I18N_PATH = APP_ROOT / "openfreebuds_qt" / "i18n"
+ASSETS_PATH = APP_ROOT / "openfreebuds_qt" / "assets"
+STORAGE_PATH = openfreebuds_backend.get_app_storage_path() / "openfreebuds"
+I18N_PATH = APP_ROOT / "openfreebuds_qt" / "assets" / "i18n"
 
 IGNORED_LOG_TAGS = [
     "qasync._QEventLoop",
     "qasync.QThreadExecutor",
     "qasync._QThreadWorker",
     "qasync._windows._EventWorker",
+    "PIL.PngImagePlugin",
 ]
 
 LINK_WEBSITE = "https://mmk.pw/en/openfreebuds/"

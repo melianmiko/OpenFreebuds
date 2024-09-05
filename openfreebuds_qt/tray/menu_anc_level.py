@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import QWidget
 from qasync import asyncSlot
 
 from openfreebuds import IOpenFreebuds
-from openfreebuds_qt.tray.menu.generic import OfbQtTrayMenuCommon
+from openfreebuds_qt.tray.menu_generic import OfbQtTrayMenuCommon
 
 
 class OfbDeviceAncLevelTrayMenu(OfbQtTrayMenuCommon):

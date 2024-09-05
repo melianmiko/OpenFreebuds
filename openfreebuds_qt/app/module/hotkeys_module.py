@@ -6,10 +6,10 @@ from qasync import asyncSlot
 
 from openfreebuds.shortcuts import OfbShortcuts
 from openfreebuds.utils.logger import create_logger
-from openfreebuds_qt.addons.hotkeys.recorder import OfbQtHotkeyRecorder
-from openfreebuds_qt.addons.hotkeys.service import OfbQtHotkeyService
+from openfreebuds_qt.utils.hotkeys.recorder import OfbQtHotkeyRecorder
+from openfreebuds_qt.utils.hotkeys.service import OfbQtHotkeyService
 from openfreebuds_qt.app.module.common_with_shortcuts import OfbQtCommonWithShortcutsModule
-from openfreebuds_qt.app.qt_utils import qt_error_handler, blocked_signals
+from openfreebuds_qt.utils.qt_utils import qt_error_handler, blocked_signals
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.designer.hotkeys import Ui_OfbQtHotkeysModule
 

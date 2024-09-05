@@ -7,7 +7,7 @@ from openfreebuds import DEVICE_TO_DRIVER_MAP
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.constants import LINK_WEBSITE, LINK_GITHUB, ASSETS_PATH
 from openfreebuds_qt.designer.about_module import Ui_OfbQtAboutModule
-from openfreebuds_qt.version_info import VERSION
+from openfreebuds_qt.version_info import VERSION, LIBRARIES
 
 
 class OfbQtAboutModule(Ui_OfbQtAboutModule, OfbQtCommonModule):
@@ -26,10 +26,9 @@ class OfbQtAboutModule(Ui_OfbQtAboutModule, OfbQtCommonModule):
 
         # Using libraries list
         dependencies = QTreeWidgetItem(None, [self.tr("Libraries")])
-        with open(ASSETS_PATH / "dependencies.txt", "r") as f:
-            for row in f.read().split("\n"):
-                name = row.split(";")[0]
-                dependencies.addChild(QTreeWidgetItem(dependencies, [name]))
+        for row in LIBRARIES:
+            name = row.split(";")[0]
+            dependencies.addChild(QTreeWidgetItem(dependencies, [name]))
 
         self.tree.addTopLevelItems([
             devices,

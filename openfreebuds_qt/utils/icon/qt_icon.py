@@ -4,7 +4,7 @@ from PIL import Image, ImageQt
 from PyQt6.QtGui import QIcon
 
 from openfreebuds_qt.constants import ASSETS_PATH
-from openfreebuds_qt.icon.utils import image_combine_mask
+from openfreebuds_qt.utils.draw import image_combine_mask
 
 ICON_SIZE = (64, 64)
 PRESET_TRANSPARENT = Image.new("RGBA", ICON_SIZE, color="#00000000")

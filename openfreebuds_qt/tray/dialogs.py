@@ -2,7 +2,7 @@ import webbrowser
 
 from PyQt6.QtWidgets import QWidget
 
-from openfreebuds_qt.app.dialog.async_dialog import OfbQtAsyncDialog
+from openfreebuds_qt.utils.async_dialog import OfbQtAsyncDialog
 from openfreebuds_qt.designer.dependency_missing import Ui_OfbQtDependencyMissingDialog
 
 

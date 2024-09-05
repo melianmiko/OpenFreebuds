@@ -4,7 +4,7 @@ from PIL import Image
 
 from openfreebuds import IOpenFreebuds
 from openfreebuds_qt.constants import ASSETS_PATH
-from openfreebuds_qt.icon.utils import image_combine_mask, image_spawn_bg_mask
+from openfreebuds_qt.utils.draw import image_combine_mask, image_spawn_bg_mask
 
 ICON_SIZE = (64, 64)
 

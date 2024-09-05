@@ -2,17 +2,17 @@ import asyncio
 from typing import Optional
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QWidget, QListWidgetItem
+from PyQt6.QtWidgets import QListWidgetItem
 from qasync import asyncSlot
 
-from openfreebuds import IOpenFreebuds, is_device_supported, OfbEventKind
+from openfreebuds import is_device_supported, OfbEventKind
 from openfreebuds_backend import bt_list_devices
-from openfreebuds_qt.addons.device_auto_select import OfbQtDeviceAutoSelect
+from openfreebuds_qt.utils.device_auto_select import OfbQtDeviceAutoSelect
 from openfreebuds_qt.app.dialog.manual_connect import OfbQtManualConnectDialog
 from openfreebuds_qt.app.dialog.porifle_picker import OfbQtProfilePickerDialog
-from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
+from openfreebuds_qt.utils.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
-from openfreebuds_qt.app.qt_utils import qt_error_handler
+from openfreebuds_qt.utils.qt_utils import qt_error_handler
 from openfreebuds_qt.config.main import OfbQtConfigParser
 from openfreebuds_qt.designer.module_device_select import Ui_OfbQtDeviceSelectModule
 

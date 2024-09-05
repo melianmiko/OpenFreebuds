@@ -88,6 +88,16 @@
       <item row="0" column="1">
        <widget class="QComboBox" name="service_language_box"/>
       </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Due to technical restrictions, current language can't be readden from device and this field will be empty.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>

@@ -1,9 +1,9 @@
 from qasync import asyncSlot
 
 from openfreebuds.utils.logger import create_logger
-from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
+from openfreebuds_qt.utils.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
-from openfreebuds_qt.app.qt_utils import fill_combo_box
+from openfreebuds_qt.utils.qt_utils import fill_combo_box
 from openfreebuds_qt.designer.sound_quality import Ui_OfbQtSoundQualityModule
 
 log = create_logger("OfbQtSoundQualityModule")

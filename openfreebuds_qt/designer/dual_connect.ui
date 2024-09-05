@@ -33,13 +33,13 @@
     <widget class="QWidget" name="left_root" native="true">
      <property name="minimumSize">
       <size>
-       <width>200</width>
+       <width>180</width>
        <height>0</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>200</width>
+       <width>180</width>
        <height>16777215</height>
       </size>
      </property>

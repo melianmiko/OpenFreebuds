@@ -8,7 +8,7 @@ from openfreebuds.utils.logger import get_full_log
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.config.config_lock import ConfigLock
 from openfreebuds_qt.constants import STORAGE_PATH
-from openfreebuds_qt.generic import IOfbQtContext
+from openfreebuds_qt.generic import IOfbQtApplication
 from openfreebuds_qt.version_info import VERSION
 
 REPORT_HEADER = """
@@ -33,7 +33,7 @@ REPORT_INTRO_CRASH = """
 
 
 class OfbQtReportTool:
-    def __init__(self, ctx: IOfbQtContext, is_crash=False):
+    def __init__(self, ctx: IOfbQtApplication, is_crash=False):
         self.is_crash = is_crash
         self.ctx = ctx
         self.config = OfbQtConfigParser.get_instance()

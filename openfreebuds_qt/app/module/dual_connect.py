@@ -6,12 +6,11 @@ from PyQt6.QtWidgets import QListWidgetItem, QMessageBox
 from qasync import asyncSlot
 
 from openfreebuds.utils.logger import create_logger
-from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
+from openfreebuds_qt.utils.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
-from openfreebuds_qt.app.qt_utils import blocked_signals, exec_msg_box_async, qt_error_handler
-from openfreebuds_qt.data_format import format_mac_address
+from openfreebuds_qt.utils import blocked_signals, exec_msg_box_async, qt_error_handler, format_mac_address
 from openfreebuds_qt.designer.dual_connect import Ui_OfbQtDualConnectModule
-from openfreebuds_qt.icon import create_dual_connect_icon
+from openfreebuds_qt.utils.icon import create_dual_connect_icon
 
 log = create_logger("OfbQtDualConnectModule")
 

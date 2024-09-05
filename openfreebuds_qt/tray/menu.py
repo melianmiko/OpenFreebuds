@@ -5,20 +5,19 @@ from qasync import asyncSlot
 
 from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds_backend.exception import OfbBackendDependencyMissingError
-from openfreebuds_qt.addons.report_tool import OfbQtReportTool
-from openfreebuds_qt.app.dialog.dependency_missing import OfbQtDependencyMissingDialog
-from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
-from openfreebuds_qt.generic import IOfbQtContext
-from openfreebuds_qt.tray.generic import IOfbTrayIcon
-from openfreebuds_qt.tray.menu.generic import OfbQtTrayMenuCommon
-from openfreebuds_qt.tray.menu.submenu import OfbDeviceAncLevelTrayMenu
+from openfreebuds_qt.tray.dialogs import OfbQtDependencyMissingDialog
+from openfreebuds_qt.utils.core_event import OfbCoreEvent
+from openfreebuds_qt.generic import IOfbTrayIcon, IOfbQtApplication
+from openfreebuds_qt.tray.menu_generic import OfbQtTrayMenuCommon
+from openfreebuds_qt.tray.menu_anc_level import OfbDeviceAncLevelTrayMenu
+from openfreebuds_qt.utils.report_tool import OfbQtReportTool
 
 
 class OfbQtTrayMenu(OfbQtTrayMenuCommon):
-    def __init__(self, tray: IOfbTrayIcon, context: IOfbQtContext, ofb: IOpenFreebuds):
-        super().__init__(context, ofb)
+    def __init__(self, tray: IOfbTrayIcon, context: IOfbQtApplication, ofb: IOpenFreebuds):
+        super().__init__(context.main_window, ofb)
 
-        self.ctx: IOfbQtContext = context
+        self.ctx: IOfbQtApplication = context
         self.tray: IOfbTrayIcon = tray
         self.is_connected: bool = False
         self.first_time_render: bool = True

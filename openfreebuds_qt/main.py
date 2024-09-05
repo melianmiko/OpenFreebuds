@@ -1,68 +1,114 @@
+import asyncio
+import logging
 import sys
 from typing import Optional
 
-from PyQt6.QtCore import QTranslator, QLibraryInfo, QLocale
-from PyQt6.QtGui import QKeySequence, QIcon
-from PyQt6.QtWidgets import QMenu, QApplication
-from qasync import asyncSlot
+from PyQt6.QtCore import QLibraryInfo, QLocale, QTranslator
+from qasync import QEventLoop
 
-from openfreebuds.utils.logger import create_logger
-from openfreebuds_qt.addons.device_auto_select import OfbQtDeviceAutoSelect
-from openfreebuds_qt.addons.hotkeys.service import OfbQtHotkeyService
-from openfreebuds_qt.addons.report_tool import OfbQtReportTool
-from openfreebuds_qt.app.dialog.manual_connect import OfbQtManualConnectDialog
-from openfreebuds_qt.app.helper.setting_tab_helper import OfbQtSettingsTabHelper
-from openfreebuds_qt.app.main import OfbQtSettingsUi
-from openfreebuds_qt.app.qt_utils import qt_error_handler
-from openfreebuds_qt.config.config_lock import ConfigLock
-from openfreebuds_qt.config.main import OfbQtConfigParser
-from openfreebuds_qt.constants import ASSETS_PATH, I18N_PATH
-from openfreebuds_qt.designer.main_window import Ui_OfbMainWindowDesign
-from openfreebuds_qt.generic import IOfbQtContext
-from openfreebuds_qt.i18n import list_available_locales
-from openfreebuds_qt.icon.qt_icon import get_qt_icon_colored
+from openfreebuds import IOpenFreebuds, create as create_ofb, OfbEventKind
+from openfreebuds.utils.logger import setup_logging, screen_handler, create_logger
+from openfreebuds_qt.app.main import OfbQtMainWindow
+from openfreebuds_qt.config import OfbQtConfigParser, ConfigLock
+from openfreebuds_qt.constants import IGNORED_LOG_TAGS, I18N_PATH, STORAGE_PATH
+from openfreebuds_qt.generic import IOfbQtApplication
 from openfreebuds_qt.tray.main import OfbTrayIcon
+from openfreebuds_qt.utils import OfbQtDeviceAutoSelect, OfbQtHotkeyService, list_available_locales
 
-log = create_logger("OfbQtMainWindow")
+log = create_logger("OfbQtApplication")
 
-WIN32_BODY_STYLE = "QPushButton, QComboBox { padding: 6px 12px; }"
 
-class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbQtContext):
-    settings: OfbQtSettingsUi
+class OfbQtApplication(IOfbQtApplication):
+    def __init__(self, args):
+        super().__init__(sys.argv)
 
-    def __init__(self, app: QApplication):
-        super().__init__()
+        self.args = args
 
-        self.app = app
-        self._exit_started: bool = False
-        self.auto_select: Optional[OfbQtDeviceAutoSelect] = None
+        # Config folder
+        if not STORAGE_PATH.is_dir():
+            STORAGE_PATH.mkdir()
 
+        # Services and UI parts
         self.config = OfbQtConfigParser.get_instance()
+        self.ofb: Optional[IOpenFreebuds] = None
+        self.auto_select: Optional[OfbQtDeviceAutoSelect] = None
+        self.hotkeys: Optional[OfbQtHotkeyService] = None
+        self.tray: Optional[OfbTrayIcon] = None
+        self.main_window: Optional[OfbQtMainWindow] = None
 
-        # Qt settings
+        # Setup logging
+        setup_logging(args.verbose)
+        if not args.verbose:
+            screen_handler.setLevel(logging.WARN)
+        if not args.dont_ignore_logs:
+            for tag in IGNORED_LOG_TAGS:
+                logging.getLogger(tag).disabled = True
+
+        # App configuration
+        ConfigLock.acquire()
+
+        # Qt base configs
+        self.setApplicationName("OpenFreebuds")
+        self.setDesktopFileName("openfreebuds")
+
+        # Qt i18n
+        locale = self._detect_locale()
         self.translator = QTranslator()
+        self.translator.load(str(I18N_PATH / f"{locale}.qm"))
+        self.installTranslator(self.translator)
         self.qt_translator = QTranslator()
-        self.setup_qt()
+        self.qt_translator.load("qtbase_" + locale,
+                                QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath))
+        self.installTranslator(self.qt_translator)
 
-        self.setupUi(self)
+        # AsyncQt preparations
+        self.event_loop = QEventLoop(self)
+        self.close_event = asyncio.Event()
+        self.aboutToQuit.connect(self.close_event.set)
 
-        # Win32 staff
-        self.setWindowIcon(QIcon(str(ASSETS_PATH / "icon.png")))
-        if sys.platform == "win32":
-            self.body_content.setStyleSheet(WIN32_BODY_STYLE)
+    async def boot(self):
+        try:
+            await self._stage_setup_ofb()
 
-        # Extras button
-        self.extra_options_button.setIcon(
-            get_qt_icon_colored("settings", self.palette().text().color().getRgb())
-        )
+            if self.args.shortcut != "":
+                return await self._stage_shortcut()
+            if self.ofb.role == "client" and not ConfigLock.owned and not self.args.client:
+                return await self._trigger_settings()
 
-        self.extra_menu = QMenu()
-        self.extra_options_button.setMenu(self.extra_menu)
-        self._fill_extras_menu()
+            log.info(f"Starting OfbQtMainWindow, ofb_role={self.ofb.role}, config_owned={ConfigLock.owned}")
 
-        self.tabs = OfbQtSettingsTabHelper(self.tabs_list_content, self.body_content)
+            # Initialize services
+            self.hotkeys = OfbQtHotkeyService.get_instance(self.ofb)
+            self.auto_select = OfbQtDeviceAutoSelect(self.ofb)
+            self.tray = OfbTrayIcon(self)
+            self.main_window = OfbQtMainWindow(self)
 
-    def setup_qt(self):
+            if self.ofb.role == "standalone":
+                await self.restore_device()
+                await self.auto_select.boot()
+
+            await self.tray.boot()
+            await self.main_window.boot()
+
+            # Show UI
+            self.tray.show()
+            if self.args.settings:
+                self.main_window.show()
+        except SystemExit as e:
+            self.qt_app.exit(e.args[0])
+            ConfigLock.release()
+            return
+
+    async def exit(self, ret_code: int = 0):
+        await self.tray.close()
+        self.main_window.close()
+
+        if self.ofb.role == "standalone":
+            await self.ofb.destroy()
+
+        return self._exit(ret_code)
+
+    def _detect_locale(self):
         locale = self.config.get("ui", "language", "auto")
         available_locales = list_available_locales()
 
@@ -73,60 +119,35 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbQtContext):
             if locale not in available_locales:
                 locale = "en"
 
-        self.translator.load(str(I18N_PATH / f"{locale}.qm"))
-        self.app.installTranslator(self.translator)
+        log.info(f"Going to use {locale} from {available_locales}")
+        return locale
 
-        self.qt_translator.load("qtbase_" + locale,
-                        QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath))
-        self.app.installTranslator(self.qt_translator)
-
-    def _fill_extras_menu(self):
-        bugreport_action = self.extra_menu.addAction(self.tr("Bugreport..."))
-        bugreport_action.setShortcut("F2")
-        # noinspection PyUnresolvedReferences
-        bugreport_action.triggered.connect(self.on_bugreport)
-
-        temp_device_action = self.extra_menu.addAction(self.tr("Temporary replace device"))
-        temp_device_action.setShortcut("Ctrl+D")
-        # noinspection PyUnresolvedReferences
-        temp_device_action.triggered.connect(self.temporary_change_device)
-
-        self.extra_menu.addSeparator()
-        hide_action = self.extra_menu.addAction(self.tr("Close this window"))
-        hide_action.setShortcut(QKeySequence('Ctrl+W'))
-        # noinspection PyUnresolvedReferences
-        hide_action.triggered.connect(self.hide)
-
-        exit_action = self.extra_menu.addAction(self.tr("Exit OpenFreebuds"))
-        exit_action.setShortcut(QKeySequence('Ctrl+Q'))
-        # noinspection PyUnresolvedReferences
-        exit_action.triggered.connect(self.on_exit)
-
-    async def exit(self, ret_code: int = 0):
-        await self.tray.close()
-
-        if self.ofb.role == "standalone":
-            await self.auto_select.close()
-            await self.ofb.destroy()
-
-        self.application.closeAllWindows()
-        self.application.exit(ret_code)
+    def _exit(self, ret_code: int):
         ConfigLock.release()
+        return self.qt_app.exit(ret_code)
 
-    async def boot(self, setup_device: bool = True):
-        async with qt_error_handler("OfbQtMain_Boot", self):
-            self.tray = OfbTrayIcon(self)
-            self.settings = OfbQtSettingsUi(self.tabs, self)
-            self.auto_select = OfbQtDeviceAutoSelect(self.ofb)
-            OfbQtHotkeyService.get_instance(self.ofb).start()
+    async def _stage_setup_ofb(self):
+        self.ofb = await create_ofb()
 
-            if self.ofb.role == "standalone" and setup_device:
-                await self.restore_device()
-                await self.auto_select.boot()
+        if self.args.virtual_device:
+            log.info(f"Will boot with virtual device: {self.args.virtual_device}")
+            await self.ofb.start("Debug: Virtual device", self.args.virtual_device)
 
-            await self.tray.boot()
-            await self.settings.boot()
-            self.tray.show()
+    async def _trigger_settings(self):
+        print("Already running, will only bring settings window up")
+        print("If you really need another instance, add --client")
+        await self.ofb.send_message(OfbEventKind.QT_BRING_SETTINGS_UP)
+        self._exit(0)
+
+    async def _stage_shortcut(self):
+        if self.ofb.role == "standalone":
+            await self.restore_device()
+            while await self.ofb.get_state() != IOpenFreebuds.STATE_CONNECTED:
+                log.debug("Waiting for device connect...")
+                await asyncio.sleep(1)
+
+        await self.ofb.run_shortcut(self.args.shortcut)
+        self._exit(0)
 
     async def restore_device(self):
         name = self.config.get("device", "name", None)
@@ -135,37 +156,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbQtContext):
             log.info(f"Restore device name={name}, address={address}")
             await self.ofb.start(name, address)
 
-    @asyncSlot()
-    async def temporary_change_device(self):
-        async with qt_error_handler("OfbQtMain_TempConnect", self):
-            result, name, address = await OfbQtManualConnectDialog(self).get_user_response()
-            if not result:
-                return
-            await self.ofb.start(name, address)
-
-    def retranslate_ui(self):
-        self.retranslateUi(self)
-        self.settings.retranslate_ui()
-
-    @asyncSlot()
-    async def on_bugreport(self):
-        await OfbQtReportTool(self).create_and_show()
-
-    @asyncSlot()
-    async def on_exit(self):
-        async with qt_error_handler("OfbQtMain_OnExit", self):
-            await self.exit()
-
-    def closeEvent(self, e):
-        if self.isVisible():
-            e.ignore()
-            self.hide()
-            return
-
-    def showEvent(self, e):
-        e.accept()
-        self.settings.on_show()
-
-    def hideEvent(self, e):
-        e.accept()
-        self.settings.on_hide()
+    def exec_async(self):
+        self.event_loop.create_task(self.boot())
+        self.event_loop.run_until_complete(self.close_event.wait())
+        self.event_loop.close()

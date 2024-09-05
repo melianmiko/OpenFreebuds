@@ -17,9 +17,17 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>This device isn't supported, for yet. But if you want, you can force connect them. To do that, select an exiting profile. Then application will try to apply it to your device. You can change profile in any time. 
-
-Notice that this may be dangerous for some kind of devices. Do it of your risk. You also can share information about your device and selected profile at GitHub, if you want get offical support.</string>
+      <string>This device isn't supported, for yet. But if you want, you can force connect them. To do that, select an exiting profile. Then application will try to apply it to your device. You can change profile in any time.</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Notice that this may be dangerous for some kind of devices. Do it of your risk. You also can share information about your device and selected profile at GitHub, if you want get offical support.</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>

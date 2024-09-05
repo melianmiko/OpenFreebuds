@@ -6,9 +6,9 @@ from qasync import asyncSlot
 
 from openfreebuds import OfbEventKind
 from openfreebuds.utils.logger import create_logger
-from openfreebuds_qt.app.helper.core_event import OfbCoreEvent
+from openfreebuds_qt.utils.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
-from openfreebuds_qt.app.qt_utils import fill_combo_box
+from openfreebuds_qt.utils.qt_utils import fill_combo_box
 from openfreebuds_qt.designer.module_geatures import Ui_OfbQtGesturesModule
 
 log = create_logger("OfbQtGesturesModule")
@@ -69,7 +69,7 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
             "noise_control_off_on": self.tr("Off and cancellation"),
             "noise_control_off_on_aw": self.tr("Cycle all modes"),
             "noise_control_on_aw": self.tr("Cancellation and awareness"),
-            "noise_control_off_an": self.tr("Off and awareness"),
+            "noise_control_off_aw": self.tr("Off and awareness"),
         }
 
         self._ui_rows: list[_UiRow] = []
