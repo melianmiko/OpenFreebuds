@@ -17,4 +17,5 @@ class OfbDriverHuaweiLacePro(OfbDriverHuaweiGeneric):
             OfbHuaweiAncLegacyChangeHandler(),
             OfbHuaweiActionsPowerButtonHandler(),
             OfbHuaweiActionLongTapHandler(),
+            OfbHuaweiVoiceLanguageHandler(),
         ]

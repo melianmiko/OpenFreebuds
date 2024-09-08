@@ -1,6 +1,7 @@
 import asyncio
 from asyncio import Task
 from contextlib import asynccontextmanager
+from typing import Optional
 
 import openfreebuds_backend
 from openfreebuds.constants import OfbEventKind
@@ -18,9 +19,9 @@ log = create_logger("OfbManager")
 class OfbManager(IOpenFreebuds):
     def __init__(self):
         super().__init__()
-        self._driver = None  # type: OfbDriverGeneric | None
-        self._task = None  # type: Task | None
-        self._device_tags = "", ""  # type: tuple[str, str]
+        self._driver: Optional[OfbDriverGeneric] = None
+        self._task: Optional[Task] = None
+        self._device_tags: tuple[str, str] = "", ""
         self._paused = False
         self._shortcuts = OfbShortcuts(self)
 

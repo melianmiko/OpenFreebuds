@@ -47,7 +47,10 @@ class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
 
         # Init all handlers
         for handler in self.handlers:
-            await handler.init()
+            try:
+                await handler.init()
+            except Exception:
+                log.exception(f"Init of {handler.handler_id} failed")
 
     async def stop(self):
         await super().stop()

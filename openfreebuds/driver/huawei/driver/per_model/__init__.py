@@ -5,3 +5,4 @@ from .buds_pro_2 import OfbDriverHuaweiPro2
 from .buds_pro_3 import OfbDriverHuaweiPro3
 from .buds_se import OfbDriverHuaweiSe
 from .lace_pro import OfbDriverHuaweiLacePro
+from .lace_pro_2 import OfbDriverHuaweiLacePro2
