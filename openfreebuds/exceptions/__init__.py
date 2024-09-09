@@ -14,6 +14,10 @@ class OfbNotSupportedError(OfbError):
     pass
 
 
+class OfbTooManyItemsError(OfbError):
+    pass
+
+
 class OfbDriverError(OfbError):
     pass
 

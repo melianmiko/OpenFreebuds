@@ -8,7 +8,7 @@ from .action_swipe_gesture import OfbHuaweiActionSwipeGestureHandler
 from .anc import OfbHuaweiAncHandler, OfbHuaweiAncLegacyChangeHandler
 from .battery import OfbHuaweiBatteryHandler
 from .config_auto_pause import OfbHuaweiConfigAutoPauseHandler
-from .config_equalizer_preset import OfbHuaweiEqualizerPresetHandler
+from .config_equalizer import OfbHuaweiEqualizerPresetHandler
 from .sound_quality_preference import OfnHuaweiSoundQualityPreferenceHandler
 from .info import OfbHuaweiInfoHandler
 from .logs import OfbHuaweiLogsHandler

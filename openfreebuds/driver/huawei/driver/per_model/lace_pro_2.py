@@ -13,12 +13,7 @@ class OfbDriverHuaweiLacePro2(OfbDriverHuaweiGeneric):
             OfbHuaweiActionLongTapSplitHandler(),
             OfbHuaweiDualConnectHandler(),
             OfbHuaweiVoiceLanguageHandler(),
-            OfbHuaweiEqualizerPresetHandler(w_presets={
-                1: "default",
-                2: "hardbass",
-                3: "treble",
-                9: "voices",
-            }),
+            OfbHuaweiEqualizerPresetHandler(w_custom=True),
             OfnHuaweiSoundQualityPreferenceHandler(),
             OfbHuaweiLowLatencyPreferenceHandler(),
         ]

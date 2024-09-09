@@ -73,6 +73,9 @@
       <string>Equalizer</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="1">
+       <widget class="QComboBox" name="eq_preset_box"/>
+      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_3">
         <property name="text">
@@ -80,10 +83,77 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="eq_preset_box"/>
+      <item row="0" column="2">
+       <widget class="QWidget" name="eq_custom_buttons" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="custom_create">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset theme="zoom-out"/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="custm_delete">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset theme="zoom-in"/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="custom_eq_rows">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>200</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>200</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Customize preset</string>
+     </property>
+     <layout class="QHBoxLayout" name="custom_eq_rows_layout"/>
     </widget>
    </item>
    <item>
@@ -151,10 +221,44 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>custom_create</sender>
+   <signal>clicked()</signal>
+   <receiver>OfbQtSoundQualityModule</receiver>
+   <slot>on_new_preset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>405</x>
+     <y>227</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>237</x>
+     <y>311</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>custm_delete</sender>
+   <signal>clicked()</signal>
+   <receiver>OfbQtSoundQualityModule</receiver>
+   <slot>on_delete_preset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>439</x>
+     <y>227</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>237</x>
+     <y>311</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>on_eq_preset_change(int)</slot>
   <slot>on_sq_set_quality()</slot>
   <slot>on_sq_set_connectivity()</slot>
+  <slot>on_new_preset()</slot>
+  <slot>on_delete_preset()</slot>
  </slots>
 </ui>

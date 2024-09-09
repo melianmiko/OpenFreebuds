@@ -165,11 +165,12 @@ class OfbDriverHandlerHuawei(OfbDriverHandlerGeneric):
             except TimeoutError:
                 self.init_attempt += 1
             except Exception:
+                log.exception(f"Unknown error on {self.handler_id} init")
                 self.init_attempt += 1
 
         self.init_success = self.init_attempt != self.init_attempt_max
         if not self.init_success:
-            log.exception(f'Can\'t initialize "{self.handler_id}". Skipping.')
+            log.info(f'Can\'t initialize "{self.handler_id}". Skipping.')
 
     async def on_init(self):
         pass

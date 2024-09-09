@@ -98,6 +98,8 @@ class OfbQtApplication(IOfbQtApplication):
             self.qt_app.exit(e.args[0])
             ConfigLock.release()
             return
+        except Exception:
+            log.exception("App boot failed")
 
     async def exit(self, ret_code: int = 0):
         await self.tray.close()

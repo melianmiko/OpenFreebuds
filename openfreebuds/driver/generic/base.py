@@ -79,17 +79,25 @@ class OfbDriverGeneric:
 
         return group_data[prop]
 
-    async def put_property(self, group: Optional[str], prop: Optional[str], value: str | dict):
+    async def put_property(
+            self,
+            group: Optional[str],
+            prop: Optional[str],
+            value: Optional[str | dict],
+            extend_group: bool = False,
+    ):
         if group is None:
             log.info("Reassigned entire store, this should happen only in debug drviers")
             self._store = value
+        elif prop is None and extend_group:
+            data = {**self._store.get(group, {}), **value}
+            self._store[group] = data
         elif prop is None:
             self._store[group] = value
         else:
             if group not in self._store:
                 self._store[group] = {}
-            if not isinstance(value, str):
-                value = json.dumps(value)
+
             self._store[group][prop] = value
 
         await self.changes.send_message(OfbEventKind.PROPERTY_CHANGED, group, prop, value)
