@@ -160,9 +160,9 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
             await OfbQtDependencyMissingDialog(self.ctx, list(e.args)).get_user_response()
 
     def do_settings(self):
-        if self.ctx.isVisible():
-            self.ctx.activateWindow()
-        self.ctx.show()
+        if self.ctx.main_window.isVisible():
+            self.ctx.main_window.activateWindow()
+        self.ctx.main_window.show()
 
     @asyncSlot()
     async def do_bugreport(self):
