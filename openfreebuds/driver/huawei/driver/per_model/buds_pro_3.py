@@ -30,4 +30,5 @@ class OfbDriverHuaweiPro3(OfbDriverHuaweiGeneric):
             OfbHuaweiActionLongTapSplitHandler(w_right=True),
             OfbHuaweiActionSwipeGestureHandler(),
             OfbHuaweiLowLatencyPreferenceHandler(),
+            OfbHuaweiEqualizerPresetHandler(w_custom=True),
         ]
