@@ -52,26 +52,29 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
         self._ui_update_task: Optional[asyncio.Task] = None
         self._ui_modules: list[OfbQtCommonModule] = []
 
-        # App-related modules
-        self._attach_module(self.tr("About OpenFreebuds..."), OfbQtAboutModule(self.tabs.root, self.ctx))
-        self._attach_module(self.tr("User interface"), OfbEmptyModule(self.tabs.root, self.ctx))
+        # Header section
         if self.ctx.ofb.role == "standalone":
             self._attach_module(self.tr("Select device"), OfbQtChooseDeviceModule(self.tabs.root, self.ctx))
-        if OfbQtHotkeysModule.available():
-            self._attach_module(self.tr("Keyboard shortcuts"), OfbQtHotkeysModule(self.tabs.root, self.ctx))
-        if sys.platform == "linux":
-            self._attach_module(self.tr("Linux-related"), OfbQtLinuxExtrasModule(self.tabs.root, self.ctx))
 
         # Device-related modules
-        self.device_section = self.tabs.add_section("Device-related")
+        self.device_section = self.tabs.add_section("")
         self._attach_module(self.tr("Device info"), OfbQtDeviceInfoModule(self.tabs.root, self.ctx))
         self._attach_module(self.tr("Dual-connect"), OfbQtDualConnectModule(self.tabs.root, self.ctx))
         self._attach_module(self.tr("Gestures"), OfbQtGesturesModule(self.tabs.root, self.ctx))
         self._attach_module(self.tr("Sound quality"), OfbQtSoundQualityModule(self.tabs.root, self.ctx))
         self._attach_module(self.tr("Other settings"), OfbQtDeviceOtherSettingsModule(self.tabs.root, self.ctx))
 
+        # App-related modules
+        self.tabs.add_section(self.tr("Application"))
+        self._attach_module(self.tr("User interface"), OfbEmptyModule(self.tabs.root, self.ctx))
+        if OfbQtHotkeysModule.available():
+            self._attach_module(self.tr("Keyboard shortcuts"), OfbQtHotkeysModule(self.tabs.root, self.ctx))
+        if sys.platform == "linux":
+            self._attach_module(self.tr("Linux-related"), OfbQtLinuxExtrasModule(self.tabs.root, self.ctx))
+        self._attach_module(self.tr("About..."), OfbQtAboutModule(self.tabs.root, self.ctx))
+
         # Finish
-        self.default_tab = 0, 1
+        self.default_tab = 2, 0
         self.tabs.finalize_list()
         self.tabs.set_active_tab(*self.default_tab)
 
@@ -124,10 +127,6 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
             await self._update_ui(OfbCoreEvent(None))
 
     async def _update_ui(self, event: OfbCoreEvent):
-        if event.kind_match(OfbEventKind.DEVICE_CHANGED):
-            device_name, _ = await self.ofb.get_device_tags()
-            self.device_section.list_item.setText(device_name)
-
         if event.kind_match(OfbEventKind.STATE_CHANGED):
             visible = await self.ofb.get_state() == IOpenFreebuds.STATE_CONNECTED
             self._device_section_set_visible(visible)

@@ -112,4 +112,3 @@ class OfbQtSettingsTabHelper:
 
     def finalize_list(self):
         self.tabs_layout.insertStretch(-1, 1)
-        self.set_active_tab(0, 0)

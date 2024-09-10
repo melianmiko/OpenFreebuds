@@ -38,7 +38,7 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
 
             # Setup global toggle
             with blocked_signals(self.global_toggle):
-                self.global_toggle.setChecked(data["enabled"] == "true")
+                self.global_toggle.setChecked(data.get("enabled") == "true")
 
             # Setup devices list
             self._all_data = []
