@@ -2,14 +2,16 @@ import asyncio
 import json
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QSlider, QSpacerItem
+from PyQt6.QtWidgets import QSlider, QMenu, QInputDialog, QMessageBox, QFileDialog
 from qasync import asyncSlot
 
+from openfreebuds.exceptions import OfbTooManyItemsError
 from openfreebuds.utils.logger import create_logger
-from openfreebuds_qt.utils.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
-from openfreebuds_qt.utils.qt_utils import fill_combo_box, blocked_signals
 from openfreebuds_qt.designer.sound_quality import Ui_OfbQtSoundQualityModule
+from openfreebuds_qt.utils.async_dialog import run_dialog_async
+from openfreebuds_qt.utils.core_event import OfbCoreEvent
+from openfreebuds_qt.utils.qt_utils import fill_combo_box, blocked_signals, qt_error_handler
 
 log = create_logger("OfbQtSoundQualityModule")
 
@@ -25,13 +27,32 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
             "equalizer_preset_voices": self.tr("Voices"),
         }
 
-        self._eq_last_options: list[str] = []
+        self.menu_actions = [
+            (self.tr("New preset…"), self.new_preset),
+            (self.tr("Delete…"), self.delete_preset),
+            (None, None),
+            (self.tr("Export to file…"), self.export_file),
+            (self.tr("Load file…"), self.load_file),
+        ]
 
-        self.setupUi(self)
+        self._eq_last_options: list[str] = []
         self._eq_rows: list[QSlider] = []
         self._last_preset_data: list[int] = []
+
+        self.setupUi(self)
+
+        self.custom_menu = QMenu()
+        self.custom_edit_button.setMenu(self.custom_menu)
+        for name, action in self.menu_actions:
+            if name is None:
+                self.custom_menu.addSeparator()
+            else:
+                # noinspection PyUnresolvedReferences
+                self.custom_menu.addAction(name).triggered.connect(action)
+
         for i in range(10):
             self._add_slider(i)
+        self.custom_eq.setVisible(False)
 
     def _add_slider(self, i):
         lock = asyncio.Lock()
@@ -64,7 +85,8 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         if sound is None:
             return
 
-        self.eq_custom_buttons.setVisible("equalizer_rows" in sound)
+        self.custom_edit_button.setVisible("equalizer_rows" in sound)
+        self.save_panel.setVisible(not json.loads(sound.get("equalizer_saved", "true")))
 
         if event.is_changed("sound", "quality_preference"):
             value = sound.get("quality_preference")
@@ -87,7 +109,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
 
         if event.is_changed("sound", "equalizer_rows"):
             rows = json.loads(sound.get("equalizer_rows") or "null")
-            self.custom_eq_rows.setVisible(rows is not None)
+            self.custom_eq.setVisible(rows is not None)
             if rows is not None:
                 self._last_preset_data = rows
                 for i, value in enumerate(rows):
@@ -96,22 +118,109 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
                         self._eq_rows[i].setToolTip(str(value))
 
     @asyncSlot()
-    async def on_new_preset(self):
-        pass
+    async def on_custom_save(self):
+        with qt_error_handler("OfbQtSoundQualityModule__EqCustomSave"):
+            await self.ofb.set_property("sound", "equalizer_saved", "true")
 
     @asyncSlot()
-    async def on_delete_preset(self):
-        pass
+    async def on_custom_reset(self):
+        with qt_error_handler("OfbQtSoundQualityModule__EqCustomReset"):
+            await self.ofb.set_property("sound", "equalizer_saved", "false")
 
     @asyncSlot()
     async def on_sq_set_connectivity(self):
-        await self.ofb.set_property("sound", "quality_preference", "sqp_connectivity")
+        with qt_error_handler("OfbQtSoundQualityModule__SetConnectivity"):
+            await self.ofb.set_property("sound", "quality_preference", "sqp_connectivity")
 
     @asyncSlot()
     async def on_sq_set_quality(self):
-        await self.ofb.set_property("sound", "quality_preference", "sqp_quality")
+        with qt_error_handler("OfbQtSoundQualityModule__SetQuality"):
+            await self.ofb.set_property("sound", "quality_preference", "sqp_quality")
 
     @asyncSlot(int)
     async def on_eq_preset_change(self, index: int):
-        value = self._eq_last_options[index]
-        await self.ofb.set_property("sound", "equalizer_preset", value)
+        with qt_error_handler("OfbQtSoundQualityModule__ChangePreset"):
+            value = self._eq_last_options[index]
+            await self.ofb.set_property("sound", "equalizer_preset", value)
+
+    @asyncSlot()
+    async def new_preset(self):
+        with qt_error_handler("OfbQtSoundQualityModule__NewPreset"):
+            try:
+                dialog = QInputDialog(self)
+                dialog.setWindowModality(Qt.WindowModality.WindowModal)
+                dialog.setInputMode(QInputDialog.InputMode.TextInput)
+                dialog.setWindowTitle(self.tr("Create new equalizer preset"))
+                dialog.setLabelText(self.tr("Enter new preset name:"))
+                if not await run_dialog_async(dialog):
+                    return False
+
+                log.info(f"Create new mode with name {dialog.textValue()}")
+                await self.ofb.set_property("sound", "equalizer_preset", dialog.textValue())
+                return True
+            except OfbTooManyItemsError:
+                dialog = QMessageBox(QMessageBox.Icon.Critical,
+                                     self.tr("Failed"),
+                                     self.tr("Can't create: too many custom preset created in device."),
+                                     QMessageBox.StandardButton.Ok)
+                dialog.setWindowModality(Qt.WindowModality.WindowModal)
+                await run_dialog_async(dialog)
+                return False
+
+    @asyncSlot()
+    async def delete_preset(self):
+        if await self.ofb.get_property("sound", "equalizer_rows") is None:
+            return
+
+        with qt_error_handler("OfbQtSoundQualityModule__DeletePreset"):
+            dialog = QMessageBox(QMessageBox.Icon.Question,
+                                 self.tr("Delete equalizer mode?"),
+                                 self.tr("Will delete following mode:") + "\n" + self.eq_preset_box.currentText(),
+                                 QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel,
+                                 self)
+            dialog.setWindowModality(Qt.WindowModality.WindowModal)
+            if not await run_dialog_async(dialog):
+                return
+
+            log.info(f"Delete mode with name {self.eq_preset_box.currentText()}")
+            await self.ofb.set_property("sound", "equalizer_rows", "null")
+
+    @asyncSlot()
+    async def export_file(self):
+        if await self.ofb.get_property("sound", "equalizer_rows") is None:
+            return
+
+        with qt_error_handler("OfbQtSoundQualityModule__ExportFile"):
+            dialog = QFileDialog(self, self.tr("Save equalizer preset to file..."))
+            dialog.setWindowModality(Qt.WindowModality.WindowModal)
+            dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptSave)
+            if not await run_dialog_async(dialog):
+                return
+            paths = dialog.selectedFiles()
+            if len(paths) < 1:
+                return
+
+            with open(paths[0], "w") as f:
+                f.write(await self.ofb.get_property("sound", "equalizer_rows"))
+
+    @asyncSlot()
+    async def load_file(self):
+        with qt_error_handler("OfbQtSoundQualityModule__LoadFile"):
+            dialog = QFileDialog(self, self.tr("Load equalizer preset from file..."))
+            dialog.setWindowModality(Qt.WindowModality.WindowModal)
+            dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptOpen)
+            if not await run_dialog_async(dialog):
+                return
+            paths = dialog.selectedFiles()
+            if len(paths) < 1:
+                return
+
+            with open(paths[0], "r") as f:
+                data = f.read()
+
+            if not await self.new_preset():
+                return
+            await asyncio.sleep(0.5)
+            await self.ofb.set_property("sound", "equalizer_rows", data)
+            await asyncio.sleep(0.25)
+            await self.ofb.set_property("sound", "equalizer_saved", "true")

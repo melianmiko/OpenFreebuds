@@ -25,6 +25,7 @@ class OfbHuaweiEqualizerPresetHandler(OfbDriverHandlerHuawei):
     properties = [
         ("sound", "equalizer_preset"),
         ("sound", "equalizer_rows"),
+        ("sound", "equalizer_saved"),
     ]
     commands = [b"\x2b\x4a"]
     ignore_commands = [b"\x2b\x49"]
@@ -41,6 +42,7 @@ class OfbHuaweiEqualizerPresetHandler(OfbDriverHandlerHuawei):
         self.w_custom_max_count = w_custom_max_count
         self.w_options_predefined: bool = w_presets is not None
 
+        self.changes_saved: bool = True
         self.custom_preset_values: dict[int, bytes] = {}
         self.options: Optional[dict[int, str]] = None
         if w_presets:
@@ -59,8 +61,33 @@ class OfbHuaweiEqualizerPresetHandler(OfbDriverHandlerHuawei):
             return await self._delete_current_mode()
         elif prop == "equalizer_rows":
             return await self._change_current_mode(value)
+        elif prop == "equalizer_saved":
+            return await self._toggle_save(value == "true")
 
         raise OfbNotSupportedError("Impossible error")
+
+    async def _toggle_save(self, save: bool):
+        mode_str = await self.driver.get_property("sound", "equalizer_preset", None)
+        mode_id = reverse_dict(self.options).get(mode_str)
+        if mode_id is None:
+            return
+
+        if save:
+            data = await self.driver.get_property("sound", "equalizer_rows", "[]")
+            data = b"".join([x.to_bytes(1, byteorder="big", signed=True) for x in json.loads(data)])
+            log.info(f"Will save persistent preset data={data}, mode_id={mode_id}")
+        else:
+            data = self.custom_preset_values[mode_id]
+            log.info(f"Will restore saved data={data}, mode_id={mode_id}")
+
+        pkg = HuaweiSppPackage.change_rq(
+            b"\x2b\x49",
+            _build_payload(mode_id, mode_str, data, 1)
+        )
+        await self.driver.send_package(pkg)
+        await self.driver.put_property("sound", "equalizer_rows",
+                                       json.dumps(_eq_bytes_to_array(data)))
+        await self.driver.put_property("sound", "equalizer_saved", "true")
 
     async def _change_current_mode(self, value: str):
         mode_str = await self.driver.get_property("sound", "equalizer_preset", None)
@@ -77,6 +104,7 @@ class OfbHuaweiEqualizerPresetHandler(OfbDriverHandlerHuawei):
         )
         await self.driver.send_package(pkg)
         await self.driver.put_property("sound", "equalizer_rows", value)
+        await self.driver.put_property("sound", "equalizer_saved", "false")
 
     async def _delete_current_mode(self):
         mode_str = await self.driver.get_property("sound", "equalizer_preset", None)
@@ -135,7 +163,12 @@ class OfbHuaweiEqualizerPresetHandler(OfbDriverHandlerHuawei):
         await self.on_init()
 
     async def on_package(self, package: HuaweiSppPackage):
-        new_props = {"equalizer_rows": None}
+        new_props = {
+            "equalizer_rows": None,
+            "equalizer_saved": json.dumps(self.changes_saved),
+            "equalizer_rows_count": self.w_custom_max_count,
+        }
+
         available_modes = package.find_param(3)
         if not self.w_options_predefined and len(available_modes) > 0:
             self.options = {i: KNOWN_BUILT_IN_PRESETS.get(i, f"preset_{i}") for i in available_modes}

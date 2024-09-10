@@ -8,7 +8,7 @@ class OfbDriverHuaweiLacePro2(OfbDriverHuaweiGeneric):
         self._spp_service_port = 1
         self.handlers = [
             OfbHuaweiInfoHandler(),
-            OfbHuaweiBatteryHandler(),
+            OfbHuaweiBatteryHandler(w_tws=False),
             OfbHuaweiAncHandler(w_cancel_lvl=True, w_cancel_dynamic=True, w_voice_boost=True),
             OfbHuaweiActionLongTapSplitHandler(),
             OfbHuaweiDualConnectHandler(),
