@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>950</width>
-    <height>550</height>
+    <height>600</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -104,7 +104,7 @@
             <x>0</x>
             <y>0</y>
             <width>218</width>
-            <height>507</height>
+            <height>550</height>
            </rect>
           </property>
           <property name="autoFillBackground">
@@ -118,7 +118,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>30</height>
+           <height>0</height>
           </size>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -139,6 +139,18 @@
           </property>
           <item>
            <widget class="QPushButton" name="extra_options_button">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>32</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>32</height>
+             </size>
+            </property>
             <property name="styleSheet">
              <string notr="true"> QPushButton::menu-indicator{width:0px;}</string>
             </property>
@@ -192,7 +204,7 @@
          <x>0</x>
          <y>0</y>
          <width>728</width>
-         <height>548</height>
+         <height>598</height>
         </rect>
        </property>
        <property name="sizePolicy">

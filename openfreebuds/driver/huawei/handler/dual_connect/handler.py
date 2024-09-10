@@ -32,8 +32,10 @@ class OfbHuaweiDualConnectHandler(OfbDriverHandlerHuawei):
         ("dual_connect", ""),
     ]
 
-    def __init__(self):
+    def __init__(self, w_auto_connect: bool = True):
         super().__init__()
+
+        self.w_auto_connect = w_auto_connect
 
         self._on_ready: Optional[asyncio.Event] = None
         self._pending_devices: dict[int, OfbHuaweiDualConnectRow] = {}
@@ -88,7 +90,7 @@ class OfbHuaweiDualConnectHandler(OfbDriverHandlerHuawei):
 
             dev_index = int.from_bytes(package.find_param(3), byteorder="big", signed=True)
             self._devices_count = int.from_bytes(package.find_param(2), byteorder="big", signed=True)
-            self._pending_devices[dev_index] = OfbHuaweiDualConnectRow(package)
+            self._pending_devices[dev_index] = OfbHuaweiDualConnectRow(package, self.w_auto_connect)
 
             is_ready = (self._devices_count == len(self._pending_devices.values())
                         or self.init_attempt == self.init_attempt_max - 1)

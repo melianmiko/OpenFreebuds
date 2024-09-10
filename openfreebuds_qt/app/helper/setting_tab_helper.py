@@ -97,7 +97,6 @@ class OfbQtSettingsTabHelper:
 
         entry.list_item.label.mousePressEvent = _activate
         entry.list_item.label.keyPressEvent = _kbd_activate
-        # self.tabs_layout.addWidget(entry.list_item)
         self.root_layout.addWidget(content)
         content.setVisible(False)
 

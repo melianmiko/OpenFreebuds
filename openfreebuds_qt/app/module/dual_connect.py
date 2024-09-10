@@ -31,14 +31,17 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
             # Setup visibility
             data = await self.ofb.get_property("dual_connect")
             self.list_item.setVisible(data is not None)
-            if (not event.is_changed("dual_connect")
-                    or not data
-                    or "devices" not in data):
+            if not data or "devices" not in data:
                 return
 
             # Setup global toggle
-            with blocked_signals(self.global_toggle):
-                self.global_toggle.setChecked(data.get("enabled") == "true")
+            if event.is_changed("dual_connect", "enabled"):
+                with blocked_signals(self.global_toggle):
+                    self.global_toggle.setChecked(data.get("enabled") == "true")
+
+            if not event.is_changed("dual_connect", "devices") \
+                    and not event.is_changed("dual_connect", "preferred_device"):
+                return
 
             # Setup devices list
             self._all_data = []
@@ -59,6 +62,8 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
                 self.devices_list.setCurrentRow(self._current_index)
 
             self.button_toggle_connect.setEnabled(True)
+            self.current_device_auto_connect.setEnabled(True)
+            self.current_device_prefered.setEnabled(True)
             self.refresh_button.setEnabled(True)
 
     @asyncSlot()
@@ -82,12 +87,25 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
         self.current_device_address.setText(format_mac_address(addr))
         with blocked_signals(self.current_device_prefered):
             self.current_device_prefered.setChecked(data["preferred"])
+        with blocked_signals(self.current_device_auto_connect):
+            self.current_device_auto_connect.setEnabled(data.get("auto_connect") is not None)
+            self.current_device_auto_connect.setChecked(data.get("auto_connect") or False)
         self.button_toggle_connect.setText(self.tr("Disconnect" if data["connected"] else "Connect"))
 
     @asyncSlot(bool)
     async def on_set_preferred(self, state: bool):
-        addr = "000000000000" if not state else self._all_data[self._current_index][0]
-        await self.ofb.set_property("dual_connect", "preferred_device", addr)
+        async with qt_error_handler("OfbQtDualConnectModule_SetPreferred", self.ctx):
+            addr = "000000000000" if not state else self._all_data[self._current_index][0]
+            self.current_device_prefered.setEnabled(False)
+            await self.ofb.set_property("dual_connect", "preferred_device", addr)
+
+    @asyncSlot(bool)
+    async def on_set_auto_connect(self, state: bool):
+        async with qt_error_handler("OfbQtDualConnectModule_AutoConnect", self.ctx):
+            addr = self._all_data[self._current_index][0]
+            self.current_device_auto_connect.setEnabled(False)
+            await self.ofb.set_property("dual_connect", f"{addr}:auto_connect",
+                                        json.dumps(state))
 
     @asyncSlot(int)
     async def on_device_select(self, index: int):

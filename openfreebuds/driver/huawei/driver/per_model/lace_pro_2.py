@@ -11,9 +11,9 @@ class OfbDriverHuaweiLacePro2(OfbDriverHuaweiGeneric):
             OfbHuaweiBatteryHandler(w_tws=False),
             OfbHuaweiAncHandler(w_cancel_lvl=True, w_cancel_dynamic=True, w_voice_boost=True),
             OfbHuaweiActionLongTapSplitHandler(),
-            OfbHuaweiDualConnectHandler(),
             OfbHuaweiVoiceLanguageHandler(),
             OfbHuaweiEqualizerPresetHandler(w_custom=True),
             OfnHuaweiSoundQualityPreferenceHandler(),
             OfbHuaweiLowLatencyPreferenceHandler(),
+            OfbHuaweiDualConnectHandler(w_auto_connect=False),
         ]

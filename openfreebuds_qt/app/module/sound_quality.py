@@ -119,33 +119,33 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
 
     @asyncSlot()
     async def on_custom_save(self):
-        with qt_error_handler("OfbQtSoundQualityModule__EqCustomSave"):
+        with qt_error_handler("OfbQtSoundQualityModule_EqCustomSave", self.ctx):
             await self.ofb.set_property("sound", "equalizer_saved", "true")
 
     @asyncSlot()
     async def on_custom_reset(self):
-        with qt_error_handler("OfbQtSoundQualityModule__EqCustomReset"):
+        with qt_error_handler("OfbQtSoundQualityModule_EqCustomReset", self.ctx):
             await self.ofb.set_property("sound", "equalizer_saved", "false")
 
     @asyncSlot()
     async def on_sq_set_connectivity(self):
-        with qt_error_handler("OfbQtSoundQualityModule__SetConnectivity"):
+        with qt_error_handler("OfbQtSoundQualityModule_SetConnectivity", self.ctx):
             await self.ofb.set_property("sound", "quality_preference", "sqp_connectivity")
 
     @asyncSlot()
     async def on_sq_set_quality(self):
-        with qt_error_handler("OfbQtSoundQualityModule__SetQuality"):
+        with qt_error_handler("OfbQtSoundQualityModule_SetQuality", self.ctx):
             await self.ofb.set_property("sound", "quality_preference", "sqp_quality")
 
     @asyncSlot(int)
     async def on_eq_preset_change(self, index: int):
-        with qt_error_handler("OfbQtSoundQualityModule__ChangePreset"):
+        with qt_error_handler("OfbQtSoundQualityModule_ChangePreset", self.ctx):
             value = self._eq_last_options[index]
             await self.ofb.set_property("sound", "equalizer_preset", value)
 
     @asyncSlot()
     async def new_preset(self):
-        with qt_error_handler("OfbQtSoundQualityModule__NewPreset"):
+        with qt_error_handler("OfbQtSoundQualityModule_NewPreset", self.ctx):
             try:
                 dialog = QInputDialog(self)
                 dialog.setWindowModality(Qt.WindowModality.WindowModal)
@@ -172,7 +172,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         if await self.ofb.get_property("sound", "equalizer_rows") is None:
             return
 
-        with qt_error_handler("OfbQtSoundQualityModule__DeletePreset"):
+        with qt_error_handler("OfbQtSoundQualityModule_DeletePreset", self.ctx):
             dialog = QMessageBox(QMessageBox.Icon.Question,
                                  self.tr("Delete equalizer mode?"),
                                  self.tr("Will delete following mode:") + "\n" + self.eq_preset_box.currentText(),
@@ -190,7 +190,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         if await self.ofb.get_property("sound", "equalizer_rows") is None:
             return
 
-        with qt_error_handler("OfbQtSoundQualityModule__ExportFile"):
+        with qt_error_handler("OfbQtSoundQualityModule_ExportFile", self.ctx):
             dialog = QFileDialog(self, self.tr("Save equalizer preset to file..."))
             dialog.setWindowModality(Qt.WindowModality.WindowModal)
             dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptSave)
@@ -205,7 +205,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
 
     @asyncSlot()
     async def load_file(self):
-        with qt_error_handler("OfbQtSoundQualityModule__LoadFile"):
+        with qt_error_handler("OfbQtSoundQualityModule_LoadFile", self.ctx):
             dialog = QFileDialog(self, self.tr("Load equalizer preset from file..."))
             dialog.setWindowModality(Qt.WindowModality.WindowModal)
             dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptOpen)

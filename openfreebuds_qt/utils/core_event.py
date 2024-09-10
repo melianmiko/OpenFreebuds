@@ -8,6 +8,9 @@ class OfbCoreEvent:
         self._kind = kind
         self.args = args
 
+    def __str__(self):
+        return f"<OfbCoreEvent kind={self._kind}, args={self.args}>"
+
     def kind_match(self, kind: str):
         return self._kind is None or self._kind == kind
 
