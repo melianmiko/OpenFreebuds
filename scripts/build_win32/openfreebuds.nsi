@@ -1,5 +1,6 @@
 !include "MUI2.nsh"
 !include "x64.nsh"
+!include "FileFunc.nsh"
 
 !define APP_NAME "OpenFreebuds"
 !define APP_VERSION "0.13.3"
@@ -54,8 +55,12 @@ Section "Dummy Section" SecDummy
 	File /r "dist\${APP_BUILD_NAME}\"
 
 	;Shortcuts
-	CreateShortCut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${APP_EXE}"
-	CreateShortCut "$SMPROGRAMS\${APP_NAME}.lnk" "$INSTDIR\${APP_EXE}"
+	ClearErrors
+	ReadRegStr $0 HKCU "Software\${APP_DEVELOPER} ${APP_NAME}" ""
+	${If} ${Errors}
+		CreateShortCut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${APP_EXE}"
+		CreateShortCut "$SMPROGRAMS\${APP_NAME}.lnk" "$INSTDIR\${APP_EXE}"
+	${EndIf}
 
 	;Store installation folder
 	WriteRegStr HKCU "Software\${APP_DEVELOPER} ${APP_NAME}" "" $INSTDIR
@@ -71,6 +76,12 @@ Section "Dummy Section" SecDummy
 			"UninstallString" "$\"$INSTDIR\uninstall.exe$\""
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}_APP" \
 			"Publisher" "${APP_DEVELOPER}"
+
+	; Bundle size
+	${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
+	IntFmt $0 "0x%08X" $0
+	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}_APP" \
+			"EstimatedSize" "$0"
 
 	;Create uninstaller
 	WriteUninstaller "$INSTDIR\Uninstall.exe"
@@ -95,6 +106,6 @@ Section "Uninstall"
 	RMDir /r "$INSTDIR"
 
 	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_NAME}_APP"
-	DeleteRegKey /ifempty HKCU "Software\${APP_DEVELOPER} ${APP_NAME}"
+	DeleteRegKey HKCU "Software\${APP_DEVELOPER} ${APP_NAME}"
 
 SectionEnd
