@@ -5,7 +5,10 @@ from qasync import asyncSlot
 
 from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds_backend.exception import OfbBackendDependencyMissingError
+from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.tray.dialogs import OfbQtDependencyMissingDialog
+from openfreebuds_qt.tray.menu_dual_connect import OfbDeviceDualConnectTrayMenu
+from openfreebuds_qt.tray.menu_equalizer import OfbDeviceEqualizerTrayMenu
 from openfreebuds_qt.utils.core_event import OfbCoreEvent
 from openfreebuds_qt.generic import IOfbTrayIcon, IOfbQtApplication
 from openfreebuds_qt.tray.menu_generic import OfbQtTrayMenuCommon
@@ -19,6 +22,7 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
 
         self.ctx: IOfbQtApplication = context
         self.tray: IOfbTrayIcon = tray
+        self.config = OfbQtConfigParser.get_instance()
         self.is_connected: bool = False
         self.first_time_render: bool = True
 
@@ -68,10 +72,18 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
         self.anc_level_action.setVisible(False)
         self.anc_separator = self.add_separator()
 
-        # Footer
-        self.footer_section = self.new_section()
+        # Extras
+        self.extras_section = self.new_section()
         self.settings_action = self.add_item(self.tr("Settings..."),
                                              callback=self.do_settings)
+        self.equalizer_submenu = OfbDeviceEqualizerTrayMenu(self, self.ctx)
+        self.equalizer_action = self.add_menu(self.equalizer_submenu)
+        self.dual_connect_submenu = OfbDeviceDualConnectTrayMenu(self, self.ctx)
+        self.dual_connect_action = self.add_menu(self.dual_connect_submenu)
+        self.extras_separator = self.add_separator()
+
+        # Footer
+        self.footer_section = self.new_section()
         self.settings_action = self.add_item(self.tr("Bugreport..."),
                                              callback=self.do_bugreport)
         self.leave_action = self.add_item(self.tr("Leave application"),
@@ -83,7 +95,7 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
             self.device_name_action.setText(device_name)
             self.device_name_action.setVisible(True)
 
-        if event.kind_match(OfbEventKind.STATE_CHANGED):
+        if event.kind_in([OfbEventKind.STATE_CHANGED, OfbEventKind.QT_SETTINGS_CHANGED]):
             state = await self.ofb.get_state()
             self.is_connected = state == IOpenFreebuds.STATE_CONNECTED
 
@@ -91,6 +103,16 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
             self.disconnect_action.setVisible(state == IOpenFreebuds.STATE_CONNECTED)
             self.set_section_visible(self.battery_section, state == IOpenFreebuds.STATE_CONNECTED)
             self.set_section_visible(self.anc_section, state == IOpenFreebuds.STATE_CONNECTED)
+            self.equalizer_action.setVisible(
+                state == IOpenFreebuds.STATE_CONNECTED
+                and self.config.get("ui", "tray_show_equalizer", False)
+                and await self.ofb.get_property("sound", "equalizer_preset", None) is not None
+            )
+            self.dual_connect_action.setVisible(
+                state == IOpenFreebuds.STATE_CONNECTED
+                and self.config.get("ui", "tray_show_dual_connect", False)
+                and await self.ofb.get_property("dual_connect", "preferred_device", None) is not None
+            )
 
         if self.is_connected:
             if event.is_changed("battery", "") or self.first_time_render:
@@ -104,6 +126,12 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
                 self.set_section_visible(self.anc_section, anc is not None)
                 if anc is not None:
                     await self._update_anc(anc)
+
+            if event.is_changed("sound") or self.first_time_render:
+                await self.equalizer_submenu.update_ui()
+
+            if event.is_changed("dual_connect") or self.first_time_render:
+                await self.dual_connect_submenu.update_ui()
 
             self.first_time_render = False
 
@@ -150,14 +178,14 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
         try:
             await self.ofb.run_shortcut("disconnect", no_catch=True)
         except OfbBackendDependencyMissingError as e:
-            await OfbQtDependencyMissingDialog(self.ctx, list(e.args)).get_user_response()
+            await OfbQtDependencyMissingDialog(self, list(e.args)).get_user_response()
 
     @asyncSlot()
     async def do_connect(self):
         try:
             await self.ofb.run_shortcut("connect", no_catch=True)
         except OfbBackendDependencyMissingError as e:
-            await OfbQtDependencyMissingDialog(self.ctx, list(e.args)).get_user_response()
+            await OfbQtDependencyMissingDialog(self, list(e.args)).get_user_response()
 
     def do_settings(self):
         if self.ctx.main_window.isVisible():

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>OfbQtUiSettingsModule</class>
+ <widget class="QWidget" name="OfbQtUiSettingsModule">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>496</width>
+    <height>524</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>UI Settings</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Looking for UI theme settings? Now it follows system-wide configuration.</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Main</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="1" column="0" colspan="2">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Restart OpenFeebuds to apply changes</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Language:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="language_picker">
+        <item>
+         <property name="text">
+          <string>System</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Tray applet</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Icon color</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="tray_icon_picker">
+        <item>
+         <property name="text">
+          <string>Auto-select</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Light</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Dark</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Left-click action</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="tray_shortcut_picker"/>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QCheckBox" name="tray_dc_toggle">
+        <property name="text">
+         <string>Show dual-connect device switcher in menu (if available)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QCheckBox" name="tray_eq_toggle">
+        <property name="text">
+         <string>Show equalizer preset switcher in menu (if available)</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>language_picker</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>OfbQtUiSettingsModule</receiver>
+   <slot>on_language_choose(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>362</x>
+     <y>76</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tray_dc_toggle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OfbQtUiSettingsModule</receiver>
+   <slot>on_tray_dc_toggle(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>247</x>
+     <y>235</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tray_eq_toggle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OfbQtUiSettingsModule</receiver>
+   <slot>on_tray_eq_toggle(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>247</x>
+     <y>264</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tray_shortcut_picker</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>OfbQtUiSettingsModule</receiver>
+   <slot>on_tray_shortcut_choose(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>362</x>
+     <y>205</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tray_icon_picker</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>OfbQtUiSettingsModule</receiver>
+   <slot>on_tray_color_choose(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>362</x>
+     <y>174</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>on_tray_eq_toggle(bool)</slot>
+  <slot>on_tray_dc_toggle(bool)</slot>
+  <slot>on_language_choose(int)</slot>
+  <slot>on_tray_color_choose(int)</slot>
+  <slot>on_tray_shortcut_choose(int)</slot>
+ </slots>
+</ui>

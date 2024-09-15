@@ -5,8 +5,8 @@ from .common_with_shortcuts import OfbQtCommonWithShortcutsModule
 from .device_info import OfbQtDeviceInfoModule
 from .device_other import OfbQtDeviceOtherSettingsModule
 from .dual_connect import OfbQtDualConnectModule
-from .empty_module import OfbEmptyModule
 from .gestures import OfbQtGesturesModule
 from .hotkeys_module import OfbQtHotkeysModule
 from .linux_related import OfbQtLinuxExtrasModule
 from .sound_quality import OfbQtSoundQualityModule
+from .ui_settings import OfbQtUiSettingsModule

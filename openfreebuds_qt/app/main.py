@@ -11,8 +11,8 @@ from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.dialog.manual_connect import OfbQtManualConnectDialog
 from openfreebuds_qt.app.helper import OfbQtSettingsTabHelper
 from openfreebuds_qt.app.module import OfbQtAboutModule, OfbQtSoundQualityModule, OfbQtLinuxExtrasModule, \
-    OfbQtHotkeysModule, OfbQtGesturesModule, OfbEmptyModule, OfbQtDualConnectModule, OfbQtDeviceOtherSettingsModule, \
-    OfbQtDeviceInfoModule, OfbQtCommonModule, OfbQtChooseDeviceModule
+    OfbQtHotkeysModule, OfbQtGesturesModule, OfbQtDualConnectModule, OfbQtDeviceOtherSettingsModule, \
+    OfbQtDeviceInfoModule, OfbQtCommonModule, OfbQtChooseDeviceModule, OfbQtUiSettingsModule
 from openfreebuds_qt.constants import ASSETS_PATH
 from openfreebuds_qt.designer.main_window import Ui_OfbMainWindowDesign
 from openfreebuds_qt.generic import IOfbQtApplication, IOfbMainWindow
@@ -66,7 +66,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
 
         # App-related modules
         self.tabs.add_section(self.tr("Application"))
-        self._attach_module(self.tr("User interface"), OfbEmptyModule(self.tabs.root, self.ctx))
+        self._attach_module(self.tr("User interface"), OfbQtUiSettingsModule(self.tabs.root, self.ctx))
         if OfbQtHotkeysModule.available():
             self._attach_module(self.tr("Keyboard shortcuts"), OfbQtHotkeysModule(self.tabs.root, self.ctx))
         if sys.platform == "linux":

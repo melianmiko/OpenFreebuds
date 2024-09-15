@@ -15,7 +15,6 @@ from openfreebuds_qt.generic import IOfbTrayIcon
 from openfreebuds_qt.tray.menu import OfbQtTrayMenu
 from openfreebuds_qt.utils import OfbCoreEvent, qt_error_handler, create_tray_icon
 
-UI_UPDATE_GROUPS = ["anc", "battery"]
 log = create_logger("OfbTrayIcon")
 
 
@@ -120,12 +119,19 @@ class OfbTrayIcon(IOfbTrayIcon):
                 while True:
                     kind, *args = await self.ofb.wait_for_event(member_id)
                     event = OfbCoreEvent(kind, *args)
+
                     if event.kind_match(OfbEventKind.QT_BRING_SETTINGS_UP):
                         self.ctx.main_window.show()
                         self.ctx.main_window.activateWindow()
+
                     if event.kind_match(OfbEventKind.STATE_CHANGED) and args[0] == IOpenFreebuds.STATE_DESTROYED:
                         raise OfbServerDeadError("Server going to exit")
-                    if event.kind_match(OfbEventKind.STATE_CHANGED) or event.is_prop_group_in(UI_UPDATE_GROUPS):
+
+                    if event.kind_in([
+                        OfbEventKind.STATE_CHANGED,
+                        OfbEventKind.QT_SETTINGS_CHANGED,
+                        OfbEventKind.PROPERTY_CHANGED,
+                    ]):
                         await self._update_ui(event)
             except asyncio.CancelledError:
                 await self.ofb.unsubscribe(member_id)

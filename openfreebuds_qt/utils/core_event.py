@@ -14,6 +14,9 @@ class OfbCoreEvent:
     def kind_match(self, kind: str):
         return self._kind is None or self._kind == kind
 
+    def kind_in(self, kinds: list[str]):
+        return self._kind is None or self._kind in kinds
+
     def is_prop_group_in(self, groups: list[str]):
         if self._kind is None:
             return True
