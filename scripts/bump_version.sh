@@ -10,12 +10,13 @@ cd "$(dirname "$0")"/..
 source scripts/constants.sh
 
 # Bump python wheel version
-sed -i "s/version =.*/version = \"$1\"/g" pyproject.toml
+VERSION_SHORT=`echo $1 | cut -d . -f -2`
+sed -i "s/^version =.*/version = \"$VERSION_SHORT\"/g" pyproject.toml
 
 # Create ./openfreebuds_qt/version_info.py
 echo "VERSION = '$1'" > ./openfreebuds_qt/version_info.py
 echo "LIBRARIES = [" >> ./openfreebuds_qt/version_info.py
-poetry export --without-hashes -n | while read line
+poetry export --without-hashes -n --with extras | while read line
 do
   echo "    '$line'," >> ./openfreebuds_qt/version_info.py
 done

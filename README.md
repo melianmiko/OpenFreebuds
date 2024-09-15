@@ -1,34 +1,14 @@
-** 🚧🚧🚧 This `next` branch  isn't ready for everyday use. **
-
-That's an absolutely new OpenFreebuds implementation, rewritten
-from scratch to asyncio & Qt6. Currently it's still in progress
-and a lot of features are missing, and only supported device
-is FreeBuds 5i. Stay turned, in some day this version will 
-become main.
-
-If you want to test, do this at your own risk:
-
-```shell
-poetry install
-poetry run pyuic6 openfreebuds_qt/designer
-poetry run python -m openfreebuds_qt -v
-```
-
-Don't send bugreports, I know that it's absolutely broken.
-But, at least, it should show a tray icon and main window
-in Win10-11 or KDE.
-
----
-
-
 <div align="center">
-<img src="docs/logo.png" alt="" />
+<img src="docs/logo.png" width="192px" alt="" />
 <h1>OpenFreebuds</h1>
 <p>Desktop application to manage wireless headphones from HUAWEI/Honor</p>
 <p>
 <img src="https://img.shields.io/github/v/release/melianmiko/openfreebuds" alt="Last release"/>
 <img src="https://img.shields.io/aur/last-modified/openfreebuds" alt="Last AUR release"/>
 <img src="https://badges.crowdin.net/openfreebuds/localized.svg" alt="Translation level"/>
+<a href="https://github.com/melianmiko/OpenFreebuds/actions/workflows/on_push.yml">
+<img src="https://github.com/melianmiko/OpenFreebuds/actions/workflows/on_push.yml/badge.svg" alt="Test build status"/>
+</a>
 </p>
 <p>
 <a href="https://mmk.pw/en/openfreebuds"><b>💿 Download binaries</b></a> | <a href="https://crowdin.com/project/openfreebuds">🌍 Suggest translation</a>
@@ -42,7 +22,7 @@ Features
 
 - Dynamic system tray icon that shows current active noise cancellation mode and battery level;
 - Tray menu with battery levels and active noise cancellation settings;
-- Ability to change voice language for some models (4i, 5i);
+- Ability to change voice language (not all devices supported);
 - Device settings dialog, eg. change equalizer preset, gesture actions, etc;
 - Built-in HTTP-server for remote control & scripting;
 - Built-in global hotkeys support (for Windows and Xorg-Linux)
@@ -71,7 +51,56 @@ app to manage your headset. Then send collected file to me, I'll analyze them an
 implement their features in OpenFreebuds.
 
 Download & install
+-----------------
+
+Will be available after release. For now, you can grab test
+binaries from [GitHub Actions](https://github.com/melianmiko/OpenFreebuds/actions/workflows/on_push.yml).
+
+Build or start from sources
 -------------
+
+Requirements:
+
+- Windows 10/11, or enough modern Linux;
+- Qt 6.0+ development tools, at least Linguist's `lrelease`;
+- [Python](https://www.python.org/downloads/) (3.11+), [Poetry](https://python-poetry.org/docs/#installation) (1.8+);
+- (Windows, optiona) [NSIS](https://nsis.sourceforge.io/Download), [UPX](https://upx.github.io/);
+- (Linux, optional) Build essentials and some libraries.
+
+Setup poetry before continue:
+
+```shell
+poetry install
+```
+
+### Just launch without installation
+
+```shell
+poetry run python -m openfreebuds_qt -vcs
+# use --help for options description
+```
+
+### Windows
+
+If everything above is installed & added to `PATH`, just run:
+
+```shell
+.\scripts\build_win32\make.cmd
+```
+
+Output binaries will be located in `scripts\build_win32\dist`
+
+### Debian, Ubuntu
+
+Install all packaging dependencies automated way:
+`apt install build-essentials && ./scripts/install_dpkg_dependencies.sh`.
+
+Go to `scripts/build_debian` and run build script:
+
+```shell
+cd scripts/build_debian
+./build.sh
+```
 
 Build from sources and prey.
 

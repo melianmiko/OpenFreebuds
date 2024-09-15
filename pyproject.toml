@@ -22,19 +22,21 @@ openfreebuds_cmd = 'openfreebuds_cmd:main'
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
 pillow = "^10.4.0"
-aiocmd = ">=0.1.5,<0.2.0"
 psutil = "^6.0.0"
 aiohttp = "^3.10.5"
-pyinstaller = "6.10.0"
-pygobject = { version = "^3.48.1", platform = "linux" }
 winsdk = { version = "1.0.0b10", platform = "win32" }
 pyqt6 = "^6.7.1"
 qasync = "^0.27.1"
 sdbus = { version = "^0.12.0", platform = "linux" }
 pynput = "^1.7.7"
 
-[tool.poetry.group.goodies.dependencies]
+[tool.poetry.group.release.dependencies]
+pyinstaller = "6.10.0"
+
+[tool.poetry.group.extras.dependencies]
+aiocmd = ">=0.1.5,<0.2.0"
 pynput = ">=1.7.6,<1.8.0"
+pygobject = { version = "^3.48.1", platform = "linux" }
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.3.2"

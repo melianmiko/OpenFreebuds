@@ -1,0 +1,75 @@
+name: Build & Test
+on: push
+
+jobs:
+  PyTest:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: "1.8.3"
+      - uses: actions/checkout@v4
+      - name: Set up poetry environment
+        run: poetry install --without extras
+      - name: Run pytest
+        run: poetry run pytest
+
+  BuildExe:
+    runs-on: windows-latest
+    steps:
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: 6.7.*
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: "1.8.3"
+      - uses: actions/checkout@v4
+      - name: Set up poetry environment
+        run: poetry install
+      - name: Change in-app version
+        run: bash.exe -c "./scripts/bump_version_git.sh"
+      - name: Run build script
+        run: .\scripts/build_win32\make.cmd
+      - name: Upload bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: Win32 installer
+          path: .\scripts\build_win32\dist\openfreebuds.install.exe
+          if-no-files-found: error
+
+  BuildDeb:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: "1.8.3"
+      - uses: actions/checkout@v4
+      - name: Install dev-dependencies
+        run: |
+          sudo apt install -y build-essential
+          sudo ./scripts/install_dpkg_dependencies.sh
+      - name: Set up poetry environment
+        run: poetry install
+      - name: Change in-app version
+        run: bash -c "./scripts/bump_version_git.sh"
+      - name: Run build script
+        run: bash ./scripts/build_debian/build.sh
+      - name: Upload bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: Debian package
+          path: ./scripts/build_debian/openfreebuds_*.deb
+          if-no-files-found: error
