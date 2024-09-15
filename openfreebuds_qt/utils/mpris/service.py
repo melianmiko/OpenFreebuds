@@ -4,9 +4,13 @@ from typing import Optional
 
 from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds.utils.logger import create_logger
-from openfreebuds_backend.linux.dbus.mpris import MPRISPProxy
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.utils import OfbCoreEvent
+
+try:
+    from openfreebuds_backend.linux.dbus.mpris import MPRISPProxy
+except ImportError:
+    pass
 
 log = create_logger("OfbQtMPRISHelperService")
 
