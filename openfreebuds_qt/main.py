@@ -14,6 +14,7 @@ from openfreebuds_qt.constants import IGNORED_LOG_TAGS, I18N_PATH, STORAGE_PATH
 from openfreebuds_qt.generic import IOfbQtApplication
 from openfreebuds_qt.tray.main import OfbTrayIcon
 from openfreebuds_qt.utils import OfbQtDeviceAutoSelect, OfbQtHotkeyService, list_available_locales
+from openfreebuds_qt.utils.mpris.service import OfbQtMPRISHelperService
 
 log = create_logger("OfbQtApplication")
 
@@ -33,6 +34,7 @@ class OfbQtApplication(IOfbQtApplication):
         self.ofb: Optional[IOpenFreebuds] = None
         self.auto_select: Optional[OfbQtDeviceAutoSelect] = None
         self.hotkeys: Optional[OfbQtHotkeyService] = None
+        self.mpris: Optional[OfbQtMPRISHelperService] = None
         self.tray: Optional[OfbTrayIcon] = None
         self.main_window: Optional[OfbQtMainWindow] = None
 
@@ -79,6 +81,7 @@ class OfbQtApplication(IOfbQtApplication):
 
             # Initialize services
             self.hotkeys = OfbQtHotkeyService.get_instance(self.ofb)
+            self.mpris = OfbQtMPRISHelperService.get_instance(self.ofb)
             self.auto_select = OfbQtDeviceAutoSelect(self.ofb)
             self.tray = OfbTrayIcon(self)
             self.main_window = OfbQtMainWindow(self)
@@ -87,6 +90,8 @@ class OfbQtApplication(IOfbQtApplication):
                 await self.restore_device()
                 await self.auto_select.boot()
 
+            self.hotkeys.start()
+            await self.mpris.start()
             await self.tray.boot()
             await self.main_window.boot()
 

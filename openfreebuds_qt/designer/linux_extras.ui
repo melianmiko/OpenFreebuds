@@ -41,6 +41,35 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Theme</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Fresh versions of OpenFreebuds are written in Qt6, and uses system-wide Qt UI theme. So, if application color scheme didn't match with system, or it looks ugly, you should configure global Qt style settings.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>In KDE, LxQT or other Qt-based desktop environments, use system appearance settings. Otherwise, configure qt manually or use any configuration tool like qt6ct.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="wayland_root">
      <property name="title">
       <string>Keyboard shortcuts</string>
@@ -105,8 +134,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>mpris_helper_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OfbQtLinuxExtrasModule</receiver>
+   <slot>on_mpris_toggle(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>293</x>
+     <y>52</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>293</x>
+     <y>206</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>on_hotkeys_doc()</slot>
+  <slot>on_mpris_toggle(bool)</slot>
  </slots>
 </ui>

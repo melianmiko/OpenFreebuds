@@ -23,9 +23,9 @@ class OfbQtHotkeyService:
         return OfbQtHotkeyService.instance
 
     def start(self):
+        self.stop()
         if not self.config.get("hotkeys", "enabled", False):
             return
-        self.stop()
 
         try:
             from pynput.keyboard import GlobalHotKeys
