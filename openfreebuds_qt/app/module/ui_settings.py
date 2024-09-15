@@ -4,6 +4,7 @@ from qasync import asyncSlot
 from openfreebuds import OfbEventKind
 from openfreebuds.shortcuts import OfbShortcuts
 from openfreebuds.utils.logger import create_logger
+from openfreebuds_backend import is_run_at_boot, set_run_at_boot
 from openfreebuds_qt.app.module import OfbQtCommonWithShortcutsModule
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.designer.ui_settings import Ui_OfbQtUiSettingsModule
@@ -50,6 +51,12 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonWithShortcutsMo
             self.tray_eq_toggle.setChecked(self.config.get("ui", "tray_show_equalizer", False))
         with blocked_signals(self.tray_dc_toggle):
             self.tray_dc_toggle.setChecked(self.config.get("ui", "tray_show_dual_connect", False))
+        with blocked_signals(self.autostart_toggle):
+            self.autostart_toggle.setChecked(is_run_at_boot())
+
+    @asyncSlot(bool)
+    async def on_autostart_toggle(self, value: bool):
+        set_run_at_boot(value)
 
     @asyncSlot(bool)
     async def on_tray_eq_toggle(self, value: bool):

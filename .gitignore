@@ -5,9 +5,6 @@
 *#
 
 /test.py
-/lib
-/venv
-/.venv
 /build
 /builddir
 /dist
