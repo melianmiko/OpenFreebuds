@@ -43,6 +43,3 @@ class OfbQtAboutModule(Ui_OfbQtAboutModule, OfbQtCommonModule):
     @pyqtSlot()
     def open_github(self):
         webbrowser.open(LINK_GITHUB)
-
-    def retranslate_ui(self):
-        self.retranslateUi(self)

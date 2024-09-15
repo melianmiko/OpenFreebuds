@@ -30,7 +30,6 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
 
         self.ctx = ctx
         self.ofb = ctx.ofb
-        self._exit_started: bool = False
 
         self.setupUi(self)
 

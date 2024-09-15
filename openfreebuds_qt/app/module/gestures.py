@@ -41,7 +41,7 @@ class _UiRow:
             return
         if self.right_combo is not None:
             index = self.grid.indexOf(self.left_combo)
-            r, c, rs, cs = self.grid.getItemPosition(index)
+            r, c, rs, _ = self.grid.getItemPosition(index)
             self.grid.takeAt(index)
             self.grid.addWidget(self.left_combo, r, c, rs, 1 if value else 2)
             self.right_combo.setVisible(value)

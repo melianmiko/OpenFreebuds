@@ -169,11 +169,6 @@ class OfbManager(IOpenFreebuds):
 
             await asyncio.sleep(2)
 
-    async def _use_device_driver(self, driver: OfbDriverGeneric):
-        if self._driver:
-            await self._driver.stop()
-        self._driver = driver
-
     async def _set_state(self, new_state: int):
         if self._state == new_state:
             return

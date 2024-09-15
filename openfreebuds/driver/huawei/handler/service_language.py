@@ -11,7 +11,7 @@ class OfbHuaweiVoiceLanguageHandler(OfbDriverHandlerHuawei):
     properties = [
         ("service", "language")
     ]
-    handle_commands = [b'\x0c\x02']
+    commands = [b'\x0c\x02']
     ignore_commands = [b"\x0c\x01"]
 
     async def on_init(self):

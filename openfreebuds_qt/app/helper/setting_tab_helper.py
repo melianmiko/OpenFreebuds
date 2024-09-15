@@ -68,13 +68,6 @@ class OfbQtSettingsTabHelper:
     def active_tab(self):
         return self._active_entry
 
-    def retranslate_ui(self):
-        for section in self._sections:
-            if section.list_item is not None:
-                section.list_item.setText(self.root.tr(section.label))
-            for item in section.items:
-                item.list_item.label.setText(self.root.tr(item.label))
-
     def add_tab(self, label: str, content: QWidget):
         section_num = len(self._sections) - 1
         tab = len(self._sections[section_num].items)

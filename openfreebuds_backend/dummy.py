@@ -8,10 +8,6 @@ def get_app_storage_path():
     return os.getcwd() + "/data"
 
 
-def open_in_file_manager(path):
-    log.info("open_dir " + path)
-
-
 def open_file(path):
     log.info("open_file " + path)
 
@@ -41,12 +37,6 @@ async def bt_disconnect(address):
 
 def bt_list_devices():
     return []
-
-
-def ask_string(message, callback):
-    logging.info("ask_str" + message)
-    if callback:
-        callback(None)
 
 
 def is_dark_taskbar():

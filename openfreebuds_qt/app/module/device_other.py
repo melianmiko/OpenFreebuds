@@ -56,9 +56,6 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                         )
                         self.service_language_box.setCurrentIndex(-1)
 
-    def retranslate_ui(self):
-        self.retranslateUi(self)
-
     @asyncSlot(bool)
     async def on_low_latency_toggle(self, value: bool):
         async with qt_error_handler("OfbQtDeviceOtherSettingsModule_SetLowLatency", self.ctx):

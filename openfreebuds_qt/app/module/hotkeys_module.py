@@ -6,20 +6,22 @@ from qasync import asyncSlot
 
 from openfreebuds.shortcuts import OfbShortcuts
 from openfreebuds.utils.logger import create_logger
-from openfreebuds_qt.utils.hotkeys.recorder import OfbQtHotkeyRecorder
-from openfreebuds_qt.utils.hotkeys.service import OfbQtHotkeyService
-from openfreebuds_qt.app.module.common_with_shortcuts import OfbQtCommonWithShortcutsModule
-from openfreebuds_qt.utils.qt_utils import qt_error_handler, blocked_signals
+from openfreebuds_qt.app.module import OfbQtCommonModule
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.designer.hotkeys import Ui_OfbQtHotkeysModule
+from openfreebuds_qt.qt_i18n import get_shortcut_names
+from openfreebuds_qt.utils.hotkeys.recorder import OfbQtHotkeyRecorder
+from openfreebuds_qt.utils.hotkeys.service import OfbQtHotkeyService
+from openfreebuds_qt.utils.qt_utils import qt_error_handler, blocked_signals
 
 log = create_logger("OfbQtHotkeysModule")
 
 
-class OfbQtHotkeysModule(Ui_OfbQtHotkeysModule, OfbQtCommonWithShortcutsModule):
+class OfbQtHotkeysModule(Ui_OfbQtHotkeysModule, OfbQtCommonModule):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.shortcut_names = get_shortcut_names()
         self.service = OfbQtHotkeyService.get_instance(self.ofb)
         self.config = OfbQtConfigParser.get_instance()
         self.recorder = OfbQtHotkeyRecorder()
@@ -70,6 +72,3 @@ class OfbQtHotkeysModule(Ui_OfbQtHotkeysModule, OfbQtCommonWithShortcutsModule):
             self.service.start()
 
             self.table.setItem(index, column, QTableWidgetItem(self.config.get("hotkeys", shortcut, "Disabled")))
-
-    def retranslate_ui(self):
-        self.retranslateUi(self)

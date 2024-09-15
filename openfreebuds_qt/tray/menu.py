@@ -70,23 +70,22 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
         self.anc_level_submenu = OfbDeviceAncLevelTrayMenu(self, ofb)
         self.anc_level_action = self.add_menu(self.anc_level_submenu)
         self.anc_level_action.setVisible(False)
-        self.anc_separator = self.add_separator()
+        self.add_separator()
 
         # Extras
-        self.extras_section = self.new_section()
-        self.settings_action = self.add_item(self.tr("Settings..."),
-                                             callback=self.do_settings)
+        self.new_section()
+        self.add_item(self.tr("Settings..."), callback=self.do_settings)
         self.equalizer_submenu = OfbDeviceEqualizerTrayMenu(self, self.ctx)
         self.equalizer_action = self.add_menu(self.equalizer_submenu)
         self.dual_connect_submenu = OfbDeviceDualConnectTrayMenu(self, self.ctx)
         self.dual_connect_action = self.add_menu(self.dual_connect_submenu)
-        self.extras_separator = self.add_separator()
+        self.add_separator()
 
         # Footer
-        self.footer_section = self.new_section()
-        self.settings_action = self.add_item(self.tr("Bugreport..."),
+        self.new_section()
+        self.add_item(self.tr("Bugreport..."),
                                              callback=self.do_bugreport)
-        self.leave_action = self.add_item(self.tr("Leave application"),
+        self.add_item(self.tr("Leave application"),
                                           callback=self.do_exit)
 
     async def on_core_event(self, event: OfbCoreEvent):

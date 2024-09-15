@@ -12,10 +12,6 @@ def get_app_storage_path():
     return pathlib.Path.home() / "AppData/Roaming"
 
 
-def open_in_file_manager(path):
-    os.startfile(path)
-
-
 def open_file(path):
     subprocess.Popen(["notepad.exe", path])
 

@@ -91,6 +91,3 @@ class OfbQtChooseDeviceModule(Ui_OfbQtDeviceSelectModule, OfbQtCommonModule):
 
             if value is True:
                 await OfbQtDeviceAutoSelect.trigger(self.ofb)
-
-    def retranslate_ui(self):
-        self.retranslateUi(self)

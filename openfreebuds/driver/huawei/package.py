@@ -1,4 +1,4 @@
-from openfreebuds.driver.huawei.utils import crc16char, build_table_row
+from openfreebuds.driver.huawei.utils import crc16_xmodem, build_table_row
 from openfreebuds.exceptions import OfbPackageChecksumError
 
 
@@ -85,7 +85,7 @@ class HuaweiSppPackage:
 
         # Build package
         result = b"Z" + (len(body) + 1).to_bytes(2, byteorder="big") + b"\x00" + body
-        result += crc16char(result)
+        result += crc16_xmodem(result)
         return result
 
     @staticmethod
@@ -104,8 +104,8 @@ class HuaweiSppPackage:
         if validate_checksum:
             crc_data = data[0:-2]
             crc_value = data[-2:]
-            if crc16char(crc_data) != crc_value:
-                raise OfbPackageChecksumError(f"{crc16char(crc_data)} != {crc_value}")
+            if crc16_xmodem(crc_data) != crc_value:
+                raise OfbPackageChecksumError(f"{crc16_xmodem(crc_data)} != {crc_value}")
 
         length = int.from_bytes(data[1:3], byteorder="big")
 

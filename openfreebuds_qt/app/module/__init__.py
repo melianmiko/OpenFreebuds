@@ -1,7 +1,6 @@
 from .about import OfbQtAboutModule
 from .choose_device import OfbQtChooseDeviceModule
 from .common import OfbQtCommonModule
-from .common_with_shortcuts import OfbQtCommonWithShortcutsModule
 from .device_info import OfbQtDeviceInfoModule
 from .device_other import OfbQtDeviceOtherSettingsModule
 from .dual_connect import OfbQtDualConnectModule

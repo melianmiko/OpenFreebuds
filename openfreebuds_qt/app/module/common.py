@@ -14,8 +14,5 @@ class OfbQtCommonModule(QWidget):
         self.ofb = context.ofb
         self.list_item: Optional[OfbQListItem] = None
 
-    def retranslate_ui(self):
-        pass
-
     async def update_ui(self, event: OfbCoreEvent):
         pass

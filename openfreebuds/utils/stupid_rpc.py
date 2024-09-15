@@ -16,7 +16,6 @@ log = create_logger("StupidRPC")
 class RemoteError(Exception):
     def __init__(self, data):
         super().__init__(data)
-        self.rpc_error_name = data["class"]
         self.rpc_trace = data["trace"]
         self.args = data["args"]
 

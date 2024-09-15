@@ -23,9 +23,6 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
 
         self.setupUi(self)
 
-    def retranslate_ui(self):
-        self.retranslateUi(self)
-
     async def update_ui(self, event: OfbCoreEvent):
         async with qt_error_handler("OfbQtDualConnectModule_UpdateUi", self.ctx):
             # Setup visibility

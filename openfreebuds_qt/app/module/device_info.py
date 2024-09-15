@@ -13,9 +13,6 @@ class OfbQtDeviceInfoModule(Ui_OfbQtDeviceInfoModule, OfbQtCommonModule):
 
         self.setupUi(self)
 
-    def retranslate_ui(self):
-        self.retranslateUi(self)
-
     async def update_ui(self, event: OfbCoreEvent):
         async with qt_error_handler("OfbQtDeviceInfoModule_UpdateUi", self.ctx):
             if event.is_changed("info") or event.kind_match(OfbEventKind.DEVICE_CHANGED):

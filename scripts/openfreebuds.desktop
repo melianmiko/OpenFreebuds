@@ -1,9 +1,14 @@
 [Desktop Entry]
 Version=1.1
 Type=Application
-Name=Openfreebuds
-Comment=HUAWEI Freebuds manager
+Name=OpenFreebuds
+GenericName=Headphones manager
+GenericName[ru]=Управление наушниками
+Comment=Open-source client app for HUAWEI FreeBuds
+Comment[ru]=Open-source клиент для устройств HUAWEI FreeBuds
 Icon=/usr/lib/python3/dist-packages/openfreebuds_qt/assets/icon.png
 Exec=/usr/bin/openfreebuds_qt
 Actions=
+Terminal=false
 Categories=Utility;
+Keywords=huawei;headphones;headset;earphones

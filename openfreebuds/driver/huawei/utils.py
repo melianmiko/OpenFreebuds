@@ -7,7 +7,7 @@ def build_table_row(ln, val, description_table=None):
     return str(val).ljust(ln) + " | "
 
 
-def crc16char(data):
+def crc16_xmodem(data):
     crc16_tab = [0, 4129, 8258, 12387, 16516, 20645, 24774, 28903, -32504, -28375, -24246, -20117, -15988, -11859,
                  -7730,
                  -3601, 4657, 528, 12915, 8786, 21173, 17044, 29431, 25302, -27847, -31976, -19589, -23718, -11331,
@@ -35,83 +35,3 @@ def crc16char(data):
         s = s & 0b1111111111111111  # use only 16 bits
 
     return s.to_bytes(2, "big")
-
-
-def bytes2array(data):
-    out = []
-    for i in range(len(data)):
-        out.append(int.from_bytes(data[i:i + 1], "big", signed=True))
-    return out
-
-
-def array2bytes(data):
-    b = b""
-    for a in data:
-        b += a.to_bytes(1, 'big', signed=True)
-    return b
-
-
-class TLVPackage:
-    def __init__(self, pkg_type: int, data: array):
-        self.type = pkg_type
-        self.data = data
-        self.length = len(data)
-
-    def get_bytes(self):
-        return self.data.tobytes()
-
-    def get_string(self):
-        return self.data.tobytes().decode("utf8")
-
-
-class TLVResponse:
-    def __init__(self):
-        self.contents: list[TLVPackage] = []
-
-    def __iter__(self):
-        return self.contents.__iter__()
-
-    def append(self, item):
-        self.contents.append(item)
-
-    def find_by_type(self, type_key) -> TLVPackage:
-        for a in self.contents:
-            if a.type == type_key:
-                return a
-        return TLVPackage(type_key, array("b", b""))
-
-    def find_by_types(self, types_list):
-        for a in self.contents:
-            if a.type in types_list:
-                return a
-        return TLVPackage(types_list[0], array("b", b""))
-
-
-class TLVException(Exception):
-    pass
-
-
-def parse_tlv(data: array) -> TLVResponse:
-    response = TLVResponse()
-    i = 0
-
-    while i <= len(data) - 2:
-        b_cur = data[i]
-        b_next = data[i + 1]
-        if (b_next & 128) != 0:
-            b_post = data[i + 2]
-            length = ((b_next & 127) << 7) + (b_post & 127)
-            pos = i + 3
-        else:
-            length = b_next & 127
-            pos = i + 2
-        i = pos + length
-        if length != 0:
-            if i > len(data):
-                raise TLVException("TLV Package overflow")
-            arr = data[pos:pos + length]
-            response.append(TLVPackage(b_cur, arr))
-        else:
-            response.append(TLVPackage(b_cur, array("b", b"")))
-
-    return response

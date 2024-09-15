@@ -72,9 +72,6 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         self.custom_eq_rows_layout.addWidget(slider)
         self._eq_rows.append(slider)
 
-    def retranslate_ui(self):
-        self.retranslateUi(self)
-
     async def update_ui(self, event: OfbCoreEvent):
         sound = await self.ofb.get_property("sound")
         self.list_item.setVisible(sound is not None)

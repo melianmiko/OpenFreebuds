@@ -10,10 +10,6 @@ def get_app_storage_path():
     return pathlib.Path.home() / ".config"
 
 
-def open_in_file_manager(path):
-    subprocess.Popen(["xdg-open", path])
-
-
 def open_file(path):
     subprocess.Popen(["xdg-open", path])
 

@@ -5,19 +5,20 @@ from openfreebuds import OfbEventKind
 from openfreebuds.shortcuts import OfbShortcuts
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_backend import is_run_at_boot, set_run_at_boot
-from openfreebuds_qt.app.module import OfbQtCommonWithShortcutsModule
+from openfreebuds_qt.app.module import OfbQtCommonModule
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.designer.ui_settings import Ui_OfbQtUiSettingsModule
+from openfreebuds_qt.qt_i18n import get_shortcut_names
 from openfreebuds_qt.utils import blocked_signals, list_available_locales
-
 
 log = create_logger("OfbQtUiSettingsModule")
 
 
-class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonWithShortcutsModule):
+class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.shortcut_names = get_shortcut_names()
         self.available_shortcuts = OfbShortcuts.all()
         self.available_icons = ["auto", "light", "dark"]
         self.available_locales = ["auto", *list_available_locales()]
