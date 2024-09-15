@@ -102,8 +102,4 @@ cd scripts/build_debian
 ./build.sh
 ```
 
-Build from sources and prey.
-
-TODO: Write this guides
-
 ![Extra dialogs preview](docs/preview_2.png)

@@ -12,6 +12,7 @@ packages = [
 include = [
     { path = "openfreebuds/assets", format = ["sdist", "wheel"] },
     { path = "openfreebuds_qt/assets", format = ["sdist", "wheel"] },
+    { path = "openfreebuds_qt/assets/i18n/*.qm", format = ["wheel"] },
     { path = "openfreebuds_qt/designer/*.py", format = ["wheel"] },
 ]
 
