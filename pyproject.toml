@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "OpenFreebuds"
+version = "0.1.0"
+description = "FOSS Windows/Linux client for HUAWEI FreeBuds headset series"
+authors = ["MelianMiko <support@mmk.pw>"]
+packages = [
+    { include = "openfreebuds" },
+    { include = "openfreebuds_qt" },
+    { include = "openfreebuds_backend" },
+    { include = "openfreebuds_cmd" },
+]
+include = [
+    { path = "openfreebuds/assets", format = ["sdist", "wheel"] },
+    { path = "openfreebuds_qt/assets", format = ["sdist", "wheel"] },
+    { path = "openfreebuds_qt/designer/*.py", format = ["wheel"] },
+]
+
+[tool.poetry.scripts]
+openfreebuds_qt = 'openfreebuds_qt:main'
+openfreebuds_cmd = 'openfreebuds_cmd:main'
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+pillow = "^10.4.0"
+psutil = "^6.0.0"
+aiohttp = "^3.10.5"
+winsdk = { version = "1.0.0b10", platform = "win32" }
+pyqt6 = "^6.7.1"
+qasync = "^0.27.1"
+sdbus = { version = "^0.12.0", platform = "linux" }
+pynput = "^1.7.7"
+
+[tool.poetry.group.release.dependencies]
+pyinstaller = "6.10.0"
+
+[tool.poetry.group.extras.dependencies]
+aiocmd = ">=0.1.5,<0.2.0"
+pynput = ">=1.7.6,<1.8.0"
+pygobject = { version = "^3.48.1", platform = "linux" }
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.2"
+pytest-asyncio = "^0.24.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>OfbQtDeviceSelectModule</class>
+ <widget class="QWidget" name="OfbQtDeviceSelectModule">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>537</width>
+    <height>526</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Change device...</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QPushButton {
+	padding: 8px;
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="spacing">
+    <number>8</number>
+   </property>
+   <item>
+    <widget class="QCheckBox" name="auto_config_checkbox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::TabFocus</enum>
+     </property>
+     <property name="text">
+      <string>Select device automatically</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>32</width>
+       <height>32</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="auto_setup_root" native="true">
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>OpenFreebuds will automatically detect currently connected headset and switch to them.</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="manual_setup_root" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>99</verstretch>
+      </sizepolicy>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>16</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="user_config_guide_label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>List bellow shows all Bluetooth devices paired with your device. Select appropriate device that you want to use with OpenFreebuds:</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QListWidget" name="paired_list">
+        <property name="focusPolicy">
+         <enum>Qt::TabFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QListWidget::item {
+	padding: 8px 16px;
+}</string>
+        </property>
+        <property name="selectionRectVisible">
+         <bool>false</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string notr="true">New Item</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget_2" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QPushButton" name="manual_setup_button">
+           <property name="focusPolicy">
+            <enum>Qt::TabFocus</enum>
+           </property>
+           <property name="text">
+            <string>Device isn't listed here</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="refresh_list_button">
+           <property name="focusPolicy">
+            <enum>Qt::TabFocus</enum>
+           </property>
+           <property name="text">
+            <string>Refresh list</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>manual_setup_button</sender>
+   <signal>clicked()</signal>
+   <receiver>OfbQtDeviceSelectModule</receiver>
+   <slot>on_manual_config()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>84</x>
+     <y>571</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>268</x>
+     <y>300</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>auto_config_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OfbQtDeviceSelectModule</receiver>
+   <slot>on_auto_config_toggle(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>268</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>268</x>
+     <y>300</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>refresh_list_button</sender>
+   <signal>clicked()</signal>
+   <receiver>OfbQtDeviceSelectModule</receiver>
+   <slot>on_refresh_list()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>197</x>
+     <y>571</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>268</x>
+     <y>300</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>paired_list</sender>
+   <signal>itemDoubleClicked(QListWidgetItem*)</signal>
+   <receiver>OfbQtDeviceSelectModule</receiver>
+   <slot>on_device_select(QListWidgetItem*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>268</x>
+     <y>315</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>268</x>
+     <y>300</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>on_manual_config()</slot>
+  <slot>on_auto_config_toggle(bool)</slot>
+  <slot>on_refresh_list()</slot>
+  <slot>on_device_select(QListWidgetItem*)</slot>
+ </slots>
+</ui>

@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>OfbQtSoundQualityModule</class>
+ <widget class="QWidget" name="OfbQtSoundQualityModule">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>479</width>
+    <height>654</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Sound quality</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="spacing">
+    <number>8</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Configure sound-related device settings.</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="sq_root">
+     <property name="title">
+      <string>Sound quality preference:</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QRadioButton" name="sq_radio_sound">
+        <property name="text">
+         <string>Prioritize sound quality</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Device will prefer loseless audio codecs, like LDAC.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="sq_radio_connection">
+        <property name="text">
+         <string>Prioritize connection quality</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Device will prefer audio codes with better compression, like AAC</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="eq_root">
+     <property name="title">
+      <string>Equalizer</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Preset:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="eq_preset_box"/>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="custom_edit_button">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"> QPushButton::menu-indicator{width:0px;}</string>
+        </property>
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="custom_eq">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>99999</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Customize preset</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QWidget" name="custom_eq_rows" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>200</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>200</height>
+         </size>
+        </property>
+        <layout class="QHBoxLayout" name="custom_eq_rows_layout"/>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="save_panel" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_5">
+           <property name="font">
+            <font>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="text">
+            <string>Save changes?</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="save_btn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Save</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="undo_btn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset theme="undo"/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>eq_preset_box</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>OfbQtSoundQualityModule</receiver>
+   <slot>on_eq_preset_change(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>347</x>
+     <y>228</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>237</x>
+     <y>311</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sq_radio_connection</sender>
+   <signal>pressed()</signal>
+   <receiver>OfbQtSoundQualityModule</receiver>
+   <slot>on_sq_set_connectivity()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>237</x>
+     <y>129</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>237</x>
+     <y>311</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sq_radio_sound</sender>
+   <signal>pressed()</signal>
+   <receiver>OfbQtSoundQualityModule</receiver>
+   <slot>on_sq_set_quality()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>237</x>
+     <y>77</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>237</x>
+     <y>311</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>save_btn</sender>
+   <signal>clicked()</signal>
+   <receiver>OfbQtSoundQualityModule</receiver>
+   <slot>on_custom_save()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>383</x>
+     <y>436</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>239</x>
+     <y>311</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>undo_btn</sender>
+   <signal>clicked()</signal>
+   <receiver>OfbQtSoundQualityModule</receiver>
+   <slot>on_custom_reset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>443</x>
+     <y>435</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>239</x>
+     <y>311</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>on_eq_preset_change(int)</slot>
+  <slot>on_sq_set_quality()</slot>
+  <slot>on_sq_set_connectivity()</slot>
+  <slot>on_custom_save()</slot>
+  <slot>on_custom_reset()</slot>
+ </slots>
+</ui>

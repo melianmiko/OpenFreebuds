@@ -1,0 +1,26 @@
+{
+  "info": {
+    "software_ver": "NotHarmonyOS 0.0.0",
+    "device_submodel": "idk",
+    "device_model": "idk",
+    "is_debug": true
+  },
+  "battery": {
+    "global": 90,
+    "is_charging": "false"
+  },
+  "anc": {
+    "mode": "normal",
+    "mode_options": "normal,cancellation,awareness"
+  },
+  "action": {
+    "long_tap": "noise_control_disabled",
+    "long_tap_options": "noise_control_disabled,noise_control_off_on,noise_control_off_on_aw,noise_control_on_aw,noise_control_off_an",
+    "power_button": "tap_action_switch_device",
+    "power_button_options": "tap_action_off,tap_action_switch_device"
+  },
+  "service": {
+    "language": "",
+    "language_options": "zh-CN,en-GB"
+  }
+}
