@@ -46,7 +46,10 @@ def create_dual_connect_icon(
                                   background=PRESET_TRANSPARENT)
 
         if is_playing:
-            accent_color = palette.accent().color().getRgb()
+            try:
+                accent_color = palette.accent().color().getRgb()
+            except AttributeError:
+                accent_color = (0, 128, 256)
             overlay = image_combine_mask(OVERLAY_PLAYING,
                                          foreground=Image.new("RGBA", ICON_SIZE, color=accent_color),
                                          background=PRESET_TRANSPARENT)
