@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from PyQt6.QtGui import QAction
@@ -25,6 +26,7 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
         self.config = OfbQtConfigParser.get_instance()
         self.is_connected: bool = False
         self.first_time_render: bool = True
+        self.device_mac_address: str = ""
 
         # Translation data
         self.battery_option_names = {
@@ -90,9 +92,10 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
 
     async def on_core_event(self, event: OfbCoreEvent):
         if event.kind_match(OfbEventKind.DEVICE_CHANGED):
-            device_name, _ = await self.ofb.get_device_tags()
+            device_name, device_addr = await self.ofb.get_device_tags()
             self.device_name_action.setText(device_name)
             self.device_name_action.setVisible(True)
+            self.device_mac_address = device_addr
 
         if event.kind_in([OfbEventKind.STATE_CHANGED, OfbEventKind.QT_SETTINGS_CHANGED]):
             state = await self.ofb.get_state()
@@ -143,11 +146,18 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
             self.battery_actions["global"].setVisible(not battery_is_tws)
             self.battery_is_tws = battery_is_tws
 
+        # Update menu items
         for code in battery:
             if code in self.battery_actions:
                 self.battery_actions[code].setText(
                     f"{self.battery_option_names[code]} {battery[code]}%"
                 )
+
+        # Update last charged config field
+        if battery.get("global", 0) - 20 > self.config.get("last_battery", self.device_mac_address, 0):
+            self.config.set("last_battery", self.device_mac_address, battery.get("global", 0))
+            self.config.set("last_charged", self.device_mac_address, datetime.now().timestamp())
+            self.config.save()
 
     async def _update_anc(self, anc: dict):
         mode = anc["mode"]
