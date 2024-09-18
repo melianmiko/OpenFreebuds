@@ -1,5 +1,6 @@
 import asyncio
 import os
+import signal
 import traceback
 from contextlib import contextmanager, asynccontextmanager, suppress
 
@@ -44,6 +45,7 @@ async def qt_error_handler(identifier, ctx: IOfbQtApplication):
         # Kill process
         # noinspection PyProtectedMember,PyUnresolvedReferences
         os._exit(1)
+        os.kill(os.getpid(), signal.SIGKILL)
 
 
 def fill_combo_box(box: QComboBox, options: list[str], name_map: dict[str, str], current: str):

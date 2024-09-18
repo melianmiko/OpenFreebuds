@@ -1,6 +1,5 @@
 from argparse import ArgumentParser
 
-from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.main import OfbQtApplication
 from openfreebuds_qt.version_info import VERSION
 

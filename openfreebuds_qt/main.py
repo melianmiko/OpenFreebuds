@@ -15,6 +15,7 @@ from openfreebuds_qt.generic import IOfbQtApplication
 from openfreebuds_qt.tray.main import OfbTrayIcon
 from openfreebuds_qt.utils import OfbQtDeviceAutoSelect, OfbQtHotkeyService, list_available_locales
 from openfreebuds_qt.utils.mpris.service import OfbQtMPRISHelperService
+from openfreebuds_qt.utils.ram_trace import start_ram_trace
 
 log = create_logger("OfbQtApplication")
 
@@ -85,6 +86,9 @@ class OfbQtApplication(IOfbQtApplication):
             self.auto_select = OfbQtDeviceAutoSelect(self.ofb)
             self.tray = OfbTrayIcon(self)
             self.main_window = OfbQtMainWindow(self)
+
+            # Dev toys (won't work in release build)
+            start_ram_trace(self)
 
             if self.ofb.role == "standalone":
                 await self.restore_device()

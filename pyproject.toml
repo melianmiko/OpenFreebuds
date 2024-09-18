@@ -43,6 +43,12 @@ pygobject = { version = "^3.48.1", platform = "linux" }
 pytest = "^8.3.2"
 pytest-asyncio = "^0.24.0"
 
+[tool.poetry.group.ram_leak_test]
+optional = true
+
+[tool.poetry.group.ram_leak_test.dependencies]
+pympler = "^1.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
