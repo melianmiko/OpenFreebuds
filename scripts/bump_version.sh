@@ -11,19 +11,19 @@ source scripts/constants.sh
 
 # Bump python wheel version
 VERSION_SHORT=`echo $1 | cut -d . -f -2`
-sed -i "s/^version =.*/version = \"$VERSION_SHORT\"/g" pyproject.toml
+sed -bi "s/^version =.*/version = \"$VERSION_SHORT\"/g" pyproject.toml
 
 # Create ./openfreebuds_qt/version_info.py
 echo "VERSION = '$1'" > ./openfreebuds_qt/version_info.py
 echo "LIBRARIES = [" >> ./openfreebuds_qt/version_info.py
-poetry export --without-hashes -n --with extras | while read line
+poetry export --without-hashes -n --with extras | sed 's/\r$//' | while read line
 do
   echo "    '$line'," >> ./openfreebuds_qt/version_info.py
 done
 echo "]" >> ./openfreebuds_qt/version_info.py
 
 # Update nsis vars
-sed -i "s/!define APP_VERSION.*/!define APP_VERSION \"$1\"/g" scripts/build_win32/openfreebuds.nsi
+sed -bi "s/!define APP_VERSION.*/!define APP_VERSION \"$1\"/g" scripts/build_win32/openfreebuds.nsi
 
 # Update debian pkg changelog
 prev_changelog=`cat scripts/build_debian/debian/changelog`
