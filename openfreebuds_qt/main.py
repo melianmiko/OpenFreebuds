@@ -49,6 +49,8 @@ class OfbQtApplication(IOfbQtApplication):
 
         # App configuration
         ConfigLock.acquire()
+        self.config.update_fallback_values(self)
+        log.info(f"Qt is dark theme: {self.config.qt_is_dark_theme}")
 
         # Qt base configs
         self.setApplicationName("OpenFreebuds")

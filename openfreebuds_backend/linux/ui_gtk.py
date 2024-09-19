@@ -16,4 +16,4 @@ def is_dark_taskbar():
         log.info(f"System theme name is {theme_name}")
         return "Dark" in theme_name
     except ImportError:
-        return False
+        return None

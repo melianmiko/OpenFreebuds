@@ -1,6 +1,9 @@
 import json
 from typing import Optional
 
+from PyQt6.QtGui import QPalette
+from qasync import QApplication
+
 from openfreebuds_backend import is_dark_taskbar
 from openfreebuds_qt.constants import STORAGE_PATH
 
@@ -12,6 +15,7 @@ class OfbQtConfigParser:
 
     def __init__(self):
         self.data = {}
+        self.qt_is_dark_theme: bool = False
         if CONFIG_PATH.is_file():
             with open(CONFIG_PATH, "r") as f:
                 self.data = json.loads(f.read())
@@ -48,8 +52,19 @@ class OfbQtConfigParser:
         self.set("device", "name", name)
         self.set("device", "address", address)
 
+    def update_fallback_values(self, ctx: QApplication):
+        palette = ctx.palette()
+        self.qt_is_dark_theme = palette.text().color().value() > palette.base().color().value()
+
     def get_tray_icon_theme(self):
         value = self.get("ui", "tray_icon_theme", "auto")
         if value != "auto":
             return value
-        return "dark" if not is_dark_taskbar() else "light"
+
+        # Auto-detect using ofb-backend
+        backend_theme = is_dark_taskbar()
+        if backend_theme is not None:
+            return "dark" if not backend_theme else "light"
+
+        # Auto-detect using qt
+        return self.qt_is_dark_theme
