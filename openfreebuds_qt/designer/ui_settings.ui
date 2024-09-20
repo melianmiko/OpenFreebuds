@@ -27,13 +27,11 @@
       <string>Main</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="1">
-       <widget class="QComboBox" name="language_picker">
-        <item>
-         <property name="text">
-          <string>System</string>
-         </property>
-        </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QCheckBox" name="autostart_toggle">
+        <property name="text">
+         <string>Launch at system startup</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="0">
@@ -43,18 +41,46 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="2">
+      <item row="0" column="1">
+       <widget class="QComboBox" name="language_picker">
+        <item>
+         <property name="text">
+          <string>System</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
        <widget class="QLabel" name="label_2">
         <property name="text">
          <string>Restart OpenFeebuds to apply changes</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2">
-       <widget class="QCheckBox" name="autostart_toggle">
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_6">
         <property name="text">
-         <string>Launch at system startup</string>
+         <string>Update checker:</string>
         </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="updater_policy_picker">
+        <item>
+         <property name="text">
+          <string>Notify about new versions</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Check for new versions, but don't notify</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Disabled (not recomended)</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>
@@ -232,6 +258,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>updater_policy_picker</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>OfbQtUiSettingsModule</receiver>
+   <slot>on_updater_policy_choose(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>362</x>
+     <y>107</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>on_tray_eq_toggle(bool)</slot>
@@ -240,5 +282,6 @@
   <slot>on_tray_color_choose(int)</slot>
   <slot>on_tray_shortcut_choose(int)</slot>
   <slot>on_autostart_toggle(bool)</slot>
+  <slot>on_updater_policy_choose(int)</slot>
  </slots>
 </ui>

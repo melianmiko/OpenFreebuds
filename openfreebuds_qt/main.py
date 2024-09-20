@@ -16,6 +16,7 @@ from openfreebuds_qt.tray.main import OfbTrayIcon
 from openfreebuds_qt.utils import OfbQtDeviceAutoSelect, OfbQtHotkeyService, list_available_locales
 from openfreebuds_qt.utils.mpris.service import OfbQtMPRISHelperService
 from openfreebuds_qt.utils.ram_trace import start_ram_trace
+from openfreebuds_qt.utils.updater.service import OfbQtUpdaterService
 
 log = create_logger("OfbQtApplication")
 
@@ -38,6 +39,7 @@ class OfbQtApplication(IOfbQtApplication):
         self.mpris: Optional[OfbQtMPRISHelperService] = None
         self.tray: Optional[OfbTrayIcon] = None
         self.main_window: Optional[OfbQtMainWindow] = None
+        self.updater_service: Optional[OfbQtUpdaterService] = None
 
         # Setup logging
         setup_logging(args.verbose)
@@ -88,6 +90,7 @@ class OfbQtApplication(IOfbQtApplication):
             self.auto_select = OfbQtDeviceAutoSelect(self.ofb)
             self.tray = OfbTrayIcon(self)
             self.main_window = OfbQtMainWindow(self)
+            self.updater_service = OfbQtUpdaterService(self.main_window)
 
             # Dev toys (won't work in release build)
             start_ram_trace(self)
@@ -100,6 +103,7 @@ class OfbQtApplication(IOfbQtApplication):
             await self.mpris.start()
             await self.tray.boot()
             await self.main_window.boot()
+            await self.updater_service.boot()
 
             # Show UI
             self.tray.show()

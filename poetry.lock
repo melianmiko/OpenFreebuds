@@ -354,6 +354,23 @@ files = [
 altgraph = ">=0.17"
 
 [[package]]
+name = "mmk-updater"
+version = "0.15.2"
+description = "mmk-updater"
+optional = false
+python-versions = "<3.13,>=3.10"
+files = [
+    {file = "mmk_updater-0.15.2-py3-none-any.whl", hash = "sha256:b84475eea1c2efc3f4c709521787a21c40cf2f416acdce1bd56cd8f27d39a519"},
+    {file = "mmk_updater-0.15.2.tar.gz", hash = "sha256:a2410381e0557f29bb9a7ab12508fde4136329d59a142318706d0b2cddf29bcf"},
+]
+
+[package.dependencies]
+aiohttp = ">=3.10.5,<4.0.0"
+pillow = ">=10.4.0,<11.0.0"
+pyqt6 = ">=6.7.1,<7.0.0"
+qasync = ">=0.27.1,<0.28.0"
+
+[[package]]
 name = "multidict"
 version = "6.1.0"
 description = "multidict implementation"
@@ -1221,4 +1238,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "65a5686e12a04dad8a1e9be2cb865fb8c54b91c67d199af357c7410182fe2e51"
+content-hash = "5ae9cfce0b546437ceacd6cf2068b5e081b3f6ddb2f07474bcf1e49dcb73f8af"

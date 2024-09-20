@@ -1,3 +1,5 @@
+import sys
+
 from PyQt6.QtCore import QLocale
 from qasync import asyncSlot
 
@@ -21,6 +23,7 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
         self.shortcut_names = get_shortcut_names()
         self.available_shortcuts = OfbShortcuts.all()
         self.available_icons = ["auto", "light", "dark"]
+        self.available_updater_policies = ["show", "check", "off"]
         self.available_locales = ["auto", *list_available_locales()]
         self.config = OfbQtConfigParser.get_instance()
 
@@ -36,6 +39,14 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
             name = QLocale(locale).nativeLanguageName()
             self.language_picker.addItem(name)
 
+        with blocked_signals(self.updater_policy_picker):
+            if sys.platform == "win32":
+                self.updater_policy_picker.setCurrentIndex(
+                    self.available_updater_policies.index(self.config.get("updater", "mode", "show"))
+                )
+            else:
+                self.updater_policy_picker.setCurrentIndex(2)
+                self.updater_policy_picker.setEnabled(False)
         with blocked_signals(self.tray_shortcut_picker):
             self.tray_shortcut_picker.setCurrentIndex(
                 self.available_shortcuts.index(self.config.get("ui", "tray_shortcut", "next_mode"))
@@ -74,6 +85,11 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
     @asyncSlot(int)
     async def on_language_choose(self, index: int):
         self.config.set("ui", "language", self.available_locales[index])
+        self.config.save()
+
+    @asyncSlot(int)
+    async def on_updater_policy_choose(self, index: int):
+        self.config.set("updater", "mode", self.available_updater_policies[index])
         self.config.save()
 
     @asyncSlot(int)

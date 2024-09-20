@@ -2,6 +2,7 @@ import asyncio
 import sys
 from typing import Optional
 
+from PyQt6.QtCore import pyqtSlot
 from PyQt6.QtGui import QIcon, QKeySequence
 from PyQt6.QtWidgets import QMenu
 from qasync import asyncSlot
@@ -10,6 +11,7 @@ from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.dialog.manual_connect import OfbQtManualConnectDialog
 from openfreebuds_qt.app.helper import OfbQtSettingsTabHelper
+from openfreebuds_qt.app.helper.update_widget_helper import OfbQtUpdateWidgetHelper
 from openfreebuds_qt.app.module import OfbQtAboutModule, OfbQtSoundQualityModule, OfbQtLinuxExtrasModule, \
     OfbQtHotkeysModule, OfbQtGesturesModule, OfbQtDualConnectModule, OfbQtDeviceOtherSettingsModule, \
     OfbQtDeviceInfoModule, OfbQtCommonModule, OfbQtChooseDeviceModule, OfbQtUiSettingsModule
@@ -47,9 +49,13 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
         self.extra_options_button.setMenu(self.extra_menu)
         self._fill_extras_menu()
 
+        # Helpers
         self.tabs = OfbQtSettingsTabHelper(self.tabs_list_content, self.body_content)
+        self.update_view = OfbQtUpdateWidgetHelper(self.updater_root, self.updater_header, self.ctx)
 
+        # Asyncio & update loop staff
         self._ui_update_task: Optional[asyncio.Task] = None
+        self._update_check_task: Optional[asyncio.Task] = None
         self._ui_modules: list[OfbQtCommonModule] = []
 
         # Header section
@@ -80,6 +86,10 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
         self.tabs.set_active_tab(*self.default_tab)
 
     def _fill_extras_menu(self):
+        self.check_updates_action = self.extra_menu.addAction(self.tr("Check for updates..."))
+        # noinspection PyUnresolvedReferences
+        self.check_updates_action.triggered.connect(self.on_check_updates)
+
         bugreport_action = self.extra_menu.addAction(self.tr("Bugreport..."))
         bugreport_action.setShortcut("F2")
         # noinspection PyUnresolvedReferences
@@ -118,6 +128,14 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
         async with qt_error_handler("OfbQtMain_OnExit", self.ctx):
             await self.ctx.exit()
 
+    @pyqtSlot()
+    def on_hide_update(self):
+        self.update_view.user_hide()
+
+    @pyqtSlot()
+    def on_check_updates(self):
+        self._update_check_task = asyncio.create_task(self.ctx.updater_service.check_now())
+
     def _attach_module(self, label: str, module: OfbQtCommonModule):
         entry = self.tabs.add_tab(label, module)
         self._ui_modules.append(module)
@@ -150,6 +168,8 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
 
             # First-time force update everything
             await self._update_ui(OfbCoreEvent(None))
+            self.check_updates_action.setEnabled(self.ctx.updater_service.updater is not None)
+            self.update_view.update_widget()
 
             try:
                 while True:
