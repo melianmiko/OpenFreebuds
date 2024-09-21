@@ -78,7 +78,7 @@
         </item>
         <item>
          <property name="text">
-          <string>Disabled (not recomended)</string>
+          <string>Disabled</string>
          </property>
         </item>
        </widget>

@@ -6,8 +6,16 @@ then
   exit 1
 fi
 
+# Init
 cd "$(dirname "$0")"/..
 source scripts/constants.sh
+
+# Init tools
+[ ! -d ./scripts/tools ] && mkdir ./scripts/tools
+[ ! -f ./scripts/tools/flatpak-pip-generator ] && \
+  echo "Downloading flatpak-pip-generator tool..." && \
+  wget https://github.com/flatpak/flatpak-builder-tools/raw/refs/heads/master/pip/flatpak-pip-generator && \
+  chmod +x flatpak-pip-generator
 
 # Bump python wheel version
 VERSION_SHORT=`echo $1 | cut -d . -f -2`
@@ -21,6 +29,18 @@ do
   echo "    '$line'," >> ./openfreebuds_qt/version_info.py
 done
 echo "]" >> ./openfreebuds_qt/version_info.py
+
+# Create flatpak PyPI manifests
+poetry export \
+  --without no_flatpak,dev \
+  --without-hashes \
+  -o ./scripts/build_flatpak/requirements.txt
+sed -i '/sys_platform == \"darwin\"/d' ./scripts/build_flatpak/requirements.txt
+sed -i '/sys_platform == \"win32\"/d' ./scripts/build_flatpak/requirements.txt
+sed -i 's/ and python_version < \"3.11\"//g' ./scripts/build_flatpak/requirements.txt
+./scripts/tools/flatpak-pip-generator \
+  -r ./scripts/build_flatpak/requirements.txt \
+  -o ./scripts/build_flatpak/python3-requirements.json
 
 # Update nsis vars
 sed -bi "s/!define APP_VERSION.*/!define APP_VERSION \"$1\"/g" scripts/build_win32/openfreebuds.nsi

@@ -1,7 +1,8 @@
 import json
+import os.path
+from functools import cached_property
 from typing import Optional
 
-from PyQt6.QtGui import QPalette
 from qasync import QApplication
 
 from openfreebuds_backend import is_dark_taskbar
@@ -68,3 +69,7 @@ class OfbQtConfigParser:
 
         # Auto-detect using qt
         return self.qt_is_dark_theme
+
+    @cached_property
+    def is_containerized_app(self):
+        return os.path.isfile("/app/is_container")

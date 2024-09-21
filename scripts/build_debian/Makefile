@@ -14,8 +14,10 @@ install:
 	mv ${DESTDIR}${DIST_PACKAGES_PATH}/bin/* ${DESTDIR}/usr/bin/
 	sed -i '1 s/^.*$$/\#\!\/usr\/bin\/env python3/' ${DESTDIR}/usr/bin/*
 	rm -rf ${DESTDIR}${DIST_PACKAGES_PATH}/bin
+	mkdir -p ${DESTDIR}/usr/share/icons/hicolor/256x256/apps
+	install -Dm644 ./pw.mmk.OpenFreebuds.png ${DESTDIR}/usr/share/icons/hicolor/256x256/apps/pw.mmk.OpenFreebuds.png
 	mkdir -p ${DESTDIR}/usr/share/applications
-	cp ../openfreebuds.desktop ${DESTDIR}/usr/share/applications
+	install -Dm644 ./pw.mmk.OpenFreebuds.desktop ${DESTDIR}/usr//share/applications/pw.mmk.OpenFreebuds.desktop
 
 clean:
 	rm -rf dist *.tar.gz *.whl

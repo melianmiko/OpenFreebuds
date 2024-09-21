@@ -56,7 +56,7 @@ class OfbQtApplication(IOfbQtApplication):
 
         # Qt base configs
         self.setApplicationName("OpenFreebuds")
-        self.setDesktopFileName("openfreebuds")
+        self.setDesktopFileName("pw.mmk.OpenFreebuds")
 
         # Qt i18n
         locale = self._detect_locale()
