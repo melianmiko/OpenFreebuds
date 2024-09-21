@@ -1,9 +1,11 @@
 import asyncio
 import logging
 import sys
+from contextlib import suppress
 from typing import Optional
 
-from PyQt6.QtCore import QLibraryInfo, QLocale, QTranslator
+from PyQt6.QtCore import QLibraryInfo, QLocale, QTranslator, QT_VERSION_STR
+from PyQt6.QtWidgets import QMessageBox
 from qasync import QEventLoop
 
 from openfreebuds import IOpenFreebuds, create as create_ofb, OfbEventKind
@@ -15,7 +17,6 @@ from openfreebuds_qt.generic import IOfbQtApplication
 from openfreebuds_qt.tray.main import OfbTrayIcon
 from openfreebuds_qt.utils import OfbQtDeviceAutoSelect, OfbQtHotkeyService, list_available_locales
 from openfreebuds_qt.utils.mpris.service import OfbQtMPRISHelperService
-from openfreebuds_qt.utils.ram_trace import start_ram_trace
 from openfreebuds_qt.utils.updater.service import OfbQtUpdaterService
 
 log = create_logger("OfbQtApplication")
@@ -52,7 +53,6 @@ class OfbQtApplication(IOfbQtApplication):
         # App configuration
         ConfigLock.acquire()
         self.config.update_fallback_values(self)
-        log.info(f"Qt is dark theme: {self.config.qt_is_dark_theme}")
 
         # Qt base configs
         self.setApplicationName("OpenFreebuds")
@@ -92,9 +92,6 @@ class OfbQtApplication(IOfbQtApplication):
             self.main_window = OfbQtMainWindow(self)
             self.updater_service = OfbQtUpdaterService(self.main_window)
 
-            # Dev toys (won't work in release build)
-            start_ram_trace(self)
-
             if self.ofb.role == "standalone":
                 await self.restore_device()
                 await self.auto_select.boot()
@@ -104,6 +101,11 @@ class OfbQtApplication(IOfbQtApplication):
             await self.tray.boot()
             await self.main_window.boot()
             await self.updater_service.boot()
+
+            # Qt version check & warn
+            with suppress(Exception):
+                if float(".".join(QT_VERSION_STR.split(".")[:2])) < 6.7:
+                    self.show_old_qt_warning()
 
             # Show UI
             self.tray.show()
@@ -177,3 +179,26 @@ class OfbQtApplication(IOfbQtApplication):
         self.event_loop.create_task(self.boot())
         self.event_loop.run_until_complete(self.close_event.wait())
         self.event_loop.close()
+
+    def show_old_qt_warning(self):
+        if self.config.get("ui", "old_qt", False):
+            return
+
+        paragraph_1 = self.tr(
+            "You're running under older version of Qt than expected. "
+            "It's strongly recommended to switch to Flatpak release, "
+            "because older Qt version may fail your experience of using "
+            "OpenFreebuds.")
+        paragraph_2 = self.tr("This warning will be shown only once. Please, "
+                              "test Flatpak version before reporting bugs.")
+
+        QMessageBox(
+            QMessageBox.Icon.Warning,
+            "OpenFreebuds",
+            paragraph_1 + "\n\n" + paragraph_2,
+            QMessageBox.StandardButton.Ok,
+            self.main_window
+        ).show()
+
+        self.config.set("ui", "old_qt", True)
+        self.config.save()

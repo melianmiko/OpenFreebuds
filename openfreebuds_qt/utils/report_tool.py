@@ -3,6 +3,8 @@ import platform
 import sys
 from contextlib import suppress
 
+from PyQt6.QtCore import QT_VERSION_STR, PYQT_VERSION_STR
+
 import openfreebuds_backend
 from openfreebuds.utils.logger import get_full_log
 from openfreebuds_qt.config import OfbQtConfigParser
@@ -48,7 +50,9 @@ class OfbQtReportTool:
         self.append(
             f"version={VERSION}",
             f"os_platform={platform.system()}-{platform.release()}",
-            f"python={sys.version_info}"
+            f"python={sys.version_info}",
+            f"qt={QT_VERSION_STR}",
+            f"pyqt={PYQT_VERSION_STR}"
         )
 
         self.header("Role info")

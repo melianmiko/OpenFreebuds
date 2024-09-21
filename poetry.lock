@@ -355,13 +355,13 @@ altgraph = ">=0.17"
 
 [[package]]
 name = "mmk-updater"
-version = "0.15.2"
+version = "0.15.3"
 description = "mmk-updater"
 optional = false
 python-versions = "<3.13,>=3.10"
 files = [
-    {file = "mmk_updater-0.15.2-py3-none-any.whl", hash = "sha256:b84475eea1c2efc3f4c709521787a21c40cf2f416acdce1bd56cd8f27d39a519"},
-    {file = "mmk_updater-0.15.2.tar.gz", hash = "sha256:a2410381e0557f29bb9a7ab12508fde4136329d59a142318706d0b2cddf29bcf"},
+    {file = "mmk_updater-0.15.3-py3-none-any.whl", hash = "sha256:6b72a01d63fefe2052c2f13acedb94e9448dfb2275904b26e80c76615aba601f"},
+    {file = "mmk_updater-0.15.3.tar.gz", hash = "sha256:ae1e9a2c016e009199006075254b6ea72f7b85c83274cd19acb0fec7577a2b2e"},
 ]
 
 [package.dependencies]
@@ -1168,4 +1168,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "1f39bee953f103daafc6f377b5b1b88505e5c3a94fe554c730af59c7537ffec9"
+content-hash = "ce0e0b1b7f0cea5faa980657c0568c24cdbecd46effe5d7629fffcdf5f49950a"
