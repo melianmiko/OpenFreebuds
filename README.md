@@ -17,6 +17,8 @@
 
 ![Tray menu preview](docs/preview_0.png)
 
+This application allows to control HUAWEI FreeBuds earphone settings from PC. Check exact battery level, toggle noise cancellation, control built-in equalizer, change gestures, and all other in-device settings and features are now available without official mobile application.
+
 Features
 ---------
 
@@ -45,10 +47,7 @@ If your device isn't listed here, you could try to use it with profile for other
 - [HUAWEI FreeLace Pro](./docs/devices/HUAWEI_FreeLace_Pro.md)
 - [HUAWEI FreeLace Pro 2](./docs/devices/HUAWEI_FreeLace_Pro_2.md)
 
-If you want to get full support of your headphones, you can [create a Bluetooth-traffic](https://mmk.pw/en/posts/ofb-contribution/)
-dump from Ai Life, which will contain all requests and responses that is used by official
-app to manage your headset. Then send collected file to me, I'll analyze them and try to
-implement their features in OpenFreebuds.
+May also work with newer/older devices in same series. If you want to get better compatibility of some model, you could [create Bluetooth traffic dump](https://mmk.pw/en/posts/ofb-contribution/) to help making OpenFreebuds better.
 
 Download & install
 -----------------

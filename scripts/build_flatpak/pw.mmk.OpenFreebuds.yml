@@ -8,22 +8,20 @@ runtime-version: '6.7'
 base-version: '6.7'
 
 finish-args:
-  # List paired Bluetooth devices, toggle their connection status
-  - --system-talk-name=org.bluez
   # Connect to Bluetooth devices through RFCOMM / SPP protocol
   - --allow=bluetooth
   - --share=network
-  # Manage currently running MPRIS-compatible media players
-  # (can be safely removed if MPRIS helper is disabled)
-  - --socket=session-bus
   # Display user interface
   - --socket=wayland
   - --socket=fallback-x11
+  - --share=ipc
   - --device=dri
+  # List paired Bluetooth devices, toggle their connection status
+  - --system-talk-name=org.bluez
   # Display tray icon
   - --talk-name=org.kde.StatusNotifierWatcher
   # Store settings
-  - --filesystem=xdg-config/openfreebuds
+  - --persist=.config/openfreebuds
 
 cleanup-commands:
   - /app/cleanup-BaseApp.sh
@@ -45,11 +43,14 @@ modules:
     build-commands:
       - pip3 install --prefix=/app --no-deps *.whl
       - touch /app/is_container
-      - install -Dm644 pw.mmk.OpenFreebuds.png /app/share/icons/hicolor/256x256/apps/pw.mmk.OpenFreebuds.png
+      - install -Dm644 pw.mmk.OpenFreebuds.png -t /app/share/icons/hicolor/256x256/apps
       - install -Dm644 pw.mmk.OpenFreebuds.desktop -t /app/share/applications
+      - install -Dm644 pw.mmk.OpenFreebuds.metainfo.xml -t /app/share/metainfo
     sources:
       - type: file
         path: pw.mmk.OpenFreebuds.desktop
+      - type: file
+        path: pw.mmk.OpenFreebuds.metainfo.xml
       - type: file
         path: pw.mmk.OpenFreebuds.png
       - type: dir

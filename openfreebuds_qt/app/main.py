@@ -108,7 +108,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
 
         self.extra_menu.addSeparator()
 
-        if self.ofb.role == "standalone" and ConfigLock.owned and not self.config.is_containerized_app:
+        if self.ofb.role == "standalone" and ConfigLock.owned:
             rpc_config_action = self.extra_menu.addAction(self.tr("Remote access..."))
             # noinspection PyUnresolvedReferences
             rpc_config_action.triggered.connect(self.on_rpc_config)
