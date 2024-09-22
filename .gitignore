@@ -8,5 +8,6 @@
 /build
 /builddir
 /dist
+/scripts/tools
 
 /.idea

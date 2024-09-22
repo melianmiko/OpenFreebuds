@@ -35,14 +35,14 @@ class OfbQtMPRISHelperService:
                 # Pause all
                 self.paused_players = []
                 for service in await MPRISPProxy.get_all():
-                    if await service.Player.PlaybackStatus == "Playing":
-                        log.info(f"Pause {service.Identity}")
-                        await service.Player.Pause()
+                    if await service.playback_status() == "Playing":
+                        log.info(f"Pause {await service.identity()}")
+                        await service.pause()
                         self.paused_players.append(service)
             elif self.last_in_ear is False and in_ear is True:
                 for service in self.paused_players:
-                    log.info(f"Resume {service.Identity}")
-                    await service.Player.Play()
+                    log.info(f"Resume {await service.identity()}")
+                    await service.play()
                 self.paused_players = []
             self.last_in_ear = in_ear
 

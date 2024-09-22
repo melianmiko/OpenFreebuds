@@ -27,8 +27,8 @@ psutil = "^6.0.0"
 aiohttp = "^3.10.5"
 qasync = "^0.27.1"
 pynput = "^1.7.7"
-sdbus = { version = "^0.12.0", platform = "linux" }
 winsdk = { version = "1.0.0b10", platform = "win32" }
+dbus-next = "^0.2.3"
 
 [tool.poetry.group.no_flatpak.dependencies]
 pyqt6 = "^6.7.1"

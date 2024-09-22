@@ -205,6 +205,17 @@ files = [
 ]
 
 [[package]]
+name = "dbus-next"
+version = "0.2.3"
+description = "A zero-dependency DBus library for Python with asyncio support"
+optional = false
+python-versions = ">=3.6.0"
+files = [
+    {file = "dbus_next-0.2.3-py3-none-any.whl", hash = "sha256:58948f9aff9db08316734c0be2a120f6dc502124d9642f55e90ac82ffb16a18b"},
+    {file = "dbus_next-0.2.3.tar.gz", hash = "sha256:f4eae26909332ada528c0a3549dda8d4f088f9b365153952a408e28023a626a5"},
+]
+
+[[package]]
 name = "evdev"
 version = "1.7.1"
 description = "Bindings to the Linux input handling subsystem"
@@ -961,18 +972,6 @@ files = [
 ]
 
 [[package]]
-name = "sdbus"
-version = "0.12.0"
-description = "Modern Python D-Bus library. Based on sd-bus from libsystemd."
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "sdbus-0.12.0-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:d918c8ad14ef00e589d6752ac0f2b6540a20c625e85000c152376945fca14209"},
-    {file = "sdbus-0.12.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d545e65637536a63898e2366b2a74617aa1a2215b1c16b23475f912e3407838c"},
-    {file = "sdbus-0.12.0.tar.gz", hash = "sha256:c3692d75704438a78adc1439350bc32f30d6b38ad344cfc94773db89c6ce4a89"},
-]
-
-[[package]]
 name = "setuptools"
 version = "75.1.0"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
@@ -1168,4 +1167,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "ce0e0b1b7f0cea5faa980657c0568c24cdbecd46effe5d7629fffcdf5f49950a"
+content-hash = "c6a9fdc0713c90fcc208829e76d5f06d56a0c3d4277fa73697bc3646fdbbaa68"

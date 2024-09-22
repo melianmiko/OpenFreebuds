@@ -8,16 +8,22 @@ runtime-version: '6.7'
 base-version: '6.7'
 
 finish-args:
+  # List paired Bluetooth devices, toggle their connection status
+  - --system-talk-name=org.bluez
+  # Connect to Bluetooth devices through RFCOMM / SPP protocol
   - --allow=bluetooth
+  - --share=network
+  # Manage currently running MPRIS-compatible media players
+  # (can be safely removed if MPRIS helper is disabled)
+  - --socket=session-bus
+  # Display user interface
   - --socket=wayland
   - --socket=fallback-x11
   - --device=dri
-  - --share=network
+  # Display tray icon
+  - --talk-name=org.kde.StatusNotifierWatcher
+  # Store settings
   - --filesystem=xdg-config/openfreebuds
-  # python-sdbus don't want to work through Flatpak's proxy,
-  # so currently we're requireing direct access to DBus'es
-  - --socket=system-bus
-  - --socket=session-bus
 
 cleanup-commands:
   - /app/cleanup-BaseApp.sh
