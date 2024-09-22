@@ -29,7 +29,7 @@ parser.add_argument("shortcut",
 
 def main():
     args = parser.parse_args()
-    OfbQtApplication(args).exec_async()
+    OfbQtApplication.start(args)
 
 
 if __name__ == "__main__":

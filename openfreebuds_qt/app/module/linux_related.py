@@ -1,10 +1,12 @@
 import os
 import webbrowser
+from contextlib import suppress
 
 from PyQt6.QtCore import pyqtSlot
 from PyQt6.QtWidgets import QMessageBox
 from qasync import asyncSlot
 
+from openfreebuds import STORAGE_PATH
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.constants import LINK_WEBSITE_HELP
@@ -23,12 +25,24 @@ class OfbQtLinuxExtrasModule(Ui_OfbQtLinuxExtrasModule, OfbQtCommonModule):
         self.setupUi(self)
         with blocked_signals(self.mpris_helper_checkbox):
             self.mpris_helper_checkbox.setChecked(self.config.get("mpris", "enabled", False))
+        with blocked_signals(self.force_x11_checkbox):
+            self.force_x11_checkbox.setChecked((STORAGE_PATH / "force_xorg").is_file())
+
         if os.environ.get("XDG_SESSION_TYPE") != "wayland":
             self.wayland_root.setVisible(False)
 
     @pyqtSlot()
     def on_hotkeys_doc(self):
         webbrowser.open(LINK_WEBSITE_HELP)
+
+    @asyncSlot(bool)
+    async def on_force_x11_toggle(self, value: bool):
+        file = STORAGE_PATH / "force_xorg"
+        if value:
+            with open(file, "w") as f:
+                f.write("ON")
+        else:
+            file.unlink(missing_ok=True)
 
     @asyncSlot(bool)
     async def on_mpris_toggle(self, value: bool):

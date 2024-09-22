@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import os
 import sys
 from contextlib import suppress
 from typing import Optional
@@ -72,6 +73,13 @@ class OfbQtApplication(IOfbQtApplication):
         self.event_loop = QEventLoop(self)
         self.close_event = asyncio.Event()
         self.aboutToQuit.connect(self.close_event.set)
+
+    @staticmethod
+    def start(args):
+        if (STORAGE_PATH / "force_xorg").is_file():
+            print("Enforce xcb Qt backend due to setting")
+            os.environ["QT_QPA_PLATFORM"] = "xcb"
+        return OfbQtApplication(args).exec_async()
 
     async def boot(self):
         try:
