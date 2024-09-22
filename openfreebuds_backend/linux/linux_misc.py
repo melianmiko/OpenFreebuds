@@ -7,6 +7,8 @@ log = logging.getLogger("OfbLinuxBackend")
 
 
 def get_app_storage_path():
+    if pathlib.Path('/app/is_container').exists():
+        return pathlib.Path.home() / ".var/app/pw.mmk.OpenFreebuds/config"
     return pathlib.Path.home() / ".config"
 
 

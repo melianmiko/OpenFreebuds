@@ -20,8 +20,6 @@ finish-args:
   - --system-talk-name=org.bluez
   # Display tray icon
   - --talk-name=org.kde.StatusNotifierWatcher
-  # Store settings
-  - --persist=.config/openfreebuds
 
 cleanup-commands:
   - /app/cleanup-BaseApp.sh
