@@ -1,6 +1,7 @@
 import os
-import sys
 from pathlib import Path
+
+from openfreebuds_backend import get_app_storage_path
 
 
 class OfbEventKind:
@@ -12,3 +13,4 @@ class OfbEventKind:
 
 
 APP_ROOT = Path(os.path.dirname(os.path.realpath(__file__))).parent
+STORAGE_PATH = get_app_storage_path() / "openfreebuds"

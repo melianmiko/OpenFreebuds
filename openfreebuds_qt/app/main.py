@@ -1,5 +1,6 @@
 import asyncio
 import sys
+import webbrowser
 from typing import Optional
 
 from PyQt6.QtCore import pyqtSlot
@@ -10,13 +11,14 @@ from qasync import asyncSlot
 from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.dialog.manual_connect import OfbQtManualConnectDialog
+from openfreebuds_qt.app.dialog.rpc_config import OfbQtRpcConfig
 from openfreebuds_qt.app.helper import OfbQtSettingsTabHelper
 from openfreebuds_qt.app.helper.update_widget_helper import OfbQtUpdateWidgetHelper
 from openfreebuds_qt.app.module import OfbQtAboutModule, OfbQtSoundQualityModule, OfbQtLinuxExtrasModule, \
     OfbQtHotkeysModule, OfbQtGesturesModule, OfbQtDualConnectModule, OfbQtDeviceOtherSettingsModule, \
     OfbQtDeviceInfoModule, OfbQtCommonModule, OfbQtChooseDeviceModule, OfbQtUiSettingsModule
-from openfreebuds_qt.config import ConfigLock
-from openfreebuds_qt.constants import ASSETS_PATH
+from openfreebuds_qt.config import ConfigLock, OfbQtConfigParser
+from openfreebuds_qt.constants import ASSETS_PATH, LINK_RPC_HELP, LINK_WEBSITE_HELP
 from openfreebuds_qt.designer.main_window import Ui_OfbMainWindowDesign
 from openfreebuds_qt.generic import IOfbQtApplication, IOfbMainWindow
 from openfreebuds_qt.utils import qt_error_handler, OfbCoreEvent, OfbQtReportTool, get_qt_icon_colored
@@ -32,6 +34,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
 
         self.ctx = ctx
         self.ofb = ctx.ofb
+        self.config = OfbQtConfigParser.get_instance()
 
         self.setupUi(self)
 
@@ -86,14 +89,29 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
         self.tabs.set_active_tab(*self.default_tab)
 
     def _fill_extras_menu(self):
-        self.check_updates_action = self.extra_menu.addAction(self.tr("Check for updates..."))
+        help_action = self.extra_menu.addAction(self.tr("Help: FAQ"))
         # noinspection PyUnresolvedReferences
-        self.check_updates_action.triggered.connect(self.on_check_updates)
+        help_action.triggered.connect(lambda: webbrowser.open(LINK_WEBSITE_HELP))
+
+        help_rpc_action = self.extra_menu.addAction(self.tr("Help: Remote control"))
+        # noinspection PyUnresolvedReferences
+        help_rpc_action.triggered.connect(lambda: webbrowser.open(LINK_RPC_HELP))
 
         bugreport_action = self.extra_menu.addAction(self.tr("Bugreport..."))
         bugreport_action.setShortcut("F2")
         # noinspection PyUnresolvedReferences
         bugreport_action.triggered.connect(self.on_bugreport)
+
+        self.check_updates_action = self.extra_menu.addAction(self.tr("Check for updates..."))
+        # noinspection PyUnresolvedReferences
+        self.check_updates_action.triggered.connect(self.on_check_updates)
+
+        self.extra_menu.addSeparator()
+
+        if self.ofb.role == "standalone" and ConfigLock.owned and not self.config.is_containerized_app:
+            rpc_config_action = self.extra_menu.addAction(self.tr("Remote access..."))
+            # noinspection PyUnresolvedReferences
+            rpc_config_action.triggered.connect(self.on_rpc_config)
 
         temp_device_action = self.extra_menu.addAction(self.tr("Temporary replace device"))
         temp_device_action.setShortcut("Ctrl+D")
@@ -101,6 +119,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
         temp_device_action.triggered.connect(self.temporary_change_device)
 
         self.extra_menu.addSeparator()
+
         hide_action = self.extra_menu.addAction(self.tr("Close this window"))
         hide_action.setShortcut(QKeySequence('Ctrl+W'))
         # noinspection PyUnresolvedReferences
@@ -122,6 +141,10 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
     @asyncSlot()
     async def on_bugreport(self):
         await OfbQtReportTool(self.ctx).create_and_show()
+
+    @asyncSlot()
+    async def on_rpc_config(self):
+        await OfbQtRpcConfig(self).get_user_response()
 
     @asyncSlot()
     async def on_exit(self):
