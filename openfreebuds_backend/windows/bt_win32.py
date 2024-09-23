@@ -10,7 +10,6 @@ from winsdk.windows.devices.enumeration import DeviceInformation, DeviceInformat
 # noinspection PyUnresolvedReferences,PyPackageRequirements
 from winsdk.windows.networking import HostName
 
-from openfreebuds_backend.errors import BluetoothNotAvailableError
 from openfreebuds_backend.exception import OfbBackendDependencyMissingError
 
 extra_tools_dir = 'C:\\Program Files (x86)\\Bluetooth Command Line Tools\\bin'
@@ -76,7 +75,7 @@ async def bt_list_devices():
         selector = BluetoothDevice.get_device_selector_from_pairing_state(True)
         devices = await DeviceInformation.find_all_async(selector, [], DeviceInformationKind.DEVICE)
     except OSError:
-        raise BluetoothNotAvailableError("Got OSError, looks like bluetooth isn't installed")
+        return []
 
     for a in devices:
         try:

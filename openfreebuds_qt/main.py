@@ -10,10 +10,11 @@ from PyQt6.QtWidgets import QMessageBox
 from qasync import QEventLoop
 
 from openfreebuds import IOpenFreebuds, create as create_ofb, OfbEventKind
+from openfreebuds.constants import STORAGE_PATH
 from openfreebuds.utils.logger import setup_logging, screen_handler, create_logger
 from openfreebuds_qt.app.main import OfbQtMainWindow
 from openfreebuds_qt.config import OfbQtConfigParser, ConfigLock
-from openfreebuds_qt.constants import IGNORED_LOG_TAGS, I18N_PATH, STORAGE_PATH
+from openfreebuds_qt.constants import IGNORED_LOG_TAGS, I18N_PATH
 from openfreebuds_qt.generic import IOfbQtApplication
 from openfreebuds_qt.tray.main import OfbTrayIcon
 from openfreebuds_qt.utils import OfbQtDeviceAutoSelect, OfbQtHotkeyService, list_available_locales
@@ -123,8 +124,6 @@ class OfbQtApplication(IOfbQtApplication):
             self.qt_app.exit(e.args[0])
             ConfigLock.release()
             return
-        except Exception:
-            log.exception("App boot failed")
 
     async def exit(self, ret_code: int = 0):
         await self.tray.close()

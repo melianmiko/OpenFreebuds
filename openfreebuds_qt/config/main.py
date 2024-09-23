@@ -5,8 +5,8 @@ from typing import Optional
 
 from qasync import QApplication
 
+from openfreebuds.constants import STORAGE_PATH
 from openfreebuds_backend import is_dark_taskbar
-from openfreebuds_qt.constants import STORAGE_PATH
 
 CONFIG_PATH = STORAGE_PATH / "openfreebuds_qt.json"
 

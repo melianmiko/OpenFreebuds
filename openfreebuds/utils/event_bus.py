@@ -27,6 +27,7 @@ class Subscription:
             self._child_subs[callback_id].cancel()
 
         async def _handler():
+            # noinspection PyProtectedMember
             queue = subscription._new_queue(callback_id, None)
             while True:
                 await self.send_message(*(await queue.get()))

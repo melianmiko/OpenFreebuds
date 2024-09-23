@@ -1,11 +1,10 @@
 import sys
-from typing import Optional
 
 from PyQt6.QtWidgets import QWidget
 
+from openfreebuds.constants import STORAGE_PATH
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.config import OfbQtConfigParser
-from openfreebuds_qt.constants import STORAGE_PATH
 from openfreebuds_qt.version_info import VERSION
 
 try:

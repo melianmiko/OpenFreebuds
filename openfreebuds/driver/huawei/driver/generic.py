@@ -1,5 +1,4 @@
 import asyncio
-from contextlib import suppress
 
 from openfreebuds.driver.generic import OfbDriverHandlerGeneric, OfbDriverSppGeneric
 from openfreebuds.driver.huawei.package import HuaweiSppPackage

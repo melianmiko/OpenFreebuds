@@ -1,6 +1,5 @@
 import os
 import webbrowser
-from contextlib import suppress
 
 from PyQt6.QtCore import pyqtSlot
 from PyQt6.QtWidgets import QMessageBox

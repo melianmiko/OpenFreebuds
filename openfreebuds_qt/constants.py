@@ -1,4 +1,4 @@
-from openfreebuds import APP_ROOT, STORAGE_PATH
+from openfreebuds import APP_ROOT
 
 ASSETS_PATH = APP_ROOT / "openfreebuds_qt" / "assets"
 I18N_PATH = APP_ROOT / "openfreebuds_qt" / "assets" / "i18n"

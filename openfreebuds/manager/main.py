@@ -5,7 +5,6 @@ from typing import Optional
 
 from aiohttp.web_routedef import RouteTableDef
 
-import openfreebuds_backend
 from openfreebuds import webserver
 from openfreebuds.constants import OfbEventKind
 from openfreebuds.driver import DEVICE_TO_DRIVER_MAP

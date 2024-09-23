@@ -68,7 +68,7 @@ class OfbQtHotkeyRecorder:
         from pynput import keyboard
         if isinstance(pressed_key, keyboard.Key):
             val = str(pressed_key).replace("Key.", "")
-            if val == "esc" and len(self._specials) == 1    :
+            if val == "esc" and len(self._specials) == 1:
                 self.cancel()
                 return
             if val in self._specials:

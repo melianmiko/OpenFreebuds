@@ -2,7 +2,7 @@ import asyncio
 import json
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QSlider, QMenu, QInputDialog, QMessageBox, QFileDialog, QApplication
+from PyQt6.QtWidgets import QSlider, QMenu, QInputDialog, QMessageBox, QFileDialog
 from qasync import asyncSlot
 
 from openfreebuds.exceptions import OfbTooManyItemsError

@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from PyQt6.QtGui import QAction
 from qasync import asyncSlot
@@ -7,13 +6,13 @@ from qasync import asyncSlot
 from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds_backend.exception import OfbBackendDependencyMissingError
 from openfreebuds_qt.config import OfbQtConfigParser
+from openfreebuds_qt.generic import IOfbTrayIcon, IOfbQtApplication
 from openfreebuds_qt.tray.dialogs import OfbQtDependencyMissingDialog
+from openfreebuds_qt.tray.menu_anc_level import OfbDeviceAncLevelTrayMenu
 from openfreebuds_qt.tray.menu_dual_connect import OfbDeviceDualConnectTrayMenu
 from openfreebuds_qt.tray.menu_equalizer import OfbDeviceEqualizerTrayMenu
-from openfreebuds_qt.utils.core_event import OfbCoreEvent
-from openfreebuds_qt.generic import IOfbTrayIcon, IOfbQtApplication
 from openfreebuds_qt.tray.menu_generic import OfbQtTrayMenuCommon
-from openfreebuds_qt.tray.menu_anc_level import OfbDeviceAncLevelTrayMenu
+from openfreebuds_qt.utils.core_event import OfbCoreEvent
 from openfreebuds_qt.utils.report_tool import OfbQtReportTool
 
 
@@ -84,10 +83,8 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
 
         # Footer
         self.new_section()
-        self.add_item(self.tr("Bugreport..."),
-                                             callback=self.do_bugreport)
-        self.add_item(self.tr("Leave application"),
-                                          callback=self.do_exit)
+        self.add_item(self.tr("Bugreport..."), callback=self.do_bugreport)
+        self.add_item(self.tr("Leave application"), callback=self.do_exit)
 
     async def on_core_event(self, event: OfbCoreEvent, state: int):
         if event.kind_in([OfbEventKind.STATE_CHANGED, OfbEventKind.QT_SETTINGS_CHANGED]):

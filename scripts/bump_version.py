@@ -13,6 +13,7 @@ DEBUG = False
 
 URL_FLATPAK_PIP_GENERATOR = ("https://github.com/flatpak/flatpak-builder-tools/raw/refs/heads/master"
                              "/pip/flatpak-pip-generator")
+BASE_CHANGELOG_URL = "https://github.com/melianmiko/OpenFreebuds/blob/main/CHANGELOG.md"
 
 PROJECT_ROOT = Path(__file__).parents[1]
 FLATPAK_PIP_GENERATOR_PATH = PROJECT_ROOT / "scripts" / "tools" / "flatpak-pip-generator"
@@ -120,7 +121,7 @@ def bump_metainfo(line: str):
     new_data = [
         line,
         f'    <release version="{NEW_VERSION}" date="{date.today()}">',
-        f'      <url type="details">https://github.com/melianmiko/OpenFreebuds/blob/main/CHANGELOG.md#v{NEW_VERSION}</url>',
+        f'      <url type="details">{BASE_CHANGELOG_URL}#v{NEW_VERSION}</url>',
         f'      <description>',
         f'        <ul>',
         *[f"          <li>{escape(line[2:])}</li>" for line in CHANGELOG],

@@ -10,7 +10,7 @@ from openfreebuds_qt.utils import OfbCoreEvent
 try:
     from openfreebuds_backend.linux.dbus.mpris import MPRISPProxy
 except ImportError:
-    pass
+    MPRISPProxy = None
 
 log = create_logger("OfbQtMPRISHelperService")
 

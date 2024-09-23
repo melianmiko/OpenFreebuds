@@ -6,10 +6,10 @@ from contextlib import suppress
 from PyQt6.QtCore import QT_VERSION_STR, PYQT_VERSION_STR
 
 import openfreebuds_backend
+from openfreebuds.constants import STORAGE_PATH
 from openfreebuds.utils.logger import get_full_log
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.config.config_lock import ConfigLock
-from openfreebuds_qt.constants import STORAGE_PATH
 from openfreebuds_qt.generic import IOfbQtApplication
 from openfreebuds_qt.version_info import VERSION
 

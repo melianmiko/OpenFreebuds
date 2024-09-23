@@ -25,7 +25,7 @@ class OfbDeviceDualConnectTrayMenu(OfbQtTrayMenuCommon):
     def _add_item(self, addr: str, display_name: str, active: bool = False):
         @asyncSlot()
         async def toggle(_):
-            await self.ofb.set_property("dual_connect", f"{addr}:connected", not active)
+            await self.ofb.set_property("dual_connect", f"{addr}:connected", json.dumps(not active))
             await self.update_ui()
 
         self.add_item(text=display_name,
