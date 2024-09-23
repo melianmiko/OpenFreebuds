@@ -1,6 +1,6 @@
 import asyncio
 from asyncio import Task
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 from typing import Optional
 
 from aiohttp.web_routedef import RouteTableDef
@@ -131,10 +131,8 @@ class OfbManager(IOpenFreebuds):
             await self._driver.stop()
 
     async def _mainloop(self):
-        try:
+        with suppress(asyncio.CancelledError):
             await self._mainloop_inner()
-        except asyncio.CancelledError:
-            pass
 
     async def _mainloop_inner(self):
         log.debug(f"Started mainloop task")
