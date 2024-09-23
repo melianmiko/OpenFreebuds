@@ -14,7 +14,7 @@ class OfbQtTrayMenuCommon(QMenu):
         self._section_visible: list[bool] = [True]
         self.ofb: IOpenFreebuds = ofb
 
-    async def on_core_event(self, event: OfbCoreEvent):
+    async def on_core_event(self, event: OfbCoreEvent, state: int):
         pass
 
     def new_section(self):
