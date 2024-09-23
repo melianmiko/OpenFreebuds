@@ -1,4 +1,4 @@
-from typing import Optional
+from datetime import datetime
 
 from PyQt6.QtGui import QAction
 from qasync import asyncSlot
@@ -6,13 +6,13 @@ from qasync import asyncSlot
 from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds_backend.exception import OfbBackendDependencyMissingError
 from openfreebuds_qt.config import OfbQtConfigParser
+from openfreebuds_qt.generic import IOfbTrayIcon, IOfbQtApplication
 from openfreebuds_qt.tray.dialogs import OfbQtDependencyMissingDialog
+from openfreebuds_qt.tray.menu_anc_level import OfbDeviceAncLevelTrayMenu
 from openfreebuds_qt.tray.menu_dual_connect import OfbDeviceDualConnectTrayMenu
 from openfreebuds_qt.tray.menu_equalizer import OfbDeviceEqualizerTrayMenu
-from openfreebuds_qt.utils.core_event import OfbCoreEvent
-from openfreebuds_qt.generic import IOfbTrayIcon, IOfbQtApplication
 from openfreebuds_qt.tray.menu_generic import OfbQtTrayMenuCommon
-from openfreebuds_qt.tray.menu_anc_level import OfbDeviceAncLevelTrayMenu
+from openfreebuds_qt.utils.core_event import OfbCoreEvent
 from openfreebuds_qt.utils.report_tool import OfbQtReportTool
 
 
@@ -25,6 +25,7 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
         self.config = OfbQtConfigParser.get_instance()
         self.is_connected: bool = False
         self.first_time_render: bool = True
+        self.device_mac_address: str = ""
 
         # Translation data
         self.battery_option_names = {
@@ -53,7 +54,6 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
 
         # Battery items
         self.battery_section = self.new_section()
-        self.battery_is_tws: Optional[bool] = None
         self.battery_actions: dict[str, QAction] = {
             "left": self.add_item("", visible=False, enabled=False),
             "right": self.add_item("", visible=False, enabled=False),
@@ -83,32 +83,29 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
 
         # Footer
         self.new_section()
-        self.add_item(self.tr("Bugreport..."),
-                                             callback=self.do_bugreport)
-        self.add_item(self.tr("Leave application"),
-                                          callback=self.do_exit)
+        self.add_item(self.tr("Bugreport..."), callback=self.do_bugreport)
+        self.add_item(self.tr("Leave application"), callback=self.do_exit)
 
-    async def on_core_event(self, event: OfbCoreEvent):
-        if event.kind_match(OfbEventKind.DEVICE_CHANGED):
-            device_name, _ = await self.ofb.get_device_tags()
-            self.device_name_action.setText(device_name)
-            self.device_name_action.setVisible(True)
-
+    async def on_core_event(self, event: OfbCoreEvent, state: int):
         if event.kind_in([OfbEventKind.STATE_CHANGED, OfbEventKind.QT_SETTINGS_CHANGED]):
-            state = await self.ofb.get_state()
             self.is_connected = state == IOpenFreebuds.STATE_CONNECTED
 
+            device_name, device_addr = await self.ofb.get_device_tags()
+            self.device_name_action.setVisible(device_name != "")
+            self.device_name_action.setText(device_name)
+            self.device_mac_address = device_addr
+
             self.connect_action.setVisible(state == IOpenFreebuds.STATE_DISCONNECTED)
-            self.disconnect_action.setVisible(state == IOpenFreebuds.STATE_CONNECTED)
-            self.set_section_visible(self.battery_section, state == IOpenFreebuds.STATE_CONNECTED)
-            self.set_section_visible(self.anc_section, state == IOpenFreebuds.STATE_CONNECTED)
+            self.disconnect_action.setVisible(self.is_connected)
+            self.set_section_visible(self.battery_section, self.is_connected)
+            self.set_section_visible(self.anc_section, self.is_connected)
             self.equalizer_action.setVisible(
-                state == IOpenFreebuds.STATE_CONNECTED
+                self.is_connected
                 and self.config.get("ui", "tray_show_equalizer", False)
                 and await self.ofb.get_property("sound", "equalizer_preset", None) is not None
             )
             self.dual_connect_action.setVisible(
-                state == IOpenFreebuds.STATE_CONNECTED
+                self.is_connected
                 and self.config.get("ui", "tray_show_dual_connect", False)
                 and await self.ofb.get_property("dual_connect", "preferred_device", None) is not None
             )
@@ -136,18 +133,23 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
 
     async def _update_battery(self, battery: dict):
         battery_is_tws = "case" in battery
-        if battery_is_tws != self.battery_is_tws:
-            self.battery_actions["left"].setVisible(battery_is_tws)
-            self.battery_actions["right"].setVisible(battery_is_tws)
-            self.battery_actions["case"].setVisible(battery_is_tws)
-            self.battery_actions["global"].setVisible(not battery_is_tws)
-            self.battery_is_tws = battery_is_tws
+        self.battery_actions["left"].setVisible(battery_is_tws)
+        self.battery_actions["right"].setVisible(battery_is_tws)
+        self.battery_actions["case"].setVisible(battery_is_tws)
+        self.battery_actions["global"].setVisible(not battery_is_tws)
 
+        # Update menu items
         for code in battery:
             if code in self.battery_actions:
                 self.battery_actions[code].setText(
                     f"{self.battery_option_names[code]} {battery[code]}%"
                 )
+
+        # Update last charged config field
+        if battery.get("global", 0) - 20 > self.config.get("last_battery", self.device_mac_address, 0):
+            self.config.set("last_battery", self.device_mac_address, battery.get("global", 0))
+            self.config.set("last_charged", self.device_mac_address, datetime.now().timestamp())
+            self.config.save()
 
     async def _update_anc(self, anc: dict):
         mode = anc["mode"]

@@ -1,36 +1,53 @@
-from sdbus import DbusInterfaceCommonAsync, dbus_property_async, dbus_method_async
-from sdbus_async.dbus_daemon import FreedesktopDbus
+import asyncio
+
+from dbus_next import BusType
+from dbus_next.aio import MessageBus, ProxyObject
 
 
-class MPRISPProxy(DbusInterfaceCommonAsync, interface_name="org.mpris.MediaPlayer2"):
-    def __init__(self, service_name):
+class MPRISPProxy:
+    def __init__(self, dbus_object: ProxyObject):
         super().__init__()
-        self._proxify(service_name, "/org/mpris/MediaPlayer2")
-        self.Player = MPRISPlayer2Proxy.new_proxy(service_name, "/org/mpris/MediaPlayer2")
+        self.dbus_interface_base = dbus_object.get_interface("org.mpris.MediaPlayer2")
+        self.dbus_interface_player = dbus_object.get_interface("org.mpris.MediaPlayer2.Player")
 
     @staticmethod
     async def get_all():
         items: list[MPRISPProxy] = []
-        bus = FreedesktopDbus()
-        for name in await bus.list_names():
+        bus = await MessageBus(bus_type=BusType.SESSION).connect()
+
+        dbus_introspect = await bus.introspect("org.freedesktop.DBus", "/org/freedesktop/DBus")
+        dbus_obj = bus.get_proxy_object("org.freedesktop.DBus", "/org/freedesktop/DBus",
+                                        dbus_introspect)
+        dbus = dbus_obj.get_interface("org.freedesktop.DBus")
+
+        # noinspection PyUnresolvedReferences
+        for name in await dbus.call_list_names():
             if name.startswith("org.mpris.MediaPlayer2"):
-                items.append(MPRISPProxy(name))
+                introspect = await bus.introspect(name, "/org/mpris/MediaPlayer2")
+                obj = bus.get_proxy_object(name, "/org/mpris/MediaPlayer2", introspect)
+                items.append(MPRISPProxy(obj))
         return items
 
-    @dbus_property_async("s")
-    def Identity(self) -> str:
-        pass
+    async def pause(self):
+        # noinspection PyUnresolvedReferences
+        return await self.dbus_interface_player.call_pause()
+
+    async def play(self):
+        # noinspection PyUnresolvedReferences
+        return await self.dbus_interface_player.call_play()
+
+    async def identity(self) -> str:
+        # noinspection PyUnresolvedReferences
+        return await self.dbus_interface_base.get_identity()
+
+    async def playback_status(self) -> str:
+        # noinspection PyUnresolvedReferences
+        return await self.dbus_interface_player.get_playback_status()
 
 
-class MPRISPlayer2Proxy(DbusInterfaceCommonAsync, interface_name="org.mpris.MediaPlayer2.Player"):
-    @dbus_property_async("s")
-    def PlaybackStatus(self) -> str:
-        pass
+if __name__ == "__main__":
+    async def main():
+        for obj in await MPRISPProxy.get_all():
+            print(await obj.playback_status())
 
-    @dbus_method_async()
-    async def Pause(self):
-        pass
-
-    @dbus_method_async()
-    async def Play(self):
-        pass
+    asyncio.run(main())

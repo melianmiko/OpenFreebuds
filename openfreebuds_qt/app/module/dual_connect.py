@@ -68,16 +68,12 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
         async with qt_error_handler("OfbQtDualConnectModule_ToggleConnect", self.ctx):
             addr, data = self._all_data[self._current_index]
 
-            try:
-                self.button_toggle_connect.setEnabled(False)
-                await self.ofb.set_property(
-                    "dual_connect",
-                    f"{addr}:connected",
-                    json.dumps(not data["connected"])
-                )
-            except Exception:
-                log.exception(f"Trying to switch connection state of {addr}")
-                self.button_toggle_connect.setEnabled(True)
+            self.button_toggle_connect.setEnabled(False)
+            await self.ofb.set_property(
+                "dual_connect",
+                f"{addr}:connected",
+                json.dumps(not data["connected"])
+            )
 
     def _update_current_device_view(self, addr: str, data: dict):
         self.current_device_name.setText(data['name'])

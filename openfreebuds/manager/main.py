@@ -1,9 +1,11 @@
 import asyncio
 from asyncio import Task
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 from typing import Optional
 
-import openfreebuds_backend
+from aiohttp.web_routedef import RouteTableDef
+
+from openfreebuds import webserver
 from openfreebuds.constants import OfbEventKind
 from openfreebuds.driver import DEVICE_TO_DRIVER_MAP
 from openfreebuds.driver.generic import OfbDriverGeneric
@@ -27,6 +29,7 @@ class OfbManager(IOpenFreebuds):
 
         self._state = IOpenFreebuds.STATE_STOPPED  # type: int
         self.role: str = "standalone"
+        self.rpc_config: dict = {}
         self.server_task: Task | None = None
 
     @rpc
@@ -127,10 +130,8 @@ class OfbManager(IOpenFreebuds):
             await self._driver.stop()
 
     async def _mainloop(self):
-        try:
+        with suppress(asyncio.CancelledError):
             await self._mainloop_inner()
-        except asyncio.CancelledError:
-            pass
 
     async def _mainloop_inner(self):
         log.debug(f"Started mainloop task")
@@ -168,6 +169,9 @@ class OfbManager(IOpenFreebuds):
                 await self._driver.stop()
 
             await asyncio.sleep(2)
+
+    def on_rpc_server_setup(self, routes: RouteTableDef, secret: Optional[str]):
+        webserver.setup_routes(self, routes, secret)
 
     async def _set_state(self, new_state: int):
         if self._state == new_state:

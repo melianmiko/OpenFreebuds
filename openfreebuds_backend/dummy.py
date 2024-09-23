@@ -40,4 +40,4 @@ def bt_list_devices():
 
 
 def is_dark_taskbar():
-    return False
+    return None

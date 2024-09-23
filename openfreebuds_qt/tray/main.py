@@ -92,7 +92,7 @@ class OfbTrayIcon(IOfbTrayIcon):
         else:
             self.setToolTip("OpenFreebuds")
 
-        await self.menu.on_core_event(event)
+        await self.menu.on_core_event(event, state)
 
     async def _get_tooltip_text(self, event: OfbCoreEvent):
         """

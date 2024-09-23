@@ -205,6 +205,17 @@ files = [
 ]
 
 [[package]]
+name = "dbus-next"
+version = "0.2.3"
+description = "A zero-dependency DBus library for Python with asyncio support"
+optional = false
+python-versions = ">=3.6.0"
+files = [
+    {file = "dbus_next-0.2.3-py3-none-any.whl", hash = "sha256:58948f9aff9db08316734c0be2a120f6dc502124d9642f55e90ac82ffb16a18b"},
+    {file = "dbus_next-0.2.3.tar.gz", hash = "sha256:f4eae26909332ada528c0a3549dda8d4f088f9b365153952a408e28023a626a5"},
+]
+
+[[package]]
 name = "evdev"
 version = "1.7.1"
 description = "Bindings to the Linux input handling subsystem"
@@ -316,13 +327,13 @@ files = [
 
 [[package]]
 name = "idna"
-version = "3.9"
+version = "3.10"
 description = "Internationalized Domain Names in Applications (IDNA)"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "idna-3.9-py3-none-any.whl", hash = "sha256:69297d5da0cc9281c77efffb4e730254dd45943f45bbfb461de5991713989b1e"},
-    {file = "idna-3.9.tar.gz", hash = "sha256:e5c5dafde284f26e9e0f28f6ea2d6400abd5ca099864a67f576f3981c6476124"},
+    {file = "idna-3.10-py3-none-any.whl", hash = "sha256:946d195a0d259cbba61165e88e65941f16e9b36ea6ddb97f00452bae8b1287d3"},
+    {file = "idna-3.10.tar.gz", hash = "sha256:12f65c9b470abda6dc35cf8e63cc574b1c52b11df2c86030af0ac09b01b13ea9"},
 ]
 
 [package.extras]
@@ -352,6 +363,23 @@ files = [
 
 [package.dependencies]
 altgraph = ">=0.17"
+
+[[package]]
+name = "mmk-updater"
+version = "0.15.3"
+description = "mmk-updater"
+optional = false
+python-versions = "<3.13,>=3.10"
+files = [
+    {file = "mmk_updater-0.15.3-py3-none-any.whl", hash = "sha256:6b72a01d63fefe2052c2f13acedb94e9448dfb2275904b26e80c76615aba601f"},
+    {file = "mmk_updater-0.15.3.tar.gz", hash = "sha256:ae1e9a2c016e009199006075254b6ea72f7b85c83274cd19acb0fec7577a2b2e"},
+]
+
+[package.dependencies]
+aiohttp = ">=3.10.5,<4.0.0"
+pillow = ">=10.4.0,<11.0.0"
+pyqt6 = ">=6.7.1,<7.0.0"
+qasync = ">=0.27.1,<0.28.0"
 
 [[package]]
 name = "multidict"
@@ -633,39 +661,6 @@ files = [
 
 [package.extras]
 test = ["enum34", "ipaddress", "mock", "pywin32", "wmi"]
-
-[[package]]
-name = "pycairo"
-version = "1.27.0"
-description = "Python interface for cairo"
-optional = false
-python-versions = ">=3.9"
-files = [
-    {file = "pycairo-1.27.0-cp310-cp310-win32.whl", hash = "sha256:e20f431244634cf244ab6b4c3a2e540e65746eed1324573cf291981c3e65fc05"},
-    {file = "pycairo-1.27.0-cp310-cp310-win_amd64.whl", hash = "sha256:03bf570e3919901572987bc69237b648fe0de242439980be3e606b396e3318c9"},
-    {file = "pycairo-1.27.0-cp311-cp311-win32.whl", hash = "sha256:9a9b79f92a434dae65c34c830bb9abdbd92654195e73d52663cbe45af1ad14b2"},
-    {file = "pycairo-1.27.0-cp311-cp311-win_amd64.whl", hash = "sha256:d40a6d80b15dacb3672dc454df4bc4ab3988c6b3f36353b24a255dc59a1c8aea"},
-    {file = "pycairo-1.27.0-cp312-cp312-win32.whl", hash = "sha256:e2239b9bb6c05edae5f3be97128e85147a155465e644f4d98ea0ceac7afc04ee"},
-    {file = "pycairo-1.27.0-cp312-cp312-win_amd64.whl", hash = "sha256:27cb4d3a80e3b9990af552818515a8e466e0317063a6e61585533f1a86f1b7d5"},
-    {file = "pycairo-1.27.0-cp313-cp313-win32.whl", hash = "sha256:01505c138a313df2469f812405963532fc2511fb9bca9bdc8e0ab94c55d1ced8"},
-    {file = "pycairo-1.27.0-cp313-cp313-win_amd64.whl", hash = "sha256:b0349d744c068b6644ae23da6ada111c8a8a7e323b56cbce3707cba5bdb474cc"},
-    {file = "pycairo-1.27.0-cp39-cp39-win32.whl", hash = "sha256:f9ca8430751f1fdcd3f072377560c9e15608b9a42d61375469db853566993c9b"},
-    {file = "pycairo-1.27.0-cp39-cp39-win_amd64.whl", hash = "sha256:1b1321652a6e27c4de3069709b1cae22aed2707fd8c5e889c04a95669228af2a"},
-    {file = "pycairo-1.27.0.tar.gz", hash = "sha256:5cb21e7a00a2afcafea7f14390235be33497a2cce53a98a19389492a60628430"},
-]
-
-[[package]]
-name = "pygobject"
-version = "3.50.0"
-description = "Python bindings for GObject Introspection"
-optional = false
-python-versions = "<4.0,>=3.9"
-files = [
-    {file = "pygobject-3.50.0.tar.gz", hash = "sha256:4500ad3dbf331773d8dedf7212544c999a76fc96b63a91b3dcac1e5925a1d103"},
-]
-
-[package.dependencies]
-pycairo = ">=1.16"
 
 [[package]]
 name = "pyinstaller"
@@ -977,31 +972,19 @@ files = [
 ]
 
 [[package]]
-name = "sdbus"
-version = "0.12.0"
-description = "Modern Python D-Bus library. Based on sd-bus from libsystemd."
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "sdbus-0.12.0-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:d918c8ad14ef00e589d6752ac0f2b6540a20c625e85000c152376945fca14209"},
-    {file = "sdbus-0.12.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d545e65637536a63898e2366b2a74617aa1a2215b1c16b23475f912e3407838c"},
-    {file = "sdbus-0.12.0.tar.gz", hash = "sha256:c3692d75704438a78adc1439350bc32f30d6b38ad344cfc94773db89c6ce4a89"},
-]
-
-[[package]]
 name = "setuptools"
-version = "74.1.2"
+version = "75.1.0"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "setuptools-74.1.2-py3-none-any.whl", hash = "sha256:5f4c08aa4d3ebcb57a50c33b1b07e94315d7fc7230f7115e47fc99776c8ce308"},
-    {file = "setuptools-74.1.2.tar.gz", hash = "sha256:95b40ed940a1c67eb70fc099094bd6e99c6ee7c23aa2306f4d2697ba7916f9c6"},
+    {file = "setuptools-75.1.0-py3-none-any.whl", hash = "sha256:35ab7fd3bcd95e6b7fd704e4a1539513edad446c097797f2985e0e4b960772f2"},
+    {file = "setuptools-75.1.0.tar.gz", hash = "sha256:d59a21b17a275fb872a9c3dae73963160ae079f1049ed956880cd7c09b120538"},
 ]
 
 [package.extras]
 check = ["pytest-checkdocs (>=2.4)", "pytest-ruff (>=0.2.1)", "ruff (>=0.5.2)"]
-core = ["importlib-metadata (>=6)", "importlib-resources (>=5.10.2)", "jaraco.text (>=3.7)", "more-itertools (>=8.8)", "packaging (>=24)", "platformdirs (>=2.6.2)", "tomli (>=2.0.1)", "wheel (>=0.43.0)"]
+core = ["importlib-metadata (>=6)", "importlib-resources (>=5.10.2)", "jaraco.collections", "jaraco.functools", "jaraco.text (>=3.7)", "more-itertools", "more-itertools (>=8.8)", "packaging", "packaging (>=24)", "platformdirs (>=2.6.2)", "tomli (>=2.0.1)", "wheel (>=0.43.0)"]
 cover = ["pytest-cov"]
 doc = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "pygments-github-lexers (==0.0.5)", "pyproject-hooks (!=1.1)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-favicon", "sphinx-inline-tabs", "sphinx-lint", "sphinx-notfound-page (>=1,<2)", "sphinx-reredirects", "sphinxcontrib-towncrier", "towncrier (<24.7)"]
 enabler = ["pytest-enabler (>=2.2)"]
@@ -1184,4 +1167,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "ecce3259a2c3f5f62c26b80f4fc1890f24753a7f3f815ef28fa9f26e257ff3d2"
+content-hash = "c6a9fdc0713c90fcc208829e76d5f06d56a0c3d4277fa73697bc3646fdbbaa68"

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OpenFreebuds</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+</head>
+<body style="max-width: 600px; margin: 64px auto">
+    <h2>
+        OpenFreebuds RPC
+    </h2>
+    <p>
+        Use this web-server to control earphones from your software
+        or scripts
+    </p>
+    <h3>
+        Quick actions
+    </h3>
+    <p>
+        Right-click on required action link and copy their URL. So you can trigger
+        them from any app or script, for exmaple, via curl:
+    </p>
+    <pre><code>curl -s http://localhost:19823/mode_cancellation</code></pre>
+    <h4>Available actions:</h4>
+    <div id="actions"></div>
+    <h3>
+        Direct RPC command execution
+    </h3>
+    <pre><code>fetch(
+    "http://localhost:19823/__rpc__/set_property", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Secret": "SECRET_KEY_IF_ENROLLED",
+        },
+        body: JSON.stringify({
+            "args": ["anc", "mode", "awareness"],
+            "kwargs": {},
+        }),
+    }
+)
+    .then(d => d.json())
+    .then(r => console.log(r))</code></pre>
+    <h3>
+        Remote access
+    </h3>
+    <p>
+        To access this page through other devices in network,
+        make sure that you're enabled "Remote access" in GUI
+        settings.
+    </p>
+    <p>
+        If you plan to do that, it's strongly recommended to also
+        enable secret key verification, and set strong, random key,
+        to prevent unauthorized access to your devices.
+    </p>
+    <script>
+        function setupShortcutLink(a, out, shortcutName) {
+            a.href = location.href + shortcutName;
+            a.innerHTML = `<code style="color: var(--text)">${shortcutName}</code>`;
+
+            a.onclick = async (e) => {
+                e.preventDefault();
+
+                out.innerText = "Loading..."
+                const resp = await fetch(`/${shortcutName}`);
+                out.innerText = await resp.text();
+            }
+        }
+
+        async function listActions() {
+            const resp = await fetch("/list_shortcuts");
+            const data = await resp.json();
+            const root = document.getElementById("actions");
+
+            for(const shortcutName of data) {
+                const p = document.createElement("p");
+                const a = document.createElement("a");
+                const out = document.createElement("code");
+                out.style.paddingLeft = "16px";
+                p.appendChild(a);
+                p.appendChild(out);
+                root.appendChild(p);
+
+                setupShortcutLink(a, out, shortcutName);
+            }
+        }
+
+        listActions()
+    </script>
+</body>
+</html>

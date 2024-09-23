@@ -104,13 +104,73 @@
             <x>0</x>
             <y>0</y>
             <width>218</width>
-            <height>550</height>
+            <height>444</height>
            </rect>
           </property>
           <property name="autoFillBackground">
            <bool>false</bool>
           </property>
          </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="updater_root" native="true">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="2" column="0" colspan="2">
+           <widget class="QLabel" name="updater_text">
+            <property name="text">
+             <string>New version available, click here to view</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QLabel" name="updater_header">
+            <property name="font">
+             <font>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>OpenFreebuds v99</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QPushButton" name="updater_hide">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>60</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Hide</string>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QPushButton" name="update_button">
+            <property name="text">
+             <string>Update now</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
@@ -245,8 +305,42 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>updater_hide</sender>
+   <signal>clicked()</signal>
+   <receiver>OfbMainWindowDesign</receiver>
+   <slot>on_hide_update()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>180</x>
+     <y>490</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>474</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>update_button</sender>
+   <signal>clicked()</signal>
+   <receiver>OfbMainWindowDesign</receiver>
+   <slot>on_check_updates()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>76</x>
+     <y>530</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>474</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>on_exit()</slot>
+  <slot>on_check_updates()</slot>
+  <slot>on_hide_update()</slot>
  </slots>
 </ui>

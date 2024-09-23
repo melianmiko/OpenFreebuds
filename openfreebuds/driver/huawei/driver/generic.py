@@ -105,8 +105,6 @@ class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
         while True:
             try:
                 await self.__recv_pacakge(reader)
-            except asyncio.TimeoutError:
-                pass
             except (asyncio.CancelledError, ConnectionResetError, ConnectionAbortedError, OSError):
                 log.debug(f"Stop recv loop due to connection failure")
                 return
@@ -115,18 +113,17 @@ class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
                 await asyncio.sleep(2)
 
     async def __recv_pacakge(self, reader: asyncio.StreamReader):
-        async with asyncio.timeout(5):
-            heading = await reader.read(4)
-            if len(heading) == 0:
-                log.debug("Got empty package, seems like socked is closed")
-                raise ConnectionResetError
-            if heading[0:2] == b"Z\x00":
-                length = heading[2]
-                if length < 4:
-                    await reader.read(length)
-                else:
-                    pkg = heading + await reader.read(length)
-                    await self._handle_raw_pkg(pkg)
+        heading = await reader.read(4)
+        if len(heading) == 0:
+            log.debug("Got empty package, seems like socked is closed")
+            raise ConnectionResetError
+        if heading[0:2] == b"Z\x00":
+            length = heading[2]
+            if length < 4:
+                await reader.read(length)
+            else:
+                pkg = heading + await reader.read(length)
+                await self._handle_raw_pkg(pkg)
 
     def _add_on_package_handler(self, handler):
         for pkg_id in handler.commands:

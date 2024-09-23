@@ -1,11 +1,11 @@
 import os
 import sys
 from pathlib import Path
+
 from psutil import Process, AccessDenied, NoSuchProcess
 
+from openfreebuds.constants import STORAGE_PATH
 from openfreebuds.utils.logger import create_logger
-from openfreebuds_qt.constants import STORAGE_PATH
-
 
 log = create_logger("ConfigLock")
 

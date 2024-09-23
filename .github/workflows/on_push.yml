@@ -35,8 +35,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Set up poetry environment
         run: poetry install
-        #- name: Change in-app version
-        #run: bash.exe -c "./scripts/bump_version_git.sh"
+      - name: Change in-app version
+        run: python3 ./scripts/bump_version.py git
       - name: Run build script
         run: .\scripts/build_win32\make.cmd
       - name: Upload bundle
@@ -64,7 +64,7 @@ jobs:
       - name: Set up poetry environment
         run: poetry install
       - name: Change in-app version
-        run: bash -c "./scripts/bump_version_git.sh"
+        run: python3 ./scripts/bump_version.py git
       - name: Run build script
         run: bash ./scripts/build_debian/build.sh
       - name: Upload bundle

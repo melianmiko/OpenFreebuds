@@ -9,9 +9,9 @@
     "in_ear": "false"
   },
   "battery": {
-    "global": 90,
-    "left": 90,
-    "right": 90,
+    "global": 50,
+    "left": 50,
+    "right": 65,
     "case": 85,
     "is_charging": "false"
   },

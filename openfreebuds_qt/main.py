@@ -1,20 +1,25 @@
 import asyncio
 import logging
+import os
 import sys
+from contextlib import suppress
 from typing import Optional
 
-from PyQt6.QtCore import QLibraryInfo, QLocale, QTranslator
+from PyQt6.QtCore import QLibraryInfo, QLocale, QTranslator, QT_VERSION_STR
+from PyQt6.QtWidgets import QMessageBox
 from qasync import QEventLoop
 
 from openfreebuds import IOpenFreebuds, create as create_ofb, OfbEventKind
+from openfreebuds.constants import STORAGE_PATH
 from openfreebuds.utils.logger import setup_logging, screen_handler, create_logger
 from openfreebuds_qt.app.main import OfbQtMainWindow
 from openfreebuds_qt.config import OfbQtConfigParser, ConfigLock
-from openfreebuds_qt.constants import IGNORED_LOG_TAGS, I18N_PATH, STORAGE_PATH
+from openfreebuds_qt.constants import IGNORED_LOG_TAGS, I18N_PATH
 from openfreebuds_qt.generic import IOfbQtApplication
 from openfreebuds_qt.tray.main import OfbTrayIcon
 from openfreebuds_qt.utils import OfbQtDeviceAutoSelect, OfbQtHotkeyService, list_available_locales
 from openfreebuds_qt.utils.mpris.service import OfbQtMPRISHelperService
+from openfreebuds_qt.utils.updater.service import OfbQtUpdaterService
 
 log = create_logger("OfbQtApplication")
 
@@ -37,6 +42,7 @@ class OfbQtApplication(IOfbQtApplication):
         self.mpris: Optional[OfbQtMPRISHelperService] = None
         self.tray: Optional[OfbTrayIcon] = None
         self.main_window: Optional[OfbQtMainWindow] = None
+        self.updater_service: Optional[OfbQtUpdaterService] = None
 
         # Setup logging
         setup_logging(args.verbose)
@@ -48,10 +54,11 @@ class OfbQtApplication(IOfbQtApplication):
 
         # App configuration
         ConfigLock.acquire()
+        self.config.update_fallback_values(self)
 
         # Qt base configs
         self.setApplicationName("OpenFreebuds")
-        self.setDesktopFileName("openfreebuds")
+        self.setDesktopFileName("pw.mmk.OpenFreebuds")
 
         # Qt i18n
         locale = self._detect_locale()
@@ -67,6 +74,13 @@ class OfbQtApplication(IOfbQtApplication):
         self.event_loop = QEventLoop(self)
         self.close_event = asyncio.Event()
         self.aboutToQuit.connect(self.close_event.set)
+
+    @staticmethod
+    def start(args):
+        if (STORAGE_PATH / "force_xorg").is_file():
+            print("Enforce xcb Qt backend due to setting")
+            os.environ["QT_QPA_PLATFORM"] = "xcb"
+        return OfbQtApplication(args).exec_async()
 
     async def boot(self):
         try:
@@ -85,6 +99,7 @@ class OfbQtApplication(IOfbQtApplication):
             self.auto_select = OfbQtDeviceAutoSelect(self.ofb)
             self.tray = OfbTrayIcon(self)
             self.main_window = OfbQtMainWindow(self)
+            self.updater_service = OfbQtUpdaterService(self.main_window)
 
             if self.ofb.role == "standalone":
                 await self.restore_device()
@@ -94,6 +109,12 @@ class OfbQtApplication(IOfbQtApplication):
             await self.mpris.start()
             await self.tray.boot()
             await self.main_window.boot()
+            await self.updater_service.boot()
+
+            # Qt version check & warn
+            with suppress(Exception):
+                if float(".".join(QT_VERSION_STR.split(".")[:2])) < 6.7:
+                    self.show_old_qt_warning()
 
             # Show UI
             self.tray.show()
@@ -103,8 +124,6 @@ class OfbQtApplication(IOfbQtApplication):
             self.qt_app.exit(e.args[0])
             ConfigLock.release()
             return
-        except Exception:
-            log.exception("App boot failed")
 
     async def exit(self, ret_code: int = 0):
         await self.tray.close()
@@ -167,3 +186,26 @@ class OfbQtApplication(IOfbQtApplication):
         self.event_loop.create_task(self.boot())
         self.event_loop.run_until_complete(self.close_event.wait())
         self.event_loop.close()
+
+    def show_old_qt_warning(self):
+        if self.config.get("ui", "old_qt", False):
+            return
+
+        paragraph_1 = self.tr(
+            "You're running under older version of Qt than expected. "
+            "It's strongly recommended to switch to Flatpak release, "
+            "because older Qt version may fail your experience of using "
+            "OpenFreebuds.")
+        paragraph_2 = self.tr("This warning will be shown only once. Please, "
+                              "test Flatpak version before reporting bugs.")
+
+        QMessageBox(
+            QMessageBox.Icon.Warning,
+            "OpenFreebuds",
+            paragraph_1 + "\n\n" + paragraph_2,
+            QMessageBox.StandardButton.Ok,
+            self.main_window
+        ).show()
+
+        self.config.set("ui", "old_qt", True)
+        self.config.save()

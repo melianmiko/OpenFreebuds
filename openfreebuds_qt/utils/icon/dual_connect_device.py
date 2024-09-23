@@ -36,17 +36,20 @@ def create_dual_connect_icon(
     if cache_key not in _cached_icons:
         palette = QApplication.palette()
 
-        if is_connected:
-            main_icon_color = palette.text().color().getRgb()
-        else:
-            main_icon_color = palette.placeholderText().color().getRgb()
+        main_icon_color = palette.text().color().getRgb()
+        if not is_connected:
+            r, g, b, _ = main_icon_color
+            main_icon_color = r, g, b, 128
 
         icon = image_combine_mask(BASE_DC_DEVICE_ICONS[kind],
                                   foreground=Image.new("RGBA", ICON_SIZE, color=main_icon_color),
                                   background=PRESET_TRANSPARENT)
 
         if is_playing:
-            accent_color = palette.accent().color().getRgb()
+            try:
+                accent_color = palette.accent().color().getRgb()
+            except AttributeError:
+                accent_color = (0, 128, 256)
             overlay = image_combine_mask(OVERLAY_PLAYING,
                                          foreground=Image.new("RGBA", ICON_SIZE, color=accent_color),
                                          background=PRESET_TRANSPARENT)

@@ -7,6 +7,8 @@ log = logging.getLogger("OfbLinuxBackend")
 
 
 def get_app_storage_path():
+    if pathlib.Path('/app/is_container').exists():
+        return pathlib.Path.home() / ".var/app/pw.mmk.OpenFreebuds/config"
     return pathlib.Path.home() / ".config"
 
 
@@ -20,7 +22,15 @@ def is_run_at_boot():
 
 def set_run_at_boot(val):
     path = _get_autostart_file_path()
-    data = _mk_autostart_file_content()
+    data = (f"[Desktop Entry]\n"
+            f"Name=OpenFreebuds\n"
+            f"Categories=GNOME;GTK;Utility;\n"
+            f"Exec=openfreebuds_qt\n"
+            f"Icon=pw.mmk.OpenFreebuds\n"
+            f"Terminal=false\n"
+            f"Type=Application\n"
+            f"X-KDE-autostart-phase=1\n"
+            f"X-GNOME-Autostart-enabled=true\n")
 
     if val:
         # Install
@@ -39,14 +49,3 @@ def _get_autostart_file_path():
     if not autostart_dir.exists():
         autostart_dir.mkdir()
     return str(autostart_dir / "openfreebuds.desktop")
-
-
-def _mk_autostart_file_content():
-    return (f"[Desktop Entry]\n"
-            f"Name=Openfreebuds\n"
-            f"Categories=GNOME;GTK;Utility;\n"
-            f"Exec=/usr/bin/openfreebuds\n"
-            f"Icon=/opt/openfreebuds/openfreebuds_assets/icon.png\n"
-            f"Terminal=false\n"
-            f"Type=Application\n"
-            f"X-GNOME-Autostart-enabled=true\n")

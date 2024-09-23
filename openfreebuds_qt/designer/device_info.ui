@@ -17,27 +17,10 @@
    <property name="verticalSpacing">
     <number>8</number>
    </property>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label_2">
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_3">
      <property name="text">
-      <string>Bluetooth address:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QLabel" name="device_address">
-     <property name="text">
-      <string notr="true">00:00:00:00:00:00</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>All available device information fields:</string>
-     </property>
-     <property name="margin">
-      <number>0</number>
+      <string>Firmware version:</string>
      </property>
     </widget>
    </item>
@@ -48,27 +31,31 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0" colspan="2">
-    <widget class="QLabel" name="device_name">
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-       <bold>true</bold>
-      </font>
-     </property>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Device name</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>Firmware version:</string>
+      <string>Bluetooth address:</string>
      </property>
     </widget>
    </item>
    <item row="4" column="0" colspan="2">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>All available device information fields:</string>
+     </property>
+     <property name="margin">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="device_address">
+     <property name="text">
+      <string notr="true">00:00:00:00:00:00</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="2">
     <widget class="QTableWidget" name="all_data_table">
      <property name="minimumSize">
       <size>
@@ -141,6 +128,33 @@
        <string notr="true">2</string>
       </property>
      </item>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="device_name">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Device name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Battery last charged:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLabel" name="last_charged_field">
+     <property name="text">
+      <string>Nobody knows</string>
+     </property>
     </widget>
    </item>
   </layout>

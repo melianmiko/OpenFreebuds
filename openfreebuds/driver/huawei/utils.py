@@ -1,6 +1,3 @@
-from array import array
-
-
 def build_table_row(ln, val, description_table=None):
     if description_table is not None and val in description_table:
         val = f"{val} ({description_table[val]})"

@@ -1,2 +1,0 @@
-class BluetoothNotAvailableError(ValueError):
-    pass

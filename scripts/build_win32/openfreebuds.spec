@@ -40,7 +40,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['..\\..\\openfreebuds_qt\\assets\\icon.ico'],
+    icon=['.\\pw.mmk.OpenFreebuds.ico'],
 )
 coll = COLLECT(
     exe,

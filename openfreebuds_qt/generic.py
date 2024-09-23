@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QMainWindow, QApplication, QSystemTrayIcon
 
 from openfreebuds import IOpenFreebuds
+from openfreebuds_qt.utils.updater.service import OfbQtUpdaterService
 
 
 class IOfbMainWindow(QMainWindow):
@@ -25,6 +26,7 @@ class IOfbQtApplication(QApplication):
     main_window: IOfbMainWindow
     ofb: IOpenFreebuds
     tray: IOfbTrayIcon
+    updater_service: OfbQtUpdaterService
 
     async def exit(self, ret_code: int = 0):
         raise NotImplementedError("Not implemented")

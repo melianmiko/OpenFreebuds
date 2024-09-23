@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QTreeWidgetItem
 
 from openfreebuds import DEVICE_TO_DRIVER_MAP
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
-from openfreebuds_qt.constants import LINK_WEBSITE, LINK_GITHUB, ASSETS_PATH
+from openfreebuds_qt.constants import LINK_WEBSITE, LINK_GITHUB
 from openfreebuds_qt.designer.about_module import Ui_OfbQtAboutModule
 from openfreebuds_qt.version_info import VERSION, LIBRARIES
 

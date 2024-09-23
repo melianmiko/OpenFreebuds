@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>588</width>
-    <height>413</height>
+    <height>534</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Media playback control</string>
+      <string>Compatibility</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -34,6 +34,20 @@
         </property>
         <property name="wordWrap">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="force_x11_checkbox">
+        <property name="text">
+         <string>Force use X11 backend (may look better in GNOME-based desktop environments)</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Restart application to apply.</string>
         </property>
        </widget>
       </item>
@@ -150,9 +164,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>force_x11_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OfbQtLinuxExtrasModule</receiver>
+   <slot>on_force_x11_toggle(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>293</x>
+     <y>182</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>293</x>
+     <y>266</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>on_hotkeys_doc()</slot>
   <slot>on_mpris_toggle(bool)</slot>
+  <slot>on_force_x11_toggle(bool)</slot>
  </slots>
 </ui>

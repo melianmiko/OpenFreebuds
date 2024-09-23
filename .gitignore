@@ -8,5 +8,7 @@
 /build
 /builddir
 /dist
+/scripts/tools
+/release.json
 
 /.idea
