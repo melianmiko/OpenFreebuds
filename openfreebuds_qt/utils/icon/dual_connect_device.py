@@ -5,14 +5,15 @@ from openfreebuds_qt.constants import ASSETS_PATH
 from openfreebuds_qt.utils.draw import image_combine_mask
 
 ICON_SIZE = (32, 32)
+DC_ICONS_PATH = ASSETS_PATH / "icon/dc"
 
 # Load files
 BASE_DC_DEVICE_ICONS = {
-    "device": Image.open(ASSETS_PATH / "dual_connect_device.png"),
+    "device": Image.open(DC_ICONS_PATH / "dual_connect_device.png"),
 }
-OVERLAY_PLAYING = Image.open(ASSETS_PATH / "overlay_playing.png")
+OVERLAY_PLAYING = Image.open(DC_ICONS_PATH / "overlay_playing.png")
 OVERLAY_PLAYING.thumbnail(ICON_SIZE)
-OVERLAY_PRIMARY = Image.open(ASSETS_PATH / "overlay_primary.png")
+OVERLAY_PRIMARY = Image.open(DC_ICONS_PATH / "overlay_primary.png")
 OVERLAY_PRIMARY.thumbnail(ICON_SIZE)
 
 # Presets
@@ -45,20 +46,21 @@ def create_dual_connect_icon(
                                   foreground=Image.new("RGBA", ICON_SIZE, color=main_icon_color),
                                   background=PRESET_TRANSPARENT)
 
+        try:
+            r, g, b, a = palette.accent().color().getRgb()
+            accent_color = (255 - r, 255 - g, 255 - b, a)
+        except AttributeError:
+            accent_color = (255, 102, 0)
+
         if is_playing:
-            try:
-                accent_color = palette.accent().color().getRgb()
-            except AttributeError:
-                accent_color = (0, 128, 256)
             overlay = image_combine_mask(OVERLAY_PLAYING,
                                          foreground=Image.new("RGBA", ICON_SIZE, color=accent_color),
                                          background=PRESET_TRANSPARENT)
             icon = Image.alpha_composite(icon, overlay)
 
         if is_primary:
-            link_color = palette.link().color().getRgb()
             overlay = image_combine_mask(OVERLAY_PRIMARY,
-                                         foreground=Image.new("RGBA", ICON_SIZE, color=link_color),
+                                         foreground=Image.new("RGBA", ICON_SIZE, color=accent_color),
                                          background=PRESET_TRANSPARENT)
             icon = Image.alpha_composite(icon, overlay)
 

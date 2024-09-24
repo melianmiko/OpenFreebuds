@@ -24,8 +24,28 @@
       This application allows to control HUAWEI FreeBuds earphone settings from PC. Check exact battery level, toggle noise cancellation, control built-in equalizer, change gestures, and all other in-device settings and features are now available without official mobile application.
     </p>
     <p>
-      Features: - Dynamic system tray icon that shows current active noise cancellation mode and battery level; - Tray menu with battery levels and active noise cancellation settings; - Ability to change voice language (not all devices supported); - Device settings dialog, eg. change equalizer preset, gesture actions, etc; - Built-in HTTP-server for remote control &amp; scripting; - Built-in global hotkeys support (for Windows and Xorg-Linux)
+      Features:
     </p>
+    <ul>
+      <li>
+        Dynamic system tray icon that shows current active noise cancellation mode and battery level;
+      </li>
+      <li>
+        Tray menu with battery levels and active noise cancellation settings;
+      </li>
+      <li>
+        Ability to change voice language (not all devices supported);
+      </li>
+      <li>
+        Device settings dialog, eg. change equalizer preset, gesture actions, etc;
+      </li>
+      <li>
+        Built-in HTTP-server for remote control &amp; scripting;
+      </li>
+      <li>
+        Built-in global hotkeys support (XOrg only, for wayand see FAQ);
+      </li>
+    </ul>
     <p>
       Tested with following devices: HUAWEI FreeBuds 4i / 5i / Pro / Pro 2 / Pro 3 / SE, HUAWEI FreeLace Pro / Pro 2.
     </p>

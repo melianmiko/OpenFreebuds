@@ -215,9 +215,6 @@
            <property name="text">
             <string/>
            </property>
-           <property name="icon">
-            <iconset theme="undo"/>
-           </property>
           </widget>
          </item>
         </layout>

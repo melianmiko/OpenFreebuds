@@ -21,7 +21,7 @@ class ConfigLock:
                 with open(ConfigLock._path, "r") as f:
                     process = Process(int(f.read()))
                     log.info(f"{Path(process.exe())}, {Path(sys.executable).resolve()}")
-                    if Path(process.exe()) == Path(sys.executable).resolve():
+                    if os.getpid() != process.pid and Path(process.exe()) == Path(sys.executable).resolve():
                         # Found already running instance, non-exclusive lock
                         ConfigLock.owned = False
                         return

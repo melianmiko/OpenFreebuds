@@ -12,7 +12,7 @@ PRESET_TRANSPARENT = Image.new("RGBA", ICON_SIZE, color="#00000000")
 
 @functools.cache
 def get_qt_icon_colored(name: str, color) -> QIcon:
-    image = Image.open(ASSETS_PATH / f"icon_{name}.png")
+    image = Image.open(ASSETS_PATH / f"icon/action/{name}.png")
     image = image_combine_mask(image,
                                foreground=Image.new("RGBA", ICON_SIZE, color=color),
                                background=PRESET_TRANSPARENT)
