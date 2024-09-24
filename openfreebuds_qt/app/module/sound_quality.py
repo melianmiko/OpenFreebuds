@@ -1,7 +1,6 @@
 import asyncio
 import json
 
-from PIL import Image, ImageQt
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QSlider, QMenu, QInputDialog, QMessageBox, QFileDialog
@@ -10,10 +9,9 @@ from qasync import asyncSlot
 from openfreebuds.exceptions import OfbTooManyItemsError
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
-from openfreebuds_qt.constants import ASSETS_PATH
 from openfreebuds_qt.designer.sound_quality import Ui_OfbQtSoundQualityModule
 from openfreebuds_qt.qt_i18n import get_eq_preset_names
-from openfreebuds_qt.utils import get_qt_icon_colored
+from openfreebuds_qt.utils import get_img_colored
 from openfreebuds_qt.utils.async_dialog import run_dialog_async
 from openfreebuds_qt.utils.core_event import OfbCoreEvent
 from openfreebuds_qt.utils.qt_utils import fill_combo_box, blocked_signals, qt_error_handler
@@ -42,7 +40,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         self.setupUi(self)
 
         self.undo_btn.setIcon(
-            get_qt_icon_colored("undo", self.palette().text().color().getRgb())
+            QIcon(get_img_colored("undo", self.palette().text().color().getRgb()))
         )
 
         self.custom_menu = QMenu()

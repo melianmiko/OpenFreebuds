@@ -21,7 +21,7 @@ from openfreebuds_qt.config import ConfigLock, OfbQtConfigParser
 from openfreebuds_qt.constants import ASSETS_PATH, LINK_RPC_HELP, LINK_WEBSITE_HELP
 from openfreebuds_qt.designer.main_window import Ui_OfbMainWindowDesign
 from openfreebuds_qt.generic import IOfbQtApplication, IOfbMainWindow
-from openfreebuds_qt.utils import qt_error_handler, OfbCoreEvent, OfbQtReportTool, get_qt_icon_colored
+from openfreebuds_qt.utils import qt_error_handler, OfbCoreEvent, OfbQtReportTool, get_img_colored
 
 log = create_logger("OfbQtMainWindow")
 
@@ -45,7 +45,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
 
         # Extras button
         self.extra_options_button.setIcon(
-            get_qt_icon_colored("settings", self.palette().text().color().getRgb())
+            QIcon(get_img_colored("settings", self.palette().text().color().getRgb()))
         )
 
         self.extra_menu = QMenu()

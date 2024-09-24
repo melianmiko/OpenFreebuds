@@ -12,6 +12,7 @@ from qasync import QEventLoop
 from openfreebuds import IOpenFreebuds, create as create_ofb, OfbEventKind
 from openfreebuds.constants import STORAGE_PATH
 from openfreebuds.utils.logger import setup_logging, screen_handler, create_logger
+from openfreebuds_qt.app.dialog.first_run import OfbQtFirstRunDialog
 from openfreebuds_qt.app.main import OfbQtMainWindow
 from openfreebuds_qt.config import OfbQtConfigParser, ConfigLock
 from openfreebuds_qt.constants import IGNORED_LOG_TAGS, I18N_PATH
@@ -120,10 +121,14 @@ class OfbQtApplication(IOfbQtApplication):
             self.tray.show()
             if self.args.settings:
                 self.main_window.show()
+            if not self.config.get("ui", "first_run_finished", False):
+                OfbQtFirstRunDialog(self).show()
         except SystemExit as e:
             self.qt_app.exit(e.args[0])
             ConfigLock.release()
             return
+        except Exception:
+            log.exception("Boot failure")
 
     async def exit(self, ret_code: int = 0):
         await self.tray.close()
