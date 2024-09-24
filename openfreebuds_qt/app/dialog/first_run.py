@@ -10,6 +10,7 @@ from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.constants import LINK_WEBSITE_HELP
 from openfreebuds_qt.designer.first_run_dialog import Ui_OfbQtFirstRunDialog
 from openfreebuds_qt.utils import get_img_colored, qt_error_handler
+from openfreebuds_qt.constants import WIN32_BODY_STYLE
 
 
 class OfbQtFirstRunDialog(Ui_OfbQtFirstRunDialog, QDialog):
@@ -20,8 +21,10 @@ class OfbQtFirstRunDialog(Ui_OfbQtFirstRunDialog, QDialog):
         self.config = OfbQtConfigParser.get_instance()
 
         self.setupUi(self)
+        if sys.platform == "win32":
+            self.setStyleSheet(WIN32_BODY_STYLE)
 
-        self.autostart_checkbox.setChecked(self.config.is_containerized_app)
+        self.autostart_checkbox.setChecked(not self.config.is_containerized_app)
         self.autostart_checkbox.setEnabled(not self.config.is_containerized_app)
         self.linux_notice.setVisible(sys.platform == 'linux')
 

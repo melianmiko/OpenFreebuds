@@ -1,9 +1,11 @@
+import sys
 import json
 from contextlib import suppress
 
 from PyQt6.QtWidgets import QWidget
 
 from openfreebuds import STORAGE_PATH
+from openfreebuds_qt.constants import WIN32_BODY_STYLE
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.designer.stupid_rpc_setup import Ui_Dialog
 from openfreebuds_qt.utils import OfbQtAsyncDialog
@@ -15,6 +17,8 @@ class OfbQtRpcConfig(Ui_Dialog, OfbQtAsyncDialog):
     def __init__(self, parent: QWidget):
         super().__init__(parent)
         self.setupUi(self)
+        if sys.platform == "win32":
+            self.setStyleSheet(WIN32_BODY_STYLE)
 
         self.current_config = {}
         with suppress(Exception):

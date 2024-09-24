@@ -18,14 +18,12 @@ from openfreebuds_qt.app.module import OfbQtAboutModule, OfbQtSoundQualityModule
     OfbQtHotkeysModule, OfbQtGesturesModule, OfbQtDualConnectModule, OfbQtDeviceOtherSettingsModule, \
     OfbQtDeviceInfoModule, OfbQtCommonModule, OfbQtChooseDeviceModule, OfbQtUiSettingsModule
 from openfreebuds_qt.config import ConfigLock, OfbQtConfigParser
-from openfreebuds_qt.constants import ASSETS_PATH, LINK_RPC_HELP, LINK_WEBSITE_HELP
+from openfreebuds_qt.constants import ASSETS_PATH, LINK_RPC_HELP, LINK_WEBSITE_HELP, WIN32_BODY_STYLE
 from openfreebuds_qt.designer.main_window import Ui_OfbMainWindowDesign
 from openfreebuds_qt.generic import IOfbQtApplication, IOfbMainWindow
 from openfreebuds_qt.utils import qt_error_handler, OfbCoreEvent, OfbQtReportTool, get_img_colored
 
 log = create_logger("OfbQtMainWindow")
-
-WIN32_BODY_STYLE = "QPushButton, QComboBox { padding: 6px 12px; }"
 
 
 class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):

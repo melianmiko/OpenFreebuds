@@ -1,6 +1,8 @@
+import sys
 from PyQt6.QtWidgets import QWidget
 
 from openfreebuds.driver import DEVICE_TO_DRIVER_MAP
+from openfreebuds_qt.constants import WIN32_BODY_STYLE
 from openfreebuds_qt.utils.async_dialog import OfbQtAsyncDialog
 from openfreebuds_qt.designer.dialog_manual_connect import Ui_Dialog
 
@@ -9,6 +11,8 @@ class OfbQtManualConnectDialog(Ui_Dialog, OfbQtAsyncDialog):
     def __init__(self, parent: QWidget):
         super().__init__(parent)
         self.setupUi(self)
+        if sys.platform == "win32":
+            self.setStyleSheet(WIN32_BODY_STYLE)
 
         self.names = list(DEVICE_TO_DRIVER_MAP.keys())
         self.profile_picker.addItems(self.names)
