@@ -73,11 +73,10 @@ class OfbHuaweiAncHandler(OfbDriverHandlerHuawei):
                 # If cancellation turned on and support levels, list them
                 new_props["level"] = self.cancel_level_options.get(data[0], data[0])
                 new_props["level_options"] = ",".join(self.cancel_level_options.values())
-
-            if data[1] == 2 and self.w_voice_boost:
+            elif data[1] == 2 and self.w_voice_boost:
                 # If awareness turned on and support voice boost
-                new_props["level"] = "voice_boost" if data[0] != 0 else "normal"
-                new_props["level_options"] = "normal,voice_boost"
+                new_props["level"] = self.awareness_level_options.get(data[0], data[0])
+                new_props["level_options"] = ",".join(self.awareness_level_options.values())
 
             await self.driver.put_property("anc", None, new_props)
 
