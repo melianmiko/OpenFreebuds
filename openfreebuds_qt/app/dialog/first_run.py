@@ -21,6 +21,7 @@ class OfbQtFirstRunDialog(Ui_OfbQtFirstRunDialog, QDialog):
 
         self.setupUi(self)
 
+        self.autostart_checkbox.setChecked(self.config.is_containerized_app)
         self.autostart_checkbox.setEnabled(not self.config.is_containerized_app)
         self.linux_notice.setVisible(sys.platform == 'linux')
 
