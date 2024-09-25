@@ -33,7 +33,6 @@ class OfbDriverSppGeneric(OfbDriverGeneric):
             sock.connect((self.device_address, self._spp_service_port))
             reader, writer = await asyncio.open_connection(sock=sock)
         except (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError, OSError, ValueError):
-            log.exception("Driver startup failed")
             raise FbStartupError("Driver startup failed")
 
         self.__task_recv = asyncio.create_task(self._loop_recv(reader))

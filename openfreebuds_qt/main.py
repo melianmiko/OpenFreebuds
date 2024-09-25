@@ -48,7 +48,7 @@ class OfbQtApplication(IOfbQtApplication):
         # Setup logging
         setup_logging(args.verbose)
         if not args.verbose:
-            screen_handler.setLevel(logging.WARN)
+            screen_handler.setLevel(logging.ERROR)
         if not args.dont_ignore_logs:
             for tag in IGNORED_LOG_TAGS:
                 logging.getLogger(tag).disabled = True

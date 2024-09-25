@@ -90,7 +90,7 @@ class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
             pkg = HuaweiSppPackage.from_bytes(pkg)
             log.debug(f"RX {pkg}")
         except (AssertionError, OfbPackageChecksumError):
-            log.exception(f"Got non-parsable package {pkg.hex()}, ignoring")
+            log.info(f"Got non-parsable package {pkg.hex()}, ignoring")
             return
 
         if pkg.command_id in self.__pending_responses:
@@ -159,7 +159,7 @@ class OfbDriverHandlerHuawei(OfbDriverHandlerGeneric):
                 async with asyncio.timeout(self.init_timeout):
                     await self.on_init()
                 break
-            except TimeoutError:
+            except (TimeoutError, ConnectionResetError):
                 self.init_attempt += 1
             except Exception:
                 log.exception(f"Unknown error on {self.handler_id} init")
