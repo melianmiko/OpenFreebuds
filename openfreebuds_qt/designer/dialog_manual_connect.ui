@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>OfbQtManualConnectDialog</class>
+ <widget class="QDialog" name="OfbQtManualConnectDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Manual connect</string>
+   <string>Manual connect…</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -120,7 +120,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>OfbQtManualConnectDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -136,7 +136,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>OfbQtManualConnectDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

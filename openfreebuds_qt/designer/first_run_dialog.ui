@@ -77,7 +77,7 @@
             </size>
            </property>
            <property name="text">
-            <string>Image</string>
+            <string notr="true">Image</string>
            </property>
           </widget>
          </item>

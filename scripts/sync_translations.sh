@@ -26,12 +26,17 @@ do
   locale=`basename ${ts_file%.*}`
   if [ ./assets/i18n/$locale.po -nt ./assets/i18n/$locale.ts ]
   then
-    echo "--- Update $locale from PO-file"
+    echo "-- Update $locale from PO-file"
     lconvert ./assets/i18n/$locale.po -o ./assets/i18n/$locale.ts
   else
     # Create *.po-file for accent
     echo "-- Update $locale"
     lconvert ./assets/i18n/$locale.ts -o ./assets/i18n/$locale.po
+
+    if [[ "$locale" == "en" ]]
+    then
+      python ../scripts/sync_translations_fill_msgstr.py ./assets/i18n/$locale.po
+    fi
   fi
 
   [[ "$locale" == "en" ]] || pylupdate6 --no-obsolete --ts $ts_file .

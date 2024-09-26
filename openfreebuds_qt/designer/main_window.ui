@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>OpenFreebuds</string>
+   <string notr="true">OpenFreebuds</string>
   </property>
   <property name="styleSheet">
    <string notr="true">#side_panel, #tabs_list_content {
@@ -137,7 +137,7 @@
              </font>
             </property>
             <property name="text">
-             <string>OpenFreebuds v99</string>
+             <string notr="true">OpenFreebuds v99</string>
             </property>
            </widget>
           </item>

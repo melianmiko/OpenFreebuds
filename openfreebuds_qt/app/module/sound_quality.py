@@ -190,7 +190,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
             return
 
         async with qt_error_handler("OfbQtSoundQualityModule_ExportFile", self.ctx):
-            dialog = QFileDialog(self, self.tr("Save equalizer preset to file..."))
+            dialog = QFileDialog(self, self.tr("Save equalizer preset to file…"))
             dialog.setWindowModality(Qt.WindowModality.WindowModal)
             dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptSave)
             if not await run_dialog_async(dialog):
@@ -205,7 +205,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
     @asyncSlot()
     async def load_file(self):
         async with qt_error_handler("OfbQtSoundQualityModule_LoadFile", self.ctx):
-            dialog = QFileDialog(self, self.tr("Load equalizer preset from file..."))
+            dialog = QFileDialog(self, self.tr("Load equalizer preset from file…"))
             dialog.setWindowModality(Qt.WindowModality.WindowModal)
             dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptOpen)
             if not await run_dialog_async(dialog):

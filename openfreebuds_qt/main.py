@@ -174,7 +174,7 @@ class OfbQtApplication(IOfbQtApplication):
         if self.ofb.role == "standalone":
             await self.restore_device()
             while await self.ofb.get_state() != IOpenFreebuds.STATE_CONNECTED:
-                log.debug("Waiting for device connect...")
+                log.debug("Waiting for device connect…")
                 await asyncio.sleep(1)
 
         await self.ofb.run_shortcut(self.args.shortcut)

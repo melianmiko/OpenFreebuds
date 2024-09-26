@@ -29,7 +29,6 @@ class OfbQtHotkeyRecorder:
 
         self.listener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
         self.listener.start()
-        log.debug("Recording...")
 
         while self.working:
             await asyncio.sleep(0.5)

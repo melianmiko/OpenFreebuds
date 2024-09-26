@@ -14,7 +14,7 @@ class OfbDeviceEqualizerTrayMenu(OfbQtTrayMenuCommon):
     def __init__(self, parent: QWidget, ctx: IOfbQtApplication):
         super().__init__(parent, ctx.ofb)
 
-        self.setTitle(self.tr("Equalizer preset..."))
+        self.setTitle(self.tr("Equalizer preset…"))
         self.eq_preset_names = get_eq_preset_names()
 
     async def update_ui(self):

@@ -83,7 +83,10 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
         with blocked_signals(self.current_device_auto_connect):
             self.current_device_auto_connect.setEnabled(data.get("auto_connect") is not None)
             self.current_device_auto_connect.setChecked(data.get("auto_connect") or False)
-        self.button_toggle_connect.setText(self.tr("Disconnect" if data["connected"] else "Connect"))
+
+        self.button_toggle_connect.setText(
+            self.tr("Disconnect") if data["connected"] else self.tr("Connect")
+        )
 
     @asyncSlot(bool)
     async def on_set_preferred(self, state: bool):

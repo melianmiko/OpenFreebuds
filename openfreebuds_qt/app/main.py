@@ -79,7 +79,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
             self._attach_module(self.tr("Keyboard shortcuts"), OfbQtHotkeysModule(self.tabs.root, self.ctx))
         if sys.platform == "linux":
             self._attach_module(self.tr("Linux-related"), OfbQtLinuxExtrasModule(self.tabs.root, self.ctx))
-        self._attach_module(self.tr("About..."), OfbQtAboutModule(self.tabs.root, self.ctx))
+        self._attach_module(self.tr("About…"), OfbQtAboutModule(self.tabs.root, self.ctx))
 
         # Finish
         self.default_tab = 2, 0
@@ -95,19 +95,19 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
         # noinspection PyUnresolvedReferences
         help_rpc_action.triggered.connect(lambda: webbrowser.open(LINK_RPC_HELP))
 
-        bugreport_action = self.extra_menu.addAction(self.tr("Bugreport..."))
+        bugreport_action = self.extra_menu.addAction(self.tr("Bugreport…"))
         bugreport_action.setShortcut("F2")
         # noinspection PyUnresolvedReferences
         bugreport_action.triggered.connect(self.on_bugreport)
 
-        self.check_updates_action = self.extra_menu.addAction(self.tr("Check for updates..."))
+        self.check_updates_action = self.extra_menu.addAction(self.tr("Check for updates…"))
         # noinspection PyUnresolvedReferences
         self.check_updates_action.triggered.connect(self.on_check_updates)
 
         self.extra_menu.addSeparator()
 
         if self.ofb.role == "standalone" and ConfigLock.owned:
-            rpc_config_action = self.extra_menu.addAction(self.tr("Remote access..."))
+            rpc_config_action = self.extra_menu.addAction(self.tr("Remote access…"))
             # noinspection PyUnresolvedReferences
             rpc_config_action.triggered.connect(self.on_rpc_config)
 

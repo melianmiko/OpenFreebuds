@@ -18,7 +18,7 @@ class OfbDeviceAncLevelTrayMenu(OfbQtTrayMenuCommon):
             "voice_boost": self.tr("Voice boost"),
         }
 
-        self.setTitle(self.tr("Intensity..."))
+        self.setTitle(self.tr("Intensity…"))
         self.anc_level_actions: dict[str, QAction] = {}
         for code in self.anc_level_option_names:
             self._add_anc_level_option(code, self.anc_level_option_names[code])

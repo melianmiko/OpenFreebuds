@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Linux-specific</string>
+   <string notr="true">Linux-specific</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>

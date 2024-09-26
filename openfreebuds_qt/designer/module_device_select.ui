@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Change device...</string>
+   <string notr="true">Change device…</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QPushButton {

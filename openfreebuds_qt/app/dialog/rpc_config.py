@@ -1,19 +1,19 @@
-import sys
 import json
+import sys
 from contextlib import suppress
 
 from PyQt6.QtWidgets import QWidget
 
 from openfreebuds import STORAGE_PATH
-from openfreebuds_qt.constants import WIN32_BODY_STYLE
 from openfreebuds.utils.logger import create_logger
-from openfreebuds_qt.designer.stupid_rpc_setup import Ui_Dialog
+from openfreebuds_qt.constants import WIN32_BODY_STYLE
+from openfreebuds_qt.designer.stupid_rpc_setup import Ui_OfbQtRpcConfig
 from openfreebuds_qt.utils import OfbQtAsyncDialog
 
 log = create_logger("OfbQtRpcConfig")
 
 
-class OfbQtRpcConfig(Ui_Dialog, OfbQtAsyncDialog):
+class OfbQtRpcConfig(Ui_OfbQtRpcConfig, OfbQtAsyncDialog):
     def __init__(self, parent: QWidget):
         super().__init__(parent)
         self.setupUi(self)
