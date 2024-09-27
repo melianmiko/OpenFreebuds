@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>237</height>
+    <height>200</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,12 +27,25 @@
    <item>
     <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Notice that this may be dangerous for some kind of devices. Do it of your risk. You also can share information about your device and selected profile at GitHub, if you want get offical support.</string>
+      <string>Notice that this may be dangerous for some kind of devices. Continue only if you know what you're doing.</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
      </property>
     </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
    <item>
     <widget class="QComboBox" name="profile_picker"/>

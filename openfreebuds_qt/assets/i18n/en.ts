@@ -15,7 +15,7 @@
     </message>
     <message>
       <location filename="../../designer/dialog_profile_picker.ui" line="0" />
-      <source>Notice that this may be dangerous for some kind of devices. Do it of your risk. You also can share information about your device and selected profile at GitHub, if you want get offical support.</source>
+      <source>Notice that this may be dangerous for some kind of devices. Continue only if you know what you're doing.</source>
       <translation type="unfinished" />
     </message>
   </context>
@@ -315,6 +315,7 @@
       <translation type="unfinished" />
     </message>
     <message>
+      <location filename="../../app/module/dual_connect.py" line="88" />
       <location filename="../../designer/dual_connect.ui" line="0" />
       <source>Connect</source>
       <translation type="unfinished" />
@@ -325,12 +326,17 @@
       <translation type="unfinished" />
     </message>
     <message>
-      <location filename="../../app/module/dual_connect.py" line="128" />
+      <location filename="../../app/module/dual_connect.py" line="88" />
+      <source>Disconnect</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../../app/module/dual_connect.py" line="131" />
       <source>Unpair device</source>
       <translation type="unfinished" />
     </message>
     <message>
-      <location filename="../../app/module/dual_connect.py" line="129" />
+      <location filename="../../app/module/dual_connect.py" line="132" />
       <source>Do you really want to unpair %1 from your headphones?</source>
       <translation type="unfinished" />
     </message>
@@ -607,7 +613,7 @@
     </message>
     <message>
       <location filename="../../app/module/linux_related.py" line="52" />
-      <source>Looks like you're running under Flatpak. To use this feature, OpenFreebuds need to have access to entire session bus, otherwise it won't find anyworking media players. Ensure that you're granted this permission,refer to FAQ for more details.</source>
+      <source>Looks like you're running under Flatpak. To use this feature, OpenFreebuds need to have access to entire session bus, otherwise it won't find any working media players. Ensure that you're granted this permission, refer to FAQ for more details.</source>
       <translation type="unfinished" />
     </message>
   </context>

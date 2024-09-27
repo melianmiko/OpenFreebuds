@@ -7,12 +7,12 @@
     <message>
       <location filename="../../designer/dialog_profile_picker.ui" line="0" />
       <source>Unsupported device</source>
-      <translation>Неподдерживаемое устройство</translation>
+      <translation>Unsupported device</translation>
     </message>
     <message>
       <location filename="../../designer/dialog_profile_picker.ui" line="0" />
       <source>This device isn't supported, for yet. But if you want, you can force connect them. To do that, select an exiting profile. Then application will try to apply it to your device. You can change profile in any time.</source>
-      <translation>Это устройство не поддерживается, по крайней мере сейчас. Но, вы можете подключить его принудительно. Для этого выберите профиль в списке ниже. Тогда приложение попытается применить его к вашему устройству. Эту настройку можно изменить в любое время.</translation>
+      <translation>This device isn't supported, for yet. But if you want, you can force connect them. To do that, select an exiting profile. Then application will try to apply it to your device. You can change profile in any time.</translation>
     </message>
     <message>
       <location filename="../../designer/dialog_profile_picker.ui" line="0" />
@@ -25,22 +25,22 @@
     <message>
       <location filename="../../qt_i18n.py" line="6" />
       <source>Default</source>
-      <translation>По умолчанию</translation>
+      <translation>Default</translation>
     </message>
     <message>
       <location filename="../../qt_i18n.py" line="7" />
       <source>Bass-boost</source>
-      <translation>Больше баса</translation>
+      <translation>Bass-boost</translation>
     </message>
     <message>
       <location filename="../../qt_i18n.py" line="8" />
       <source>Treble-boost</source>
-      <translation>Больше высоких</translation>
+      <translation>Treble-boost</translation>
     </message>
     <message>
       <location filename="../../qt_i18n.py" line="9" />
       <source>Voices</source>
-      <translation>Вокал</translation>
+      <translation>Voices</translation>
     </message>
   </context>
   <context>
@@ -48,32 +48,32 @@
     <message>
       <location filename="../../tray/menu_anc_level.py" line="14" />
       <source>Comfortable</source>
-      <translation>Комфортный</translation>
+      <translation>Comfortable</translation>
     </message>
     <message>
       <location filename="../../tray/menu_anc_level.py" line="15" />
       <source>Normal</source>
-      <translation>Обычный</translation>
+      <translation>Normal</translation>
     </message>
     <message>
       <location filename="../../tray/menu_anc_level.py" line="16" />
       <source>Ultra</source>
-      <translation>Максимальное</translation>
+      <translation>Ultra</translation>
     </message>
     <message>
       <location filename="../../tray/menu_anc_level.py" line="17" />
       <source>Dynamic</source>
-      <translation>Динамический</translation>
+      <translation>Dynamic</translation>
     </message>
     <message>
       <location filename="../../tray/menu_anc_level.py" line="18" />
       <source>Voice boost</source>
-      <translation>Усиление голоса</translation>
+      <translation>Voice boost</translation>
     </message>
     <message>
       <location filename="../../tray/menu_anc_level.py" line="21" />
       <source>Intensity…</source>
-      <translation>Интенсивность…</translation>
+      <translation>Intensity…</translation>
     </message>
   </context>
   <context>
@@ -81,7 +81,7 @@
     <message>
       <location filename="../../tray/menu_dual_connect.py" line="14" />
       <source>Dual-connect…</source>
-      <translation>Двойное подключение…</translation>
+      <translation>Dual-connect…</translation>
     </message>
   </context>
   <context>
@@ -89,7 +89,7 @@
     <message>
       <location filename="../../tray/menu_equalizer.py" line="17" />
       <source>Equalizer preset…</source>
-      <translation>Эквалайзер…</translation>
+      <translation>Equalizer preset…</translation>
     </message>
   </context>
   <context>
@@ -97,22 +97,22 @@
     <message>
       <location filename="../../designer/main_window.ui" line="0" />
       <source>New version available, click here to view</source>
-      <translation>Доступна новая версия, нажмите здесь для просмотра</translation>
+      <translation>New version available, click here to view</translation>
     </message>
     <message>
       <location filename="../../designer/main_window.ui" line="0" />
       <source>Hide</source>
-      <translation>Скрыть</translation>
+      <translation>Hide</translation>
     </message>
     <message>
       <location filename="../../designer/main_window.ui" line="0" />
       <source>Update now</source>
-      <translation>Обновить сейчас</translation>
+      <translation>Update now</translation>
     </message>
     <message>
       <location filename="../../designer/main_window.ui" line="0" />
       <source>Exit</source>
-      <translation>Выход</translation>
+      <translation>Exit</translation>
     </message>
   </context>
   <context>
@@ -120,27 +120,27 @@
     <message>
       <location filename="../../designer/about_module.ui" line="0" />
       <source>Client application for HUAWEI FreeBuds wireless earphone series. Free and open source.</source>
-      <translation>Приложения для управления наушниками серии HUAWEI FreeBuds Бесплатно и с открытым исходным кодом.</translation>
+      <translation>Client application for HUAWEI FreeBuds wireless earphone series. Free and open source.</translation>
     </message>
     <message>
       <location filename="../../designer/about_module.ui" line="0" />
       <source>Website</source>
-      <translation>Веб-сайт</translation>
+      <translation>Website</translation>
     </message>
     <message>
       <location filename="../../designer/about_module.ui" line="0" />
       <source>Source code</source>
-      <translation>Исходный код</translation>
+      <translation>Source code</translation>
     </message>
     <message>
       <location filename="../../app/module/about.py" line="21" />
       <source>Supported devices</source>
-      <translation>Совместимые устройства</translation>
+      <translation>Supported devices</translation>
     </message>
     <message>
       <location filename="../../app/module/about.py" line="28" />
       <source>Libraries</source>
-      <translation>Библиотеки</translation>
+      <translation>Libraries</translation>
     </message>
   </context>
   <context>
@@ -148,12 +148,12 @@
     <message>
       <location filename="../../main.py" line="199" />
       <source>You're running under older version of Qt than expected. It's strongly recommended to switch to Flatpak release, because older Qt version may fail your experience of using OpenFreebuds.</source>
-      <translation>Вы используете более старую версию Qt, чем ожидалось. Рекомендуем перейти на Flatpak-версию программы, поскольку более старые версии Qt, предоставляемые вашей системой, могут пагубно повлиять на работу программы.</translation>
+      <translation>You're running under older version of Qt than expected. It's strongly recommended to switch to Flatpak release, because older Qt version may fail your experience of using OpenFreebuds.</translation>
     </message>
     <message>
       <location filename="../../main.py" line="204" />
       <source>This warning will be shown only once. Please, test Flatpak version before reporting bugs.</source>
-      <translation>Это предупреждение будет показано лишь один раз. Перед тем, как сообщать о проблемах, протестируйте Flatpak версию.</translation>
+      <translation>This warning will be shown only once. Please, test Flatpak version before reporting bugs.</translation>
     </message>
   </context>
   <context>
@@ -161,7 +161,7 @@
     <message>
       <location filename="../../designer/dependency_missing.ui" line="0" />
       <source>To use this feature, additional dependencies is required. Install it now?</source>
-      <translation>Для этой функции требуется дополнительный компонент. Перейти к установке?</translation>
+      <translation>To use this feature, additional dependencies is required. Install it now?</translation>
     </message>
   </context>
   <context>
@@ -169,37 +169,37 @@
     <message>
       <location filename="../../designer/device_info.ui" line="0" />
       <source>Firmware version:</source>
-      <translation>Версия прошивки:</translation>
+      <translation>Firmware version:</translation>
     </message>
     <message>
       <location filename="../../designer/device_info.ui" line="0" />
       <source>Bluetooth address:</source>
-      <translation>Bluetooth адрес:</translation>
+      <translation>Bluetooth address:</translation>
     </message>
     <message>
       <location filename="../../designer/device_info.ui" line="0" />
       <source>All available device information fields:</source>
-      <translation>Вся известная информация об устройстве:</translation>
+      <translation>All available device information fields:</translation>
     </message>
     <message>
       <location filename="../../designer/device_info.ui" line="0" />
       <source>Property</source>
-      <translation>Свойство</translation>
+      <translation>Property</translation>
     </message>
     <message>
       <location filename="../../designer/device_info.ui" line="0" />
       <source>Value</source>
-      <translation>Значение</translation>
+      <translation>Value</translation>
     </message>
     <message>
       <location filename="../../designer/device_info.ui" line="0" />
       <source>Battery last charged:</source>
-      <translation>Последняя зарядка аккумулятора:</translation>
+      <translation>Battery last charged:</translation>
     </message>
     <message>
       <location filename="../../app/module/device_info.py" line="27" />
       <source>Unknown</source>
-      <translation>Неизвестно</translation>
+      <translation>Unknown</translation>
     </message>
   </context>
   <context>
@@ -207,47 +207,47 @@
     <message>
       <location filename="../../designer/device_other.ui" line="0" />
       <source>Interaction</source>
-      <translation>Взаимодействие</translation>
+      <translation>Interaction</translation>
     </message>
     <message>
       <location filename="../../designer/device_other.ui" line="0" />
       <source>Wear detection</source>
-      <translation>Обнаружение ношения</translation>
+      <translation>Wear detection</translation>
     </message>
     <message>
       <location filename="../../designer/device_other.ui" line="0" />
       <source>Pause audio or switch device when earphones are removed</source>
-      <translation>Приостанавливать звук или переключать устройства при извлечении наушника</translation>
+      <translation>Pause audio or switch device when earphones are removed</translation>
     </message>
     <message>
       <location filename="../../designer/device_other.ui" line="0" />
       <source>Networking</source>
-      <translation>Связь</translation>
+      <translation>Networking</translation>
     </message>
     <message>
       <location filename="../../designer/device_other.ui" line="0" />
       <source>Enable low-latency mode</source>
-      <translation>Включить режим низкой задержки</translation>
+      <translation>Enable low-latency mode</translation>
     </message>
     <message>
       <location filename="../../designer/device_other.ui" line="0" />
       <source>Will try to reduce audio latency when using headphones in enviroments with high network load. This option is disabled when your earphones are disconnected. Applies only for current device.</source>
-      <translation>Устройство попытается снизить задержку звука для использования в окружении с высокой сетевой засорённостью. Эта опция отключится при отсоединении наушников. Применяется только для текущего клиента.</translation>
+      <translation>Will try to reduce audio latency when using headphones in enviroments with high network load. This option is disabled when your earphones are disconnected. Applies only for current device.</translation>
     </message>
     <message>
       <location filename="../../designer/device_other.ui" line="0" />
       <source>Service</source>
-      <translation>Служебное</translation>
+      <translation>Service</translation>
     </message>
     <message>
       <location filename="../../designer/device_other.ui" line="0" />
       <source>Device language:</source>
-      <translation>Язык устройства:</translation>
+      <translation>Device language:</translation>
     </message>
     <message>
       <location filename="../../designer/device_other.ui" line="0" />
       <source>Due to technical restrictions, current language can't be readden from device and this field will be empty.</source>
-      <translation>Из-за технических ограничений прочитать текущий язык устройства невозможно, и поле выше будет пустым.</translation>
+      <translation>Due to technical restrictions, current language can't be readden from device and this field will be empty.</translation>
     </message>
   </context>
   <context>
@@ -255,27 +255,27 @@
     <message>
       <location filename="../../designer/module_device_select.ui" line="0" />
       <source>Select device automatically</source>
-      <translation>Выбирать устройство автоматически</translation>
+      <translation>Select device automatically</translation>
     </message>
     <message>
       <location filename="../../designer/module_device_select.ui" line="0" />
       <source>OpenFreebuds will automatically detect currently connected headset and switch to them.</source>
-      <translation>OpenFreebuds будет автоматически определять подключенные наушники и переключится на них.</translation>
+      <translation>OpenFreebuds will automatically detect currently connected headset and switch to them.</translation>
     </message>
     <message>
       <location filename="../../designer/module_device_select.ui" line="0" />
       <source>List bellow shows all Bluetooth devices paired with your device. Select appropriate device that you want to use with OpenFreebuds:</source>
-      <translation>Список ниже содержит все Bluetooth-устройства, сопряжённые с вашим ПК. Выберите нужное для работы с OpenFreebuds.</translation>
+      <translation>List bellow shows all Bluetooth devices paired with your device. Select appropriate device that you want to use with OpenFreebuds:</translation>
     </message>
     <message>
       <location filename="../../designer/module_device_select.ui" line="0" />
       <source>Device isn't listed here</source>
-      <translation>Устройства нет в списке</translation>
+      <translation>Device isn't listed here</translation>
     </message>
     <message>
       <location filename="../../designer/module_device_select.ui" line="0" />
       <source>Refresh list</source>
-      <translation>Обновить список</translation>
+      <translation>Refresh list</translation>
     </message>
   </context>
   <context>
@@ -283,63 +283,63 @@
     <message>
       <location filename="../../designer/dual_connect.ui" line="0" />
       <source>Refresh</source>
-      <translation>Обновить</translation>
+      <translation>Refresh</translation>
     </message>
     <message>
       <location filename="../../designer/dual_connect.ui" line="0" />
       <source>Allow connecting to multiple devices at once</source>
-      <translation>Разрешить мульти-подключение</translation>
+      <translation>Allow connecting to multiple devices at once</translation>
     </message>
     <message>
       <location filename="../../designer/dual_connect.ui" line="0" />
       <source>This page allows you to manage devices that are paired with your headphones.</source>
-      <translation>Эта страница позволяет управлять устройствами, сопряжёнными с вашими наушниками.</translation>
+      <translation>This page allows you to manage devices that are paired with your headphones.</translation>
     </message>
     <message>
       <location filename="../../designer/dual_connect.ui" line="0" />
       <source>Bluetooth address:</source>
-      <translation>Bluetooth адрес:</translation>
+      <translation>Bluetooth address:</translation>
     </message>
     <message>
       <location filename="../../designer/dual_connect.ui" line="0" />
       <source>Device name:</source>
-      <translation>Название:</translation>
+      <translation>Device name:</translation>
     </message>
     <message>
       <location filename="../../designer/dual_connect.ui" line="0" />
       <source>Preferred device</source>
-      <translation>Предпочитаемое устройство</translation>
+      <translation>Preferred device</translation>
     </message>
     <message>
       <location filename="../../designer/dual_connect.ui" line="0" />
       <source>Auto connect this device</source>
-      <translation>Авто-подключение</translation>
+      <translation>Auto connect this device</translation>
     </message>
     <message>
       <location filename="../../app/module/dual_connect.py" line="88" />
       <location filename="../../designer/dual_connect.ui" line="0" />
       <source>Connect</source>
-      <translation>Подключить</translation>
+      <translation>Connect</translation>
     </message>
     <message>
       <location filename="../../designer/dual_connect.ui" line="0" />
       <source>Unpair</source>
-      <translation>Удалить</translation>
+      <translation>Unpair</translation>
     </message>
     <message>
       <location filename="../../app/module/dual_connect.py" line="88" />
       <source>Disconnect</source>
-      <translation type="unfinished">Отсоединить</translation>
+      <translation type="unfinished">Disconnect</translation>
     </message>
     <message>
       <location filename="../../app/module/dual_connect.py" line="131" />
       <source>Unpair device</source>
-      <translation>Отменить сопряжение устройства</translation>
+      <translation>Unpair device</translation>
     </message>
     <message>
       <location filename="../../app/module/dual_connect.py" line="132" />
       <source>Do you really want to unpair %1 from your headphones?</source>
-      <translation>Вы действительно хотите разорвать сопряжение между %1 и вашими наушниками?</translation>
+      <translation>Do you really want to unpair %1 from your headphones?</translation>
     </message>
   </context>
   <context>
@@ -352,7 +352,7 @@
     <message>
       <location filename="../../designer/dialog_error.ui" line="0" />
       <source>Application will be closed, restart it manually.</source>
-      <translation>Программа будет закрыта, перезапустите её вручную.</translation>
+      <translation>Application will be closed, restart it manually.</translation>
     </message>
   </context>
   <context>
@@ -360,42 +360,42 @@
     <message>
       <location filename="../../designer/first_run_dialog.ui" line="0" />
       <source>Welcome</source>
-      <translation>Добро пожаловать</translation>
+      <translation>Welcome</translation>
     </message>
     <message>
       <location filename="../../designer/first_run_dialog.ui" line="0" />
       <source>This application allows you to manage your HUAWEI Bluetooth earphones. To access them, look for headphones icon in system tray panel, near other icons.</source>
-      <translation>Это приложение позволяет управлять вашим устройством серии HUAWEI FreeBuds. Для доступа к ним, найдите значок в виде наушников на панели задачи, в области уведомлений.</translation>
+      <translation>This application allows you to manage your HUAWEI Bluetooth earphones. To access them, look for headphones icon in system tray panel, near other icons.</translation>
     </message>
     <message>
       <location filename="../../designer/first_run_dialog.ui" line="0" />
       <source>Left-click on this icon will cycle through noise cancellation modes (can be configured), right-click will provide access to full battery status and main options. Settings window provides access to all features.</source>
-      <translation>Левый клик по этой иконке будет переключать режимы шумоподавления (поведение можно настроить), правый клик предоставит доступ к полной информации о состоянии батареи утройства и основным опциям. Окно "Настройки" предоставит полный доступ до всех опций, доступных в устройстве.</translation>
+      <translation>Left-click on this icon will cycle through noise cancellation modes (can be configured), right-click will provide access to full battery status and main options. Settings window provides access to all features.</translation>
     </message>
     <message>
       <location filename="../../designer/first_run_dialog.ui" line="0" />
       <source>If you're running under GNOME shell and can't find tray icon, please, check FAQ.</source>
-      <translation>Если вы используете рабочий стол GNOME и не можете найти значок в области уведомлений, ознакомьтесь с ЧаВо.</translation>
+      <translation>If you're running under GNOME shell and can't find tray icon, please, check FAQ.</translation>
     </message>
     <message>
       <location filename="../../designer/first_run_dialog.ui" line="0" />
       <source>Launch OpenFreebuds at system boot</source>
-      <translation>Запускать OpenFreebuds при включении ПК</translation>
+      <translation>Launch OpenFreebuds at system boot</translation>
     </message>
     <message>
       <location filename="../../designer/first_run_dialog.ui" line="0" />
       <source>You could change this options anytime later in settings.</source>
-      <translation>Вы можете изменить свой выбор в любой момент через настройки программы.</translation>
+      <translation>You could change this options anytime later in settings.</translation>
     </message>
     <message>
       <location filename="../../designer/first_run_dialog.ui" line="0" />
       <source>FAQ</source>
-      <translation>ЧаВо</translation>
+      <translation>FAQ</translation>
     </message>
     <message>
       <location filename="../../designer/first_run_dialog.ui" line="0" />
       <source>Get started</source>
-      <translation>Начать</translation>
+      <translation>Get started</translation>
     </message>
   </context>
   <context>
@@ -403,118 +403,118 @@
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
       <source>Long-tap</source>
-      <translation>Долгое касание</translation>
+      <translation>Long-tap</translation>
     </message>
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
       <source>Triple-tap</source>
-      <translation>Тройное касание</translation>
+      <translation>Triple-tap</translation>
     </message>
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
       <source>Double-tap in call</source>
-      <translation>…во время звонка</translation>
+      <translation>Double-tap in call</translation>
     </message>
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
       <source>Left</source>
-      <translation>Левый</translation>
+      <translation>Left</translation>
     </message>
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
       <source>Power button double-tap</source>
-      <translation>Двойной клик кнопки питания</translation>
+      <translation>Power button double-tap</translation>
     </message>
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
       <source>Customize device touch panel(s) and button(s) behaviour. This settings are stored inside your device and will work also if OpenFreebuds is closed.</source>
-      <translation>Настройка поведения сенсорных панелей и кнопок на устройстве. Эти настройки хранятся прямо в устройстве и работают даже если OpenFreebuds закрыт.</translation>
+      <translation>Customize device touch panel(s) and button(s) behaviour. This settings are stored inside your device and will work also if OpenFreebuds is closed.</translation>
     </message>
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
       <source>Swipe gesture</source>
-      <translation>Свайп по наушнику</translation>
+      <translation>Swipe gesture</translation>
     </message>
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
       <source>Double-tap</source>
-      <translation>Двойное касание</translation>
+      <translation>Double-tap</translation>
     </message>
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
       <source>Right</source>
-      <translation>Правый</translation>
+      <translation>Right</translation>
     </message>
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
       <source>Preferred modes</source>
-      <translation>Предпочитаемые режимы</translation>
+      <translation>Preferred modes</translation>
     </message>
     <message>
       <location filename="../../app/module/gestures.py" line="56" />
       <source>Answer to call</source>
-      <translation>Ответить на звонок</translation>
+      <translation>Answer to call</translation>
     </message>
     <message>
       <location filename="../../app/module/gestures.py" line="57" />
       <source>Adjust volume</source>
-      <translation>Изменить громкость</translation>
+      <translation>Adjust volume</translation>
     </message>
     <message>
       <location filename="../../app/module/gestures.py" line="58" />
       <source>Voice assistant</source>
-      <translation>Голосовой помощник</translation>
+      <translation>Voice assistant</translation>
     </message>
     <message>
       <location filename="../../app/module/gestures.py" line="59" />
       <source>Next track</source>
-      <translation>Следующий трек</translation>
+      <translation>Next track</translation>
     </message>
     <message>
       <location filename="../../app/module/gestures.py" line="68" />
       <location filename="../../app/module/gestures.py" line="60" />
       <source>Disabled</source>
-      <translation>Отключено</translation>
+      <translation>Disabled</translation>
     </message>
     <message>
       <location filename="../../app/module/gestures.py" line="61" />
       <source>Play/pause</source>
-      <translation>Воспроизвести/Пауза</translation>
+      <translation>Play/pause</translation>
     </message>
     <message>
       <location filename="../../app/module/gestures.py" line="62" />
       <source>Prev track</source>
-      <translation>Предыдущий трек</translation>
+      <translation>Prev track</translation>
     </message>
     <message>
       <location filename="../../app/module/gestures.py" line="63" />
       <source>Switch device</source>
-      <translation>Сменить устройство</translation>
+      <translation>Switch device</translation>
     </message>
     <message>
       <location filename="../../app/module/gestures.py" line="64" />
       <source>Switch noise control mode</source>
-      <translation>Сменить режим шумоподавления</translation>
+      <translation>Switch noise control mode</translation>
     </message>
     <message>
       <location filename="../../app/module/gestures.py" line="69" />
       <source>Off and cancellation</source>
-      <translation>Отключен и шумоподавление</translation>
+      <translation>Off and cancellation</translation>
     </message>
     <message>
       <location filename="../../app/module/gestures.py" line="70" />
       <source>Cycle all modes</source>
-      <translation>Все режимы</translation>
+      <translation>Cycle all modes</translation>
     </message>
     <message>
       <location filename="../../app/module/gestures.py" line="71" />
       <source>Cancellation and awareness</source>
-      <translation>Прозрачность и шумоподавление</translation>
+      <translation>Cancellation and awareness</translation>
     </message>
     <message>
       <location filename="../../app/module/gestures.py" line="72" />
       <source>Off and awareness</source>
-      <translation>Отключен и прозрачность</translation>
+      <translation>Off and awareness</translation>
     </message>
   </context>
   <context>
@@ -522,32 +522,32 @@
     <message>
       <location filename="../../designer/hotkeys.ui" line="0" />
       <source>Enable global keyboard shortcuts</source>
-      <translation>Включить глобальные сочетания клавиш</translation>
+      <translation>Enable global keyboard shortcuts</translation>
     </message>
     <message>
       <location filename="../../designer/hotkeys.ui" line="0" />
       <source>Here you can configure system-wide keyboard shortcuts for OpenFreebuds</source>
-      <translation>Здесь вы можете настроить глобальные сочетания клавиш для OpenFreebuds.</translation>
+      <translation>Here you can configure system-wide keyboard shortcuts for OpenFreebuds</translation>
     </message>
     <message>
       <location filename="../../designer/hotkeys.ui" line="0" />
       <source>Action</source>
-      <translation>Действие</translation>
+      <translation>Action</translation>
     </message>
     <message>
       <location filename="../../designer/hotkeys.ui" line="0" />
       <source>Shortcut</source>
-      <translation>Действие</translation>
+      <translation>Shortcut</translation>
     </message>
     <message>
       <location filename="../../designer/hotkeys.ui" line="0" />
       <source>Hint: to remove already assigned shortcut, press Esc while recording a new one.</source>
-      <translation>Подсказка: для удавления уже назначенного сочетания нажмите Esc во время записи нового</translation>
+      <translation>Hint: to remove already assigned shortcut, press Esc while recording a new one.</translation>
     </message>
     <message>
       <location filename="../../app/module/hotkeys_module.py" line="63" />
       <source>Press new shortcut…</source>
-      <translation>Нажмите новое сочетание клавиш…</translation>
+      <translation>Press new shortcut…</translation>
     </message>
   </context>
   <context>
@@ -555,62 +555,62 @@
     <message>
       <location filename="../../designer/linux_extras.ui" line="0" />
       <source>Compatibility</source>
-      <translation>Совместимость</translation>
+      <translation>Compatibility</translation>
     </message>
     <message>
       <location filename="../../designer/linux_extras.ui" line="0" />
       <source>Enable MPRIS helper service</source>
-      <translation>Включить службу урпаления MPRIS</translation>
+      <translation>Enable MPRIS helper service</translation>
     </message>
     <message>
       <location filename="../../designer/linux_extras.ui" line="0" />
       <source>Try this option if auto-pause doesn't work with your desktop environment. Note that only MPRIS-compatible media players are supported (mostly all standalone player and browsers support this API).</source>
-      <translation>Попробуйте включить эту опцию, если авто-пауза не работает с вашим рабочим столом. Учтите, что работать это будет только с MPRIS-совместимыми проигрывателями (большинство отдельных программ и браузеров поддерживают этот API).</translation>
+      <translation>Try this option if auto-pause doesn't work with your desktop environment. Note that only MPRIS-compatible media players are supported (mostly all standalone player and browsers support this API).</translation>
     </message>
     <message>
       <location filename="../../designer/linux_extras.ui" line="0" />
       <source>Force use X11 backend (may look better in GNOME-based desktop environments)</source>
-      <translation>Принудительно использовать X11 (может выглядеть лучше в GNOME)</translation>
+      <translation>Force use X11 backend (may look better in GNOME-based desktop environments)</translation>
     </message>
     <message>
       <location filename="../../designer/linux_extras.ui" line="0" />
       <source>Restart application to apply.</source>
-      <translation>Перезапустите приложение для применения изменений.</translation>
+      <translation>Restart application to apply.</translation>
     </message>
     <message>
       <location filename="../../designer/linux_extras.ui" line="0" />
       <source>Theme</source>
-      <translation>Тема</translation>
+      <translation>Theme</translation>
     </message>
     <message>
       <location filename="../../designer/linux_extras.ui" line="0" />
       <source>Fresh versions of OpenFreebuds are written in Qt6, and uses system-wide Qt UI theme. So, if application color scheme didn't match with system, or it looks ugly, you should configure global Qt style settings.</source>
-      <translation>Новые версии OpenFreebuds написаны с использованием Qt6, и используют общесистемные настройки внешнего вида. Потому, если цветовая схема программы не совпадает с системной, или выглядит плохо, настройте тему для Qt приложений в системе.</translation>
+      <translation>Fresh versions of OpenFreebuds are written in Qt6, and uses system-wide Qt UI theme. So, if application color scheme didn't match with system, or it looks ugly, you should configure global Qt style settings.</translation>
     </message>
     <message>
       <location filename="../../designer/linux_extras.ui" line="0" />
       <source>In KDE, LxQT or other Qt-based desktop environments, use system appearance settings. Otherwise, configure qt manually or use any configuration tool like qt6ct.</source>
-      <translation>В KDE, LxQT и иных основанных на Qt рабочих столах, используйте системные настройки внешнего вида. Иначе измените настройки вручную или воспользуйтесь утилитой наподобии qt6ct.</translation>
+      <translation>In KDE, LxQT or other Qt-based desktop environments, use system appearance settings. Otherwise, configure qt manually or use any configuration tool like qt6ct.</translation>
     </message>
     <message>
       <location filename="../../designer/linux_extras.ui" line="0" />
       <source>Keyboard shortcuts</source>
-      <translation>Сочетания клавиш</translation>
+      <translation>Keyboard shortcuts</translation>
     </message>
     <message>
       <location filename="../../designer/linux_extras.ui" line="0" />
       <source>Looks like you're using Wayland desktop environment. Due to that OpenFreebuds built-in global hotkeys won't work. If you want to use keyboard shortcuts, setup them from your desktop environment settings.</source>
-      <translation>Похоже что вы используете рабочий стол на базе Wayland. В связи с этим, встроенный функционал по управлению сочетаниями клавиш недоступен. Если вам они нужны, сконфигурируйте их вручную через настройки рабочего стола.</translation>
+      <translation>Looks like you're using Wayland desktop environment. Due to that OpenFreebuds built-in global hotkeys won't work. If you want to use keyboard shortcuts, setup them from your desktop environment settings.</translation>
     </message>
     <message>
       <location filename="../../designer/linux_extras.ui" line="0" />
       <source>Documentation</source>
-      <translation>Справка</translation>
+      <translation>Documentation</translation>
     </message>
     <message>
       <location filename="../../app/module/linux_related.py" line="51" />
       <source>Ensure bus access</source>
-      <translation>Убедитесь в доступности DBus</translation>
+      <translation>Ensure bus access</translation>
     </message>
     <message>
       <location filename="../../app/module/linux_related.py" line="52" />
@@ -623,97 +623,97 @@
     <message>
       <location filename="../../app/main.py" line="64" />
       <source>Select device</source>
-      <translation>Выбрать устройство</translation>
+      <translation>Select device</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="68" />
       <source>Device info</source>
-      <translation>Об устройстве</translation>
+      <translation>Device info</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="69" />
       <source>Dual-connect</source>
-      <translation>Двойное подключение</translation>
+      <translation>Dual-connect</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="70" />
       <source>Gestures</source>
-      <translation>Жесты</translation>
+      <translation>Gestures</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="71" />
       <source>Sound quality</source>
-      <translation>Качество звука</translation>
+      <translation>Sound quality</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="72" />
       <source>Other settings</source>
-      <translation>Прочие настройки</translation>
+      <translation>Other settings</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="75" />
       <source>Application</source>
-      <translation>Приложение</translation>
+      <translation>Application</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="77" />
       <source>User interface</source>
-      <translation>Внешний вид</translation>
+      <translation>User interface</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="79" />
       <source>Keyboard shortcuts</source>
-      <translation>Сочетания клавиш</translation>
+      <translation>Keyboard shortcuts</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="81" />
       <source>Linux-related</source>
-      <translation>Linux-специфичное</translation>
+      <translation>Linux-related</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="82" />
       <source>About…</source>
-      <translation>О программе…</translation>
+      <translation>About…</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="90" />
       <source>Help: FAQ</source>
-      <translation>Помощь: Частые вопросы</translation>
+      <translation>Help: FAQ</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="94" />
       <source>Help: Remote control</source>
-      <translation>Помощь: Удалённое управление</translation>
+      <translation>Help: Remote control</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="98" />
       <source>Bugreport…</source>
-      <translation>Отчёт об ошибке…</translation>
+      <translation>Bugreport…</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="103" />
       <source>Check for updates…</source>
-      <translation>Проверить наличие обновлений…</translation>
+      <translation>Check for updates…</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="110" />
       <source>Remote access…</source>
-      <translation>Удалённый доступ…</translation>
+      <translation>Remote access…</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="114" />
       <source>Temporary replace device</source>
-      <translation>Временно сменить устройство</translation>
+      <translation>Temporary replace device</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="121" />
       <source>Close this window</source>
-      <translation>Закрыть окно</translation>
+      <translation>Close this window</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="126" />
       <source>Exit OpenFreebuds</source>
-      <translation>Закрыть OpenFreebuds</translation>
+      <translation>Exit OpenFreebuds</translation>
     </message>
   </context>
   <context>
@@ -721,22 +721,22 @@
     <message>
       <location filename="../../designer/dialog_manual_connect.ui" line="0" />
       <source>Manual connect…</source>
-      <translation>Ручное подключение…</translation>
+      <translation>Manual connect…</translation>
     </message>
     <message>
       <location filename="../../designer/dialog_manual_connect.ui" line="0" />
       <source>Enter bluetooth address of your device and select their model from list. You can find bluetooth address in system settings.</source>
-      <translation>Введите Bluetooth-адрес устройства и выберите его модель из списка. Найти Bluetooth-адрес можно в настройках системы.</translation>
+      <translation>Enter bluetooth address of your device and select their model from list. You can find bluetooth address in system settings.</translation>
     </message>
     <message>
       <location filename="../../designer/dialog_manual_connect.ui" line="0" />
       <source>Bluetooth address:</source>
-      <translation>Bluetooth адрес:</translation>
+      <translation>Bluetooth address:</translation>
     </message>
     <message>
       <location filename="../../designer/dialog_manual_connect.ui" line="0" />
       <source>Device profile:</source>
-      <translation>Профиль устройства:</translation>
+      <translation>Device profile:</translation>
     </message>
   </context>
   <context>
@@ -744,28 +744,27 @@
     <message>
       <location filename="../../designer/stupid_rpc_setup.ui" line="0" />
       <source>Remote access…</source>
-      <translation>Удалённый доступ…</translation>
+      <translation>Remote access…</translation>
     </message>
     <message>
       <location filename="../../designer/stupid_rpc_setup.ui" line="0" />
       <source>Change this settings only if you know what you're doing. Require restart of all OpenFreebuds instances and all clients.</source>
-      <translation>Change this settings only if you know what you're doing. Require restart of all OpenFreebuds instances and all clients.
-Изменяйте эти настройки только если знаете, что делаете. Потребуется перезапуск всех запущенных OpenFreebuds и иных клиентов.</translation>
+      <translation>Change this settings only if you know what you're doing. Require restart of all OpenFreebuds instances and all clients.</translation>
     </message>
     <message>
       <location filename="../../designer/stupid_rpc_setup.ui" line="0" />
       <source>Allow controlling OpenFreebuds through network</source>
-      <translation>Разрешить управлять OpenFreebuds через сеть</translation>
+      <translation>Allow controlling OpenFreebuds through network</translation>
     </message>
     <message>
       <location filename="../../designer/stupid_rpc_setup.ui" line="0" />
       <source>Require following secret to be present in X-Secret header</source>
-      <translation>Требовать наличие ключа ниже в HTTP-заголовке X-Secret</translation>
+      <translation>Require following secret to be present in X-Secret header</translation>
     </message>
     <message>
       <location filename="../../designer/stupid_rpc_setup.ui" line="0" />
       <source>(enter new secret key)</source>
-      <translation>(введите новый секретный ключ)</translation>
+      <translation>(enter new secret key)</translation>
     </message>
   </context>
   <context>
@@ -773,117 +772,117 @@
     <message>
       <location filename="../../designer/sound_quality.ui" line="0" />
       <source>Configure sound-related device settings.</source>
-      <translation>Настройки устройства, связанные с качеством звука.</translation>
+      <translation>Configure sound-related device settings.</translation>
     </message>
     <message>
       <location filename="../../designer/sound_quality.ui" line="0" />
       <source>Sound quality preference:</source>
-      <translation>Предпочтение по качеству звука:</translation>
+      <translation>Sound quality preference:</translation>
     </message>
     <message>
       <location filename="../../designer/sound_quality.ui" line="0" />
       <source>Prioritize sound quality</source>
-      <translation>Предпочитать качество звука</translation>
+      <translation>Prioritize sound quality</translation>
     </message>
     <message>
       <location filename="../../designer/sound_quality.ui" line="0" />
       <source>Device will prefer loseless audio codecs, like LDAC.</source>
-      <translation>Устройство будет предпочитать аудио-кодеки с лучшим качеством звука, вроде LDAC</translation>
+      <translation>Device will prefer loseless audio codecs, like LDAC.</translation>
     </message>
     <message>
       <location filename="../../designer/sound_quality.ui" line="0" />
       <source>Prioritize connection quality</source>
-      <translation>Предпочитать качество связи</translation>
+      <translation>Prioritize connection quality</translation>
     </message>
     <message>
       <location filename="../../designer/sound_quality.ui" line="0" />
       <source>Device will prefer audio codes with better compression, like AAC</source>
-      <translation>Устройство будет предпочитать аудио-кодеки с лучшим сжатием, вроде AAC</translation>
+      <translation>Device will prefer audio codes with better compression, like AAC</translation>
     </message>
     <message>
       <location filename="../../designer/sound_quality.ui" line="0" />
       <source>Equalizer</source>
-      <translation>Эквалайзер</translation>
+      <translation>Equalizer</translation>
     </message>
     <message>
       <location filename="../../designer/sound_quality.ui" line="0" />
       <source>Preset:</source>
-      <translation>Предустановка:</translation>
+      <translation>Preset:</translation>
     </message>
     <message>
       <location filename="../../designer/sound_quality.ui" line="0" />
       <source>Customize preset</source>
-      <translation>Настроить</translation>
+      <translation>Customize preset</translation>
     </message>
     <message>
       <location filename="../../designer/sound_quality.ui" line="0" />
       <source>Save changes?</source>
-      <translation>Сохранить изменения?</translation>
+      <translation>Save changes?</translation>
     </message>
     <message>
       <location filename="../../designer/sound_quality.ui" line="0" />
       <source>Save</source>
-      <translation>Сохранить</translation>
+      <translation>Save</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="29" />
       <source>New preset…</source>
-      <translation>Новый…</translation>
+      <translation>New preset…</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="30" />
       <source>Delete…</source>
-      <translation>Удалить…</translation>
+      <translation>Delete…</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="32" />
       <source>Export to file…</source>
-      <translation>Экспорт в файл…</translation>
+      <translation>Export to file…</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="33" />
       <source>Load file…</source>
-      <translation>Загрузить файл…</translation>
+      <translation>Load file…</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="152" />
       <source>Create new equalizer preset</source>
-      <translation>Создать новую предустановку эквалайзера</translation>
+      <translation>Create new equalizer preset</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="153" />
       <source>Enter new preset name:</source>
-      <translation>Введите название новой предустановки:</translation>
+      <translation>Enter new preset name:</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="162" />
       <source>Failed</source>
-      <translation>Ошибка</translation>
+      <translation>Failed</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="163" />
       <source>Can't create: too many custom preset created in device.</source>
-      <translation>Не удалось: достигнут лимит кол-ва предустановок в памяти устройства.</translation>
+      <translation>Can't create: too many custom preset created in device.</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="176" />
       <source>Delete equalizer mode?</source>
-      <translation>Удалить предустановку эквалайзера?</translation>
+      <translation>Delete equalizer mode?</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="177" />
       <source>Will delete following mode:</source>
-      <translation>Будет удалена предустановка:</translation>
+      <translation>Will delete following mode:</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="193" />
       <source>Save equalizer preset to file…</source>
-      <translation>Сохранить предустановку в файл…</translation>
+      <translation>Save equalizer preset to file…</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="208" />
       <source>Load equalizer preset from file…</source>
-      <translation>Загрузить предустановку из файла…</translation>
+      <translation>Load equalizer preset from file…</translation>
     </message>
   </context>
   <context>
@@ -891,62 +890,62 @@
     <message>
       <location filename="../../tray/menu.py" line="32" />
       <source>Left headphone:</source>
-      <translation>Левый наушник:</translation>
+      <translation>Left headphone:</translation>
     </message>
     <message>
       <location filename="../../tray/menu.py" line="33" />
       <source>Right headphone:</source>
-      <translation>Правый наушник</translation>
+      <translation>Right headphone:</translation>
     </message>
     <message>
       <location filename="../../tray/menu.py" line="34" />
       <source>Battery case:</source>
-      <translation>Зарядный чехол:</translation>
+      <translation>Battery case:</translation>
     </message>
     <message>
       <location filename="../../tray/menu.py" line="35" />
       <source>Battery:</source>
-      <translation>Батарея:</translation>
+      <translation>Battery:</translation>
     </message>
     <message>
       <location filename="../../tray/menu.py" line="38" />
       <source>Disable noise control</source>
-      <translation>Отключить</translation>
+      <translation>Disable noise control</translation>
     </message>
     <message>
       <location filename="../../tray/menu.py" line="39" />
       <source>Noise cancelling</source>
-      <translation>Шумоподавление</translation>
+      <translation>Noise cancelling</translation>
     </message>
     <message>
       <location filename="../../tray/menu.py" line="40" />
       <source>Awareness</source>
-      <translation>Прозрачность</translation>
+      <translation>Awareness</translation>
     </message>
     <message>
       <location filename="../../tray/menu.py" line="47" />
       <source>Disconnect</source>
-      <translation>Отсоединить</translation>
+      <translation>Disconnect</translation>
     </message>
     <message>
       <location filename="../../tray/menu.py" line="50" />
       <source>Connect</source>
-      <translation>Подключить</translation>
+      <translation>Connect</translation>
     </message>
     <message>
       <location filename="../../tray/menu.py" line="77" />
       <source>Settings…</source>
-      <translation>Настройки…</translation>
+      <translation>Settings…</translation>
     </message>
     <message>
       <location filename="../../tray/menu.py" line="86" />
       <source>Bugreport…</source>
-      <translation>Отчёт об ошибке…</translation>
+      <translation>Bugreport…</translation>
     </message>
     <message>
       <location filename="../../tray/menu.py" line="87" />
       <source>Leave application</source>
-      <translation>Закрыть программу</translation>
+      <translation>Leave application</translation>
     </message>
   </context>
   <context>
@@ -954,92 +953,92 @@
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Looking for UI theme settings? Now it follows system-wide configuration.</source>
-      <translation>Ищите настройку темы оформления? Теперь она всегда соответствует системной настройке.</translation>
+      <translation>Looking for UI theme settings? Now it follows system-wide configuration.</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Main</source>
-      <translation>Главное</translation>
+      <translation>Main</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Launch at system startup</source>
-      <translation>Запускать вместе с системой</translation>
+      <translation>Launch at system startup</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Language:</source>
-      <translation>Язык интерфейса:</translation>
+      <translation>Language:</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>System</source>
-      <translation>Системный</translation>
+      <translation>System</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Restart OpenFeebuds to apply changes</source>
-      <translation>Перезапустите OpenFreebuds для применения изменения</translation>
+      <translation>Restart OpenFeebuds to apply changes</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Update checker:</source>
-      <translation>Проверка обновлений:</translation>
+      <translation>Update checker:</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Notify about new versions</source>
-      <translation>Уведомлять о новых версиях</translation>
+      <translation>Notify about new versions</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Check for new versions, but don't notify</source>
-      <translation>Проверять, но не оповещать</translation>
+      <translation>Check for new versions, but don't notify</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Disabled</source>
-      <translation>Отключить</translation>
+      <translation>Disabled</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Tray applet</source>
-      <translation>Иконка в области уведомлений</translation>
+      <translation>Tray applet</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Icon color</source>
-      <translation>Цвет значка в трее</translation>
+      <translation>Icon color</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Auto-select</source>
-      <translation>Авто</translation>
+      <translation>Auto-select</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Light</source>
-      <translation>Светлый</translation>
+      <translation>Light</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Dark</source>
-      <translation>Тёмный</translation>
+      <translation>Dark</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Left-click action</source>
-      <translation>Действие по левому клику</translation>
+      <translation>Left-click action</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Show dual-connect device switcher in menu (if available)</source>
-      <translation>Показывать опции двойного подключения в меню (если доступно)</translation>
+      <translation>Show dual-connect device switcher in menu (if available)</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Show equalizer preset switcher in menu (if available)</source>
-      <translation>Показывать опции эквалайзера в меню (если доступно)</translation>
+      <translation>Show equalizer preset switcher in menu (if available)</translation>
     </message>
   </context>
   <context>
@@ -1047,7 +1046,7 @@
     <message>
       <location filename="../../tray/main.py" line="92" />
       <source>OpenFreebuds: Connecting to device…</source>
-      <translation>OpenFreebuds: Подключение…</translation>
+      <translation>OpenFreebuds: Connecting to device…</translation>
     </message>
   </context>
   <context>
@@ -1055,42 +1054,42 @@
     <message>
       <location filename="../../qt_i18n.py" line="15" />
       <source>Connect device</source>
-      <translation>Подключить устройство</translation>
+      <translation>Connect device</translation>
     </message>
     <message>
       <location filename="../../qt_i18n.py" line="16" />
       <source>Disconnect device</source>
-      <translation>Отсоединить устройство</translation>
+      <translation>Disconnect device</translation>
     </message>
     <message>
       <location filename="../../qt_i18n.py" line="17" />
       <source>Connect/disconnect device</source>
-      <translation>Подключить/отключить устройство</translation>
+      <translation>Connect/disconnect device</translation>
     </message>
     <message>
       <location filename="../../qt_i18n.py" line="18" />
       <source>Next noise control mode</source>
-      <translation>Следующий режим шумоподавления</translation>
+      <translation>Next noise control mode</translation>
     </message>
     <message>
       <location filename="../../qt_i18n.py" line="19" />
       <source>Disable noise control</source>
-      <translation>Отключить шумоподавление</translation>
+      <translation>Disable noise control</translation>
     </message>
     <message>
       <location filename="../../qt_i18n.py" line="20" />
       <source>Enable noise cancellation</source>
-      <translation>Включить шумоподавление</translation>
+      <translation>Enable noise cancellation</translation>
     </message>
     <message>
       <location filename="../../qt_i18n.py" line="21" />
       <source>Enable awareness mode</source>
-      <translation>Включить режим прозрачность</translation>
+      <translation>Enable awareness mode</translation>
     </message>
     <message>
       <location filename="../../qt_i18n.py" line="22" />
       <source>Enable low-latency mode</source>
-      <translation>Включить режим низкой задержки</translation>
+      <translation>Enable low-latency mode</translation>
     </message>
   </context>
 </TS>
