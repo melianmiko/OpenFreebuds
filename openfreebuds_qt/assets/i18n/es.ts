@@ -796,7 +796,7 @@
     <message>
       <location filename="../../designer/sound_quality.ui" line="0" />
       <source>Device will prefer audio codec with better compression, like AAC</source>
-      <translation>El dispositivo preferirá los códigos de audio con mejor compresión, como AAC</translation>
+      <translation>El dispositivo preferirá los codecs de audio con mejor compresión, como AAC</translation>
     </message>
     <message>
       <location filename="../../designer/sound_quality.ui" line="0" />
@@ -952,7 +952,7 @@
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Looking for UI theme settings? Now it follows system-wide configuration.</source>
-      <translation>¿Buscas la configuración del tema de IU? Ahora sigue la configuración del sistema.</translation>
+      <translation>Configuración de la UI y el tema.</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
@@ -1002,7 +1002,7 @@
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Tray applet</source>
-      <translation>Widget de bandeja</translation>
+      <translation>Widget de la bandeja</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
