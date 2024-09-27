@@ -17,7 +17,7 @@
     <message>
       <location filename="../../designer/dialog_profile_picker.ui" line="0" />
       <source>Notice that this may be dangerous for some kind of devices. Continue only if you know what you're doing.</source>
-      <translation type="unfinished" />
+      <translation>Учтите, что это может быть опасным для некоторых устройств. Продолжайте только если знаете, что делаете.</translation>
     </message>
   </context>
   <context>
@@ -329,7 +329,7 @@
     <message>
       <location filename="../../app/module/dual_connect.py" line="88" />
       <source>Disconnect</source>
-      <translation type="unfinished">Отсоединить</translation>
+      <translation>Отсоединить</translation>
     </message>
     <message>
       <location filename="../../app/module/dual_connect.py" line="131" />
@@ -347,7 +347,7 @@
     <message>
       <location filename="../../designer/dialog_error.ui" line="0" />
       <source>OpenFreebuds ran into error. Please, save bugreport and send them to developer. Bugreport will be generated after clicking on "Close" button.</source>
-      <translation>OpenFreebuds ran into error. Please, save bugreport and send them to developer. Bugreport will be generated after clicking on "Close" button.</translation>
+      <translation>В работе OpenFreebuds произошла критическая ошибка. Пожалуйста, сохраните отчёт об ошибке и передайте разработчику, он будет сформирован после нажатия на кнопку "Закрыть".</translation>
     </message>
     <message>
       <location filename="../../designer/dialog_error.ui" line="0" />
@@ -615,7 +615,7 @@
     <message>
       <location filename="../../app/module/linux_related.py" line="52" />
       <source>Looks like you're running under Flatpak. To use this feature, OpenFreebuds need to have access to entire session bus, otherwise it won't find any working media players. Ensure that you're granted this permission, refer to FAQ for more details.</source>
-      <translation type="unfinished" />
+      <translation>Похоже что вы запустили OpenFreebuds через Flatpak. Однако для работы этой функции требуются доступ к DBus-шине пользователя, иначе программа не увидит запущенные медиаплееры. Убедитесь, что доступ предоставлен, см. ЧаВо чтобы узнать подробнее.</translation>
     </message>
   </context>
   <context>
@@ -749,8 +749,7 @@
     <message>
       <location filename="../../designer/stupid_rpc_setup.ui" line="0" />
       <source>Change this settings only if you know what you're doing. Require restart of all OpenFreebuds instances and all clients.</source>
-      <translation>Change this settings only if you know what you're doing. Require restart of all OpenFreebuds instances and all clients.
-Изменяйте эти настройки только если знаете, что делаете. Потребуется перезапуск всех запущенных OpenFreebuds и иных клиентов.</translation>
+      <translation>Изменяйте эти настройки только если знаете, что делаете. Потребуется перезапуск всех запущенных OpenFreebuds и иных клиентов.</translation>
     </message>
     <message>
       <location filename="../../designer/stupid_rpc_setup.ui" line="0" />
