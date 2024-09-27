@@ -84,7 +84,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         if sound is None:
             return
 
-        self.custom_edit_button.setVisible("equalizer_rows" in sound)
+        self.custom_edit_button.setVisible(int(sound.get("equalizer_max_custom_modes", "0")) > 0)
         self.save_panel.setVisible(not json.loads(sound.get("equalizer_saved", "true")))
 
         if event.is_changed("sound", "quality_preference"):

@@ -174,7 +174,8 @@ class OfbHuaweiEqualizerPresetHandler(OfbDriverHandlerHuawei):
         new_props = {
             "equalizer_rows": None,
             "equalizer_saved": json.dumps(self.changes_saved),
-            "equalizer_rows_count": self.w_custom_max_count,
+            "equalizer_rows_count": str(self.w_custom_max_count),
+            "equalizer_max_custom_modes": str(self.w_custom_max_count) if self.w_custom else "0"
         }
 
         available_modes = package.find_param(3)
