@@ -72,7 +72,7 @@
     <message>
       <location filename="../../tray/menu_anc_level.py" line="21" />
       <source>Intensity…</source>
-      <translation>Intensidad...</translation>
+      <translation>Intensidad…</translation>
     </message>
   </context>
   <context>
@@ -80,7 +80,7 @@
     <message>
       <location filename="../../tray/menu_dual_connect.py" line="14" />
       <source>Dual-connect…</source>
-      <translation>Conexión dual...</translation>
+      <translation>Conexión dual…</translation>
     </message>
   </context>
   <context>
@@ -88,7 +88,7 @@
     <message>
       <location filename="../../tray/menu_equalizer.py" line="17" />
       <source>Equalizer preset…</source>
-      <translation>Perfil del ecualizador...</translation>
+      <translation>Perfil del ecualizador…</translation>
     </message>
   </context>
   <context>
@@ -521,7 +521,7 @@
     <message>
       <location filename="../../app/module/hotkeys_module.py" line="63" />
       <source>Press new shortcut…</source>
-      <translation>Pulsa nuevo acceso directo...</translation>
+      <translation>Pulsa nuevo acceso directo…</translation>
     </message>
     <message>
       <location filename="../../designer/hotkeys.ui" line="0" />
@@ -672,7 +672,7 @@
     <message>
       <location filename="../../app/main.py" line="82" />
       <source>About…</source>
-      <translation>Acerca de...</translation>
+      <translation>Acerca de…</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="90" />
@@ -687,17 +687,17 @@
     <message>
       <location filename="../../app/main.py" line="98" />
       <source>Bugreport…</source>
-      <translation>Reportar errores...</translation>
+      <translation>Reportar errores…</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="103" />
       <source>Check for updates…</source>
-      <translation>Comprobar actualizaciones...</translation>
+      <translation>Comprobar actualizaciones…</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="110" />
       <source>Remote access…</source>
-      <translation>Acceso remoto...</translation>
+      <translation>Acceso remoto…</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="114" />
@@ -720,7 +720,7 @@
     <message>
       <location filename="../../designer/dialog_manual_connect.ui" line="0" />
       <source>Manual connect…</source>
-      <translation>Conexión manual...</translation>
+      <translation>Conexión manual…</translation>
     </message>
     <message>
       <location filename="../../designer/dialog_manual_connect.ui" line="0" />
@@ -743,7 +743,7 @@
     <message>
       <location filename="../../designer/stupid_rpc_setup.ui" line="0" />
       <source>Remote access…</source>
-      <translation>Acceso remoto...</translation>
+      <translation>Acceso remoto…</translation>
     </message>
     <message>
       <location filename="../../designer/stupid_rpc_setup.ui" line="0" />
@@ -771,22 +771,22 @@
     <message>
       <location filename="../../app/module/sound_quality.py" line="29" />
       <source>New preset…</source>
-      <translation>Nuevo perfil...</translation>
+      <translation>Nuevo perfil…</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="30" />
       <source>Delete…</source>
-      <translation>Borrar...</translation>
+      <translation>Borrar…</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="32" />
       <source>Export to file…</source>
-      <translation>Exportar a un archivo...</translation>
+      <translation>Exportar a un archivo…</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="33" />
       <source>Load file…</source>
-      <translation>Cargar archivo...</translation>
+      <translation>Cargar archivo…</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="152" />
@@ -821,12 +821,12 @@
     <message>
       <location filename="../../app/module/sound_quality.py" line="193" />
       <source>Save equalizer preset to file…</source>
-      <translation>Guardar perfil del equalizador...</translation>
+      <translation>Guardar perfil del equalizador…</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="208" />
       <source>Load equalizer preset from file…</source>
-      <translation>Cargar perfil del equalizador...</translation>
+      <translation>Cargar perfil del equalizador…</translation>
     </message>
     <message>
       <location filename="../../designer/sound_quality.ui" line="0" />
@@ -934,12 +934,12 @@
     <message>
       <location filename="../../tray/menu.py" line="77" />
       <source>Settings…</source>
-      <translation>Ajustes...</translation>
+      <translation>Ajustes…</translation>
     </message>
     <message>
       <location filename="../../tray/menu.py" line="86" />
       <source>Bugreport…</source>
-      <translation>Reportar errores...</translation>
+      <translation>Reportar errores…</translation>
     </message>
     <message>
       <location filename="../../tray/menu.py" line="87" />
@@ -1045,7 +1045,7 @@
     <message>
       <location filename="../../tray/main.py" line="92" />
       <source>OpenFreebuds: Connecting to device…</source>
-      <translation>OpenFreebuds: Conectando al dispositivo...</translation>
+      <translation>OpenFreebuds: Conectando al dispositivo…</translation>
     </message>
   </context>
   <context>
