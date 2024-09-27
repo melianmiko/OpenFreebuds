@@ -5,17 +5,18 @@
 <p>
 <img src="https://img.shields.io/github/v/release/melianmiko/openfreebuds" alt="Last release"/>
 <img src="https://img.shields.io/aur/last-modified/openfreebuds" alt="Last AUR release"/>
-<img src="https://badges.crowdin.net/openfreebuds/localized.svg" alt="Translation level"/>
+<a href="https://translate.mmk.pw/projects/0a1e818d-92b0-4f43-a1be-570e2ec35c8a"><img alt="Translated" src="https://translate.mmk.pw/0a1e818d-92b0-4f43-a1be-570e2ec35c8a/percentage_reviewed_badge.svg" /></a>
 <a href="https://github.com/melianmiko/OpenFreebuds/actions/workflows/on_push.yml">
 <img src="https://github.com/melianmiko/OpenFreebuds/actions/workflows/on_push.yml/badge.svg" alt="Test build status"/>
 </a>
 </p>
 <p>
-<a href="https://mmk.pw/en/openfreebuds"><b>💿 Download binaries</b></a> | <a href="https://crowdin.com/project/openfreebuds">🌍 Suggest translation</a>
+<a href="https://mmk.pw/en/openfreebuds"><b>💿 Download binaries</b></a> | <a href="https://mmk.pw/en/openfreebuds/help/"><b>❓ FAQ</b></a>  | <a href="https://translate.mmk.pw/projects/0a1e818d-92b0-4f43-a1be-570e2ec35c8a">🌍 Suggest translation</a>
+</p>
+<p>
+<img alt="Tray menu preview" src="docs/preview_0.png" />
 </p>
 </div>
-
-![Tray menu preview](docs/preview_0.png)
 
 This application allows to control HUAWEI FreeBuds earphone settings from PC. Check exact battery level, toggle noise cancellation, control built-in equalizer, change gestures, and all other in-device settings and features are now available without official mobile application.
 
@@ -52,8 +53,17 @@ May also work with newer/older devices in same series. If you want to get better
 Download & install
 -----------------
 
-Will be available after release. For now, you can grab test
-binaries from [GitHub Actions](https://github.com/melianmiko/OpenFreebuds/actions/workflows/on_push.yml).
+- **Windows**: [Download here](https://mmk.pw/en/openfreebuds/).
+- **Debian/Ubuntu**:
+
+```shell
+curl -s https://deb.mmk.pw/setup | sudo bash -
+sudo apt install openfreebuds
+```
+- **Arch Linux**: `openfreebuds-git` [available in AUR](https://aur.archlinux.org/packages/openfreebuds).
+- **Flatpak**: _Coming soon_
+
+Most recent `dev`-binaries can be found in [GitHub Actions](https://github.com/melianmiko/OpenFreebuds/actions/workflows/on_push.yml) build artifacts.
 
 Build or start from sources
 -------------
@@ -63,10 +73,12 @@ Requirements:
 - Windows 10/11, or enough modern Linux;
 - Qt 6.0+ development tools, at least Linguist's `lrelease`;
 - [Python](https://www.python.org/downloads/) (3.11+), [Poetry](https://python-poetry.org/docs/#installation) (1.8+);
-- (Windows, optiona) [NSIS](https://nsis.sourceforge.io/Download), [UPX](https://upx.github.io/);
+- (Windows, optional) [NSIS](https://nsis.sourceforge.io/Download), [UPX](https://upx.github.io/);
 - (Linux, optional) Build essentials and some libraries.
 
-Setup poetry before continue:
+Also, some dev-scripts may have their own requirements, like `python3-polib` for
+`./scripts/sync_translations.sh`. Setup poetry env and dependencies before 
+continue:
 
 ```shell
 poetry install
@@ -75,7 +87,12 @@ poetry install
 ### Just launch without installation
 
 ```shell
+# Compile Qt Designer & Linguist sources
+./scripts/make_qt_parts.sh
+
+# Launch
 poetry run python -m openfreebuds_qt -vcs
+
 # use --help for options description
 ```
 
@@ -89,7 +106,7 @@ If everything above is installed & added to `PATH`, just run:
 
 Output binaries will be located in `scripts\build_win32\dist`
 
-### Debian, Ubuntu
+### Debian/Ubuntu
 
 Install all packaging dependencies automated way:
 `apt install build-essentials && ./scripts/install_dpkg_dependencies.sh`.
