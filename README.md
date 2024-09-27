@@ -60,7 +60,7 @@ Download & install
 curl -s https://deb.mmk.pw/setup | sudo bash -
 sudo apt install openfreebuds
 ```
-- **Arch Linux**: `openfreebuds-git` [available in AUR](https://aur.archlinux.org/packages/openfreebuds).
+- **Arch Linux**: `openfreebuds` [available in AUR](https://aur.archlinux.org/packages/openfreebuds).
 - **Flatpak**: _Coming soon_
 
 Most recent `dev`-binaries can be found in [GitHub Actions](https://github.com/melianmiko/OpenFreebuds/actions/workflows/on_push.yml) build artifacts.
