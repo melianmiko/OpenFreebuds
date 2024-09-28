@@ -98,12 +98,29 @@
   <content_rating type="oars-1.1" />
 
   <releases>
-    <release version="0.14.0" date="2034-12-12">
+    <release version="0.14.0" date="2024-09-28">
       <url type="details">https://github.com/melianmiko/OpenFreebuds/blob/main/CHANGELOG.md#v0.14.0</url>
       <description>
         <ul>
-          <li>Application rewritter from scratch to Qt</li>
-          <li>Add HUAWEI FreeBuds Pro 2 compatibility</li>
+          <li>[Core] Client-server architecture, close #14;</li>
+          <li>Now multiple instances of OpenFreebuds could be launched, for multi-user usage for example;</li>
+          <li>Built-in HTTP-server is now used as cross process communication protocol, so it can't be fully disabled, remote access is still disallowed out-of-box;</li>
+          <li>If you need to launch multiple instances from single user, use -c  CLI flag;</li>
+          <li>[Core] Web-server authorization</li>
+          <li>[Core] Rewritten (mostly from scratch) to asyncio ;</li>
+          <li>[Core] Drop pybluez  from dependencies, now will use predefined port numbers instead of SDP detection;</li>
+          <li>[UI] Rewritten from scratch to asyncio  and PyQT6, introduce redesigned Settings UI;</li>
+          <li>[UI] Disable logging to CLI / `journalctl` if -v  isn't present, close #29;</li>
+          <li>[Device compatibility] Bug fixes for modern HUAWEI Devices (5i, Pro 2, Pro 3);</li>
+          <li>[HUAWEI FreeBuds 5i &amp; other] Better Dual-Connect configuration;</li>
+          <li>[HUAWEI FreeBuds 5i &amp; other] Add low-latency mode setting;</li>
+          <li>[HUAWEI FreeBuds 5i &amp; other] Add triple-tap settings;</li>
+          <li>[HUAWEI FreeBuds 5i &amp; other] Fix SQ preference switch;</li>
+          <li>[Device compatibility] Add HUAWEI FreeLace Pro 2 compatibility;</li>
+          <li>Custom equalizer preset configuration (should also work with Pro 3);</li>
+          <li>[Linux] Flatpak as installation option</li>
+          <li>[i18n] Add Spanish translation, thanks to @Pedro-vk (GitHub)</li>
+          <li>[i18n] Add  partial Portuguese (Brazilian), thanks to  @Lobo (Accent)</li>
         </ul>
       </description>
     </release>

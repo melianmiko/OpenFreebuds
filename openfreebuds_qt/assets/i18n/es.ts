@@ -117,16 +117,6 @@
   <context>
     <name>OfbQtAboutModule</name>
     <message>
-      <location filename="../../app/module/about.py" line="21" />
-      <source>Supported devices</source>
-      <translation>Dispositivos soportados</translation>
-    </message>
-    <message>
-      <location filename="../../app/module/about.py" line="28" />
-      <source>Libraries</source>
-      <translation>Librerias</translation>
-    </message>
-    <message>
       <location filename="../../designer/about_module.ui" line="0" />
       <source>Client application for HUAWEI FreeBuds wireless earphone series. Free and open source.</source>
       <translation>Cliente para los auriculares inalámbricos HUAWEI FreeBuds. Libre y de código abierto.</translation>
@@ -140,6 +130,16 @@
       <location filename="../../designer/about_module.ui" line="0" />
       <source>Source code</source>
       <translation>Código fuente</translation>
+    </message>
+    <message>
+      <location filename="../../app/module/about.py" line="21" />
+      <source>Supported devices</source>
+      <translation>Dispositivos soportados</translation>
+    </message>
+    <message>
+      <location filename="../../app/module/about.py" line="28" />
+      <source>Libraries</source>
+      <translation>Librerias</translation>
     </message>
   </context>
   <context>
@@ -165,11 +165,6 @@
   </context>
   <context>
     <name>OfbQtDeviceInfoModule</name>
-    <message>
-      <location filename="../../app/module/device_info.py" line="27" />
-      <source>Unknown</source>
-      <translation>Desconocido</translation>
-    </message>
     <message>
       <location filename="../../designer/device_info.ui" line="0" />
       <source>Firmware version:</source>
@@ -199,6 +194,11 @@
       <location filename="../../designer/device_info.ui" line="0" />
       <source>Battery last charged:</source>
       <translation>Ultima carga:</translation>
+    </message>
+    <message>
+      <location filename="../../app/module/device_info.py" line="27" />
+      <source>Unknown</source>
+      <translation>Desconocido</translation>
     </message>
   </context>
   <context>
@@ -280,27 +280,6 @@
   <context>
     <name>OfbQtDualConnectModule</name>
     <message>
-      <location filename="../../app/module/dual_connect.py" line="88" />
-      <source>Disconnect</source>
-      <translation>Desconectar</translation>
-    </message>
-    <message>
-      <location filename="../../designer/dual_connect.ui" line="0" />
-      <location filename="../../app/module/dual_connect.py" line="88" />
-      <source>Connect</source>
-      <translation>Conectar</translation>
-    </message>
-    <message>
-      <location filename="../../app/module/dual_connect.py" line="131" />
-      <source>Unpair device</source>
-      <translation>Desemparejar dispositivo</translation>
-    </message>
-    <message>
-      <location filename="../../app/module/dual_connect.py" line="132" />
-      <source>Do you really want to unpair %1 from your headphones?</source>
-      <translation>¿Quieres desemparejar %1 de tus auriculares?</translation>
-    </message>
-    <message>
       <location filename="../../designer/dual_connect.ui" line="0" />
       <source>Refresh</source>
       <translation>Actualizar</translation>
@@ -336,9 +315,30 @@
       <translation>Autoconectar este dispositivo</translation>
     </message>
     <message>
+      <location filename="../../app/module/dual_connect.py" line="88" />
+      <location filename="../../designer/dual_connect.ui" line="0" />
+      <source>Connect</source>
+      <translation>Conectar</translation>
+    </message>
+    <message>
       <location filename="../../designer/dual_connect.ui" line="0" />
       <source>Unpair</source>
       <translation>Desemparejar</translation>
+    </message>
+    <message>
+      <location filename="../../app/module/dual_connect.py" line="88" />
+      <source>Disconnect</source>
+      <translation>Desconectar</translation>
+    </message>
+    <message>
+      <location filename="../../app/module/dual_connect.py" line="131" />
+      <source>Unpair device</source>
+      <translation>Desemparejar dispositivo</translation>
+    </message>
+    <message>
+      <location filename="../../app/module/dual_connect.py" line="132" />
+      <source>Do you really want to unpair %1 from your headphones?</source>
+      <translation>¿Quieres desemparejar %1 de tus auriculares?</translation>
     </message>
   </context>
   <context>
@@ -399,6 +399,56 @@
   </context>
   <context>
     <name>OfbQtGesturesModule</name>
+    <message>
+      <location filename="../../designer/module_geatures.ui" line="0" />
+      <source>Long-tap</source>
+      <translation>Pulsación larga</translation>
+    </message>
+    <message>
+      <location filename="../../designer/module_geatures.ui" line="0" />
+      <source>Triple-tap</source>
+      <translation>Triple pulsación</translation>
+    </message>
+    <message>
+      <location filename="../../designer/module_geatures.ui" line="0" />
+      <source>Double-tap in call</source>
+      <translation>Doble pulsación en llamada</translation>
+    </message>
+    <message>
+      <location filename="../../designer/module_geatures.ui" line="0" />
+      <source>Left</source>
+      <translation>Izquierdo</translation>
+    </message>
+    <message>
+      <location filename="../../designer/module_geatures.ui" line="0" />
+      <source>Power button double-tap</source>
+      <translation>Doble pulsación de encendido</translation>
+    </message>
+    <message>
+      <location filename="../../designer/module_geatures.ui" line="0" />
+      <source>Customize device touch panel(s) and button(s) behaviour. This settings are stored inside your device and will work also if OpenFreebuds is closed.</source>
+      <translation>Personalica el comportamiento de los paneles táctiles y los botones del dispositivo. Esta configuración se almacena en el dispositivo y funcionará también si OpenFreebuds está cerrado.</translation>
+    </message>
+    <message>
+      <location filename="../../designer/module_geatures.ui" line="0" />
+      <source>Swipe gesture</source>
+      <translation>Gestos</translation>
+    </message>
+    <message>
+      <location filename="../../designer/module_geatures.ui" line="0" />
+      <source>Double-tap</source>
+      <translation>Pulsación doble</translation>
+    </message>
+    <message>
+      <location filename="../../designer/module_geatures.ui" line="0" />
+      <source>Right</source>
+      <translation>Derecho</translation>
+    </message>
+    <message>
+      <location filename="../../designer/module_geatures.ui" line="0" />
+      <source>Preferred modes</source>
+      <translation>Modos preferidos</translation>
+    </message>
     <message>
       <location filename="../../app/module/gestures.py" line="56" />
       <source>Answer to call</source>
@@ -465,64 +515,9 @@
       <source>Off and awareness</source>
       <translation>Apagado y exterior</translation>
     </message>
-    <message>
-      <location filename="../../designer/module_geatures.ui" line="0" />
-      <source>Long-tap</source>
-      <translation>Pulsación larga</translation>
-    </message>
-    <message>
-      <location filename="../../designer/module_geatures.ui" line="0" />
-      <source>Triple-tap</source>
-      <translation>Triple pulsación</translation>
-    </message>
-    <message>
-      <location filename="../../designer/module_geatures.ui" line="0" />
-      <source>Double-tap in call</source>
-      <translation>Doble pulsación en llamada</translation>
-    </message>
-    <message>
-      <location filename="../../designer/module_geatures.ui" line="0" />
-      <source>Left</source>
-      <translation>Izquierdo</translation>
-    </message>
-    <message>
-      <location filename="../../designer/module_geatures.ui" line="0" />
-      <source>Power button double-tap</source>
-      <translation>Doble pulsación de encendido</translation>
-    </message>
-    <message>
-      <location filename="../../designer/module_geatures.ui" line="0" />
-      <source>Customize device touch panel(s) and button(s) behaviour. This settings are stored inside your device and will work also if OpenFreebuds is closed.</source>
-      <translation>Personalica el comportamiento de los paneles táctiles y los botones del dispositivo. Esta configuración se almacena en el dispositivo y funcionará también si OpenFreebuds está cerrado.</translation>
-    </message>
-    <message>
-      <location filename="../../designer/module_geatures.ui" line="0" />
-      <source>Swipe gesture</source>
-      <translation>Gestos</translation>
-    </message>
-    <message>
-      <location filename="../../designer/module_geatures.ui" line="0" />
-      <source>Double-tap</source>
-      <translation>Pulsación doble</translation>
-    </message>
-    <message>
-      <location filename="../../designer/module_geatures.ui" line="0" />
-      <source>Right</source>
-      <translation>Derecho</translation>
-    </message>
-    <message>
-      <location filename="../../designer/module_geatures.ui" line="0" />
-      <source>Preferred modes</source>
-      <translation>Modos preferidos</translation>
-    </message>
   </context>
   <context>
     <name>OfbQtHotkeysModule</name>
-    <message>
-      <location filename="../../app/module/hotkeys_module.py" line="63" />
-      <source>Press new shortcut…</source>
-      <translation>Pulsa nuevo acceso directo…</translation>
-    </message>
     <message>
       <location filename="../../designer/hotkeys.ui" line="0" />
       <source>Enable global keyboard shortcuts</source>
@@ -548,19 +543,14 @@
       <source>Hint: to remove already assigned shortcut, press Esc while recording a new one.</source>
       <translation>Sugerencia: para eliminar un atajo ya asignado, pulse "Esc" mientras grabas uno nuevo.</translation>
     </message>
+    <message>
+      <location filename="../../app/module/hotkeys_module.py" line="63" />
+      <source>Press new shortcut…</source>
+      <translation>Pulsa nuevo acceso directo…</translation>
+    </message>
   </context>
   <context>
     <name>OfbQtLinuxExtrasModule</name>
-    <message>
-      <location filename="../../app/module/linux_related.py" line="51" />
-      <source>Ensure bus access</source>
-      <translation>Garantizar el acceso al bus</translation>
-    </message>
-    <message>
-      <location filename="../../app/module/linux_related.py" line="52" />
-      <source>Looks like you're running under Flatpak. To use this feature, OpenFreebuds need to have access to entire session bus, otherwise it won't find any working media players. Ensure that you're granted this permission, refer to FAQ for more details.</source>
-      <translation>Parece que estas ejecutando bajo Flatpak. Para utilizar esta función, OpenFreebuds necesita tener acceso a todo el bus de sesión, de lo contrario no encontrará ningún reproductor multimedia que funcione. Asegúrese de que se le concede este permiso, consulte las FAQ para más detalles.</translation>
-    </message>
     <message>
       <location filename="../../designer/linux_extras.ui" line="0" />
       <source>Compatibility</source>
@@ -615,6 +605,16 @@
       <location filename="../../designer/linux_extras.ui" line="0" />
       <source>Documentation</source>
       <translation>Documentación</translation>
+    </message>
+    <message>
+      <location filename="../../app/module/linux_related.py" line="51" />
+      <source>Ensure bus access</source>
+      <translation>Garantizar el acceso al bus</translation>
+    </message>
+    <message>
+      <location filename="../../app/module/linux_related.py" line="52" />
+      <source>Looks like you're running under Flatpak. To use this feature, OpenFreebuds need to have access to entire session bus, otherwise it won't find any working media players. Ensure that you're granted this permission, refer to FAQ for more details.</source>
+      <translation>Parece que estas ejecutando bajo Flatpak. Para utilizar esta función, OpenFreebuds necesita tener acceso a todo el bus de sesión, de lo contrario no encontrará ningún reproductor multimedia que funcione. Asegúrese de que se le concede este permiso, consulte las FAQ para más detalles.</translation>
     </message>
   </context>
   <context>
@@ -769,6 +769,61 @@
   <context>
     <name>OfbQtSoundQualityModule</name>
     <message>
+      <location filename="../../designer/sound_quality.ui" line="0" />
+      <source>Configure sound-related device settings.</source>
+      <translation>Configura los ajustes de los dispositivos relacionados con el sonido.</translation>
+    </message>
+    <message>
+      <location filename="../../designer/sound_quality.ui" line="0" />
+      <source>Sound quality preference:</source>
+      <translation>Preferencia de calidad de sonido:</translation>
+    </message>
+    <message>
+      <location filename="../../designer/sound_quality.ui" line="0" />
+      <source>Prioritize sound quality</source>
+      <translation>Priorizar la calidad del sonido</translation>
+    </message>
+    <message>
+      <location filename="../../designer/sound_quality.ui" line="0" />
+      <source>Device will prefer loseless audio codecs, like LDAC.</source>
+      <translation>El dispositivo preferirá los códecs de audio sin pérdida, como LDAC.</translation>
+    </message>
+    <message>
+      <location filename="../../designer/sound_quality.ui" line="0" />
+      <source>Prioritize connection quality</source>
+      <translation>Priorizar la calidad de la conexión</translation>
+    </message>
+    <message>
+      <location filename="../../designer/sound_quality.ui" line="0" />
+      <source>Device will prefer audio codes with better compression, like AAC</source>
+      <translation>El dispositivo preferirá los códigos de audio con mejor compresión, como AAC</translation>
+    </message>
+    <message>
+      <location filename="../../designer/sound_quality.ui" line="0" />
+      <source>Equalizer</source>
+      <translation>Equalizador</translation>
+    </message>
+    <message>
+      <location filename="../../designer/sound_quality.ui" line="0" />
+      <source>Preset:</source>
+      <translation>Perfil:</translation>
+    </message>
+    <message>
+      <location filename="../../designer/sound_quality.ui" line="0" />
+      <source>Customize preset</source>
+      <translation>Personalizar perfil</translation>
+    </message>
+    <message>
+      <location filename="../../designer/sound_quality.ui" line="0" />
+      <source>Save changes?</source>
+      <translation>¿Guardar cambios?</translation>
+    </message>
+    <message>
+      <location filename="../../designer/sound_quality.ui" line="0" />
+      <source>Save</source>
+      <translation>Guardar</translation>
+    </message>
+    <message>
       <location filename="../../app/module/sound_quality.py" line="29" />
       <source>New preset…</source>
       <translation>Nuevo perfil…</translation>
@@ -827,61 +882,6 @@
       <location filename="../../app/module/sound_quality.py" line="208" />
       <source>Load equalizer preset from file…</source>
       <translation>Cargar perfil del equalizador…</translation>
-    </message>
-    <message>
-      <location filename="../../designer/sound_quality.ui" line="0" />
-      <source>Configure sound-related device settings.</source>
-      <translation>Configura los ajustes de los dispositivos relacionados con el sonido.</translation>
-    </message>
-    <message>
-      <location filename="../../designer/sound_quality.ui" line="0" />
-      <source>Sound quality preference:</source>
-      <translation>Preferencia de calidad de sonido:</translation>
-    </message>
-    <message>
-      <location filename="../../designer/sound_quality.ui" line="0" />
-      <source>Prioritize sound quality</source>
-      <translation>Priorizar la calidad del sonido</translation>
-    </message>
-    <message>
-      <location filename="../../designer/sound_quality.ui" line="0" />
-      <source>Device will prefer loseless audio codecs, like LDAC.</source>
-      <translation>El dispositivo preferirá los códecs de audio sin pérdida, como LDAC.</translation>
-    </message>
-    <message>
-      <location filename="../../designer/sound_quality.ui" line="0" />
-      <source>Prioritize connection quality</source>
-      <translation>Priorizar la calidad de la conexión</translation>
-    </message>
-    <message>
-      <location filename="../../designer/sound_quality.ui" line="0" />
-      <source>Device will prefer audio codes with better compression, like AAC</source>
-      <translation>El dispositivo preferirá los códigos de audio con mejor compresión, como AAC</translation>
-    </message>
-    <message>
-      <location filename="../../designer/sound_quality.ui" line="0" />
-      <source>Equalizer</source>
-      <translation>Equalizador</translation>
-    </message>
-    <message>
-      <location filename="../../designer/sound_quality.ui" line="0" />
-      <source>Preset:</source>
-      <translation>Perfil:</translation>
-    </message>
-    <message>
-      <location filename="../../designer/sound_quality.ui" line="0" />
-      <source>Customize preset</source>
-      <translation>Personalizar perfil</translation>
-    </message>
-    <message>
-      <location filename="../../designer/sound_quality.ui" line="0" />
-      <source>Save changes?</source>
-      <translation>¿Guardar cambios?</translation>
-    </message>
-    <message>
-      <location filename="../../designer/sound_quality.ui" line="0" />
-      <source>Save</source>
-      <translation>Guardar</translation>
     </message>
   </context>
   <context>
