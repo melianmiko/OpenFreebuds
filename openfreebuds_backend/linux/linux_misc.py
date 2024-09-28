@@ -47,5 +47,5 @@ def set_run_at_boot(val):
 def _get_autostart_file_path():
     autostart_dir = pathlib.Path.home() / ".config/autostart"
     if not autostart_dir.exists():
-        autostart_dir.mkdir()
+        autostart_dir.mkdir(parents=True)
     return str(autostart_dir / "openfreebuds.desktop")
