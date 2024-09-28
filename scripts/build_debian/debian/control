@@ -3,17 +3,28 @@ Section: utils
 Priority: optional
 Maintainer: MelianMiko <melianmiko@gmail.com>
 Build-Depends: debhelper-compat (= 12),
- python3 (>= 3.11), python3-pip, pyqt6-dev-tools,
- libcairo2-dev, gobject-introspection, libgirepository1.0-dev,
- qt6-l10n-tools, make
+ python3 (>= 3.11),
+ python3-pip,
+ pyqt6-dev-tools,
+ libcairo2-dev,
+ gobject-introspection,
+ libgirepository1.0-dev,
+ qt6-l10n-tools,
+ make
 Standards-Version: 4.4.1
 Homepage: https://github.com/melianmiko/OpenFreebuds
 
 Package: openfreebuds
 Architecture: all
 Depends:
- ${misc:Depends}, python3 (>= 3.11),
- python3-sdbus, python3-pyqt6, python3-pil, python3-qasync, python3-aiohttp
+ ${misc:Depends}, 
+ python3 (>= 3.11),
+ python3-dbus-next, 
+ python3-pyqt6, 
+ python3-pil, 
+ python3-qasync, 
+ python3-aiohttp,
+ python3-psutil
 Description:
  Open-source client application for HUAWEI FreeBuds bluetooth headset series.
  .
