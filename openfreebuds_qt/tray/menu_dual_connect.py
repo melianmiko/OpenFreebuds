@@ -11,7 +11,7 @@ class OfbDeviceDualConnectTrayMenu(OfbQtTrayMenuCommon):
     def __init__(self, parent: QWidget, ctx: IOfbQtApplication):
         super().__init__(parent, ctx.ofb)
 
-        self.setTitle(self.tr("Dual-connect..."))
+        self.setTitle(self.tr("Dual-connect…"))
 
     async def update_ui(self):
         data = await self.ofb.get_property("dual_connect")

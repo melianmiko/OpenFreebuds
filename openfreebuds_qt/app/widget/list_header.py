@@ -7,7 +7,7 @@ class OfbQListHeader(QLabel):
         self.setStyleSheet("font-weight: bold;"
                            "font-size: 14px;"
                            "padding: 8px 12px;"
-                           "color: palette(link)")
+                           "color: palette(highlight)")
         self.setText(text)
 
     def setText(self, a0: str):

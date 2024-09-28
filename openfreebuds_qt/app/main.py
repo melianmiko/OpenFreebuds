@@ -18,14 +18,12 @@ from openfreebuds_qt.app.module import OfbQtAboutModule, OfbQtSoundQualityModule
     OfbQtHotkeysModule, OfbQtGesturesModule, OfbQtDualConnectModule, OfbQtDeviceOtherSettingsModule, \
     OfbQtDeviceInfoModule, OfbQtCommonModule, OfbQtChooseDeviceModule, OfbQtUiSettingsModule
 from openfreebuds_qt.config import ConfigLock, OfbQtConfigParser
-from openfreebuds_qt.constants import ASSETS_PATH, LINK_RPC_HELP, LINK_WEBSITE_HELP
+from openfreebuds_qt.constants import ASSETS_PATH, LINK_RPC_HELP, LINK_WEBSITE_HELP, WIN32_BODY_STYLE
 from openfreebuds_qt.designer.main_window import Ui_OfbMainWindowDesign
 from openfreebuds_qt.generic import IOfbQtApplication, IOfbMainWindow
-from openfreebuds_qt.utils import qt_error_handler, OfbCoreEvent, OfbQtReportTool, get_qt_icon_colored
+from openfreebuds_qt.utils import qt_error_handler, OfbCoreEvent, OfbQtReportTool, get_img_colored
 
 log = create_logger("OfbQtMainWindow")
-
-WIN32_BODY_STYLE = "QPushButton, QComboBox { padding: 6px 12px; }"
 
 
 class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
@@ -45,7 +43,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
 
         # Extras button
         self.extra_options_button.setIcon(
-            get_qt_icon_colored("settings", self.palette().text().color().getRgb())
+            QIcon(get_img_colored("settings", self.palette().text().color().getRgb()))
         )
 
         self.extra_menu = QMenu()
@@ -81,7 +79,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
             self._attach_module(self.tr("Keyboard shortcuts"), OfbQtHotkeysModule(self.tabs.root, self.ctx))
         if sys.platform == "linux":
             self._attach_module(self.tr("Linux-related"), OfbQtLinuxExtrasModule(self.tabs.root, self.ctx))
-        self._attach_module(self.tr("About..."), OfbQtAboutModule(self.tabs.root, self.ctx))
+        self._attach_module(self.tr("About…"), OfbQtAboutModule(self.tabs.root, self.ctx))
 
         # Finish
         self.default_tab = 2, 0
@@ -97,19 +95,19 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
         # noinspection PyUnresolvedReferences
         help_rpc_action.triggered.connect(lambda: webbrowser.open(LINK_RPC_HELP))
 
-        bugreport_action = self.extra_menu.addAction(self.tr("Bugreport..."))
+        bugreport_action = self.extra_menu.addAction(self.tr("Bugreport…"))
         bugreport_action.setShortcut("F2")
         # noinspection PyUnresolvedReferences
         bugreport_action.triggered.connect(self.on_bugreport)
 
-        self.check_updates_action = self.extra_menu.addAction(self.tr("Check for updates..."))
+        self.check_updates_action = self.extra_menu.addAction(self.tr("Check for updates…"))
         # noinspection PyUnresolvedReferences
         self.check_updates_action.triggered.connect(self.on_check_updates)
 
         self.extra_menu.addSeparator()
 
         if self.ofb.role == "standalone" and ConfigLock.owned:
-            rpc_config_action = self.extra_menu.addAction(self.tr("Remote access..."))
+            rpc_config_action = self.extra_menu.addAction(self.tr("Remote access…"))
             # noinspection PyUnresolvedReferences
             rpc_config_action.triggered.connect(self.on_rpc_config)
 

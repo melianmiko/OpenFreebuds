@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Gestures</string>
+   <string notr="true">Gestures</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="spacing">

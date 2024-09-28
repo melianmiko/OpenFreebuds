@@ -7,14 +7,15 @@ from openfreebuds_qt.constants import ASSETS_PATH
 from openfreebuds_qt.utils.draw import image_combine_mask, image_spawn_bg_mask
 
 ICON_SIZE = (64, 64)
+TRAY_ICON_PATH = ASSETS_PATH / "icon/tray"
 
 # Images
-ICON_LOADING = Image.open(ASSETS_PATH / "base_loading.png")
-ICON_ANC_OFF = Image.open(ASSETS_PATH / "base_headset.png")
-ICON_ANC_ON = Image.open(ASSETS_PATH / "base_headset_1.png")
-ICON_ANC_AWR = Image.open(ASSETS_PATH / "base_headset_2.png")
-ICON_OVERLAY_ERROR = Image.open(ASSETS_PATH / "overlay_error.png")
-ICON_OVERLAY_SETUP = Image.open(ASSETS_PATH / "overlay_setup.png")
+ICON_LOADING = Image.open(TRAY_ICON_PATH / "base_loading.png")
+ICON_ANC_OFF = Image.open(TRAY_ICON_PATH / "base_headset.png")
+ICON_ANC_ON = Image.open(TRAY_ICON_PATH / "base_headset_1.png")
+ICON_ANC_AWR = Image.open(TRAY_ICON_PATH / "base_headset_2.png")
+ICON_OVERLAY_ERROR = Image.open(TRAY_ICON_PATH / "overlay_error.png")
+ICON_OVERLAY_SETUP = Image.open(TRAY_ICON_PATH / "overlay_setup.png")
 
 # Presets
 PRESET_TRANSPARENT = Image.new("RGBA", ICON_SIZE, color="#00000000")

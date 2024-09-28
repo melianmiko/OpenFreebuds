@@ -68,7 +68,7 @@ class OfbQtConfigParser:
             return "dark" if not backend_theme else "light"
 
         # Auto-detect using qt
-        return self.qt_is_dark_theme
+        return "dark" if not self.qt_is_dark_theme else "light"
 
     @cached_property
     def is_containerized_app(self):

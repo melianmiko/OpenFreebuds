@@ -60,7 +60,7 @@ class OfbQtHotkeysModule(Ui_OfbQtHotkeysModule, OfbQtCommonModule):
         async with qt_error_handler("OfbQtHotkeysModule_EditShortcut", self.ctx):
             shortcut = self.all_shortcuts[index]
             log.info(f"Editing {shortcut}")
-            self.table.setItem(index, column, QTableWidgetItem(self.tr("Press new shortcut...")))
+            self.table.setItem(index, column, QTableWidgetItem(self.tr("Press new shortcut…")))
 
             self.service.stop()
             r = await self.recorder.record()

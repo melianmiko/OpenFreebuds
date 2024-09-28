@@ -10,5 +10,6 @@
 /dist
 /scripts/tools
 /release.json
+/accent.json
 
 /.idea

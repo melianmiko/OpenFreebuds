@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Sound quality</string>
+   <string notr="true">Sound quality</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <property name="spacing">
@@ -101,7 +101,7 @@
          <string notr="true"> QPushButton::menu-indicator{width:0px;}</string>
         </property>
         <property name="text">
-         <string>...</string>
+         <string notr="true">…</string>
         </property>
        </widget>
       </item>
@@ -214,9 +214,6 @@
            </property>
            <property name="text">
             <string/>
-           </property>
-           <property name="icon">
-            <iconset theme="undo"/>
            </property>
           </widget>
          </item>

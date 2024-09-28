@@ -1,3 +1,27 @@
+openfreebuds (0.14.0-1) bookworm noble; urgency=medium
+
+  * [Core] Client-server architecture, close #14;
+  * Now multiple instances of OpenFreebuds could be launched, for multi-user usage for example;
+  * Built-in HTTP-server is now used as cross process communication protocol, so it can't be fully disabled, remote access is still disallowed out-of-box;
+  * If you need to launch multiple instances from single user, use -c  CLI flag;
+  * [Core] Web-server authorization
+  * [Core] Rewritten (mostly from scratch) to asyncio ;
+  * [Core] Drop pybluez  from dependencies, now will use predefined port numbers instead of SDP detection;
+  * [UI] Rewritten from scratch to asyncio  and PyQT6, introduce redesigned Settings UI;
+  * [UI] Disable logging to CLI / `journalctl` if -v  isn't present, close #29;
+  * [Device compatibility] Bug fixes for modern HUAWEI Devices (5i, Pro 2, Pro 3);
+  * [HUAWEI FreeBuds 5i & other] Better Dual-Connect configuration;
+  * [HUAWEI FreeBuds 5i & other] Add low-latency mode setting;
+  * [HUAWEI FreeBuds 5i & other] Add triple-tap settings;
+  * [HUAWEI FreeBuds 5i & other] Fix SQ preference switch;
+  * [Device compatibility] Add HUAWEI FreeLace Pro 2 compatibility;
+  * Custom equalizer preset configuration (should also work with Pro 3);
+  * [Linux] Flatpak as installation option
+  * [i18n] Add Spanish translation, thanks to @Pedro-vk (GitHub)
+  * [i18n] Add  partial Portuguese (Brazilian), thanks to  @Lobo (Accent)
+
+ -- MelianMiko <support@mmk.pw>  Sat, 28 Sep 2024 11:15:46 +0700
+
 openfreebuds (0.13.3-2) bookworm trixie jammy mantic noble; urgency=medium
 
   * Fix: Random crash when enumerating dual-connect devices

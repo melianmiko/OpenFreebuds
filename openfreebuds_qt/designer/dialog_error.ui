@@ -11,13 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>OpenFreebuds</string>
+   <string notr="true">OpenFreebuds</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="2" column="1">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>OpenFreebuds ran into error. Please, save bugreport and send them to developer. Bugreport will be generated after clocking on &quot;Close&quot; button.</string>
+      <string>OpenFreebuds ran into error. Please, save bugreport and send them to developer. Bugreport will be generated after clicking on &quot;Close&quot; button.</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
@@ -60,7 +60,8 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset theme="dialog-error"/>
+      <iconset theme="dialog-error">
+       <normaloff>.</normaloff>.</iconset>
      </property>
      <property name="iconSize">
       <size>

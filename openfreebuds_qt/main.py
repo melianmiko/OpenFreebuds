@@ -12,6 +12,7 @@ from qasync import QEventLoop
 from openfreebuds import IOpenFreebuds, create as create_ofb, OfbEventKind
 from openfreebuds.constants import STORAGE_PATH
 from openfreebuds.utils.logger import setup_logging, screen_handler, create_logger
+from openfreebuds_qt.app.dialog.first_run import OfbQtFirstRunDialog
 from openfreebuds_qt.app.main import OfbQtMainWindow
 from openfreebuds_qt.config import OfbQtConfigParser, ConfigLock
 from openfreebuds_qt.constants import IGNORED_LOG_TAGS, I18N_PATH
@@ -47,7 +48,7 @@ class OfbQtApplication(IOfbQtApplication):
         # Setup logging
         setup_logging(args.verbose)
         if not args.verbose:
-            screen_handler.setLevel(logging.WARN)
+            screen_handler.setLevel(logging.ERROR)
         if not args.dont_ignore_logs:
             for tag in IGNORED_LOG_TAGS:
                 logging.getLogger(tag).disabled = True
@@ -120,10 +121,14 @@ class OfbQtApplication(IOfbQtApplication):
             self.tray.show()
             if self.args.settings:
                 self.main_window.show()
+            if not self.config.get("ui", "first_run_finished", False):
+                OfbQtFirstRunDialog(self).show()
         except SystemExit as e:
             self.qt_app.exit(e.args[0])
             ConfigLock.release()
             return
+        except Exception:
+            log.exception("Boot failure")
 
     async def exit(self, ret_code: int = 0):
         await self.tray.close()
@@ -169,7 +174,7 @@ class OfbQtApplication(IOfbQtApplication):
         if self.ofb.role == "standalone":
             await self.restore_device()
             while await self.ofb.get_state() != IOpenFreebuds.STATE_CONNECTED:
-                log.debug("Waiting for device connect...")
+                log.debug("Waiting for device connect…")
                 await asyncio.sleep(1)
 
         await self.ofb.run_shortcut(self.args.shortcut)

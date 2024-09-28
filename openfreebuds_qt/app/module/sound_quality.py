@@ -2,6 +2,7 @@ import asyncio
 import json
 
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QSlider, QMenu, QInputDialog, QMessageBox, QFileDialog
 from qasync import asyncSlot
 
@@ -10,6 +11,7 @@ from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.designer.sound_quality import Ui_OfbQtSoundQualityModule
 from openfreebuds_qt.qt_i18n import get_eq_preset_names
+from openfreebuds_qt.utils import get_img_colored
 from openfreebuds_qt.utils.async_dialog import run_dialog_async
 from openfreebuds_qt.utils.core_event import OfbCoreEvent
 from openfreebuds_qt.utils.qt_utils import fill_combo_box, blocked_signals, qt_error_handler
@@ -36,6 +38,10 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         self._last_preset_data: list[int] = []
 
         self.setupUi(self)
+
+        self.undo_btn.setIcon(
+            QIcon(get_img_colored("undo", self.palette().text().color().getRgb()))
+        )
 
         self.custom_menu = QMenu()
         self.custom_edit_button.setMenu(self.custom_menu)
@@ -78,7 +84,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         if sound is None:
             return
 
-        self.custom_edit_button.setVisible("equalizer_rows" in sound)
+        self.custom_edit_button.setVisible(int(sound.get("equalizer_max_custom_modes", "0")) > 0)
         self.save_panel.setVisible(not json.loads(sound.get("equalizer_saved", "true")))
 
         if event.is_changed("sound", "quality_preference"):
@@ -184,7 +190,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
             return
 
         async with qt_error_handler("OfbQtSoundQualityModule_ExportFile", self.ctx):
-            dialog = QFileDialog(self, self.tr("Save equalizer preset to file..."))
+            dialog = QFileDialog(self, self.tr("Save equalizer preset to file…"))
             dialog.setWindowModality(Qt.WindowModality.WindowModal)
             dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptSave)
             if not await run_dialog_async(dialog):
@@ -199,7 +205,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
     @asyncSlot()
     async def load_file(self):
         async with qt_error_handler("OfbQtSoundQualityModule_LoadFile", self.ctx):
-            dialog = QFileDialog(self, self.tr("Load equalizer preset from file..."))
+            dialog = QFileDialog(self, self.tr("Load equalizer preset from file…"))
             dialog.setWindowModality(Qt.WindowModality.WindowModal)
             dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptOpen)
             if not await run_dialog_async(dialog):

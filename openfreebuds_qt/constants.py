@@ -15,3 +15,16 @@ LINK_WEBSITE = "https://mmk.pw/en/openfreebuds/"
 LINK_WEBSITE_HELP = "https://mmk.pw/en/openfreebuds/help"
 LINK_GITHUB = "https://github.com/melianmiko/OpenFreebuds/"
 LINK_RPC_HELP = "http://localhost:19823/"
+
+WIN32_BODY_STYLE = """
+QPushButton, 
+QComboBox, 
+QComboBox QAbstractItemView:item, 
+QTreeView::item { 
+    padding: 6px 12px; 
+}
+
+QLineEdit {
+    padding: 4px 8px;
+}
+"""

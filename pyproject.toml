@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "OpenFreebuds"
-version = "0.1.0"
+version = "0.14.0"
 description = "FOSS Windows/Linux client for HUAWEI FreeBuds headset series"
 authors = ["MelianMiko <support@mmk.pw>"]
 packages = [

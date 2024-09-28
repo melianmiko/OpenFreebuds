@@ -15,7 +15,9 @@
 - [HUAWEI FreeBuds 5i & other] Fix SQ preference switch;
 - [Device compatibility] Add HUAWEI FreeLace Pro 2 compatibility;
 	- Custom equalizer preset configuration (should also work with Pro 3);
-- [Linux] Flatpak installation option
+- [Linux] Flatpak as installation option
+- [i18n] Add Spanish translation, thanks to @Pedro-vk (GitHub)
+- [i18n] Add  partial Portuguese (Brazilian), thanks to  @Lobo (Accent)
 
 # Older releases
 WIP

@@ -50,7 +50,6 @@ class OfbShortcuts:
 
             return await handler(*args)
         except Exception as e:
-            log.exception(f"While triggering shortcut {shortcut}")
             if no_catch:
                 raise e
 

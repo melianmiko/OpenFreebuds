@@ -1,20 +1,17 @@
 import functools
 
 from PIL import Image, ImageQt
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QPixmap
 
 from openfreebuds_qt.constants import ASSETS_PATH
 from openfreebuds_qt.utils.draw import image_combine_mask
 
-ICON_SIZE = (64, 64)
-PRESET_TRANSPARENT = Image.new("RGBA", ICON_SIZE, color="#00000000")
-
 
 @functools.cache
-def get_qt_icon_colored(name: str, color) -> QIcon:
-    image = Image.open(ASSETS_PATH / f"icon_{name}.png")
+def get_img_colored(name: str, color, base_dir: str = "icon/action") -> QPixmap:
+    image = Image.open(ASSETS_PATH / f"{base_dir}/{name}.png")
     image = image_combine_mask(image,
-                               foreground=Image.new("RGBA", ICON_SIZE, color=color),
-                               background=PRESET_TRANSPARENT)
+                               foreground=Image.new("RGBA", image.size, color=color),
+                               background=Image.new("RGBA", image.size, color="#00000000"))
 
-    return QIcon(ImageQt.toqpixmap(image))
+    return ImageQt.toqpixmap(image)

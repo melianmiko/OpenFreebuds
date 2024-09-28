@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dual connect</string>
+   <string notr="true">Dual connect</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">

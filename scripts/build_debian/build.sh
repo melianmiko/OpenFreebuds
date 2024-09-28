@@ -2,6 +2,7 @@
 
 cd "$(dirname "$0")"
 
+rm ../../dist/*
 rm openfreebuds*
 
 make prepare

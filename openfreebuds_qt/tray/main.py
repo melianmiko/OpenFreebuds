@@ -75,6 +75,7 @@ class OfbTrayIcon(IOfbTrayIcon):
         """
 
         state = await self.ofb.get_state()
+        log.info(f"theme={self.config.get_tray_icon_theme()}")
 
         # Update icon
         icon = create_tray_icon(self.config.get_tray_icon_theme(),
@@ -88,7 +89,7 @@ class OfbTrayIcon(IOfbTrayIcon):
         if state == IOpenFreebuds.STATE_CONNECTED:
             self.setToolTip(await self._get_tooltip_text(event))
         elif state == IOpenFreebuds.STATE_WAIT:
-            self.setToolTip(self.tr("OpenFreebuds: Connecting to device..."))
+            self.setToolTip(self.tr("OpenFreebuds: Connecting to device…"))
         else:
             self.setToolTip("OpenFreebuds")
 
@@ -136,6 +137,6 @@ class OfbTrayIcon(IOfbTrayIcon):
             except asyncio.CancelledError:
                 await self.ofb.unsubscribe(member_id)
             except OfbServerDeadError:
-                log.info("Server is dead, exiting now...")
+                log.info("Server is dead, exiting now…")
                 self.ui_update_task = None
                 await self.ctx.exit(1)

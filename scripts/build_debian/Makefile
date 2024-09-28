@@ -12,6 +12,7 @@ install:
 	pip install --upgrade --no-dependencies --target="${DESTDIR}${DIST_PACKAGES_PATH}" ${WHEEL_FILE}
 	mkdir -p ${DESTDIR}/usr/bin
 	mv ${DESTDIR}${DIST_PACKAGES_PATH}/bin/* ${DESTDIR}/usr/bin/
+	ln -s ${DESTDIR}/usr/bin/openfreebuds_qt ${DESTDIR}/usr/bin/openfreebuds
 	sed -i '1 s/^.*$$/\#\!\/usr\/bin\/env python3/' ${DESTDIR}/usr/bin/*
 	rm -rf ${DESTDIR}${DIST_PACKAGES_PATH}/bin
 	mkdir -p ${DESTDIR}/usr/share/icons/hicolor/256x256/apps

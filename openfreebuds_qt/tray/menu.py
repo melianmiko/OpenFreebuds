@@ -74,7 +74,7 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
 
         # Extras
         self.new_section()
-        self.add_item(self.tr("Settings..."), callback=self.do_settings)
+        self.add_item(self.tr("Settings…"), callback=self.do_settings)
         self.equalizer_submenu = OfbDeviceEqualizerTrayMenu(self, self.ctx)
         self.equalizer_action = self.add_menu(self.equalizer_submenu)
         self.dual_connect_submenu = OfbDeviceDualConnectTrayMenu(self, self.ctx)
@@ -83,7 +83,7 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
 
         # Footer
         self.new_section()
-        self.add_item(self.tr("Bugreport..."), callback=self.do_bugreport)
+        self.add_item(self.tr("Bugreport…"), callback=self.do_bugreport)
         self.add_item(self.tr("Leave application"), callback=self.do_exit)
 
     async def on_core_event(self, event: OfbCoreEvent, state: int):

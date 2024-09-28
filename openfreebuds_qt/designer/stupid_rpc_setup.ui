@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>OfbQtRpcConfig</class>
+ <widget class="QDialog" name="OfbQtRpcConfig">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>363</width>
-    <height>172</height>
+    <height>189</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>StupidRPC configuration</string>
+   <string>Remote access…</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -68,7 +68,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>OfbQtRpcConfig</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -84,7 +84,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>OfbQtRpcConfig</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
