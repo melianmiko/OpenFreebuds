@@ -7,7 +7,7 @@ from datetime import date
 from pathlib import Path
 from xml.sax.saxutils import escape
 
-DEB_CODENAMES = "bookworm jammy mantic"
+DEB_CODENAMES = "bookworm jammy mantic noble"
 DEVELOPER_SIGN = "MelianMiko <support@mmk.pw>"
 DEBUG = False
 

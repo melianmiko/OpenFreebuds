@@ -1,4 +1,4 @@
-openfreebuds (0.14.0-1) bookworm jammy mantic; urgency=medium
+openfreebuds (0.14.0-1) bookworm jammy mantic noble; urgency=medium
 
   * [Core] Client-server architecture, close #14;
   * Now multiple instances of OpenFreebuds could be launched, for multi-user usage for example;
