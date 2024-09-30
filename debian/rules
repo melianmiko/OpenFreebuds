@@ -10,4 +10,5 @@ override_dh_auto_install:
 	python ./scripts/make.py install debian/openfreebuds/usr debian/openfreebuds/usr/lib/python3/dist-packages
 
 override_dh_clean:
-    git clean -Xfd
+	git clean -Xfd
+

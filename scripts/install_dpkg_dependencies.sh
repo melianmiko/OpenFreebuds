@@ -15,4 +15,4 @@ apt install -y $(awk '
       gsub(/[^a-z0-9_.+-].*$/, "", dep)
       if (dep && !seen[dep]++) print dep
     }
-  }' scripts/build_debian/debian/control)
+  }' debian/control)
