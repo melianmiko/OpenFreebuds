@@ -78,15 +78,15 @@
   <url type="vcs-browser">https://github.com/melianmiko/OpenFreebuds</url>
 
   <screenshots>
-    <screenshot type="default">
+    <screenshot type="default" xml:lang="en">
       <caption>Tray indicator and context menu with common features</caption>
       <image>https://raw.githubusercontent.com/melianmiko/OpenFreebuds/refs/heads/main/docs/preview_0.png</image>
     </screenshot>
-    <screenshot>
+    <screenshot xml:lang="en">
       <caption>Device gesture settings (may vary depending on device model)</caption>
       <image>https://raw.githubusercontent.com/melianmiko/OpenFreebuds/refs/heads/main/docs/app_0.png</image>
     </screenshot>
-    <screenshot>
+    <screenshot xml:lang="en">
       <caption>Application user interface settings</caption>
       <image>https://raw.githubusercontent.com/melianmiko/OpenFreebuds/refs/heads/main/docs/app_1.png</image>
     </screenshot>

@@ -65,11 +65,13 @@ jobs:
         run: poetry install
       - name: Change in-app version
         run: python3 ./scripts/bump_version.py git
-      - name: Run build script
-        run: bash ./scripts/build_debian/build.sh
+      - name: Build
+        run: dpkg-buildpackage -b
+      - name: Move release to dist dir
+        run: mv ../*.deb ./dist
       - name: Upload bundle
         uses: actions/upload-artifact@v4
         with:
           name: Debian package
-          path: ./scripts/build_debian/openfreebuds*
+          path: ./dist/*
           if-no-files-found: error

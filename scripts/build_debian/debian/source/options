@@ -1,4 +1,0 @@
-tar-ignore = "*venv"
-tar-ignore = ".git"
-tar-ignore = "builddir"
-tar-ignore = "**/__pycache__"

@@ -87,13 +87,7 @@ poetry install
 ### Just launch without installation
 
 ```shell
-# Compile Qt Designer & Linguist sources
-./scripts/make_qt_parts.sh
-
-# Launch
-poetry run python -m openfreebuds_qt -vcs
-
-# use --help for options description
+./scripts/make.py build_launch
 ```
 
 ### Windows
@@ -111,11 +105,10 @@ Output binaries will be located in `scripts\build_win32\dist`
 Install all packaging dependencies automated way:
 `apt install build-essentials && ./scripts/install_dpkg_dependencies.sh`.
 
-Go to `scripts/build_debian` and run build script:
-
 ```shell
-cd scripts/build_debian
-./build.sh
+dpkg-buildpackage -b
 ```
+
+Output file will be located in parent folder (`../*.deb`).
 
 ![Extra dialogs preview](docs/preview_2.png)

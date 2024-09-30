@@ -191,7 +191,7 @@ def main():
     bump_pyproject(str(PROJECT_ROOT / "pyproject.toml"))
     bump_nsis(str(PROJECT_ROOT / "scripts/build_win32/openfreebuds.nsi"))
     bump_debian(PROJECT_ROOT / "scripts/build_debian/debian/changelog")
-    bump_metainfo(str(PROJECT_ROOT / "scripts/build_flatpak/pw.mmk.OpenFreebuds.metainfo.xml"))
+    bump_metainfo(str(PROJECT_ROOT / "openfreebuds_qt/assets/pw.mmk.OpenFreebuds.metainfo.xml"))
     create_version_info(PROJECT_ROOT / "openfreebuds_qt/version_info.py")
     create_flatpak_staff()
 
