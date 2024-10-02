@@ -1,3 +1,6 @@
+# v0.14.1
+- [Fix] Crash when using with old devices, like 4i / SE
+
 # v0.14.0
 - [Core] Client-server architecture, close #14;
 	- Now multiple instances of OpenFreebuds could be launched, for multi-user usage for example;

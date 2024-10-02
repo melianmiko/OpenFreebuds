@@ -7,13 +7,13 @@
             "name": "python3-aiohappyeyeballs",
             "buildsystem": "simple",
             "build-commands": [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"aiohappyeyeballs==2.4.0\" --no-build-isolation"
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"aiohappyeyeballs==2.4.2\" --no-build-isolation"
             ],
             "sources": [
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/18/b6/58ea188899950d759a837f9a58b2aee1d1a380ea4d6211ce9b1823748851/aiohappyeyeballs-2.4.0-py3-none-any.whl",
-                    "sha256": "7ce92076e249169a13c2f49320d1967425eaf1f407522d707d59cac7628d62bd"
+                    "url": "https://files.pythonhosted.org/packages/13/64/40165ff77ade5203284e3015cf88e11acb07d451f6bf83fff71192912a0d/aiohappyeyeballs-2.4.2-py3-none-any.whl",
+                    "sha256": "8522691d9a154ba1145b157d6d5c15e5c692527ce6a53c5e5f9876977f6dab2f"
                 }
             ]
         },
@@ -21,18 +21,18 @@
             "name": "python3-aiohttp",
             "buildsystem": "simple",
             "build-commands": [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"aiohttp==3.10.5\" --no-build-isolation"
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"aiohttp==3.10.7\" --no-build-isolation"
             ],
             "sources": [
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/18/b6/58ea188899950d759a837f9a58b2aee1d1a380ea4d6211ce9b1823748851/aiohappyeyeballs-2.4.0-py3-none-any.whl",
-                    "sha256": "7ce92076e249169a13c2f49320d1967425eaf1f407522d707d59cac7628d62bd"
+                    "url": "https://files.pythonhosted.org/packages/13/64/40165ff77ade5203284e3015cf88e11acb07d451f6bf83fff71192912a0d/aiohappyeyeballs-2.4.2-py3-none-any.whl",
+                    "sha256": "8522691d9a154ba1145b157d6d5c15e5c692527ce6a53c5e5f9876977f6dab2f"
                 },
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/ca/28/ca549838018140b92a19001a8628578b0f2a3b38c16826212cc6f706e6d4/aiohttp-3.10.5.tar.gz",
-                    "sha256": "f071854b47d39591ce9a17981c46790acb30518e2f83dfca8db2dfa091178691"
+                    "url": "https://files.pythonhosted.org/packages/ad/8a/c574246bbd2eaa0fb602bcb684196aed6e846c8e2000f4497fa75164976d/aiohttp-3.10.7.tar.gz",
+                    "sha256": "18c72a69ba20713f26fa40932cac17437b0c1d25edff2e27437a204c12275bd9"
                 },
                 {
                     "type": "file",
@@ -61,8 +61,8 @@
                 },
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/e4/3d/4924f9ed49698bac5f112bc9b40aa007bbdcd702462c1df3d2e1383fb158/yarl-1.11.1.tar.gz",
-                    "sha256": "1bb2d9e212fb7449b8fb73bc461b51eaa17cc8430b4a87d87be7b25052d92f53"
+                    "url": "https://files.pythonhosted.org/packages/e0/11/2b8334f4192646677a2e7da435670d043f536088af943ec242f31453e5ba/yarl-1.13.1.tar.gz",
+                    "sha256": "ec8cfe2295f3e5e44c51f57272afbd69414ae629ec7c6b27f5a410efc78b70a0"
                 }
             ]
         },
@@ -281,7 +281,7 @@
             "name": "python3-yarl",
             "buildsystem": "simple",
             "build-commands": [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"yarl==1.11.1\" --no-build-isolation"
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"yarl==1.13.1\" --no-build-isolation"
             ],
             "sources": [
                 {
@@ -296,8 +296,8 @@
                 },
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/e4/3d/4924f9ed49698bac5f112bc9b40aa007bbdcd702462c1df3d2e1383fb158/yarl-1.11.1.tar.gz",
-                    "sha256": "1bb2d9e212fb7449b8fb73bc461b51eaa17cc8430b4a87d87be7b25052d92f53"
+                    "url": "https://files.pythonhosted.org/packages/e0/11/2b8334f4192646677a2e7da435670d043f536088af943ec242f31453e5ba/yarl-1.13.1.tar.gz",
+                    "sha256": "ec8cfe2295f3e5e44c51f57272afbd69414ae629ec7c6b27f5a410efc78b70a0"
                 }
             ]
         }
