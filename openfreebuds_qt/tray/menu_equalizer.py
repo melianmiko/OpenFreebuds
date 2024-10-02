@@ -20,6 +20,8 @@ class OfbDeviceEqualizerTrayMenu(OfbQtTrayMenuCommon):
     async def update_ui(self):
         current = await self.ofb.get_property("sound", "equalizer_preset")
         options = await self.ofb.get_property("sound", "equalizer_preset_options")
+        if options is None:
+            return
 
         self.clear()
         for code in options.split(","):
