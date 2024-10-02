@@ -181,6 +181,8 @@ class OfbQtApplication(IOfbQtApplication):
         self._exit(0)
 
     async def restore_device(self):
+        if self.args.virtual_device:
+            return
         name = self.config.get("device", "name", None)
         address = self.config.get('device', "address", None)
         if address is not None:
