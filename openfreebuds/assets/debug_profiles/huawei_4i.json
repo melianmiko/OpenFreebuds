@@ -8,30 +8,28 @@
   "state": {
     "in_ear": "false"
   },
-  "battery": {
-    "global": 90,
-    "left": 90,
-    "right": 90,
-    "case": 85,
-    "is_charging": "false"
-  },
   "anc": {
     "mode": "normal",
     "mode_options": "normal,cancellation,awareness"
   },
+  "battery": {
+    "global": 100,
+    "left": 100,
+    "right": 100,
+    "case": 70,
+    "is_charging": "false"
+  },
   "action": {
-    "double_tap_left": "tap_action_off",
-    "double_tap_right": "tap_action_off",
-    "double_tap_options": "tap_action_pause,tap_action_prev,tap_action_next,tap_action_assistant,tap_action_off",
-    "long_tap_left": "tap_action_off",
-    "long_tap_right": "tap_action_off",
+    "double_tap_left": "tap_action_pause",
+    "double_tap_right": "tap_action_pause",
+    "double_tap_options": "tap_action_pause,tap_action_next,tap_action_prev,tap_action_assistant,tap_action_off",
+    "long_tap_left": "tap_action_switch_anc",
     "long_tap_options": "tap_action_off,tap_action_switch_anc",
     "noise_control_left": "noise_control_off_on_aw",
-    "noise_control_right": "noise_control_off_on_aw",
     "noise_control_options": "noise_control_off_on,noise_control_off_on_aw,noise_control_on_aw,noise_control_off_aw"
   },
   "config": {
-    "auto_pause": "false"
+    "auto_pause": "true"
   },
   "service": {
     "language": "",
