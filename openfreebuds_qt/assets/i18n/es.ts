@@ -795,7 +795,7 @@
     </message>
     <message>
       <location filename="../../designer/sound_quality.ui" line="0" />
-      <source>Device will prefer audio codes with better compression, like AAC</source>
+      <source>Device will prefer audio codec with better compression, like AAC</source>
       <translation>El dispositivo preferirá los códigos de audio con mejor compresión, como AAC</translation>
     </message>
     <message>
