@@ -146,12 +146,12 @@
   <context>
     <name>OfbQtApplication</name>
     <message>
-      <location filename="../../main.py" line="199" />
+      <location filename="../../main.py" line="201" />
       <source>You're running under older version of Qt than expected. It's strongly recommended to switch to Flatpak release, because older Qt version may fail your experience of using OpenFreebuds.</source>
       <translation>Você está executando uma versão mais antiga do Qt do que o esperado. É altamente recomendável mudar para a versão Flatpak, porque a versão mais antiga do Qt pode prejudicar sua experiência de uso do OpenFreebuds.</translation>
     </message>
     <message>
-      <location filename="../../main.py" line="204" />
+      <location filename="../../main.py" line="206" />
       <source>This warning will be shown only once. Please, test Flatpak version before reporting bugs.</source>
       <translation>Este aviso será mostrado apenas uma vez. Por favor, teste a versão Flatpak antes de relatar bugs.</translation>
     </message>
@@ -1044,7 +1044,7 @@
   <context>
     <name>OfbTrayIcon</name>
     <message>
-      <location filename="../../tray/main.py" line="92" />
+      <location filename="../../tray/main.py" line="91" />
       <source>OpenFreebuds: Connecting to device…</source>
       <translation>OpenFreebuds: Conectando ao dispositivo…</translation>
     </message>
