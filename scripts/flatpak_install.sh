@@ -3,7 +3,7 @@
 cd "$(dirname "$0")"/..
 
 # Compile wheel
-./scripts/install.py build
+./scripts/make.py build
 
 # Build & install flatpak
 cd scripts/build_flatpak

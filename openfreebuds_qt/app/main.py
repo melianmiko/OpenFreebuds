@@ -13,6 +13,7 @@ from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.dialog.manual_connect import OfbQtManualConnectDialog
 from openfreebuds_qt.app.dialog.rpc_config import OfbQtRpcConfig
 from openfreebuds_qt.app.helper import OfbQtSettingsTabHelper
+from openfreebuds_qt.app.helper.device_control_view_helper import OfbQtDeviceControlViewHelper
 from openfreebuds_qt.app.helper.update_widget_helper import OfbQtUpdateWidgetHelper
 from openfreebuds_qt.app.module import OfbQtAboutModule, OfbQtSoundQualityModule, OfbQtLinuxExtrasModule, \
     OfbQtHotkeysModule, OfbQtGesturesModule, OfbQtDualConnectModule, OfbQtDeviceOtherSettingsModule, \
@@ -53,6 +54,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
         # Helpers
         self.tabs = OfbQtSettingsTabHelper(self.tabs_list_content, self.body_content)
         self.update_view = OfbQtUpdateWidgetHelper(self.updater_root, self.updater_header, self.ctx)
+        self.control_view = OfbQtDeviceControlViewHelper(self.ctx, self)
 
         # Asyncio & update loop staff
         self._ui_update_task: Optional[asyncio.Task] = None
@@ -170,6 +172,8 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
         if event.kind_match(OfbEventKind.STATE_CHANGED):
             visible = await self.ofb.get_state() == IOpenFreebuds.STATE_CONNECTED
             self._device_section_set_visible(visible)
+
+        await self.control_view.update_ui(event)
 
         for mod in self._ui_modules:
             try:

@@ -1,6 +1,16 @@
 from PyQt6.QtWidgets import QApplication
 
 
+def get_anc_level_names():
+    return {
+        "comfort": QApplication.translate("OfbDeviceAncLevelTrayMenu", "Comfortable"),
+        "normal": QApplication.translate("OfbDeviceAncLevelTrayMenu", "Normal"),
+        "ultra": QApplication.translate("OfbDeviceAncLevelTrayMenu", "Ultra"),
+        "dynamic": QApplication.translate("OfbDeviceAncLevelTrayMenu", "Dynamic"),
+        "voice_boost": QApplication.translate("OfbDeviceAncLevelTrayMenu", "Voice boost"),
+    }
+
+
 def get_eq_preset_names():
     return {
         "equalizer_preset_default": QApplication.translate("EqPresetName", "Default"),
