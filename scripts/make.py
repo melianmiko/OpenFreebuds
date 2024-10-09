@@ -54,7 +54,7 @@ DO_LAUNCH = "launch" in TASK
 DO_BUILD = "build" in TASK
 
 # Ensure environment
-if sys.platform == "win32" and TASK != "build":
+if sys.platform == "win32" and DO_INSTALL:
     print("-- Can't install under Windows, use pyinstaller")
     raise SystemExit(1)
 if os.environ.get("VIRTUAL_ENV", None) is not None:
@@ -69,7 +69,7 @@ if PYTHON_LIBS_DIR is None:
             PYTHON_LIBS_DIR.mkdir(exist_ok=True, parents=True)
             break
 
-if PYTHON_LIBS_DIR is None:
+if PYTHON_LIBS_DIR is None and sys.platform != "win32":
     print("-- Error: Can't find python packages location, provide them manually")
     raise SystemExit(1)
 
@@ -82,7 +82,7 @@ if DO_BUILD:
     # Compile Qt Designer layouts
     print("Compile Qt Designer files")
     DESIGNER_DIR = PROJECT_ROOT / "openfreebuds_qt" / "designer"
-    result = subprocess.run(["env", "poetry", "run", "pyuic6", DESIGNER_DIR])
+    result = subprocess.run(["poetry", "run", "pyuic6", DESIGNER_DIR])
     if result.returncode != 0:
         print("Failed, old pyuic? Will try single file mode...")
         for ui_file in DESIGNER_DIR.iterdir():
@@ -99,7 +99,7 @@ if DO_BUILD:
     # Compile Qt translations
     L_RELEASE_EXEC = None
     for option in QT_L_RELEASE_PATH_OPTIONS:
-        if Path(option).exists():
+        if shutil.which(option) is not None:
             L_RELEASE_EXEC = option
             break
 
