@@ -146,8 +146,9 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
                 )
 
         # Update last charged config field
-        if battery.get("global", 0) - 20 > self.config.get("last_battery", self.device_mac_address, 0):
-            self.config.set("last_battery", self.device_mac_address, battery.get("global", 0))
+        global_battery = battery.get("global", 0)
+        last_charged = self.config.get("last_charged", self.device_mac_address, 0)
+        if global_battery > 95 and datetime.now().timestamp() > last_charged + 3600:
             self.config.set("last_charged", self.device_mac_address, datetime.now().timestamp())
             self.config.save()
 
