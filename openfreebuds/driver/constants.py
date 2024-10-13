@@ -3,6 +3,7 @@ from openfreebuds.driver.huawei import *
 
 DEVICE_TO_DRIVER_MAP = {
     "HUAWEI FreeBuds 5i": OfbDriverHuawei5I,
+    "HUAWEI FreeBuds 6i": OfbDriverHuawei6I,
     "HUAWEI FreeBuds SE": OfbDriverHuaweiSe,
     "HUAWEI FreeLace Pro": OfbDriverHuaweiLacePro,
     "HUAWEI FreeLace Pro 2": OfbDriverHuaweiLacePro2,
