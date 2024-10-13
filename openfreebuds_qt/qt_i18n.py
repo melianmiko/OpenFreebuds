@@ -24,6 +24,7 @@ def get_eq_preset_names():
 
 def get_shortcut_names():
     return {
+        "show_main_window": QApplication.translate("ShortcutName", "Show OpenFreebuds window"),
         "connect": QApplication.translate("ShortcutName", "Connect device"),
         "disconnect": QApplication.translate("ShortcutName", "Disconnect device"),
         "toggle_connect": QApplication.translate("ShortcutName", "Connect/disconnect device"),
