@@ -57,8 +57,8 @@ class OfbHuaweiEqualizerPresetHandler(OfbDriverHandlerHuawei):
         self.data_overrides: dict[int, str] = {}
 
         # Predefined set of built-in modes
-        if w_presets:
-            for i, name in w_presets:
+        if w_presets is not None:
+            for i, name in w_presets.items():
                 self.default_preset_data.append((i, name, None))
 
         # Load predefined presets

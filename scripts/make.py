@@ -69,7 +69,7 @@ if PYTHON_LIBS_DIR is None:
             PYTHON_LIBS_DIR.mkdir(exist_ok=True, parents=True)
             break
 
-if PYTHON_LIBS_DIR is None and sys.platform != "win32":
+if PYTHON_LIBS_DIR is None and DO_INSTALL:
     print("-- Error: Can't find python packages location, provide them manually")
     raise SystemExit(1)
 
