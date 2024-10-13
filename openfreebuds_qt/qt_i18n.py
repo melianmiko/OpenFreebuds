@@ -17,6 +17,8 @@ def get_eq_preset_names():
         "equalizer_preset_hardbass": QApplication.translate("EqPresetName", "Bass-boost"),
         "equalizer_preset_treble": QApplication.translate("EqPresetName", "Treble-boost"),
         "equalizer_preset_voices": QApplication.translate("EqPresetName", "Voices"),
+        "equalizer_preset_symphony": QApplication.translate("EqPresetName", "Symphony"),
+        "equalizer_preset_hi_fi_live": QApplication.translate("EqPresetName", "Hi-Fi Live"),
     }
 
 
