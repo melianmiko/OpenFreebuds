@@ -212,7 +212,7 @@
     <message>
       <location filename="../../designer/device_other.ui" line="0" />
       <source>Wear detection</source>
-      <translation>Detectar fones de ouvido</translation>
+      <translation>Detecção de uso</translation>
     </message>
     <message>
       <location filename="../../designer/device_other.ui" line="0" />
