@@ -2,10 +2,11 @@ import sys
 import webbrowser
 
 from PyQt6.QtCore import pyqtSlot
-from PyQt6.QtWidgets import QDialog
+from PyQt6.QtWidgets import QDialog, QSystemTrayIcon
 from qasync import asyncSlot
 
 import openfreebuds_backend
+from openfreebuds import OfbEventKind
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.constants import LINK_WEBSITE_HELP
 from openfreebuds_qt.designer.first_run_dialog import Ui_OfbQtFirstRunDialog
@@ -26,7 +27,8 @@ class OfbQtFirstRunDialog(Ui_OfbQtFirstRunDialog, QDialog):
 
         self.autostart_checkbox.setChecked(not self.config.is_containerized_app)
         self.autostart_checkbox.setEnabled(not self.config.is_containerized_app)
-        self.linux_notice.setVisible(sys.platform == 'linux')
+        self.background_checkbox.setChecked(QSystemTrayIcon.isSystemTrayAvailable())
+        self.background_checkbox.setEnabled(QSystemTrayIcon.isSystemTrayAvailable())
 
         preview_fn = "ofb_linux_preview" if sys.platform == 'linux' else "ofb_win32_preview"
         preview_image = get_img_colored(preview_fn,
@@ -39,11 +41,15 @@ class OfbQtFirstRunDialog(Ui_OfbQtFirstRunDialog, QDialog):
         async with qt_error_handler("OfbQtFirstRunDialog_Confirm", self.ctx):
             self.hide()
 
-            if self.autostart_checkbox.isChecked():
-                openfreebuds_backend.set_run_at_boot(True)
-
+            openfreebuds_backend.set_run_at_boot(self.autostart_checkbox.isChecked())
+            self.config.set("ui", "background", self.background_checkbox.isChecked())
             self.config.set("ui", "first_run_finished", True)
             self.config.save()
+
+            if not self.background_checkbox.isChecked():
+                self.ctx.main_window.show()
+
+            await self.ctx.ofb.send_message(OfbEventKind.QT_SETTINGS_CHANGED)
 
     @pyqtSlot()
     def on_faq_click(self):

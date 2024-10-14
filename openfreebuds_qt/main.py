@@ -6,7 +6,7 @@ from contextlib import suppress
 from typing import Optional
 
 from PyQt6.QtCore import QLibraryInfo, QLocale, QTranslator, QT_VERSION_STR
-from PyQt6.QtWidgets import QMessageBox
+from PyQt6.QtWidgets import QMessageBox, QSystemTrayIcon
 from qasync import QEventLoop
 
 from openfreebuds import IOpenFreebuds, create as create_ofb, OfbEventKind
@@ -30,6 +30,7 @@ class OfbQtApplication(IOfbQtApplication):
         super().__init__(sys.argv)
 
         self.args = args
+        self.tray_available = QSystemTrayIcon.isSystemTrayAvailable()
 
         # Config folder
         if not STORAGE_PATH.is_dir():
@@ -117,9 +118,14 @@ class OfbQtApplication(IOfbQtApplication):
                 if float(".".join(QT_VERSION_STR.split(".")[:2])) < 6.7:
                     self.show_old_qt_warning()
 
+            # System tray icon not available
+            if not self.tray_available:
+                self.show_no_tray_warning()
+                self.main_window.show()
+
             # Show UI
             self.tray.show()
-            if self.args.settings:
+            if not self.config.get("ui", "background", True) or self.args.settings:
                 self.main_window.show()
             if not self.config.get("ui", "first_run_finished", False):
                 OfbQtFirstRunDialog(self).show()
@@ -132,7 +138,7 @@ class OfbQtApplication(IOfbQtApplication):
 
     async def exit(self, ret_code: int = 0):
         await self.tray.close()
-        self.main_window.close()
+        self.main_window.hide()
 
         if self.ofb.role == "standalone":
             await self.ofb.destroy()
@@ -194,8 +200,28 @@ class OfbQtApplication(IOfbQtApplication):
         self.event_loop.run_until_complete(self.close_event.wait())
         self.event_loop.close()
 
+    def show_no_tray_warning(self):
+        if self.config.get("warn", "no_tray", False):
+            return
+
+        paragraph_1 = self.tr("System tray not available, application won't work in background. "
+                              "This will make some features, like global hotkeys, unavailable.")
+        paragraph_2 = self.tr("If you're running under GNOME shell, please, check FAQ. "
+                              "This warning will be shown only once.")
+
+        QMessageBox(
+            QMessageBox.Icon.Warning,
+            "OpenFreebuds",
+            paragraph_1 + "\n\n" + paragraph_2,
+            QMessageBox.StandardButton.Ok,
+            self.main_window
+        ).show()
+
+        self.config.set("warn", "no_tray", True)
+        self.config.save()
+
     def show_old_qt_warning(self):
-        if self.config.get("ui", "old_qt", False):
+        if self.config.get("warn", "old_qt", False):
             return
 
         paragraph_1 = self.tr(
@@ -214,5 +240,5 @@ class OfbQtApplication(IOfbQtApplication):
             self.main_window
         ).show()
 
-        self.config.set("ui", "old_qt", True)
+        self.config.set("warn", "old_qt", True)
         self.config.save()

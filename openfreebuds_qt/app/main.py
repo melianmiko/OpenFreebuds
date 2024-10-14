@@ -5,8 +5,8 @@ from typing import Optional
 
 from PyQt6.QtCore import pyqtSlot
 from PyQt6.QtGui import QIcon, QKeySequence
-from PyQt6.QtWidgets import QMenu
-from qasync import asyncSlot
+from PyQt6.QtWidgets import QMenu, QSystemTrayIcon
+from qasync import asyncSlot, asyncClose
 
 from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds.utils.logger import create_logger
@@ -34,6 +34,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
         self.ctx = ctx
         self.ofb = ctx.ofb
         self.config = OfbQtConfigParser.get_instance()
+        self.tray_available = QSystemTrayIcon.isSystemTrayAvailable()
 
         self.setupUi(self)
 
@@ -123,7 +124,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
         hide_action = self.extra_menu.addAction(self.tr("Close this window"))
         hide_action.setShortcut(QKeySequence('Ctrl+W'))
         # noinspection PyUnresolvedReferences
-        hide_action.triggered.connect(self.hide)
+        hide_action.triggered.connect(self.hide_or_exit)
 
         exit_action = self.extra_menu.addAction(self.tr("Exit OpenFreebuds"))
         exit_action.setShortcut(QKeySequence('Ctrl+Q'))
@@ -212,8 +213,13 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
     def closeEvent(self, e):
         if self.isVisible():
             e.ignore()
-            self.hide()
+            self.hide_or_exit()
             return
+
+    def hide_or_exit(self):
+        self.hide()
+        if not self.config.get("ui", "background", True) or not self.tray_available:
+            self.on_exit()
 
     def showEvent(self, e):
         e.accept()
