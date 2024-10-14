@@ -4,23 +4,23 @@ Protocol: Huawei SPP, port 1
 
 ## Features
 
-- Fetch device information and battery level: ❓ (untested)
-- Fetch in-ear status: ❓ (untested)
-- Sound quality preference: ❓ (untested)
-- Low-latency mode: ❓ (untested)
-- Control noise cancellation: ❓ (untested)
+- Fetch device information and battery level: ✅
+- Fetch in-ear status: ✅
+- Sound quality preference: ✅
+- Low-latency mode: ✅
+- Control noise cancellation: ✅
   - With cancellation level
   - With dynamic cancellation
-- Set double-tap action: ❓ (untested)
-- Set triple-tap action: ❓ (untested)
-- Set swipe action: ❓ (untested)
-- Wear detection (aka auto-pause) configuration: ❓ (untested)
-- Set long-tap action: ❓ (untested)
+- Set double-tap action: ✅
+- Set triple-tap action: ✅
+- Set swipe action: ✅
+- Wear detection (aka auto-pause) configuration: ✅
+- Set long-tap action: ✅
   - Split configuration store
-- Change voice language: ❓ (untested)
+- Change voice language: ✅
   - English, Chinese
-- Dual connect: ❓ (untested)
-- Equalizer: ❓ (untested)
+- Dual connect: ✅
+- Equalizer: ✅
   - 4 built-in presets
   - 2 fake built-in presets (stored in application)
   - Up to ??? custom presets in-device memory
