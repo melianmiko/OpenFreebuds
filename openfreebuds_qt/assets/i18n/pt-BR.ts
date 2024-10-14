@@ -102,12 +102,12 @@
     <message>
       <location filename="../../designer/main_window.ui" line="0" />
       <source>Hide</source>
-      <translation>Esconder</translation>
+      <translation>Ocultar</translation>
     </message>
     <message>
       <location filename="../../designer/main_window.ui" line="0" />
       <source>Update now</source>
-      <translation>Atualizar</translation>
+      <translation>Atualizar agora</translation>
     </message>
     <message>
       <location filename="../../designer/main_window.ui" line="0" />
@@ -169,7 +169,7 @@
     <message>
       <location filename="../../designer/device_info.ui" line="0" />
       <source>Firmware version:</source>
-      <translation>Versão do firmware</translation>
+      <translation>Versão do firmware:</translation>
     </message>
     <message>
       <location filename="../../designer/device_info.ui" line="0" />
@@ -212,7 +212,7 @@
     <message>
       <location filename="../../designer/device_other.ui" line="0" />
       <source>Wear detection</source>
-      <translation>Detecção de desgaste</translation>
+      <translation>Detectar fones de ouvido</translation>
     </message>
     <message>
       <location filename="../../designer/device_other.ui" line="0" />
@@ -227,7 +227,7 @@
     <message>
       <location filename="../../designer/device_other.ui" line="0" />
       <source>Enable low-latency mode</source>
-      <translation>Ative o modo de baixa latência</translation>
+      <translation>Ativar o modo de baixa latência</translation>
     </message>
     <message>
       <location filename="../../designer/device_other.ui" line="0" />
@@ -1008,7 +1008,7 @@
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Icon color</source>
-      <translation>Tema de ícones</translation>
+      <translation>Cor do ícone</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
@@ -1064,7 +1064,7 @@
     <message>
       <location filename="../../qt_i18n.py" line="17" />
       <source>Connect/disconnect device</source>
-      <translation>Conectar ou desconectar</translation>
+      <translation>Conectar/desconectar dispositivo</translation>
     </message>
     <message>
       <location filename="../../qt_i18n.py" line="18" />
