@@ -118,16 +118,16 @@ class OfbQtApplication(IOfbQtApplication):
                 if float(".".join(QT_VERSION_STR.split(".")[:2])) < 6.7:
                     self.show_old_qt_warning()
 
-            # System tray icon not available
-            if not self.tray_available:
-                self.show_no_tray_warning()
-                self.main_window.show()
-
             # Show UI
             self.tray.show()
             if not self.config.get("ui", "background", True) or self.args.settings:
                 self.main_window.show()
-            if not self.config.get("ui", "first_run_finished", False):
+
+            # System tray availability
+            if not self.tray_available:
+                self.show_no_tray_warning()
+                self.main_window.show()
+            elif not self.config.get("ui", "first_run_finished", False):
                 OfbQtFirstRunDialog(self).show()
         except SystemExit as e:
             self.qt_app.exit(e.args[0])
