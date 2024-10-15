@@ -23,55 +23,65 @@
   <context>
     <name>EqPresetName</name>
     <message>
-      <location filename="../../qt_i18n.py" line="6" />
+      <location filename="../../qt_i18n.py" line="16" />
       <source>Default</source>
       <translation>По умолчанию</translation>
     </message>
     <message>
-      <location filename="../../qt_i18n.py" line="7" />
+      <location filename="../../qt_i18n.py" line="17" />
       <source>Bass-boost</source>
       <translation>Больше баса</translation>
     </message>
     <message>
-      <location filename="../../qt_i18n.py" line="8" />
+      <location filename="../../qt_i18n.py" line="18" />
       <source>Treble-boost</source>
       <translation>Больше высоких</translation>
     </message>
     <message>
-      <location filename="../../qt_i18n.py" line="9" />
+      <location filename="../../qt_i18n.py" line="19" />
       <source>Voices</source>
       <translation>Вокал</translation>
+    </message>
+    <message>
+      <location filename="../../qt_i18n.py" line="20" />
+      <source>Symphony</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../../qt_i18n.py" line="21" />
+      <source>Hi-Fi Live</source>
+      <translation type="unfinished" />
     </message>
   </context>
   <context>
     <name>OfbDeviceAncLevelTrayMenu</name>
     <message>
-      <location filename="../../tray/menu_anc_level.py" line="14" />
+      <location filename="../../qt_i18n.py" line="6" />
       <source>Comfortable</source>
       <translation>Комфортный</translation>
     </message>
     <message>
-      <location filename="../../tray/menu_anc_level.py" line="15" />
+      <location filename="../../qt_i18n.py" line="7" />
       <source>Normal</source>
       <translation>Обычный</translation>
     </message>
     <message>
-      <location filename="../../tray/menu_anc_level.py" line="16" />
+      <location filename="../../qt_i18n.py" line="8" />
       <source>Ultra</source>
       <translation>Максимальное</translation>
     </message>
     <message>
-      <location filename="../../tray/menu_anc_level.py" line="17" />
+      <location filename="../../qt_i18n.py" line="9" />
       <source>Dynamic</source>
       <translation>Динамический</translation>
     </message>
     <message>
-      <location filename="../../tray/menu_anc_level.py" line="18" />
+      <location filename="../../qt_i18n.py" line="10" />
       <source>Voice boost</source>
       <translation>Усиление голоса</translation>
     </message>
     <message>
-      <location filename="../../tray/menu_anc_level.py" line="21" />
+      <location filename="../../tray/menu_anc_level.py" line="16" />
       <source>Intensity…</source>
       <translation>Интенсивность…</translation>
     </message>
@@ -94,6 +104,36 @@
   </context>
   <context>
     <name>OfbMainWindowDesign</name>
+    <message>
+      <location filename="../../designer/main_window.ui" line="0" />
+      <source>Left headphone</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../../designer/main_window.ui" line="0" />
+      <source>Right headphone</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../../designer/main_window.ui" line="0" />
+      <source>Battery level</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../../designer/main_window.ui" line="0" />
+      <source>Cancellation</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../../designer/main_window.ui" line="0" />
+      <source>Disable noise control</source>
+      <translation type="unfinished">Отключить шумоподавление</translation>
+    </message>
+    <message>
+      <location filename="../../designer/main_window.ui" line="0" />
+      <source>Awareness</source>
+      <translation type="unfinished">Прозрачность</translation>
+    </message>
     <message>
       <location filename="../../designer/main_window.ui" line="0" />
       <source>New version available, click here to view</source>
@@ -146,12 +186,22 @@
   <context>
     <name>OfbQtApplication</name>
     <message>
-      <location filename="../../main.py" line="201" />
+      <location filename="../../main.py" line="207" />
+      <source>System tray not available, application won't work in background. This will make some features, like global hotkeys, unavailable.</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../../main.py" line="209" />
+      <source>If you're running under GNOME shell, please, check FAQ. This warning will be shown only once.</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../../main.py" line="227" />
       <source>You're running under older version of Qt than expected. It's strongly recommended to switch to Flatpak release, because older Qt version may fail your experience of using OpenFreebuds.</source>
       <translation>Вы используете более старую версию Qt, чем ожидалось. Рекомендуем перейти на Flatpak-версию программы, поскольку более старые версии Qt, предоставляемые вашей системой, могут пагубно повлиять на работу программы.</translation>
     </message>
     <message>
-      <location filename="../../main.py" line="206" />
+      <location filename="../../main.py" line="232" />
       <source>This warning will be shown only once. Please, test Flatpak version before reporting bugs.</source>
       <translation>Это предупреждение будет показано лишь один раз. Перед тем, как сообщать о проблемах, протестируйте Flatpak версию.</translation>
     </message>
@@ -162,6 +212,14 @@
       <location filename="../../designer/dependency_missing.ui" line="0" />
       <source>To use this feature, additional dependencies is required. Install it now?</source>
       <translation>Для этой функции требуется дополнительный компонент. Перейти к установке?</translation>
+    </message>
+  </context>
+  <context>
+    <name>OfbQtDeviceControlViewHelper</name>
+    <message>
+      <location filename="../../app/helper/device_control_view_helper.py" line="78" />
+      <source>Connecting…</source>
+      <translation type="unfinished" />
     </message>
   </context>
   <context>
@@ -374,13 +432,13 @@
     </message>
     <message>
       <location filename="../../designer/first_run_dialog.ui" line="0" />
-      <source>If you're running under GNOME shell and can't find tray icon, please, check FAQ.</source>
-      <translation>Если вы используете рабочий стол GNOME и не можете найти значок в области уведомлений, ознакомьтесь с ЧаВо.</translation>
+      <source>Launch OpenFreebuds at system boot</source>
+      <translation>Запускать OpenFreebuds при включении ПК</translation>
     </message>
     <message>
       <location filename="../../designer/first_run_dialog.ui" line="0" />
-      <source>Launch OpenFreebuds at system boot</source>
-      <translation>Запускать OpenFreebuds при включении ПК</translation>
+      <source>Mininize to system tray instead of closing</source>
+      <translation type="unfinished" />
     </message>
     <message>
       <location filename="../../designer/first_run_dialog.ui" line="0" />
@@ -621,97 +679,97 @@
   <context>
     <name>OfbQtMainWindow</name>
     <message>
-      <location filename="../../app/main.py" line="64" />
+      <location filename="../../app/main.py" line="67" />
       <source>Select device</source>
       <translation>Выбрать устройство</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="68" />
+      <location filename="../../app/main.py" line="71" />
       <source>Device info</source>
       <translation>Об устройстве</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="69" />
+      <location filename="../../app/main.py" line="72" />
       <source>Dual-connect</source>
       <translation>Двойное подключение</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="70" />
+      <location filename="../../app/main.py" line="73" />
       <source>Gestures</source>
       <translation>Жесты</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="71" />
+      <location filename="../../app/main.py" line="74" />
       <source>Sound quality</source>
       <translation>Качество звука</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="72" />
+      <location filename="../../app/main.py" line="75" />
       <source>Other settings</source>
       <translation>Прочие настройки</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="75" />
+      <location filename="../../app/main.py" line="78" />
       <source>Application</source>
       <translation>Приложение</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="77" />
+      <location filename="../../app/main.py" line="80" />
       <source>User interface</source>
       <translation>Внешний вид</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="79" />
+      <location filename="../../app/main.py" line="82" />
       <source>Keyboard shortcuts</source>
       <translation>Сочетания клавиш</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="81" />
+      <location filename="../../app/main.py" line="84" />
       <source>Linux-related</source>
       <translation>Linux-специфичное</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="82" />
+      <location filename="../../app/main.py" line="85" />
       <source>About…</source>
       <translation>О программе…</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="90" />
+      <location filename="../../app/main.py" line="93" />
       <source>Help: FAQ</source>
       <translation>Помощь: Частые вопросы</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="94" />
+      <location filename="../../app/main.py" line="97" />
       <source>Help: Remote control</source>
       <translation>Помощь: Удалённое управление</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="98" />
+      <location filename="../../app/main.py" line="101" />
       <source>Bugreport…</source>
       <translation>Отчёт об ошибке…</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="103" />
+      <location filename="../../app/main.py" line="106" />
       <source>Check for updates…</source>
       <translation>Проверить наличие обновлений…</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="110" />
+      <location filename="../../app/main.py" line="113" />
       <source>Remote access…</source>
       <translation>Удалённый доступ…</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="114" />
+      <location filename="../../app/main.py" line="117" />
       <source>Temporary replace device</source>
       <translation>Временно сменить устройство</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="121" />
+      <location filename="../../app/main.py" line="124" />
       <source>Close this window</source>
       <translation>Закрыть окно</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="126" />
+      <location filename="../../app/main.py" line="129" />
       <source>Exit OpenFreebuds</source>
       <translation>Закрыть OpenFreebuds</translation>
     </message>
@@ -845,42 +903,54 @@
       <translation>Загрузить файл…</translation>
     </message>
     <message>
-      <location filename="../../app/module/sound_quality.py" line="152" />
-      <source>Create new equalizer preset</source>
-      <translation>Создать новую предустановку эквалайзера</translation>
+      <location filename="../../app/module/sound_quality.py" line="150" />
+      <source>Notice</source>
+      <translation type="unfinished" />
     </message>
     <message>
-      <location filename="../../app/module/sound_quality.py" line="153" />
-      <source>Enter new preset name:</source>
-      <translation>Введите название новой предустановки:</translation>
+      <location filename="../../app/module/sound_quality.py" line="151" />
+      <source>This preset isn't available in your device, it will be created as custom preset.</source>
+      <translation type="unfinished" />
     </message>
     <message>
-      <location filename="../../app/module/sound_quality.py" line="162" />
+      <location filename="../../app/module/sound_quality.py" line="184" />
+      <location filename="../../app/module/sound_quality.py" line="161" />
       <source>Failed</source>
       <translation>Ошибка</translation>
     </message>
     <message>
-      <location filename="../../app/module/sound_quality.py" line="163" />
+      <location filename="../../app/module/sound_quality.py" line="185" />
+      <location filename="../../app/module/sound_quality.py" line="162" />
       <source>Can't create: too many custom preset created in device.</source>
       <translation>Не удалось: достигнут лимит кол-ва предустановок в памяти устройства.</translation>
     </message>
     <message>
-      <location filename="../../app/module/sound_quality.py" line="176" />
+      <location filename="../../app/module/sound_quality.py" line="174" />
+      <source>Create new equalizer preset</source>
+      <translation>Создать новую предустановку эквалайзера</translation>
+    </message>
+    <message>
+      <location filename="../../app/module/sound_quality.py" line="175" />
+      <source>Enter new preset name:</source>
+      <translation>Введите название новой предустановки:</translation>
+    </message>
+    <message>
+      <location filename="../../app/module/sound_quality.py" line="198" />
       <source>Delete equalizer mode?</source>
       <translation>Удалить предустановку эквалайзера?</translation>
     </message>
     <message>
-      <location filename="../../app/module/sound_quality.py" line="177" />
+      <location filename="../../app/module/sound_quality.py" line="199" />
       <source>Will delete following mode:</source>
       <translation>Будет удалена предустановка:</translation>
     </message>
     <message>
-      <location filename="../../app/module/sound_quality.py" line="193" />
+      <location filename="../../app/module/sound_quality.py" line="215" />
       <source>Save equalizer preset to file…</source>
       <translation>Сохранить предустановку в файл…</translation>
     </message>
     <message>
-      <location filename="../../app/module/sound_quality.py" line="208" />
+      <location filename="../../app/module/sound_quality.py" line="230" />
       <source>Load equalizer preset from file…</source>
       <translation>Загрузить предустановку из файла…</translation>
     </message>
@@ -962,23 +1032,13 @@
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
-      <source>Launch at system startup</source>
-      <translation>Запускать вместе с системой</translation>
-    </message>
-    <message>
-      <location filename="../../designer/ui_settings.ui" line="0" />
-      <source>Language:</source>
-      <translation>Язык интерфейса:</translation>
-    </message>
-    <message>
-      <location filename="../../designer/ui_settings.ui" line="0" />
-      <source>System</source>
-      <translation>Системный</translation>
-    </message>
-    <message>
-      <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Restart OpenFeebuds to apply changes</source>
       <translation>Перезапустите OpenFreebuds для применения изменения</translation>
+    </message>
+    <message>
+      <location filename="../../designer/ui_settings.ui" line="0" />
+      <source>Launch at system startup</source>
+      <translation>Запускать вместе с системой</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
@@ -999,6 +1059,21 @@
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Disabled</source>
       <translation>Отключить</translation>
+    </message>
+    <message>
+      <location filename="../../designer/ui_settings.ui" line="0" />
+      <source>Language:</source>
+      <translation>Язык интерфейса:</translation>
+    </message>
+    <message>
+      <location filename="../../designer/ui_settings.ui" line="0" />
+      <source>System</source>
+      <translation>Системный</translation>
+    </message>
+    <message>
+      <location filename="../../designer/ui_settings.ui" line="0" />
+      <source>Mininize to system tray instead of closing</source>
+      <translation type="unfinished" />
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
@@ -1052,42 +1127,47 @@
   <context>
     <name>ShortcutName</name>
     <message>
-      <location filename="../../qt_i18n.py" line="15" />
+      <location filename="../../qt_i18n.py" line="27" />
+      <source>Show OpenFreebuds window</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../../qt_i18n.py" line="28" />
       <source>Connect device</source>
       <translation>Подключить устройство</translation>
     </message>
     <message>
-      <location filename="../../qt_i18n.py" line="16" />
+      <location filename="../../qt_i18n.py" line="29" />
       <source>Disconnect device</source>
       <translation>Отсоединить устройство</translation>
     </message>
     <message>
-      <location filename="../../qt_i18n.py" line="17" />
+      <location filename="../../qt_i18n.py" line="30" />
       <source>Connect/disconnect device</source>
       <translation>Подключить/отключить устройство</translation>
     </message>
     <message>
-      <location filename="../../qt_i18n.py" line="18" />
+      <location filename="../../qt_i18n.py" line="31" />
       <source>Next noise control mode</source>
       <translation>Следующий режим шумоподавления</translation>
     </message>
     <message>
-      <location filename="../../qt_i18n.py" line="19" />
+      <location filename="../../qt_i18n.py" line="32" />
       <source>Disable noise control</source>
       <translation>Отключить шумоподавление</translation>
     </message>
     <message>
-      <location filename="../../qt_i18n.py" line="20" />
+      <location filename="../../qt_i18n.py" line="33" />
       <source>Enable noise cancellation</source>
       <translation>Включить шумоподавление</translation>
     </message>
     <message>
-      <location filename="../../qt_i18n.py" line="21" />
+      <location filename="../../qt_i18n.py" line="34" />
       <source>Enable awareness mode</source>
       <translation>Включить режим прозрачность</translation>
     </message>
     <message>
-      <location filename="../../qt_i18n.py" line="22" />
+      <location filename="../../qt_i18n.py" line="35" />
       <source>Enable low-latency mode</source>
       <translation>Включить режим низкой задержки</translation>
     </message>
