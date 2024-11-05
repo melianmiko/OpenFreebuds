@@ -32,7 +32,7 @@ Features
 
 ![Settings preview](docs/preview_1.png)
 
-Device compatability
+Device compatibility
 ------------------------
 
 See device page to get information about supported features.
@@ -54,15 +54,22 @@ May also work with newer/older devices in same series. If you want to get better
 Download & install
 -----------------
 
-- **Windows**: [Download here](https://mmk.pw/en/openfreebuds/).
-- **Debian/Ubuntu**:
+[![Download for Windows](./docs/download_buttons/windows.png)](https://mmk.pw/en/openfreebuds/)
+[![Available in FlatHub](./docs/download_buttons/flathub.png)](https://flathub.org/apps/pw.mmk.OpenFreebuds)
+
+
+#### Debian/Ubuntu
 
 ```shell
 curl -s https://deb.mmk.pw/setup | sudo bash -
 sudo apt install openfreebuds
 ```
-- **Arch Linux**: `openfreebuds` [available in AUR](https://aur.archlinux.org/packages/openfreebuds).
-- **Flatpak**: _Coming soon_
+
+#### Arch Linux
+
+`openfreebuds` [available in AUR](https://aur.archlinux.org/packages/openfreebuds).
+
+#### Test builds
 
 Most recent `dev`-binaries can be found in [GitHub Actions](https://github.com/melianmiko/OpenFreebuds/actions/workflows/on_push.yml) build artifacts.
 
