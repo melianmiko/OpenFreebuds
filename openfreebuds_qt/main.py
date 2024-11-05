@@ -55,7 +55,6 @@ class OfbQtApplication(IOfbQtApplication):
                 logging.getLogger(tag).disabled = True
 
         # App configuration
-        ConfigLock.acquire()
         self.config.update_fallback_values(self)
 
         # Qt base configs
@@ -86,6 +85,7 @@ class OfbQtApplication(IOfbQtApplication):
 
     async def boot(self):
         try:
+            await ConfigLock.acquire()
             await self._stage_setup_ofb()
 
             if self.args.shortcut != "":

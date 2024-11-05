@@ -6,6 +6,7 @@ from psutil import Process, AccessDenied, NoSuchProcess
 
 from openfreebuds.constants import STORAGE_PATH
 from openfreebuds.utils.logger import create_logger
+from openfreebuds_qt.config.dbus_config_lock import DBusConfigLock
 
 log = create_logger("ConfigLock")
 
@@ -15,7 +16,12 @@ class ConfigLock:
     owned: bool = False
 
     @staticmethod
-    def acquire():
+    async def acquire():
+        if sys.platform == "linux" and os.path.isfile("/app/is_container"):
+            ConfigLock.owned = await DBusConfigLock.acquire()
+            log.info(f"DBus ConfigLock result {ConfigLock.owned}")
+            return
+
         if ConfigLock._path.is_file():
             try:
                 with open(ConfigLock._path, "r") as f:

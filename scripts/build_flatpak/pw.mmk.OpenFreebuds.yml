@@ -20,7 +20,7 @@ finish-args:
   - --system-talk-name=org.bluez
   # Display tray icon
   - --talk-name=org.kde.StatusNotifierWatcher
-  # Check running state, enable/disable autostart
+  # Enable/disable autostart from in-app settings
   - --talk-name=org.freedesktop.impl.portal.desktop.gnome
 
 cleanup-commands:
