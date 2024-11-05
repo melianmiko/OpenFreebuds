@@ -7,7 +7,7 @@ cd "$(dirname "$0")"/..
 
 # Build & install flatpak
 cd scripts/build_flatpak
-flatpak-builder \
+flatpak run org.flatpak.Builder \
 	--force-clean \
 	--user \
 	--install-deps-from=flathub \

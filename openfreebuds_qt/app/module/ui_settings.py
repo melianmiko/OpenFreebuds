@@ -75,9 +75,6 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
         with blocked_signals(self.autostart_toggle):
             self.autostart_toggle.setChecked(is_run_at_boot())
 
-            if self.config.is_containerized_app:
-                self.autostart_toggle.setVisible(False)
-
         with blocked_signals(self.background_toggle):
             self.background_toggle.setEnabled(QSystemTrayIcon.isSystemTrayAvailable())
             self.background_toggle.setChecked(self.config.get("ui", "background", True))
@@ -89,7 +86,7 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
 
     @asyncSlot(bool)
     async def on_autostart_toggle(self, value: bool):
-        set_run_at_boot(value)
+        await set_run_at_boot(value)
 
     @asyncSlot(bool)
     async def on_tray_eq_toggle(self, value: bool):

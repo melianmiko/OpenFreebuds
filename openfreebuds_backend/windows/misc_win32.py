@@ -34,7 +34,7 @@ def is_run_at_boot():
     return False
 
 
-def set_run_at_boot(val):
+async def set_run_at_boot(val):
     with winreg.OpenKey(
             key=winreg.HKEY_CURRENT_USER,
             sub_key=r'Software\Microsoft\Windows\CurrentVersion\Run',

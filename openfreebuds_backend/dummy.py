@@ -16,7 +16,7 @@ def is_run_at_boot():
     return False
 
 
-def set_run_at_boot(val):
+async def set_run_at_boot(val):
     log.info("run_at_boot " + str(val))
 
 

@@ -25,8 +25,6 @@ class OfbQtFirstRunDialog(Ui_OfbQtFirstRunDialog, QDialog):
         if sys.platform == "win32":
             self.setStyleSheet(WIN32_BODY_STYLE)
 
-        self.autostart_checkbox.setChecked(not self.config.is_containerized_app)
-        self.autostart_checkbox.setEnabled(not self.config.is_containerized_app)
         self.background_checkbox.setChecked(QSystemTrayIcon.isSystemTrayAvailable())
         self.background_checkbox.setEnabled(QSystemTrayIcon.isSystemTrayAvailable())
 
@@ -41,7 +39,7 @@ class OfbQtFirstRunDialog(Ui_OfbQtFirstRunDialog, QDialog):
         async with qt_error_handler("OfbQtFirstRunDialog_Confirm", self.ctx):
             self.hide()
 
-            openfreebuds_backend.set_run_at_boot(self.autostart_checkbox.isChecked())
+            await openfreebuds_backend.set_run_at_boot(self.autostart_checkbox.isChecked())
             self.config.set("ui", "background", self.background_checkbox.isChecked())
             self.config.set("ui", "first_run_finished", True)
             self.config.save()
