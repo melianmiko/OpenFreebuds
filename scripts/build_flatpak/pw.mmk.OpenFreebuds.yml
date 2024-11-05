@@ -22,6 +22,7 @@ finish-args:
   - --talk-name=org.kde.StatusNotifierWatcher
   # Enable/disable autostart from in-app settings
   - --talk-name=org.freedesktop.impl.portal.desktop.gnome
+  - --talk-name=org.freedesktop.impl.portal.desktop.kde
 
 cleanup-commands:
   - /app/cleanup-BaseApp.sh

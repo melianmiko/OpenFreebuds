@@ -5,6 +5,7 @@ from dbus_next.aio import ProxyObject, MessageBus
 
 ALLOWED_PORTALS = [
     "org.freedesktop.impl.portal.desktop.gnome",
+    "org.freedesktop.impl.portal.desktop.kde",
 ]
 
 introspection = """<?xml version="1.0"?>
