@@ -15,6 +15,7 @@ from sys import version_info
 PROJECT_ROOT = Path(__file__).parent
 if PROJECT_ROOT.name == "scripts":
     PROJECT_ROOT = PROJECT_ROOT.parent
+SHELL_PREFIX = [] if sys.platform != "linux" else ["/usr/bin/env"]
 
 # Constants
 DEFAULT_DESTINATION = "/usr/local"
@@ -57,9 +58,9 @@ DO_BUILD = "build" in TASK
 if sys.platform == "win32" and DO_INSTALL:
     print("-- Can't install under Windows, use pyinstaller")
     raise SystemExit(1)
-if os.environ.get("VIRTUAL_ENV", None) is not None:
-    print("-- Launch this script outside of virtualenv")
-    raise SystemExit(1)
+# if os.environ.get("VIRTUAL_ENV", None) is not None:
+#     print("-- Launch this script outside of virtualenv")
+#     raise SystemExit(1)
 
 # Find python dest dir
 if PYTHON_LIBS_DIR is None:
@@ -82,14 +83,14 @@ if DO_BUILD:
     # Compile Qt Designer layouts
     print("Compile Qt Designer files")
     DESIGNER_DIR = PROJECT_ROOT / "openfreebuds_qt" / "designer"
-    result = subprocess.run(["poetry", "run", "pyuic6", DESIGNER_DIR])
+    result = subprocess.run([*SHELL_PREFIX, "poetry", "run", "pyuic6", DESIGNER_DIR])
     if result.returncode != 0:
         print("Failed, old pyuic? Will try single file mode...")
         for ui_file in DESIGNER_DIR.iterdir():
             if not ui_file.name.endswith(".ui"):
                 continue
             print(f"Compile {ui_file}")
-            result = subprocess.run(["poetry", "run", "pyuic6",
+            result = subprocess.run([*SHELL_PREFIX, "poetry", "run", "pyuic6",
                                      "-o", str(ui_file).replace(".ui", ".py"),
                                      ui_file])
             if result.returncode != 0:
@@ -121,7 +122,7 @@ if DO_BUILD:
     print("Compile Python wheel")
     POETRY_DIST = PROJECT_ROOT / "dist"
     shutil.rmtree(POETRY_DIST, ignore_errors=True)
-    result = subprocess.run(["poetry", "build", "-q"])
+    result = subprocess.run([*SHELL_PREFIX, "poetry", "build", "-q"])
     if result.returncode != 0:
         print("-- Poetry build failed")
         raise SystemExit(1)
@@ -130,7 +131,7 @@ if DO_BUILD:
 if DO_LAUNCH:
     print('----------------------------------------------------------------')
     print("Launching OpenFreebuds")
-    subprocess.run(["poetry", "run", "python", "-m", "openfreebuds_qt", "-vcs"])
+    subprocess.run([*SHELL_PREFIX, "poetry", "run", "python", "-m", "openfreebuds_qt", "-vcs"])
     raise SystemExit(0)
 
 # Wheel install tasks
