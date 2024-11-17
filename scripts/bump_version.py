@@ -115,7 +115,9 @@ def bump_debian(path: Path):
 def bump_metainfo(line: str):
     if not line.strip().startswith('<releases>'):
         return line
-    non_nerd_changelog = CHANGELOG[:CHANGELOG.index('')]
+    non_nerd_changelog = 'Not provided'
+    if '' in CHANGELOG:
+        non_nerd_changelog = CHANGELOG[:CHANGELOG.index('')]
     new_data = [
         line,
         f'    <release version="{NEW_VERSION}" date="{date.today()}">',

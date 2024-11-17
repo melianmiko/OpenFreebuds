@@ -30,6 +30,7 @@ PYTHON_LIB_PATH_OPTIONS = [
 ]
 QT_L_RELEASE_PATH_OPTIONS = [
     "/usr/lib/qt6/bin/lrelease",
+    "/usr/lib64/qt6/bin/lrelease",
     "/usr/bin/lrelease",
     "lrelease",
 ]
