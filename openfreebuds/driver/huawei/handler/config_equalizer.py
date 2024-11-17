@@ -42,10 +42,22 @@ class OfbHuaweiEqualizerPresetHandler(OfbDriverHandlerHuawei):
             w_presets: Optional[dict[int, str]] = None,
             w_custom: bool = False,
             w_fake_built_in: bool = False,
+            wo_read: bool = False,
             w_custom_rows: int = 10,
             w_custom_max_count: int = 3,
     ):
+        """
+        Equalizer configuration handler
+
+        @param w_presets: Available built-in presets
+        @param w_custom: Allow custom modes flag
+        @param w_fake_built_in: Allow fake built-in modes flag
+        @param wo_read: Disallow read request flag (for legacy devices)
+        @param w_custom_rows: Count of equalizer rows, for custom modes
+        @param w_custom_max_count: Max count of custom modes available in device
+        """
         self.w_custom: bool = w_custom
+        self.wo_read: bool = wo_read
         self.w_custom_rows = w_custom_rows
         self.w_custom_max_count = w_custom_max_count
         self.w_fake_built_in = w_fake_built_in
@@ -71,6 +83,13 @@ class OfbHuaweiEqualizerPresetHandler(OfbDriverHandlerHuawei):
         self.preset_data = self.default_preset_data
 
     async def on_init(self):
+        if self.wo_read:
+            await self.driver.put_property("sound", None, {
+                "equalizer_preset": "",
+                "equalizer_preset_options": ",".join([l for _, l, _ in self.preset_data])
+            }, extend_group=True)
+            return
+
         resp = await self.driver.send_package(
             HuaweiSppPackage.read_rq(b"\x2b\x4a", [1, 2, 3, 4, 5, 6, 7, 8])
         )
@@ -206,7 +225,11 @@ class OfbHuaweiEqualizerPresetHandler(OfbDriverHandlerHuawei):
         self.changes_saved = True
 
         await self.driver.send_package(pkg)
-        await self.on_init()
+
+        if self.wo_read:
+            await self.driver.put_property("sound", "equalizer_preset", mode_str)
+        else:
+            await self.on_init()
 
     async def on_package(self, package: HuaweiSppPackage):
         new_props = {

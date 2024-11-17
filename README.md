@@ -46,6 +46,7 @@ If your device isn't listed here, you could try to use it with profile for other
 - [HUAWEI FreeBuds Pro 2](./docs/devices/HUAWEI_FreeBuds_Pro_2.md)
 - [HUAWEI FreeBuds Pro 3](./docs/devices/HUAWEI_FreeBuds_Pro_3.md)
 - [HUAWEI FreeBuds SE](./docs/devices/HUAWEI_FreeBuds_SE.md)
+- [HUAWEI FreeBuds Studio](./docs/devices/HUAWEI_FreeBuds_Studio.md)
 - [HUAWEI FreeLace Pro](./docs/devices/HUAWEI_FreeLace_Pro.md)
 - [HUAWEI FreeLace Pro 2](./docs/devices/HUAWEI_FreeLace_Pro_2.md)
 
