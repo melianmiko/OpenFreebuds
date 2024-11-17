@@ -99,10 +99,7 @@ def bump_debian(path: Path):
     with open(path) as f:
         exiting_data = f.read()
 
-    debian_changelog = []
-    for line in CHANGELOG:
-        debian_changelog.append(f"  * {line[2:]}")
-
+    debian_changelog = [f"  {line}" for line in CHANGELOG]
     write_file(path, [
         f"openfreebuds ({NEW_VERSION}-1) {DEB_CODENAMES}; urgency=medium",
         f"",
