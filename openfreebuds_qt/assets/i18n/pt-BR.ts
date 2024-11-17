@@ -193,7 +193,7 @@
     <message>
       <location filename="../../main.py" line="209" />
       <source>If you're running under GNOME shell, please, check FAQ. This warning will be shown only once.</source>
-      <translation type="unfinished" />
+      <translation>Se você estiver executando o shell do GNOME e não conseguir encontrar o ícone da bandeja, verifique o FAQ.</translation>
     </message>
     <message>
       <location filename="../../main.py" line="227" />
@@ -1073,7 +1073,7 @@
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Mininize to system tray instead of closing</source>
-      <translation type="unfinished" />
+      <translation>Aplicativo da bandeja (tray applet)</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />

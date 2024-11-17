@@ -1,3 +1,9 @@
+openfreebuds (0.14.1-1) bookworm noble; urgency=medium
+
+  * [Fix] Crash when using with old devices, like 4i / SE
+
+ -- MelianMiko <support@mmk.pw>  Wed, 02 Oct 2024 18:29:46 +0700
+
 openfreebuds (0.14.0-1) bookworm noble; urgency=medium
 
   * [Core] Client-server architecture, close #14;

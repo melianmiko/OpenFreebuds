@@ -1,4 +1,4 @@
-VERSION = '0.14.0'
+VERSION = '0.14.1'
 LIBRARIES = [
   'aiocmd==0.1.5 ; python_version >= "3.10" and python_version < "3.13"',
   'aiohappyeyeballs==2.4.2 ; python_version >= "3.10" and python_version < "3.13"',

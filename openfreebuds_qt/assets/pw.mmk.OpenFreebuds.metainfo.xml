@@ -98,6 +98,14 @@
   <content_rating type="oars-1.1" />
 
   <releases>
+    <release version="0.14.1" date="2024-10-02">
+      <url type="details">https://github.com/melianmiko/OpenFreebuds/blob/main/CHANGELOG.md#v0.14.1</url>
+      <description>
+        <ul>
+          <li>[Fix] Crash when using with old devices, like 4i / SE</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.14.0" date="2024-09-28">
       <url type="details">https://github.com/melianmiko/OpenFreebuds/blob/main/CHANGELOG.md#v0.14.0</url>
       <description>
