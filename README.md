@@ -5,13 +5,12 @@
 <p>
 <img src="https://img.shields.io/github/v/release/melianmiko/openfreebuds" alt="Last release"/>
 <img src="https://img.shields.io/aur/last-modified/openfreebuds" alt="Last AUR release"/>
-<a href="https://translate.mmk.pw/projects/0a1e818d-92b0-4f43-a1be-570e2ec35c8a"><img alt="Translated" src="https://translate.mmk.pw/0a1e818d-92b0-4f43-a1be-570e2ec35c8a/percentage_reviewed_badge.svg" /></a>
 <a href="https://github.com/melianmiko/OpenFreebuds/actions/workflows/on_push.yml">
 <img src="https://github.com/melianmiko/OpenFreebuds/actions/workflows/on_push.yml/badge.svg" alt="Test build status"/>
 </a>
 </p>
 <p>
-<a href="https://mmk.pw/en/openfreebuds"><b>💿 Download binaries</b></a> | <a href="https://mmk.pw/en/openfreebuds/help/"><b>❓ FAQ</b></a>  | <a href="https://translate.mmk.pw/projects/0a1e818d-92b0-4f43-a1be-570e2ec35c8a">🌍 Suggest translation</a>
+<a href="https://mmk.pw/en/openfreebuds"><b>💿 Download binaries</b></a> | <a href="https://mmk.pw/en/openfreebuds/help/"><b>❓ FAQ</b></a>
 </p>
 <p>
 <img alt="Tray menu preview" src="docs/preview_0.png" />
