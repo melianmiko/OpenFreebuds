@@ -43,16 +43,22 @@ class HuaweiSppPackage:
         """
         Pretty-print this pacakge contents
         """
+        hex_len = 40
+        for p_type in self.parameters:
+            cand_l = self.parameters[p_type].hex()
+            if len(cand_l) > hex_len:
+                hex_len = len(cand_l)
+
         out = build_table_row(12, "COMMAND_ID")
         out += build_table_row(10, "2 bytes")
-        out += build_table_row(40, self.command_id.hex(), []) + "\n"
+        out += build_table_row(hex_len, self.command_id.hex(), []) + "\n"
 
-        out += 70 * "=" + "\n"
+        out += (30 + hex_len) * "=" + "\n"
         for p_type in self.parameters:
             p_value = self.parameters[p_type]
             out += build_table_row(12, f"PARAM {p_type}")
             out += build_table_row(10, f"{len(p_value)} bytes")
-            out += build_table_row(40, p_value.hex())
+            out += build_table_row(hex_len, p_value.hex())
 
             if all(c < 128 for c in p_value):
                 # ASCII string

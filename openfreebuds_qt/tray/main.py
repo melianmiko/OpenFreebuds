@@ -75,7 +75,6 @@ class OfbTrayIcon(IOfbTrayIcon):
         """
 
         state = await self.ofb.get_state()
-        log.info(f"theme={self.config.get_tray_icon_theme()}")
 
         # Update icon
         icon = create_tray_icon(self.config.get_tray_icon_theme(),

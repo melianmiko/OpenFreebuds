@@ -3,6 +3,8 @@ import os
 import pathlib
 import subprocess
 
+from openfreebuds_backend.linux.dbus.background import FreedesktopBackgroundPortalProxy
+
 log = logging.getLogger("OfbLinuxBackend")
 
 
@@ -20,7 +22,7 @@ def is_run_at_boot():
     return os.path.isfile(_get_autostart_file_path())
 
 
-def set_run_at_boot(val):
+async def set_run_at_boot(val):
     path = _get_autostart_file_path()
     data = (f"[Desktop Entry]\n"
             f"Name=OpenFreebuds\n"
@@ -42,6 +44,18 @@ def set_run_at_boot(val):
         if os.path.isfile(path):
             os.unlink(path)
         log.debug("Removed autostart file: " + path)
+
+    # Sync with DBus (Flatpak)
+    try:
+        o = await FreedesktopBackgroundPortalProxy.get()
+        r = await o.enable_autostart(
+            "pw.mmk.OpenFreebuds",
+            ["/usr/bin/flatpak", "run", "pw.mmk.OpenFreebuds"],
+            val
+        )
+        log.debug(f"Enable autostart through portal result {r}")
+    except AttributeError:
+        log.debug("Sync with portal failed, no valid portal found")
 
 
 def _get_autostart_file_path():

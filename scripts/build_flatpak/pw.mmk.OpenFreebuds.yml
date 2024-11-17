@@ -20,6 +20,9 @@ finish-args:
   - --system-talk-name=org.bluez
   # Display tray icon
   - --talk-name=org.kde.StatusNotifierWatcher
+  # Enable/disable autostart from in-app settings
+  - --talk-name=org.freedesktop.impl.portal.desktop.gnome
+  - --talk-name=org.freedesktop.impl.portal.desktop.kde
 
 cleanup-commands:
   - /app/cleanup-BaseApp.sh
@@ -36,20 +39,13 @@ modules:
 
   - python3-requirements.json
 
-  - name: PyQtApp
+  - name: OpenFreebuds
     buildsystem: simple
     build-commands:
-      - pip3 install --prefix=/app --no-deps *.whl
       - touch /app/is_container
-      - install -Dm644 pw.mmk.OpenFreebuds.png -t /app/share/icons/hicolor/256x256/apps
-      - install -Dm644 pw.mmk.OpenFreebuds.desktop -t /app/share/applications
-      - install -Dm644 pw.mmk.OpenFreebuds.metainfo.xml -t /app/share/metainfo
+      - python ./make.py install /app
     sources:
       - type: file
-        path: pw.mmk.OpenFreebuds.desktop
-      - type: file
-        path: pw.mmk.OpenFreebuds.metainfo.xml
-      - type: file
-        path: pw.mmk.OpenFreebuds.png
+        path: ../../scripts/make.py
       - type: dir
         path: ../../dist

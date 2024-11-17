@@ -1,6 +1,7 @@
 import sys
 
 from PyQt6.QtCore import QLocale
+from PyQt6.QtWidgets import QSystemTrayIcon
 from qasync import asyncSlot
 
 from openfreebuds import OfbEventKind
@@ -11,7 +12,7 @@ from openfreebuds_qt.app.module import OfbQtCommonModule
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.designer.ui_settings import Ui_OfbQtUiSettingsModule
 from openfreebuds_qt.qt_i18n import get_shortcut_names
-from openfreebuds_qt.utils import blocked_signals, list_available_locales
+from openfreebuds_qt.utils import blocked_signals, list_available_locales, OfbCoreEvent
 
 log = create_logger("OfbQtUiSettingsModule")
 
@@ -67,15 +68,25 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
         with blocked_signals(self.tray_dc_toggle):
             self.tray_dc_toggle.setChecked(self.config.get("ui", "tray_show_dual_connect", False))
 
+    async def update_ui(self, event: OfbCoreEvent):
+        if not event.kind_match(OfbEventKind.QT_SETTINGS_CHANGED):
+            return
+
         with blocked_signals(self.autostart_toggle):
             self.autostart_toggle.setChecked(is_run_at_boot())
 
-            if self.config.is_containerized_app:
-                self.autostart_toggle.setVisible(False)
+        with blocked_signals(self.background_toggle):
+            self.background_toggle.setEnabled(QSystemTrayIcon.isSystemTrayAvailable())
+            self.background_toggle.setChecked(self.config.get("ui", "background", True))
+
+    @asyncSlot(bool)
+    async def on_background_toggle(self, value: bool):
+        self.config.set("ui", "background", value)
+        self.config.save()
 
     @asyncSlot(bool)
     async def on_autostart_toggle(self, value: bool):
-        set_run_at_boot(value)
+        await set_run_at_boot(value)
 
     @asyncSlot(bool)
     async def on_tray_eq_toggle(self, value: bool):

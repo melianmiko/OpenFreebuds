@@ -36,6 +36,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         self._eq_last_options: list[str] = []
         self._eq_rows: list[QSlider] = []
         self._last_preset_data: list[int] = []
+        self._last_copy_options: list[str] = []
 
         self.setupUi(self)
 
@@ -101,7 +102,10 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         if event.is_changed("sound", "equalizer_preset"):
             value = sound.get("equalizer_preset")
             options = sound.get("equalizer_preset_options")
+            copy_options = sound.get("equalizer_preset_create_options")
             self.eq_root.setVisible(value is not None and options is not None)
+            if copy_options is not None:
+                self._last_copy_options = list(copy_options.split(","))
             if options is not None:
                 self._eq_last_options = list(options.split(","))
                 fill_combo_box(self.eq_preset_box, self._eq_last_options, self.eq_preset_option_names, value)
@@ -140,7 +144,25 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
     async def on_eq_preset_change(self, index: int):
         async with qt_error_handler("OfbQtSoundQualityModule_ChangePreset", self.ctx):
             value = self._eq_last_options[index]
-            await self.ofb.set_property("sound", "equalizer_preset", value)
+
+            if value in self._last_copy_options:
+                dialog = QMessageBox(QMessageBox.Icon.Information,
+                                     self.tr("Notice"),
+                                     self.tr("This preset isn't available in your device, it will be created as "
+                                             "custom preset."),
+                                     QMessageBox.StandardButton.Ok)
+                dialog.setWindowModality(Qt.WindowModality.WindowModal)
+                await run_dialog_async(dialog)
+
+            try:
+                await self.ofb.set_property("sound", "equalizer_preset", value)
+            except OfbTooManyItemsError:
+                dialog = QMessageBox(QMessageBox.Icon.Critical,
+                                     self.tr("Failed"),
+                                     self.tr("Can't create: too many custom preset created in device."),
+                                     QMessageBox.StandardButton.Ok)
+                dialog.setWindowModality(Qt.WindowModality.WindowModal)
+                await run_dialog_async(dialog)
 
     @asyncSlot()
     async def new_preset(self):

@@ -51,8 +51,8 @@ class OfbDriverSppGeneric(OfbDriverGeneric):
                 await self.__task_recv
             self.__task_recv = None
 
-        self._writer.close()
-        # await self._writer.wait_closed()
+        if self._writer is not None:
+            self._writer.close()
 
         self._writer = None
         self.started = False

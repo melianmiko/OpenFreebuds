@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-cd "$(dirname "$0")"/../..
+cd "$(dirname "$0")"/..
 
-rm -rf scripts/build_flatpak/release
-./scripts/make_qt_parts.sh
-poetry build
+# Compile wheel
+./scripts/make.py build
 
+# Build & install flatpak
 cd scripts/build_flatpak
-flatpak-builder \
+flatpak run org.flatpak.Builder \
 	--force-clean \
 	--user \
 	--install-deps-from=flathub \

@@ -1,4 +1,5 @@
 import openfreebuds_backend
+from openfreebuds.constants import OfbEventKind
 from openfreebuds.exceptions import OfbAlreadyRunningError, OfbSystemError, OfbNotSupportedError
 from openfreebuds.manager.generic import IOpenFreebuds
 from openfreebuds.utils.logger import create_logger
@@ -79,6 +80,9 @@ class OfbShortcuts:
             await self.do_disconnect()
         else:
             await self.do_connect()
+
+    async def do_show_main_window(self):
+        await self.ofb.send_message(OfbEventKind.QT_BRING_SETTINGS_UP)
 
     async def do_disconnect(self):
         state = await self.ofb.get_state()

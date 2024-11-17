@@ -57,7 +57,7 @@
       <item>
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Device will prefer audio codes with better compression, like AAC</string>
+         <string>Device will prefer audio codec with better compression, like AAC</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
