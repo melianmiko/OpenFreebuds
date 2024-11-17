@@ -43,15 +43,9 @@
         Built-in HTTP-server for remote control &amp; scripting;
       </li>
       <li>
-        Built-in global hotkeys support (XOrg only, for wayand see FAQ);
+        Built-in global hotkeys support (Xorg only, for Wayland see FAQ);
       </li>
     </ul>
-    <p>
-      Tested with following devices: HUAWEI FreeBuds 4i / 5i / Pro / Pro 2 / Pro 3 / SE, HUAWEI FreeLace Pro / Pro 2.
-    </p>
-    <p>
-      May also work with newer/older devices in same series.
-    </p>
   </description>
   
   <launchable type="desktop-id">pw.mmk.OpenFreebuds.desktop</launchable>
@@ -73,22 +67,22 @@
   <url type="donation">https://mmk.pw/en/donate/</url>
   <url type="contact">https://mmk.pw/mailto/</url>
   <url type="faq">https://mmk.pw/en/openfreebuds/help/</url>
-  <url type="translate">https://mmk.pw/en/openfreebuds/translate/</url>
+<!-- Temporary <url type="translate">https://mmk.pw/en/openfreebuds/translate/</url>-->
   <url type="contribute">https://github.com/melianmiko/OpenFreebuds</url>
   <url type="vcs-browser">https://github.com/melianmiko/OpenFreebuds</url>
 
   <screenshots>
     <screenshot type="default" xml:lang="en">
-      <caption>Tray indicator and context menu with common features</caption>
-      <image>https://raw.githubusercontent.com/melianmiko/OpenFreebuds/refs/heads/main/docs/preview_0.png</image>
-    </screenshot>
-    <screenshot xml:lang="en">
-      <caption>Device gesture settings (may vary depending on device model)</caption>
+      <caption>Gesture settings</caption>
       <image>https://raw.githubusercontent.com/melianmiko/OpenFreebuds/refs/heads/main/docs/app_0.png</image>
     </screenshot>
     <screenshot xml:lang="en">
-      <caption>Application user interface settings</caption>
+      <caption>Other device settings</caption>
       <image>https://raw.githubusercontent.com/melianmiko/OpenFreebuds/refs/heads/main/docs/app_1.png</image>
+    </screenshot>
+    <screenshot xml:lang="en">
+      <caption>About dialog</caption>
+      <image>https://raw.githubusercontent.com/melianmiko/OpenFreebuds/refs/heads/main/docs/app_2.png</image>
     </screenshot>
   </screenshots>
   <branding>

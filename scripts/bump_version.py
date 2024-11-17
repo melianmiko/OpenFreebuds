@@ -118,15 +118,12 @@ def bump_debian(path: Path):
 def bump_metainfo(line: str):
     if not line.strip().startswith('<releases>'):
         return line
+    non_nerd_changelog = CHANGELOG[:CHANGELOG.index('')]
     new_data = [
         line,
         f'    <release version="{NEW_VERSION}" date="{date.today()}">',
         f'      <url type="details">{BASE_CHANGELOG_URL}#v{NEW_VERSION}</url>',
-        f'      <description>',
-        f'        <ul>',
-        *[f"          <li>{escape(line[2:])}</li>" for line in CHANGELOG],
-        f'        </ul>',
-        f'      </description>',
+        f'      <description>{" ".join(" ".join(non_nerd_changelog).split(" "))}</description>',
         f'    </release>',
     ]
 
@@ -170,7 +167,7 @@ def main():
             if not reach_section:
                 reach_section = changelog_line.startswith(f"# v{NEW_VERSION}")
                 continue
-            if changelog_line.strip() == "" or changelog_line[0] == "#":
+            if changelog_line[0] == "#":
                 break
 
             CHANGELOG.append(changelog_line.strip())
