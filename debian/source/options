@@ -1,4 +1,2 @@
 tar-ignore = "*venv"
 tar-ignore = ".git"
-tar-ignore = "accent.json"
-
