@@ -20,12 +20,15 @@ finish-args:
   - --system-talk-name=org.bluez
   # Display tray icon
   - --talk-name=org.kde.StatusNotifierWatcher
-  # Enable/disable autostart from in-app settings
-  - --talk-name=org.freedesktop.impl.portal.desktop.gnome
-  - --talk-name=org.freedesktop.impl.portal.desktop.kde
 
 cleanup-commands:
   - /app/cleanup-BaseApp.sh
+
+build-options:
+  env:
+    # Current release of yarl fails to compile in Flatpak env, idk why
+    # This is temporary, switch to pure-python implementation of yarl
+    YARL_NO_EXTENSIONS: "true"
 
 modules:
   - name: python3_extras
