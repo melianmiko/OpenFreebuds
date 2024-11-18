@@ -1,3 +1,11 @@
+# v0.15.1
+This release introduces compatibility with FeeeBuds 6i and Studio models.
+Also, since this version OpenFreebuds can be used in desktop environments
+without system tray.
+
+- [Fix] Rework Flatpak autostart management mechanism
+- This version would be only released as Flatpak package
+
 # v0.15.0
 This release introduces compatibility with FeeeBuds 6i and Studio models.
 Also, since this version OpenFreebuds can be used in desktop environments

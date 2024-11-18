@@ -92,6 +92,10 @@
   <content_rating type="oars-1.1" />
 
   <releases>
+    <release version="0.15.1" date="2024-11-18">
+      <url type="details">https://github.com/melianmiko/OpenFreebuds/blob/main/CHANGELOG.md#v0.15.1</url>
+      <description>This release introduces compatibility with FeeeBuds 6i and Studio models. Also, since this version OpenFreebuds can be used in desktop environments without system tray.</description>
+    </release>
     <release version="0.15.0" date="2024-11-17">
       <url type="details">https://github.com/melianmiko/OpenFreebuds/blob/main/CHANGELOG.md#v0.15.0</url>
       <description>This release introduces compatibility with FeeeBuds 6i and Studio models. Also, since this version OpenFreebuds can be used in desktop environments without system tray.</description>
