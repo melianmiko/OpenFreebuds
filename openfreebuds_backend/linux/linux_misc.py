@@ -3,7 +3,9 @@ import os
 import pathlib
 import subprocess
 
-from openfreebuds_backend.linux.dbus.background import FreedesktopBackgroundPortalProxy
+from dbus_next import DBusError
+
+from openfreebuds_backend.linux.dbus.xdg_background import XdgDesktopBackgroundPortal
 
 log = logging.getLogger("OfbLinuxBackend")
 
@@ -47,18 +49,18 @@ async def set_run_at_boot(val):
 
     # Sync with DBus (Flatpak)
     try:
-        o = await FreedesktopBackgroundPortalProxy.get()
-        r = await o.enable_autostart(
-            "pw.mmk.OpenFreebuds",
-            ["/usr/bin/flatpak", "run", "pw.mmk.OpenFreebuds"],
-            val
-        )
-        log.debug(f"Enable autostart through portal result {r}")
-    except AttributeError:
-        log.debug("Sync with portal failed, no valid portal found")
+        o = await XdgDesktopBackgroundPortal.get()
+        res, bg, autostart = await o.request_background(autostart=val)
+        assert res and autostart is val
+        log.debug(f"Enable autostart through portal success")
+    except (AttributeError, AssertionError, DBusError):
+        log.debug("Sync with portal failed")
 
 
 def _get_autostart_file_path():
+    if pathlib.Path('/app/is_container').exists():
+        return str(get_app_storage_path() / "autostart")
+
     autostart_dir = pathlib.Path.home() / ".config/autostart"
     if not autostart_dir.exists():
         autostart_dir.mkdir(parents=True)
