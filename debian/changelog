@@ -1,3 +1,15 @@
+openfreebuds (0.15.1-1) bookworm noble; urgency=medium
+
+  This release introduces compatibility with FeeeBuds 6i and Studio models.
+  Also, since this version OpenFreebuds can be used in desktop environments
+  without system tray.
+  
+  - [Fix] Rework Flatpak autostart management mechanism
+  - This version would be only released as Flatpak package
+  
+
+ -- MelianMiko <support@mmk.pw>  Mon, 18 Nov 2024 20:28:07 +0700
+
 openfreebuds (0.15.0-1) bookworm noble; urgency=medium
 
   This release introduces compatibility with FeeeBuds 6i and Studio models.
