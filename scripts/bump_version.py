@@ -122,7 +122,9 @@ def bump_metainfo(line: str):
         line,
         f'    <release version="{NEW_VERSION}" date="{date.today()}">',
         f'      <url type="details">{BASE_CHANGELOG_URL}#v{NEW_VERSION}</url>',
-        f'      <description>{" ".join(" ".join(non_nerd_changelog).split(" "))}</description>',
+        f'      <description>',
+        f'        <p>{" ".join(" ".join(non_nerd_changelog).split(" "))}</p>',
+        f'      </description>',
         f'    </release>',
     ]
 
