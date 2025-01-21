@@ -10,6 +10,7 @@ from openfreebuds.utils.logger import create_logger
 from openfreebuds_backend import is_run_at_boot, set_run_at_boot
 from openfreebuds_qt.app.module import OfbQtCommonModule
 from openfreebuds_qt.config import OfbQtConfigParser
+from openfreebuds_qt.config.feature import OfbQtFeatureAvailability
 from openfreebuds_qt.designer.ui_settings import Ui_OfbQtUiSettingsModule
 from openfreebuds_qt.qt_i18n import get_shortcut_names
 from openfreebuds_qt.utils import blocked_signals, list_available_locales, OfbCoreEvent
@@ -31,7 +32,7 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
         self.setupUi(self)
 
         with blocked_signals(self.updater_policy_picker):
-            if sys.platform == "win32":
+            if OfbQtFeatureAvailability.can_autoupdate():
                 self.updater_policy_picker.setCurrentIndex(
                     self.available_updater_policies.index(self.config.get("updater", "mode", "show"))
                 )
@@ -73,11 +74,18 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
             return
 
         with blocked_signals(self.autostart_toggle):
-            self.autostart_toggle.setChecked(is_run_at_boot())
+            if OfbQtFeatureAvailability.can_autostart():
+                self.autostart_toggle.setChecked(is_run_at_boot())
+            else:
+                self.autostart_toggle.setChecked(False)
+                self.autostart_toggle.setEnabled(False)
 
         with blocked_signals(self.background_toggle):
-            self.background_toggle.setEnabled(QSystemTrayIcon.isSystemTrayAvailable())
-            self.background_toggle.setChecked(self.config.get("ui", "background", True))
+            if OfbQtFeatureAvailability.can_background():
+                self.background_toggle.setChecked(self.config.get("ui", "background", True))
+            else:
+                self.background_toggle.setChecked(False)
+                self.background_toggle.setEnabled(False)
 
     @asyncSlot(bool)
     async def on_background_toggle(self, value: bool):

@@ -8,6 +8,7 @@ from openfreebuds.shortcuts import OfbShortcuts
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.module import OfbQtCommonModule
 from openfreebuds_qt.config import OfbQtConfigParser
+from openfreebuds_qt.config.feature import OfbQtFeatureAvailability
 from openfreebuds_qt.designer.hotkeys import Ui_OfbQtHotkeysModule
 from openfreebuds_qt.qt_i18n import get_shortcut_names
 from openfreebuds_qt.utils.hotkeys.recorder import OfbQtHotkeyRecorder
@@ -40,7 +41,7 @@ class OfbQtHotkeysModule(Ui_OfbQtHotkeysModule, OfbQtCommonModule):
 
     @staticmethod
     def available():
-        return sys.platform != "linux" or os.environ.get("XDG_SESSION_TYPE", "") != "wayland"
+        return OfbQtFeatureAvailability.can_handle_hotkeys()
 
     @asyncSlot(bool)
     async def on_toggle_enabled(self, value: bool):

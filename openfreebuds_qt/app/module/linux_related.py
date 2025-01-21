@@ -8,6 +8,7 @@ from qasync import asyncSlot
 from openfreebuds import STORAGE_PATH
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.config import OfbQtConfigParser
+from openfreebuds_qt.config.feature import OfbQtFeatureAvailability
 from openfreebuds_qt.constants import LINK_WEBSITE_HELP
 from openfreebuds_qt.designer.linux_extras import Ui_OfbQtLinuxExtrasModule
 from openfreebuds_qt.utils import blocked_signals
@@ -45,7 +46,7 @@ class OfbQtLinuxExtrasModule(Ui_OfbQtLinuxExtrasModule, OfbQtCommonModule):
 
     @asyncSlot(bool)
     async def on_mpris_toggle(self, value: bool):
-        if value and self.config.is_containerized_app:
+        if value and OfbQtFeatureAvailability.is_flatpak():
             QMessageBox(
                 QMessageBox.Icon.Information,
                 self.tr("Ensure bus access"),

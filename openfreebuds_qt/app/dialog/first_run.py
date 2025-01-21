@@ -2,12 +2,13 @@ import sys
 import webbrowser
 
 from PyQt6.QtCore import pyqtSlot
-from PyQt6.QtWidgets import QDialog, QSystemTrayIcon
+from PyQt6.QtWidgets import QDialog
 from qasync import asyncSlot
 
 import openfreebuds_backend
 from openfreebuds import OfbEventKind
 from openfreebuds_qt.config import OfbQtConfigParser
+from openfreebuds_qt.config.feature import OfbQtFeatureAvailability
 from openfreebuds_qt.constants import LINK_WEBSITE_HELP
 from openfreebuds_qt.designer.first_run_dialog import Ui_OfbQtFirstRunDialog
 from openfreebuds_qt.utils import get_img_colored, qt_error_handler
@@ -25,8 +26,8 @@ class OfbQtFirstRunDialog(Ui_OfbQtFirstRunDialog, QDialog):
         if sys.platform == "win32":
             self.setStyleSheet(WIN32_BODY_STYLE)
 
-        self.background_checkbox.setChecked(QSystemTrayIcon.isSystemTrayAvailable())
-        self.background_checkbox.setEnabled(QSystemTrayIcon.isSystemTrayAvailable())
+        self.background_checkbox.setChecked(OfbQtFeatureAvailability.can_background())
+        self.background_checkbox.setEnabled(OfbQtFeatureAvailability.can_background())
 
         preview_fn = "ofb_linux_preview" if sys.platform == 'linux' else "ofb_win32_preview"
         preview_image = get_img_colored(preview_fn,
