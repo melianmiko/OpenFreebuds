@@ -20,7 +20,6 @@ class OfbQtUpdateWidgetHelper:
             self.root_widget.setVisible(False)
             return
 
-        log.info(f"{updater.has_update} {updater.release_info}")
         if updater.has_update:
             if updater.release_info.version == self.config.get("updater", "ignored_version", ""):
                 self.root_widget.setVisible(False)

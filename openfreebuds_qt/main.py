@@ -20,6 +20,7 @@ from openfreebuds_qt.generic import IOfbQtApplication
 from openfreebuds_qt.tray.main import OfbTrayIcon
 from openfreebuds_qt.utils import OfbQtDeviceAutoSelect, OfbQtHotkeyService, list_available_locales
 from openfreebuds_qt.utils.async_dialog import run_dialog_async
+from openfreebuds_qt.utils.automation import OfbQtAutomationService
 from openfreebuds_qt.utils.mpris.service import OfbQtMPRISHelperService
 from openfreebuds_qt.utils.updater.service import OfbQtUpdaterService
 
@@ -39,6 +40,7 @@ class OfbQtApplication(IOfbQtApplication):
 
         # Services and UI parts
         self.config = OfbQtConfigParser.get_instance()
+        self.automation: Optional[OfbQtAutomationService] = None
         self.ofb: Optional[IOpenFreebuds] = None
         self.auto_select: Optional[OfbQtDeviceAutoSelect] = None
         self.hotkeys: Optional[OfbQtHotkeyService] = None
@@ -97,6 +99,7 @@ class OfbQtApplication(IOfbQtApplication):
             log.info(f"Starting OfbQtMainWindow, ofb_role={self.ofb.role}, config_owned={ConfigLock.owned}")
 
             # Initialize services
+            self.automation = OfbQtAutomationService.get_instance(self.ofb)
             self.hotkeys = OfbQtHotkeyService.get_instance(self.ofb)
             self.mpris = OfbQtMPRISHelperService.get_instance(self.ofb)
             self.auto_select = OfbQtDeviceAutoSelect(self.ofb)
@@ -113,6 +116,7 @@ class OfbQtApplication(IOfbQtApplication):
                 await self.auto_select.boot()
 
             self.hotkeys.start()
+            await self.automation.start()
             await self.mpris.start()
             await self.tray.boot()
             await self.main_window.boot()
