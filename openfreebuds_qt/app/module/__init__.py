@@ -1,4 +1,5 @@
 from .about import OfbQtAboutModule
+from .automation import OfbQtAutomationModule
 from .choose_device import OfbQtChooseDeviceModule
 from .common import OfbQtCommonModule
 from .device_info import OfbQtDeviceInfoModule
