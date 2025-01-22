@@ -19,6 +19,7 @@ from openfreebuds_qt.constants import IGNORED_LOG_TAGS, I18N_PATH
 from openfreebuds_qt.generic import IOfbQtApplication
 from openfreebuds_qt.tray.main import OfbTrayIcon
 from openfreebuds_qt.utils import OfbQtDeviceAutoSelect, OfbQtHotkeyService, list_available_locales
+from openfreebuds_qt.utils.async_dialog import run_dialog_async
 from openfreebuds_qt.utils.mpris.service import OfbQtMPRISHelperService
 from openfreebuds_qt.utils.updater.service import OfbQtUpdaterService
 
@@ -102,6 +103,10 @@ class OfbQtApplication(IOfbQtApplication):
             self.tray = OfbTrayIcon(self)
             self.main_window = OfbQtMainWindow(self)
             self.updater_service = OfbQtUpdaterService(self.main_window)
+
+            if self.config.config_load_failed:
+                await self.show_config_load_failed_warning()
+                self.config.config_load_failed = False
 
             if self.ofb.role == "standalone":
                 await self.restore_device()
@@ -219,6 +224,18 @@ class OfbQtApplication(IOfbQtApplication):
 
         self.config.set("warn", "no_tray", True)
         self.config.save()
+
+    async def show_config_load_failed_warning(self):
+        paragraph_1 = self.tr("Failed to read configuration file. "
+                              "Default application settings was restored.")
+        dialog = QMessageBox(
+            QMessageBox.Icon.Warning,
+            "OpenFreebuds",
+            paragraph_1,
+            QMessageBox.StandardButton.Ok,
+            self.main_window
+        )
+        await run_dialog_async(dialog)
 
     def show_old_qt_warning(self):
         if self.config.get("warn", "old_qt", False):
