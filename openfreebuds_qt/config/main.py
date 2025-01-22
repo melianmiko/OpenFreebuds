@@ -6,9 +6,11 @@ from typing import Optional
 from qasync import QApplication
 
 from openfreebuds.constants import STORAGE_PATH
+from openfreebuds.utils.logger import create_logger
 from openfreebuds_backend import is_dark_taskbar
 
 CONFIG_PATH = STORAGE_PATH / "openfreebuds_qt.json"
+log = create_logger("OfbQtConfigParser")
 
 
 class OfbQtConfigParser:
@@ -17,9 +19,18 @@ class OfbQtConfigParser:
     def __init__(self):
         self.data = {}
         self.qt_is_dark_theme: bool = False
+        self.config_load_failed: bool = False
         if CONFIG_PATH.is_file():
-            with open(CONFIG_PATH, "r") as f:
-                self.data = json.loads(f.read())
+            self._load()
+
+    def _load(self):
+        with open(CONFIG_PATH, "r") as f:
+            raw_data = f.read()
+
+        try:
+            self.data = json.loads(raw_data)
+        except json.JSONDecodeError:
+            self.config_load_failed = True
 
     @staticmethod
     def get_instance():
@@ -46,6 +57,10 @@ class OfbQtConfigParser:
         del self.data[section][key]
 
     def save(self):
+        if self.config_load_failed:
+            log.warn("Ignore config save request, load_failed flag set")
+            return
+
         with open(CONFIG_PATH, "w") as f:
             f.write(json.dumps(self.data, ensure_ascii=False, indent=4))
 
