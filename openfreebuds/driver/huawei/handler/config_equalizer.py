@@ -224,6 +224,9 @@ class OfbHuaweiEqualizerPresetHandler(OfbDriverHandlerHuawei):
 
         self.changes_saved = True
 
+        if self.wo_read:
+            pkg.response_id = b""
+
         await self.driver.send_package(pkg)
 
         if self.wo_read:
