@@ -94,6 +94,12 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
                                      left_combo=self.triple_left,
                                      right_combo=self.triple_right))
         self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
+                                     settings_prefix="long_tap_in_call",
+                                     ui_names_map=self.gesture_names,
+                                     label=self.long_in_call_label,
+                                     left_combo=self.long_in_call,
+                                     is_separate=False))
+        self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
                                      settings_prefix="long_tap",
                                      ui_names_map=self.gesture_names,
                                      label=self.long_label,
