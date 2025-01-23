@@ -1,0 +1,33 @@
+{
+  "info": {
+    "software_ver": "HarmonyOS 0.0.0",
+    "device_submodel": "BTFT0014-000145",
+    "device_model": "BTFT0014",
+    "is_debug": true
+  },
+  "battery": {
+    "left": 50,
+    "right": 65,
+    "case": 85,
+    "is_charging": "false"
+  },
+  "action": {
+    "double_tap_left": "tap_action_off",
+    "double_tap_right": "tap_action_off",
+    "double_tap_options": "tap_action_pause,tap_action_prev,tap_action_next,tap_action_assistant,tap_action_off",
+    "double_tap_in_call": "tap_action_off",
+    "double_tap_in_call_options": "tap_action_off,tap_action_answer",
+    "triple_tap_left": "tap_action_off",
+    "triple_tap_right": "tap_action_off",
+    "triple_tap_options": "tap_action_prev,tap_action_next,tap_action_off",
+    "long_tap_in_call": "tap_action_answer",
+    "long_tap_in_call_options": "tap_action_off,tap_action_answer"
+  },
+  "sound": {
+    "equalizer_preset": "equalizer_preset_default",
+    "equalizer_preset_options": "equalizer_preset_default,equalizer_preset_hardbass,equalizer_preset_treble,equalizer_preset_voices"
+  },
+  "config": {
+    "low_latency": "false"
+  }
+}

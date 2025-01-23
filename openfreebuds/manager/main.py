@@ -163,6 +163,8 @@ class OfbManager(IOpenFreebuds):
                     await self._set_state(IOpenFreebuds.STATE_FAILED)
                     await asyncio.sleep(5)
                     continue
+                except Exception:
+                    log.exception("Unknown error while trying to bring driver up")
 
             if not self._driver.healthy():
                 log.warning("Driver health check failed, restarting them")

@@ -18,6 +18,7 @@ class OfbFileDeviceDriver(OfbDriverGeneric):
     async def start(self):
         path = files_dir / f"{self._profile_file}.json"
         if not path.is_file():
+            log.error(f"Profile file not found: {path}")
             raise FbStartupError(f"Profile file not found: {path}")
 
         with open(path, "r") as f:
