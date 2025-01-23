@@ -88,6 +88,8 @@ class OfbQtDeviceControlViewHelper:
             self.ui.anc_root.setVisible(anc is not None)
             if anc is not None:
                 await self._update_anc(anc)
+            else:
+                self.ui.anc_level.setVisible(False)
 
     async def _update_anc(self, anc: dict):
         mode = anc["mode"]
