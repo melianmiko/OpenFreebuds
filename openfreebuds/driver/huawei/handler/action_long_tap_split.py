@@ -30,9 +30,11 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
         ("action", "noise_control_right"),
     ]
 
-    def __init__(self, w_right=False, w_in_call=False):
+    def __init__(self, w_left=True, w_right=False, w_in_call=False, w_anc=True):
+        self.w_left = w_left
         self.w_right = w_right
         self.w_in_call = w_in_call
+        self.w_anc = w_anc
 
         self._options_lt = {
             -1: "tap_action_off",
@@ -50,13 +52,17 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
         }
 
     async def on_init(self):
-        pkgs = [
-            HuaweiSppPackage.read_rq(CMD_LONG_TAP_SPLIT_READ_BASE, [1, 2]),
-            HuaweiSppPackage.read_rq(CMD_LONG_TAP_SPLIT_READ_ANC, [1, 2]),
-        ]
+        # Base request
+        resp = await self.driver.send_package(
+            HuaweiSppPackage.read_rq(CMD_LONG_TAP_SPLIT_READ_BASE, [1, 2])
+        )
+        await self.on_package(resp)
 
-        for pkg in pkgs:
-            resp = await self.driver.send_package(pkg)
+        # ANC options request
+        if self.w_anc:
+            resp = await self.driver.send_package(
+                HuaweiSppPackage.read_rq(CMD_LONG_TAP_SPLIT_READ_ANC, [1, 2])
+            )
             await self.on_package(resp)
 
     async def set_property(self, group: str, prop: str, value):
@@ -91,7 +97,7 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
         right = package.find_param(2)
         in_call = package.find_param(4)
         if package.command_id == CMD_LONG_TAP_SPLIT_READ_BASE:
-            if len(left) == 1:
+            if len(left) == 1 and self.w_left:
                 value = int.from_bytes(left, byteorder="big", signed=True)
                 await self.driver.put_property("action", "long_tap_left",
                                                self._options_lt.get(value, value))
