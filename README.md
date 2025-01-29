@@ -54,8 +54,8 @@ May also work with newer/older devices in same series. If you want to get better
 Download & install
 -----------------
 
-[![Download for Windows](./docs/download_buttons/windows.png)](https://mmk.pw/en/openfreebuds/)
-[![Available in FlatHub](./docs/download_buttons/flathub.png)](https://flathub.org/apps/pw.mmk.OpenFreebuds)
+[![Download for Windows](./docs/img/windows.png)](https://mmk.pw/en/openfreebuds/)
+[![Available in FlatHub](./docs/img/flathub.png)](https://flathub.org/apps/pw.mmk.OpenFreebuds)
 
 
 #### Debian/Ubuntu
