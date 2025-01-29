@@ -67,22 +67,21 @@
   <url type="donation">https://mmk.pw/en/donate/</url>
   <url type="contact">https://mmk.pw/mailto/</url>
   <url type="faq">https://mmk.pw/en/openfreebuds/help/</url>
-<!-- Temporary <url type="translate">https://mmk.pw/en/openfreebuds/translate/</url>-->
   <url type="contribute">https://github.com/melianmiko/OpenFreebuds</url>
   <url type="vcs-browser">https://github.com/melianmiko/OpenFreebuds</url>
 
   <screenshots>
     <screenshot type="default" xml:lang="en">
-      <caption>Gesture settings</caption>
-      <image>https://raw.githubusercontent.com/melianmiko/OpenFreebuds/refs/heads/main/docs/app_0.png</image>
-    </screenshot>
-    <screenshot xml:lang="en">
-      <caption>Other device settings</caption>
-      <image>https://raw.githubusercontent.com/melianmiko/OpenFreebuds/refs/heads/main/docs/app_1.png</image>
+      <caption>In-device equalizer</caption>
+      <image>https://raw.githubusercontent.com/melianmiko/OpenFreebuds/refs/heads/main/docs/img/appstream1.png</image>
     </screenshot>
     <screenshot xml:lang="en">
       <caption>About dialog</caption>
-      <image>https://raw.githubusercontent.com/melianmiko/OpenFreebuds/refs/heads/main/docs/app_2.png</image>
+      <image>https://raw.githubusercontent.com/melianmiko/OpenFreebuds/refs/heads/main/docs/img/appstream2.png</image>
+    </screenshot>
+    <screenshot xml:lang="en">
+      <caption>Application settings</caption>
+      <image>https://raw.githubusercontent.com/melianmiko/OpenFreebuds/refs/heads/main/docs/img/appstream3.png</image>
     </screenshot>
   </screenshots>
   <branding>
