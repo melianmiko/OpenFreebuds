@@ -36,7 +36,7 @@ class OfbQtApplication(IOfbQtApplication):
 
         # Config folder
         if not STORAGE_PATH.is_dir():
-            STORAGE_PATH.mkdir()
+            STORAGE_PATH.mkdir(parents=True)
 
         # Services and UI parts
         self.config = OfbQtConfigParser.get_instance()

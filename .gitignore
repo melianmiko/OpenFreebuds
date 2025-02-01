@@ -12,4 +12,8 @@
 /release.json
 /accent.json
 
+# Portable mode data
+/data
+/is_portable
+
 /.idea

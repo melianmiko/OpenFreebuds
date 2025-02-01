@@ -14,3 +14,6 @@ class OfbEventKind:
 
 APP_ROOT = Path(os.path.dirname(os.path.realpath(__file__))).parent
 STORAGE_PATH = get_app_storage_path() / "openfreebuds"
+
+if (APP_ROOT / "is_portable").is_file():
+    STORAGE_PATH = APP_ROOT / "data"
