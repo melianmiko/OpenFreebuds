@@ -4,7 +4,7 @@ from functools import cache
 
 from PyQt6.QtWidgets import QSystemTrayIcon
 
-from openfreebuds import APP_ROOT
+from openfreebuds import APP_ROOT, IS_PORTABLE
 
 
 class OfbQtFeatureAvailability:
@@ -12,11 +12,6 @@ class OfbQtFeatureAvailability:
     @cache
     def is_flatpak():
         return os.path.isfile("/app/is_container")
-
-    @staticmethod
-    @cache
-    def is_portable():
-        return (APP_ROOT / "is_portable").is_file()
 
     @staticmethod
     @cache
@@ -32,9 +27,9 @@ class OfbQtFeatureAvailability:
     @cache
     def can_autostart():
         # Currently unused
-        return not OfbQtFeatureAvailability.is_portable()
+        return not IS_PORTABLE
 
     @staticmethod
     @cache
     def can_autoupdate():
-        return not OfbQtFeatureAvailability.is_portable() and sys.platform == "win32"
+        return not IS_PORTABLE and sys.platform == "win32"
