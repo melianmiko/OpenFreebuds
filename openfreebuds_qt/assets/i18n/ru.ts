@@ -160,7 +160,7 @@
     <message>
       <location filename="../../designer/about_module.ui" line="0" />
       <source>Client application for HUAWEI FreeBuds wireless earphone series. Free and open source.</source>
-      <translation>Приложения для управления наушниками серии HUAWEI FreeBuds Бесплатно и с открытым исходным кодом.</translation>
+      <translation>Приложения для управления наушниками серии HUAWEI FreeBuds. Бесплатное и с открытым исходным кодом.</translation>
     </message>
     <message>
       <location filename="../../designer/about_module.ui" line="0" />
@@ -188,7 +188,7 @@
     <message>
       <location filename="../../main.py" line="207" />
       <source>System tray not available, application won't work in background. This will make some features, like global hotkeys, unavailable.</source>
-      <translation>Область уведомлений недоступна, приложение не сможет работать в фоне. Из-за этого часть функций, вроде сочетаний клавиш, могут быть недоступны.</translation>
+      <translation>Область уведомлений недоступна, приложение не сможет работать в фоне. Из-за этого часть функций, вроде сочетаний клавиш, может быть недоступна.</translation>
     </message>
     <message>
       <location filename="../../main.py" line="209" />
@@ -203,7 +203,7 @@
     <message>
       <location filename="../../main.py" line="232" />
       <source>This warning will be shown only once. Please, test Flatpak version before reporting bugs.</source>
-      <translation>Это предупреждение будет показано лишь один раз. Перед тем, как сообщать о проблемах, протестируйте Flatpak версию.</translation>
+      <translation>Это предупреждение будет показано лишь один раз. Перед тем, как сообщать о проблемах, протестируйте Flatpak-версию.</translation>
     </message>
   </context>
   <context>
@@ -232,7 +232,7 @@
     <message>
       <location filename="../../designer/device_info.ui" line="0" />
       <source>Bluetooth address:</source>
-      <translation>Bluetooth адрес:</translation>
+      <translation>Bluetooth-адрес:</translation>
     </message>
     <message>
       <location filename="../../designer/device_info.ui" line="0" />
@@ -356,7 +356,7 @@
     <message>
       <location filename="../../designer/dual_connect.ui" line="0" />
       <source>Bluetooth address:</source>
-      <translation>Bluetooth адрес:</translation>
+      <translation>Bluetooth-адрес:</translation>
     </message>
     <message>
       <location filename="../../designer/dual_connect.ui" line="0" />
@@ -486,7 +486,7 @@
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
       <source>Customize device touch panel(s) and button(s) behaviour. This settings are stored inside your device and will work also if OpenFreebuds is closed.</source>
-      <translation>Настройка поведения сенсорных панелей и кнопок на устройстве. Эти настройки хранятся прямо в устройстве и работают даже если OpenFreebuds закрыт.</translation>
+      <translation>Настройка поведения сенсорных панелей и кнопок на устройстве. Эти настройки хранятся прямо в устройстве и работают даже если OpenFreebuds закрыто.</translation>
     </message>
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
@@ -595,12 +595,12 @@
     <message>
       <location filename="../../designer/hotkeys.ui" line="0" />
       <source>Shortcut</source>
-      <translation>Действие</translation>
+      <translation>Сочетание клавиш</translation>
     </message>
     <message>
       <location filename="../../designer/hotkeys.ui" line="0" />
       <source>Hint: to remove already assigned shortcut, press Esc while recording a new one.</source>
-      <translation>Подсказка: для удавления уже назначенного сочетания нажмите Esc во время записи нового.</translation>
+      <translation>Подсказка: для удаления уже назначенного сочетания нажмите Esc во время записи нового.</translation>
     </message>
     <message>
       <location filename="../../app/module/hotkeys_module.py" line="63" />
@@ -648,7 +648,7 @@
     <message>
       <location filename="../../designer/linux_extras.ui" line="0" />
       <source>In KDE, LxQT or other Qt-based desktop environments, use system appearance settings. Otherwise, configure qt manually or use any configuration tool like qt6ct.</source>
-      <translation>В KDE, LxQT и иных основанных на Qt рабочих столах, используйте системные настройки внешнего вида. Иначе измените настройки вручную или воспользуйтесь утилитой наподобии qt6ct.</translation>
+      <translation>В KDE, LxQT и иных основанных на Qt рабочих столах используйте системные настройки внешнего вида. Иначе измените настройки вручную или воспользуйтесь утилитой наподобие qt6ct.</translation>
     </message>
     <message>
       <location filename="../../designer/linux_extras.ui" line="0" />
@@ -658,7 +658,7 @@
     <message>
       <location filename="../../designer/linux_extras.ui" line="0" />
       <source>Looks like you're using Wayland desktop environment. Due to that OpenFreebuds built-in global hotkeys won't work. If you want to use keyboard shortcuts, setup them from your desktop environment settings.</source>
-      <translation>Похоже что вы используете рабочий стол на базе Wayland. В связи с этим, встроенный функционал по управлению сочетаниями клавиш недоступен. Если вам они нужны, сконфигурируйте их вручную через настройки рабочего стола.</translation>
+      <translation>Похоже, что вы используете рабочий стол на базе Wayland. В связи с этим, встроенная функциональность по управлению сочетаниями клавиш недоступна. Если вам они нужны, сконфигурируйте их вручную через настройки рабочего стола.</translation>
     </message>
     <message>
       <location filename="../../designer/linux_extras.ui" line="0" />
@@ -673,7 +673,7 @@
     <message>
       <location filename="../../app/module/linux_related.py" line="52" />
       <source>Looks like you're running under Flatpak. To use this feature, OpenFreebuds need to have access to entire session bus, otherwise it won't find any working media players. Ensure that you're granted this permission, refer to FAQ for more details.</source>
-      <translation>Похоже что вы запустили OpenFreebuds через Flatpak. Однако для работы этой функции требуются доступ к DBus-шине пользователя, иначе программа не увидит запущенные медиаплееры. Убедитесь, что доступ предоставлен, см. ЧаВо чтобы узнать подробнее.</translation>
+      <translation>Похоже, что вы запустили OpenFreebuds через Flatpak. Однако для работы этой функции требуются доступ к DBus-шине пользователя, иначе программа не увидит запущенные медиаплееры. Убедитесь, что доступ предоставлен, см. ЧаВо чтобы узнать подробнее.</translation>
     </message>
   </context>
   <context>
@@ -789,7 +789,7 @@
     <message>
       <location filename="../../designer/dialog_manual_connect.ui" line="0" />
       <source>Bluetooth address:</source>
-      <translation>Bluetooth адрес:</translation>
+      <translation>Bluetooth-адрес:</translation>
     </message>
     <message>
       <location filename="../../designer/dialog_manual_connect.ui" line="0" />
@@ -1023,7 +1023,7 @@
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
       <source>Looking for UI theme settings? Now it follows system-wide configuration.</source>
-      <translation>Ищите настройку темы оформления? Теперь она всегда соответствует системной настройке.</translation>
+      <translation>Ищете настройку темы оформления? Теперь она всегда соответствует системной настройке.</translation>
     </message>
     <message>
       <location filename="../../designer/ui_settings.ui" line="0" />
@@ -1164,7 +1164,7 @@
     <message>
       <location filename="../../qt_i18n.py" line="34" />
       <source>Enable awareness mode</source>
-      <translation>Включить режим прозрачность</translation>
+      <translation>Включить режим прозрачности</translation>
     </message>
     <message>
       <location filename="../../qt_i18n.py" line="35" />
