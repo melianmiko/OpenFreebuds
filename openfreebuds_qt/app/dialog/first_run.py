@@ -29,6 +29,9 @@ class OfbQtFirstRunDialog(Ui_OfbQtFirstRunDialog, QDialog):
         self.background_checkbox.setChecked(OfbQtFeatureAvailability.can_background())
         self.background_checkbox.setEnabled(OfbQtFeatureAvailability.can_background())
 
+        self.autostart_checkbox.setChecked(OfbQtFeatureAvailability.can_autostart())
+        self.autostart_checkbox.setEnabled(OfbQtFeatureAvailability.can_autostart())
+
         preview_fn = "ofb_linux_preview" if sys.platform == 'linux' else "ofb_win32_preview"
         preview_image = get_img_colored(preview_fn,
                                         color=self.palette().text().color().getRgb(),
