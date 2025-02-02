@@ -162,13 +162,13 @@ files = [
 
 [[package]]
 name = "attrs"
-version = "24.3.0"
+version = "25.1.0"
 description = "Classes Without Boilerplate"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "attrs-24.3.0-py3-none-any.whl", hash = "sha256:ac96cd038792094f438ad1f6ff80837353805ac950cd2aa0e0625ef19850c308"},
-    {file = "attrs-24.3.0.tar.gz", hash = "sha256:8f5c07333d543103541ba7be0e2ce16eeee8130cb0b3f9238ab904ce1e85baff"},
+    {file = "attrs-25.1.0-py3-none-any.whl", hash = "sha256:c75a69e28a550a7e93789579c22aa26b0f5b83b75dc4e08fe092980051e1090a"},
+    {file = "attrs-25.1.0.tar.gz", hash = "sha256:1c97078a80c814273a76b2a298a932eb681c87415c11dee0a6921de7f1b02c3e"},
 ]
 
 [package.extras]
@@ -203,12 +203,12 @@ files = [
 
 [[package]]
 name = "evdev"
-version = "1.7.1"
+version = "1.8.0"
 description = "Bindings to the Linux input handling subsystem"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.8"
 files = [
-    {file = "evdev-1.7.1.tar.gz", hash = "sha256:0c72c370bda29d857e188d931019c32651a9c1ea977c08c8d939b1ced1637fde"},
+    {file = "evdev-1.8.0.tar.gz", hash = "sha256:45598eee1ae3876a3122ca1dc0ec8049c01931672d12478b5c610afc24e47d75"},
 ]
 
 [[package]]
@@ -782,13 +782,13 @@ hook-testing = ["execnet (>=1.5.0)", "psutil", "pytest (>=2.7.3)"]
 
 [[package]]
 name = "pyinstaller-hooks-contrib"
-version = "2025.0"
+version = "2025.1"
 description = "Community maintained hooks for PyInstaller"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pyinstaller_hooks_contrib-2025.0-py3-none-any.whl", hash = "sha256:3c0623799c3f81a37293127f485d65894c20fd718f722cb588785a3e52581ad1"},
-    {file = "pyinstaller_hooks_contrib-2025.0.tar.gz", hash = "sha256:6dc0b55a1acaab2ffee36ed4a05b073aa0a22e46f25fb5c66a31e217454135ed"},
+    {file = "pyinstaller_hooks_contrib-2025.1-py3-none-any.whl", hash = "sha256:d3c799470cbc0bda60dcc8e6b4ab976777532b77621337f2037f558905e3a8e9"},
+    {file = "pyinstaller_hooks_contrib-2025.1.tar.gz", hash = "sha256:130818f9e9a0a7f2261f1fd66054966a3a50c99d000981c5d1db11d3ad0c6ab2"},
 ]
 
 [package.dependencies]
