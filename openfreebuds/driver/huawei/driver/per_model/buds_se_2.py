@@ -2,7 +2,7 @@ from openfreebuds.driver.huawei.driver.generic import OfbDriverHuaweiGeneric
 from openfreebuds.driver.huawei.handler import *
 
 
-class OfbDriverHuaweiSe(OfbDriverHuaweiGeneric):
+class OfbDriverHuaweiSe2(OfbDriverHuaweiGeneric):
     def __init__(self, address):
         super().__init__(address)
         self.handlers = [
