@@ -1,4 +1,4 @@
-openfreebuds (0.16.0-1) bookworm noble; urgency=medium
+openfreebuds (0.16.0-1) bookworm noble oracular; urgency=medium
 
   HUAWEI FreeBuds SE 2 is now supported. Added automation actions (beta).
   Added portable version for Windows 10-11.
