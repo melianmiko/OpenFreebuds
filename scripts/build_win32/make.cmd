@@ -7,7 +7,7 @@ rd /s /q dist > nul 2>&1
 rd /s /q build > nul 2>&1
 
 rem Build Qt ui/ts files
-poetry run ..\make.py build
+call make_qt.cmd
 
 rem Build base bundle via pyinstaller
 poetry run pyinstaller openfreebuds.spec
