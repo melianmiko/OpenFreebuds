@@ -43,7 +43,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: openfreebuds_test_win32
-          path: .\scripts\build_win32\dist\*.exe
+          path: .\scripts\build_win32\dist\*_win32.exe
           if-no-files-found: error
 
   BuildDeb:
