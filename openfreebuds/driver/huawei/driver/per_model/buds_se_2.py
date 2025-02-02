@@ -5,6 +5,7 @@ from openfreebuds.driver.huawei.handler import *
 class OfbDriverHuaweiSe2(OfbDriverHuaweiGeneric):
     def __init__(self, address):
         super().__init__(address)
+        self._spp_service_port = 1
         self.handlers = [
             OfbHuaweiLogsHandler(),
             OfbHuaweiInfoHandler(),

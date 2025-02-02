@@ -151,7 +151,7 @@ class OfbManager(IOpenFreebuds):
                 continue
 
             if not self._driver.started:
-                log.info("Trying bring driver up...")
+                log.info("Trying to start driver")
                 await self._set_state(IOpenFreebuds.STATE_WAIT)
                 try:
                     await self._driver.start()
@@ -159,12 +159,13 @@ class OfbManager(IOpenFreebuds):
                     if last_device_address != self._device_tags[1]:
                         await self.send_message(OfbEventKind.DEVICE_CHANGED)
                         last_device_address = self._device_tags[1]
-                except OfbDriverError:
+                except OfbDriverError as e:
+                    log.error(f"Driver start failure: {e}, will retry in 5s")
                     await self._set_state(IOpenFreebuds.STATE_FAILED)
                     await asyncio.sleep(5)
                     continue
                 except Exception:
-                    log.exception("Unknown error while trying to bring driver up")
+                    log.exception("Unknown error while trying to start driver")
 
             if not self._driver.healthy():
                 log.warning("Driver health check failed, restarting them")
