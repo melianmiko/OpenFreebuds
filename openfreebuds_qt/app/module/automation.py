@@ -27,19 +27,19 @@ class OfbQtAutomationModule(Ui_OfbQtAutomationModule, OfbQtCommonModule):
         self.setupUi(self)
 
         self._setup_select("on_connect", self.on_connect_action)
-        self._setup_select("on_disconnect", self.on_disconnect_action)
 
     def _setup_select(self, prop_name: str, select_box: QComboBox):
         @pyqtSlot(int)
         def _activate(index: int):
             action_name = self.available_shortcuts[index]
             self.config.set("automation", prop_name, action_name)
+            self.config.save()
 
         for shortcut in self.available_shortcuts:
             select_box.addItem(self.shortcut_names.get(shortcut, shortcut) or self.tr("Disabled"))
 
-        select_box.setCurrentText(
-            self.config.get("automation", prop_name, self.tr("Disabled"))
+        select_box.setCurrentIndex(
+            self.available_shortcuts.index(self.config.get("automation", prop_name, False))
         )
 
         select_box.currentIndexChanged[int].connect(_activate)

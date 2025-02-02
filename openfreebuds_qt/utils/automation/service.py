@@ -41,9 +41,9 @@ class OfbQtAutomationService:
 
     async def _handle(self, event: OfbCoreEvent):
         if event.kind_match(OfbEventKind.STATE_CHANGED):
-            if event.args[0] == IOpenFreebuds.STATE_DISCONNECTED:
-                await self._trigger("on_disconnect")
-            elif event.args[0] == IOpenFreebuds.STATE_CONNECTED:
+            # if event.args[0] == IOpenFreebuds.STATE_DISCONNECTED:
+            #     await self._trigger("on_disconnect")
+            if event.args[0] == IOpenFreebuds.STATE_CONNECTED:
                 await self._trigger("on_connect")
 
     async def _trigger(self, local_kind: str):
