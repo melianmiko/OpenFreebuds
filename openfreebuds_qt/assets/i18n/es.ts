@@ -185,24 +185,63 @@
   <context>
     <name>OfbQtApplication</name>
     <message>
-      <location filename="../../main.py" line="207" />
+      <location filename="../../main.py" line="216" />
       <source>System tray not available, application won't work in background. This will make some features, like global hotkeys, unavailable.</source>
       <translation type="unfinished" />
     </message>
     <message>
-      <location filename="../../main.py" line="209" />
+      <location filename="../../main.py" line="218" />
       <source>If you're running under GNOME shell, please, check FAQ. This warning will be shown only once.</source>
       <translation type="unfinished" />
     </message>
     <message>
-      <location filename="../../main.py" line="227" />
+      <location filename="../../main.py" line="233" />
+      <source>Failed to read configuration file. Default application settings was restored.</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../../main.py" line="248" />
       <source>You're running under older version of Qt than expected. It's strongly recommended to switch to Flatpak release, because older Qt version may fail your experience of using OpenFreebuds.</source>
       <translation>Está ejecutando una versión de Qt antigua. Te recomendamos cambiar a la versión de Flatpak, ya que una versión anterior de Qt puede afectar negativamente a la experiencia de uso de OpenFreebuds.</translation>
     </message>
     <message>
-      <location filename="../../main.py" line="232" />
+      <location filename="../../main.py" line="253" />
       <source>This warning will be shown only once. Please, test Flatpak version before reporting bugs.</source>
       <translation>Este aviso sólo se mostrará una vez. Por favor, prueba la versión de Flatpak antes de informar de errores.</translation>
+    </message>
+  </context>
+  <context>
+    <name>OfbQtAutomationModule</name>
+    <message>
+      <location filename="../../designer/automation_module.ui" line="0" />
+      <source>Automation</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../../designer/automation_module.ui" line="0" />
+      <source>Automation allows you to perform certain actions when a certain event occurs.</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../../designer/automation_module.ui" line="0" />
+      <source>On earphones connect:</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../../designer/automation_module.ui" line="0" />
+      <source>On earphones disconnect:</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../../designer/automation_module.ui" line="0" />
+      <source>Experimental feature</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../../app/module/automation.py" line="42" />
+      <location filename="../../app/module/automation.py" line="39" />
+      <source>Disabled</source>
+      <translation type="unfinished">Deshabilitado</translation>
     </message>
   </context>
   <context>
@@ -459,6 +498,16 @@
     <name>OfbQtGesturesModule</name>
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
+      <source>Double-tap</source>
+      <translation>Pulsación doble</translation>
+    </message>
+    <message>
+      <location filename="../../designer/module_geatures.ui" line="0" />
+      <source>Power button double-tap</source>
+      <translation>Doble pulsación de encendido</translation>
+    </message>
+    <message>
+      <location filename="../../designer/module_geatures.ui" line="0" />
       <source>Long-tap</source>
       <translation>Pulsación larga</translation>
     </message>
@@ -469,8 +518,8 @@
     </message>
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
-      <source>Double-tap in call</source>
-      <translation>Doble pulsación en llamada</translation>
+      <source>Right</source>
+      <translation>Derecho</translation>
     </message>
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
@@ -479,8 +528,8 @@
     </message>
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
-      <source>Power button double-tap</source>
-      <translation>Doble pulsación de encendido</translation>
+      <source>Swipe gesture</source>
+      <translation>Gestos</translation>
     </message>
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
@@ -489,23 +538,18 @@
     </message>
     <message>
       <location filename="../../designer/module_geatures.ui" line="0" />
-      <source>Swipe gesture</source>
-      <translation>Gestos</translation>
-    </message>
-    <message>
-      <location filename="../../designer/module_geatures.ui" line="0" />
-      <source>Double-tap</source>
-      <translation>Pulsación doble</translation>
-    </message>
-    <message>
-      <location filename="../../designer/module_geatures.ui" line="0" />
-      <source>Right</source>
-      <translation>Derecho</translation>
-    </message>
-    <message>
-      <location filename="../../designer/module_geatures.ui" line="0" />
       <source>Preferred modes</source>
       <translation>Modos preferidos</translation>
+    </message>
+    <message>
+      <location filename="../../designer/module_geatures.ui" line="0" />
+      <source>Double-tap in call</source>
+      <translation>Doble pulsación en llamada</translation>
+    </message>
+    <message>
+      <location filename="../../designer/module_geatures.ui" line="0" />
+      <source>Long-tap in call</source>
+      <translation type="unfinished" />
     </message>
     <message>
       <location filename="../../app/module/gestures.py" line="56" />
@@ -602,7 +646,7 @@
       <translation>Sugerencia: para eliminar un atajo ya asignado, pulse "Esc" mientras grabas uno nuevo.</translation>
     </message>
     <message>
-      <location filename="../../app/module/hotkeys_module.py" line="63" />
+      <location filename="../../app/module/hotkeys_module.py" line="64" />
       <source>Press new shortcut…</source>
       <translation>Pulsa nuevo acceso directo…</translation>
     </message>
@@ -665,12 +709,12 @@
       <translation>Documentación</translation>
     </message>
     <message>
-      <location filename="../../app/module/linux_related.py" line="51" />
+      <location filename="../../app/module/linux_related.py" line="52" />
       <source>Ensure bus access</source>
       <translation>Garantizar el acceso al bus</translation>
     </message>
     <message>
-      <location filename="../../app/module/linux_related.py" line="52" />
+      <location filename="../../app/module/linux_related.py" line="53" />
       <source>Looks like you're running under Flatpak. To use this feature, OpenFreebuds need to have access to entire session bus, otherwise it won't find any working media players. Ensure that you're granted this permission, refer to FAQ for more details.</source>
       <translation>Parece que estas ejecutando bajo Flatpak. Para utilizar esta función, OpenFreebuds necesita tener acceso a todo el bus de sesión, de lo contrario no encontrará ningún reproductor multimedia que funcione. Asegúrese de que se le concede este permiso, consulte las FAQ para más detalles.</translation>
     </message>
@@ -718,57 +762,62 @@
       <translation>Interfaz de usuario</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="82" />
+      <location filename="../../app/main.py" line="81" />
+      <source>Automation</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <location filename="../../app/main.py" line="83" />
       <source>Keyboard shortcuts</source>
       <translation>Atajo del teclado</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="84" />
+      <location filename="../../app/main.py" line="85" />
       <source>Linux-related</source>
       <translation>Ajustes de Linux</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="85" />
+      <location filename="../../app/main.py" line="86" />
       <source>About…</source>
       <translation>Acerca de…</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="93" />
+      <location filename="../../app/main.py" line="94" />
       <source>Help: FAQ</source>
       <translation>Ayuda: FAQ</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="97" />
+      <location filename="../../app/main.py" line="98" />
       <source>Help: Remote control</source>
       <translation>Ayuda: Control remoto</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="101" />
+      <location filename="../../app/main.py" line="102" />
       <source>Bugreport…</source>
       <translation>Reportar errores…</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="106" />
+      <location filename="../../app/main.py" line="107" />
       <source>Check for updates…</source>
       <translation>Comprobar actualizaciones…</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="113" />
+      <location filename="../../app/main.py" line="114" />
       <source>Remote access…</source>
       <translation>Acceso remoto…</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="117" />
+      <location filename="../../app/main.py" line="118" />
       <source>Temporary replace device</source>
       <translation>Reemplazar dispositivo temporalmente</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="124" />
+      <location filename="../../app/main.py" line="125" />
       <source>Close this window</source>
       <translation>Cerrar la ventana</translation>
     </message>
     <message>
-      <location filename="../../app/main.py" line="129" />
+      <location filename="../../app/main.py" line="130" />
       <source>Exit OpenFreebuds</source>
       <translation>Cerrar OpenFreebuds</translation>
     </message>
