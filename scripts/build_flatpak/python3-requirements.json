@@ -7,13 +7,13 @@
             "name": "python3-aiohappyeyeballs",
             "buildsystem": "simple",
             "build-commands": [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"aiohappyeyeballs==2.4.3\" --no-build-isolation"
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"aiohappyeyeballs==2.4.4\" --no-build-isolation"
             ],
             "sources": [
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/f7/d8/120cd0fe3e8530df0539e71ba9683eade12cae103dd7543e50d15f737917/aiohappyeyeballs-2.4.3-py3-none-any.whl",
-                    "sha256": "8a7a83727b2756f394ab2895ea0765a0a8c475e3c71e98d43d76f22b4b435572"
+                    "url": "https://files.pythonhosted.org/packages/b9/74/fbb6559de3607b3300b9be3cc64e97548d55678e44623db17820dbd20002/aiohappyeyeballs-2.4.4-py3-none-any.whl",
+                    "sha256": "a980909d50efcd44795c4afeca523296716d50cd756ddca6af8c65b996e27de8"
                 }
             ]
         },
@@ -21,28 +21,28 @@
             "name": "python3-aiohttp",
             "buildsystem": "simple",
             "build-commands": [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"aiohttp==3.11.2\" --no-build-isolation"
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"aiohttp==3.11.11\" --no-build-isolation"
             ],
             "sources": [
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/f7/d8/120cd0fe3e8530df0539e71ba9683eade12cae103dd7543e50d15f737917/aiohappyeyeballs-2.4.3-py3-none-any.whl",
-                    "sha256": "8a7a83727b2756f394ab2895ea0765a0a8c475e3c71e98d43d76f22b4b435572"
+                    "url": "https://files.pythonhosted.org/packages/b9/74/fbb6559de3607b3300b9be3cc64e97548d55678e44623db17820dbd20002/aiohappyeyeballs-2.4.4-py3-none-any.whl",
+                    "sha256": "a980909d50efcd44795c4afeca523296716d50cd756ddca6af8c65b996e27de8"
                 },
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/55/68/97e4fab2add44bbd4b0107379d6900e80556c9a5d8ff548385690807b3f6/aiohttp-3.11.2.tar.gz",
-                    "sha256": "68d1f46f9387db3785508f5225d3acbc5825ca13d9c29f2b5cce203d5863eb79"
+                    "url": "https://files.pythonhosted.org/packages/fe/ed/f26db39d29cd3cb2f5a3374304c713fe5ab5a0e4c8ee25a0c45cc6adf844/aiohttp-3.11.11.tar.gz",
+                    "sha256": "bb49c7f1e6ebf3821a42d81d494f538107610c3a705987f53068546b0e90303e"
                 },
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/76/ac/a7305707cb852b7e16ff80eaf5692309bde30e2b1100a1fcacdc8f731d97/aiosignal-1.3.1-py3-none-any.whl",
-                    "sha256": "f8376fb07dd1e86a584e4fcdec80b36b7f81aac666ebc724e2c090300dd83b17"
+                    "url": "https://files.pythonhosted.org/packages/ec/6a/bc7e17a3e87a2985d3e8f4da4cd0f481060eb78fb08596c42be62c90a4d9/aiosignal-1.3.2-py2.py3-none-any.whl",
+                    "sha256": "45cde58e409a301715980c2b01d0c28bdde3770d8290b5eb2173759d9acb31a5"
                 },
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/6a/21/5b6702a7f963e95456c0de2d495f67bf5fd62840ac655dc451586d23d39a/attrs-24.2.0-py3-none-any.whl",
-                    "sha256": "81921eb96de3191c8258c199618104dd27ac608d9366f5e35d011eae1867ede2"
+                    "url": "https://files.pythonhosted.org/packages/fc/30/d4986a882011f9df997a55e6becd864812ccfcd821d64aac8570ee39f719/attrs-25.1.0-py3-none-any.whl",
+                    "sha256": "c75a69e28a550a7e93789579c22aa26b0f5b83b75dc4e08fe092980051e1090a"
                 },
                 {
                     "type": "file",
@@ -61,13 +61,13 @@
                 },
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/a9/4d/5e5a60b78dbc1d464f8a7bbaeb30957257afdc8512cbb9dfd5659304f5cd/propcache-0.2.0.tar.gz",
-                    "sha256": "df81779732feb9d01e5d513fad0122efb3d53bbc75f61b2a4f29a020bc985e70"
+                    "url": "https://files.pythonhosted.org/packages/20/c8/2a13f78d82211490855b2fb303b6721348d0787fdd9a12ac46d99d3acde1/propcache-0.2.1.tar.gz",
+                    "sha256": "3f77ce728b19cb537714499928fe800c3dda29e8d9428778fc7c186da4c09a64"
                 },
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/54/9c/9c0a9bfa683fc1be7fdcd9687635151544d992cccd48892dc5e0a5885a29/yarl-1.17.1.tar.gz",
-                    "sha256": "067a63fcfda82da6b198fa73079b1ca40b7c9b7994995b6ee38acda728b64d47"
+                    "url": "https://files.pythonhosted.org/packages/b7/9d/4b94a8e6d2b51b599516a5cb88e5bc99b4d8d4583e468057eaa29d5f0918/yarl-1.18.3.tar.gz",
+                    "sha256": "ac1801c45cbf77b6c99242eeff4fffb5e4e73a800b5c4ad4fc0be5def634d2e1"
                 }
             ]
         },
@@ -75,13 +75,13 @@
             "name": "python3-aiosignal",
             "buildsystem": "simple",
             "build-commands": [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"aiosignal==1.3.1\" --no-build-isolation"
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"aiosignal==1.3.2\" --no-build-isolation"
             ],
             "sources": [
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/76/ac/a7305707cb852b7e16ff80eaf5692309bde30e2b1100a1fcacdc8f731d97/aiosignal-1.3.1-py3-none-any.whl",
-                    "sha256": "f8376fb07dd1e86a584e4fcdec80b36b7f81aac666ebc724e2c090300dd83b17"
+                    "url": "https://files.pythonhosted.org/packages/ec/6a/bc7e17a3e87a2985d3e8f4da4cd0f481060eb78fb08596c42be62c90a4d9/aiosignal-1.3.2-py2.py3-none-any.whl",
+                    "sha256": "45cde58e409a301715980c2b01d0c28bdde3770d8290b5eb2173759d9acb31a5"
                 },
                 {
                     "type": "file",
@@ -108,13 +108,13 @@
             "name": "python3-attrs",
             "buildsystem": "simple",
             "build-commands": [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"attrs==24.2.0\" --no-build-isolation"
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"attrs==25.1.0\" --no-build-isolation"
             ],
             "sources": [
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/6a/21/5b6702a7f963e95456c0de2d495f67bf5fd62840ac655dc451586d23d39a/attrs-24.2.0-py3-none-any.whl",
-                    "sha256": "81921eb96de3191c8258c199618104dd27ac608d9366f5e35d011eae1867ede2"
+                    "url": "https://files.pythonhosted.org/packages/fc/30/d4986a882011f9df997a55e6becd864812ccfcd821d64aac8570ee39f719/attrs-25.1.0-py3-none-any.whl",
+                    "sha256": "c75a69e28a550a7e93789579c22aa26b0f5b83b75dc4e08fe092980051e1090a"
                 }
             ]
         },
@@ -136,13 +136,13 @@
             "name": "python3-evdev",
             "buildsystem": "simple",
             "build-commands": [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"evdev==1.7.1\" --no-build-isolation"
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"evdev==1.8.0\" --no-build-isolation"
             ],
             "sources": [
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/12/bb/f622a8a5e64d46ca83020a761877c0ead19140903c9aaf1431f3c531fdf6/evdev-1.7.1.tar.gz",
-                    "sha256": "0c72c370bda29d857e188d931019c32651a9c1ea977c08c8d939b1ced1637fde"
+                    "url": "https://files.pythonhosted.org/packages/4c/eb/b8900082a13a47bb9f69f415174d03cbf12ce95d07345722e1f4ef0e2093/evdev-1.8.0.tar.gz",
+                    "sha256": "45598eee1ae3876a3122ca1dc0ec8049c01931672d12478b5c610afc24e47d75"
                 }
             ]
         },
@@ -192,13 +192,13 @@
             "name": "python3-pillow",
             "buildsystem": "simple",
             "build-commands": [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"pillow==11.0.0\" --no-build-isolation"
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"pillow==11.1.0\" --no-build-isolation"
             ],
             "sources": [
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/a5/26/0d95c04c868f6bdb0c447e3ee2de5564411845e36a858cfd63766bc7b563/pillow-11.0.0.tar.gz",
-                    "sha256": "72bacbaf24ac003fea9bff9837d1eedb6088758d41e100c1552930151f677739"
+                    "url": "https://files.pythonhosted.org/packages/f3/af/c097e544e7bd278333db77933e535098c259609c4eb3b85381109602fb5b/pillow-11.1.0.tar.gz",
+                    "sha256": "368da70808b36d73b4b390a8ffac11069f8a5c85f29eff1f1b01bcf3ef5b2a20"
                 }
             ]
         },
@@ -206,13 +206,13 @@
             "name": "python3-propcache",
             "buildsystem": "simple",
             "build-commands": [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"propcache==0.2.0\" --no-build-isolation"
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"propcache==0.2.1\" --no-build-isolation"
             ],
             "sources": [
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/a9/4d/5e5a60b78dbc1d464f8a7bbaeb30957257afdc8512cbb9dfd5659304f5cd/propcache-0.2.0.tar.gz",
-                    "sha256": "df81779732feb9d01e5d513fad0122efb3d53bbc75f61b2a4f29a020bc985e70"
+                    "url": "https://files.pythonhosted.org/packages/20/c8/2a13f78d82211490855b2fb303b6721348d0787fdd9a12ac46d99d3acde1/propcache-0.2.1.tar.gz",
+                    "sha256": "3f77ce728b19cb537714499928fe800c3dda29e8d9428778fc7c186da4c09a64"
                 }
             ]
         },
@@ -220,13 +220,13 @@
             "name": "python3-psutil",
             "buildsystem": "simple",
             "build-commands": [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"psutil==6.1.0\" --no-build-isolation"
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"psutil==6.1.1\" --no-build-isolation"
             ],
             "sources": [
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/26/10/2a30b13c61e7cf937f4adf90710776b7918ed0a9c434e2c38224732af310/psutil-6.1.0.tar.gz",
-                    "sha256": "353815f59a7f64cdaca1c0307ee13558a0512f6db064e92fe833784f08539c7a"
+                    "url": "https://files.pythonhosted.org/packages/1f/5a/07871137bb752428aa4b659f910b399ba6f291156bdea939be3e96cae7cb/psutil-6.1.1.tar.gz",
+                    "sha256": "cf8496728c18f2d0b45198f06895be52f36611711746b7f30c464b422b50e2f5"
                 }
             ]
         },
@@ -239,8 +239,8 @@
             "sources": [
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/12/bb/f622a8a5e64d46ca83020a761877c0ead19140903c9aaf1431f3c531fdf6/evdev-1.7.1.tar.gz",
-                    "sha256": "0c72c370bda29d857e188d931019c32651a9c1ea977c08c8d939b1ced1637fde"
+                    "url": "https://files.pythonhosted.org/packages/4c/eb/b8900082a13a47bb9f69f415174d03cbf12ce95d07345722e1f4ef0e2093/evdev-1.8.0.tar.gz",
+                    "sha256": "45598eee1ae3876a3122ca1dc0ec8049c01931672d12478b5c610afc24e47d75"
                 },
                 {
                     "type": "file",
@@ -300,7 +300,7 @@
             "name": "python3-yarl",
             "buildsystem": "simple",
             "build-commands": [
-                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"yarl==1.17.1\" --no-build-isolation"
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"yarl==1.18.3\" --no-build-isolation"
             ],
             "sources": [
                 {
@@ -315,13 +315,13 @@
                 },
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/a9/4d/5e5a60b78dbc1d464f8a7bbaeb30957257afdc8512cbb9dfd5659304f5cd/propcache-0.2.0.tar.gz",
-                    "sha256": "df81779732feb9d01e5d513fad0122efb3d53bbc75f61b2a4f29a020bc985e70"
+                    "url": "https://files.pythonhosted.org/packages/20/c8/2a13f78d82211490855b2fb303b6721348d0787fdd9a12ac46d99d3acde1/propcache-0.2.1.tar.gz",
+                    "sha256": "3f77ce728b19cb537714499928fe800c3dda29e8d9428778fc7c186da4c09a64"
                 },
                 {
                     "type": "file",
-                    "url": "https://files.pythonhosted.org/packages/54/9c/9c0a9bfa683fc1be7fdcd9687635151544d992cccd48892dc5e0a5885a29/yarl-1.17.1.tar.gz",
-                    "sha256": "067a63fcfda82da6b198fa73079b1ca40b7c9b7994995b6ee38acda728b64d47"
+                    "url": "https://files.pythonhosted.org/packages/b7/9d/4b94a8e6d2b51b599516a5cb88e5bc99b4d8d4583e468057eaa29d5f0918/yarl-1.18.3.tar.gz",
+                    "sha256": "ac1801c45cbf77b6c99242eeff4fffb5e4e73a800b5c4ad4fc0be5def634d2e1"
                 }
             ]
         }
