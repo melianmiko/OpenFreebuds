@@ -1,3 +1,14 @@
+# v0.16.0
+HUAWEI FreeBuds SE 2 is now supported. Added automation actions (beta).
+Added portable version for Windows 10-11.
+
+-  [Device compatibility] HUAWEI FreeBuds SE 2
+-  [Feature] Self-repair if config file is broken 
+-  [Feature] Automation on device connect
+-  [Feature] Add long-tap in-call gesture setting field 
+-  [Feature] win32 portable build 
+-  [Dep] Add py3.13 to supported 
+
 # v0.15.1
 This release introduces compatibility with FeeeBuds 6i and Studio models.
 Also, since this version OpenFreebuds can be used in desktop environments
