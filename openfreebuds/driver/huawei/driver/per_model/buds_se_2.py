@@ -12,7 +12,7 @@ class OfbDriverHuaweiSe2(OfbDriverHuaweiGeneric):
             OfbHuaweiBatteryHandler(),
             OfbHuaweiActionDoubleTapHandler(w_in_call=True),
             OfbHuaweiActionTripleTapHandler(),
-            OfbHuaweiActionLongTapSplitHandler(w_left=False, w_anc=False),
+            OfbHuaweiActionLongTapSplitHandler(w_left=False, w_anc=False, w_in_call=True),
             OfbHuaweiEqualizerPresetHandler(w_presets={
                 1: "default",
                 2: "hardbass",

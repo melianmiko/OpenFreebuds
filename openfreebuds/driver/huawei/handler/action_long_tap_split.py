@@ -42,7 +42,7 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
         }
         self._options_lt_call = {
             -1: "tap_action_off",
-            10: "tap_action_answer"
+            0: "tap_action_answer"
         }
         self._options_anc = {
             1: "noise_control_off_on",
