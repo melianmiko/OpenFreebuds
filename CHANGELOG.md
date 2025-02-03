@@ -1,3 +1,10 @@
+# v0.16.1
+HUAWEI FreeBuds SE 2 is now supported. Added automation actions (beta).
+Added portable version for Windows 10-11.
+
+- [FDevice compatibility] HUAWEI FreeBuds Pro 4 (as alias for Pro 3)
+- [Fix] Couple of FreeBuds SE 2 related bugs
+
 # v0.16.0
 HUAWEI FreeBuds SE 2 is now supported. Added automation actions (beta).
 Added portable version for Windows 10-11.
