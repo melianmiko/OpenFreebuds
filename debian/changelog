@@ -1,3 +1,14 @@
+openfreebuds (0.16.1-1) bookworm noble oracular; urgency=medium
+
+  HUAWEI FreeBuds SE 2 is now supported. Added automation actions (beta).
+  Added portable version for Windows 10-11.
+  
+  - [FDevice compatibility] HUAWEI FreeBuds Pro 4 (as alias for Pro 3)
+  - [Fix] Couple of FreeBuds SE 2 related bugs
+  
+
+ -- MelianMiko <support@mmk.pw>  Mon, 03 Feb 2025 19:01:45 +0700
+
 openfreebuds (0.16.0-1) bookworm noble oracular; urgency=medium
 
   HUAWEI FreeBuds SE 2 is now supported. Added automation actions (beta).
