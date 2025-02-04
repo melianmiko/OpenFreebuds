@@ -39,11 +39,17 @@ jobs:
         run: python3 ./scripts/bump_version.py git
       - name: Run build script
         run: .\scripts/build_win32\make.cmd
-      - name: Upload bundle
+      - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
           name: openfreebuds_test_win32
           path: .\scripts\build_win32\dist\*_win32.exe
+          if-no-files-found: error
+      - name: Upload portable
+        uses: actions/upload-artifact@v4
+        with:
+          name: openfreebuds_test_win32_portable
+          path: .\scripts\build_win32\dist\*_win32_portable.exe
           if-no-files-found: error
 
   BuildDeb:
