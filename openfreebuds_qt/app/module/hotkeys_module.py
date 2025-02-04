@@ -1,14 +1,11 @@
-import os
-import sys
-
 from PyQt6.QtWidgets import QTableWidgetItem
 from qasync import asyncSlot
 
 from openfreebuds.shortcuts import OfbShortcuts
 from openfreebuds.utils.logger import create_logger
+from openfreebuds_backend import GLOBAL_HOTKEYS_AVAILABLE
 from openfreebuds_qt.app.module import OfbQtCommonModule
 from openfreebuds_qt.config import OfbQtConfigParser
-from openfreebuds_qt.config.feature import OfbQtFeatureAvailability
 from openfreebuds_qt.designer.hotkeys import Ui_OfbQtHotkeysModule
 from openfreebuds_qt.qt_i18n import get_shortcut_names
 from openfreebuds_qt.utils.hotkeys.recorder import OfbQtHotkeyRecorder
@@ -41,7 +38,7 @@ class OfbQtHotkeysModule(Ui_OfbQtHotkeysModule, OfbQtCommonModule):
 
     @staticmethod
     def available():
-        return OfbQtFeatureAvailability.can_handle_hotkeys()
+        return GLOBAL_HOTKEYS_AVAILABLE
 
     @asyncSlot(bool)
     async def on_toggle_enabled(self, value: bool):

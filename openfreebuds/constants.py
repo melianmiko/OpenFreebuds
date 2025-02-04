@@ -1,5 +1,4 @@
 import os
-import sys
 from pathlib import Path
 
 from openfreebuds_backend import get_app_storage_path
@@ -14,9 +13,4 @@ class OfbEventKind:
 
 
 APP_ROOT = Path(os.path.dirname(os.path.realpath(__file__))).parent
-IS_PORTABLE = (APP_ROOT / "is_portable").is_file() \
-    or sys.executable.endswith("_portable.exe")
-STORAGE_PATH = get_app_storage_path() / "openfreebuds"
-
-if IS_PORTABLE and sys.platform == "win32":
-    STORAGE_PATH = Path(sys.executable).parent / "data"
+STORAGE_PATH = get_app_storage_path()

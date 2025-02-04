@@ -3,6 +3,10 @@ import os
 
 log = logging.getLogger("OfbDummyBackend")
 
+AUTOSTART_AVAILABLE = False
+AUTOUPDATE_AVAILABLE = False
+GLOBAL_HOTKEYS_AVAILABLE = False
+
 
 def get_app_storage_path():
     return os.getcwd() + "/data"

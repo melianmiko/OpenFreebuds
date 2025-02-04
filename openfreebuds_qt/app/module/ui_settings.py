@@ -1,5 +1,3 @@
-import sys
-
 from PyQt6.QtCore import QLocale
 from PyQt6.QtWidgets import QSystemTrayIcon
 from qasync import asyncSlot
@@ -7,10 +5,9 @@ from qasync import asyncSlot
 from openfreebuds import OfbEventKind
 from openfreebuds.shortcuts import OfbShortcuts
 from openfreebuds.utils.logger import create_logger
-from openfreebuds_backend import is_run_at_boot, set_run_at_boot
+from openfreebuds_backend import is_run_at_boot, set_run_at_boot, AUTOSTART_AVAILABLE, AUTOUPDATE_AVAILABLE
 from openfreebuds_qt.app.module import OfbQtCommonModule
 from openfreebuds_qt.config import OfbQtConfigParser
-from openfreebuds_qt.config.feature import OfbQtFeatureAvailability
 from openfreebuds_qt.designer.ui_settings import Ui_OfbQtUiSettingsModule
 from openfreebuds_qt.qt_i18n import get_shortcut_names
 from openfreebuds_qt.utils import blocked_signals, list_available_locales, OfbCoreEvent
@@ -32,7 +29,7 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
         self.setupUi(self)
 
         with blocked_signals(self.updater_policy_picker):
-            if OfbQtFeatureAvailability.can_autoupdate():
+            if AUTOUPDATE_AVAILABLE:
                 self.updater_policy_picker.setCurrentIndex(
                     self.available_updater_policies.index(self.config.get("updater", "mode", "show"))
                 )
@@ -74,14 +71,14 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
             return
 
         with blocked_signals(self.autostart_toggle):
-            if OfbQtFeatureAvailability.can_autostart():
+            if AUTOSTART_AVAILABLE:
                 self.autostart_toggle.setChecked(is_run_at_boot())
             else:
                 self.autostart_toggle.setChecked(False)
                 self.autostart_toggle.setEnabled(False)
 
         with blocked_signals(self.background_toggle):
-            if OfbQtFeatureAvailability.can_background():
+            if QSystemTrayIcon.isSystemTrayAvailable():
                 self.background_toggle.setChecked(self.config.get("ui", "background", True))
             else:
                 self.background_toggle.setChecked(False)
