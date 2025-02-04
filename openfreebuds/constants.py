@@ -13,10 +13,16 @@ class OfbEventKind:
     QT_SETTINGS_CHANGED = "qt::settings_changed"
 
 
-APP_ROOT = Path(os.path.dirname(os.path.realpath(__file__))).parent
+APP_ROOT = (
+    Path(os.path.dirname(sys.executable))
+    if getattr(sys, "frozen", False)
+    else Path(os.path.dirname(os.path.realpath(__file__))).parent
+)
 IS_PORTABLE = (APP_ROOT / "is_portable").is_file() \
     or sys.executable.endswith("_portable.exe")
 STORAGE_PATH = get_app_storage_path() / "openfreebuds"
 
 if IS_PORTABLE:
     STORAGE_PATH = APP_ROOT / "data"
+
+APP_ROOT = Path(os.path.dirname(os.path.realpath(__file__))).parent
