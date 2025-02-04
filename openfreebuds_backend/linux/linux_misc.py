@@ -9,11 +9,18 @@ from openfreebuds_backend.linux.dbus.xdg_background import XdgDesktopBackgroundP
 
 log = logging.getLogger("OfbLinuxBackend")
 
+AUTOSTART_AVAILABLE = True
+AUTOUPDATE_AVAILABLE = False            # Delegated to system package managers
+GLOBAL_HOTKEYS_AVAILABLE = os.environ.get("XDG_SESSION_TYPE", "") != "wayland"
+
 
 def get_app_storage_path():
+    base_dir = pathlib.Path.home() / ".config"
+
     if pathlib.Path('/app/is_container').exists():
-        return pathlib.Path.home() / ".var/app/pw.mmk.OpenFreebuds/config"
-    return pathlib.Path.home() / ".config"
+        base_dir = pathlib.Path.home() / ".var/app/pw.mmk.OpenFreebuds/config"
+
+    return base_dir / "openfreebuds"
 
 
 def open_file(path):

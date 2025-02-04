@@ -1,14 +1,28 @@
-import pathlib
 import subprocess
 import sys
 import winreg
+from pathlib import Path
+
+# Portable mode if file name ends with `_portable.exe`
+# or location folder contains `is_portable` flag-file.
+IS_PORTABLE = sys.executable.endswith("_portable.exe") \
+              or (Path(sys.executable).parent / "is_portable").is_file()
+
+# Feature flags
+AUTOSTART_AVAILABLE = not IS_PORTABLE
+AUTOUPDATE_AVAILABLE = not IS_PORTABLE          # TODO: mmk_updater add portable replace support
+GLOBAL_HOTKEYS_AVAILABLE = True
 
 no_console = subprocess.STARTUPINFO()
 no_console.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 
 
 def get_app_storage_path():
-    return pathlib.Path.home() / "AppData/Roaming"
+    # In portable mode, store all app-related data near executable
+    if IS_PORTABLE:
+        return Path(sys.executable).parent / "data"
+
+    return Path.home() / "AppData" / "Roaming" / "openfreebuds"
 
 
 def open_file(path):

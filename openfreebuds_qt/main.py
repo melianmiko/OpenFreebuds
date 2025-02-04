@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import QMessageBox, QSystemTrayIcon
 from qasync import QEventLoop
 
 from openfreebuds import IOpenFreebuds, create as create_ofb, OfbEventKind
-from openfreebuds.constants import STORAGE_PATH
+from openfreebuds.constants import STORAGE_PATH, APP_ROOT
 from openfreebuds.utils.logger import setup_logging, screen_handler, create_logger
 from openfreebuds_qt.app.dialog.first_run import OfbQtFirstRunDialog
 from openfreebuds_qt.app.main import OfbQtMainWindow
@@ -35,8 +35,7 @@ class OfbQtApplication(IOfbQtApplication):
         self.tray_available = QSystemTrayIcon.isSystemTrayAvailable()
 
         # Config folder
-        if not STORAGE_PATH.is_dir():
-            STORAGE_PATH.mkdir(parents=True)
+        STORAGE_PATH.mkdir(parents=True, exist_ok=True)
 
         # Services and UI parts
         self.config = OfbQtConfigParser.get_instance()
@@ -97,6 +96,7 @@ class OfbQtApplication(IOfbQtApplication):
                 return await self._trigger_settings()
 
             log.info(f"Starting OfbQtMainWindow, ofb_role={self.ofb.role}, config_owned={ConfigLock.owned}")
+            log.info(f"app_root={APP_ROOT}, storage_path={STORAGE_PATH}")
 
             # Initialize services
             self.automation = OfbQtAutomationService.get_instance(self.ofb)
