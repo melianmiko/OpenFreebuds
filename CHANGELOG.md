@@ -1,3 +1,10 @@
+# v0.16.2
+HUAWEI FreeBuds SE 2 is now supported. Added automation actions (beta).
+Added portable version for Windows 10-11.
+
+- [Fix] Windows portable version data location
+- This release will be available only as win32 portable version
+
 # v0.16.1
 HUAWEI FreeBuds SE 2 is now supported. Added automation actions (beta).
 Added portable version for Windows 10-11.
