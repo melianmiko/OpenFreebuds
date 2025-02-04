@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import QWidget
 
 from openfreebuds.constants import STORAGE_PATH
 from openfreebuds.utils.logger import create_logger
+from openfreebuds_backend import AUTOUPDATE_AVAILABLE
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.version_info import VERSION
 
@@ -47,7 +48,7 @@ class OfbQtUpdaterService:
         if self.config.get("updater", "mode", "show") == "off":
             return
 
-        if "git" in VERSION:
+        if "git" in VERSION or not AUTOUPDATE_AVAILABLE:
             return
 
         await self.updater.boot()
