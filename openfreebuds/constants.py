@@ -18,5 +18,5 @@ IS_PORTABLE = (APP_ROOT / "is_portable").is_file() \
     or sys.executable.endswith("_portable.exe")
 STORAGE_PATH = get_app_storage_path() / "openfreebuds"
 
-if IS_PORTABLE:
-    STORAGE_PATH = APP_ROOT / "data"
+if IS_PORTABLE and sys.platform == "win32":
+    STORAGE_PATH = Path(sys.executable).parent / "data"
