@@ -5,7 +5,6 @@ import sys
 import urllib.request
 from datetime import date
 from pathlib import Path
-from xml.sax.saxutils import escape
 
 DEB_CODENAMES = "bookworm noble oracular"
 DEVELOPER_SIGN = "MelianMiko <support@mmk.pw>"

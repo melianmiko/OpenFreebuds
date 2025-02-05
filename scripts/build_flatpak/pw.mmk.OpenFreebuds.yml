@@ -35,10 +35,23 @@ modules:
     buildsystem: simple
     build-commands:
       - pip3 install --prefix=/app --no-deps *.whl
+      - tar xzf just.tar.gz just && install just /app/bin
     sources:
       - type: file
         url: https://files.pythonhosted.org/packages/df/b3/072c28eace372ba7630ea187b7efd7f09cc8bcebf847a96b5e03e9cc0828/expandvars-0.12.0-py3-none-any.whl
         sha256: 7432c1c2ae50c671a8146583177d60020dd210ada7d940e52af91f1f84f753b2
+      - type: file
+        url: f1b9acdb4374983539c765d60374350932527df807b25975e05abb152c9021e7
+        sha256: https://github.com/casey/just/releases/download/1.39.0/just-1.39.0-aarch64-unknown-linux-musl.tar.gz
+        dest-filename: just.tar.gz
+        only-arches:
+          - aarch64
+      - type: file
+        url: https://github.com/casey/just/releases/download/1.39.0/just-1.39.0-x86_64-unknown-linux-musl.tar.gz
+        sha256: 1c53fa85a8c021ce7b19814e1a5e1dc0aa10c04bddca75196f7ab6db6130d2cd
+        dest-filename: just.tar.gz
+        only-arches:
+          - x86_64
 
   - python3-requirements.json
 
@@ -46,9 +59,11 @@ modules:
     buildsystem: simple
     build-commands:
       - touch /app/is_container
-      - python ./make.py install /app
+      - DESTDIR=/app PYTHONLIBDIR=/app/lib/python3.11/site-packages just install
+      - rm /app/bin/just
     sources:
       - type: file
-        path: ../../scripts/make.py
-      - type: dir
-        path: ../../dist
+        path: ../../justfile
+      - type: file
+        dest: dist/
+        path: ../../dist/openfreebuds-0.0-py3-none-any.whl

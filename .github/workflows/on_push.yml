@@ -21,30 +21,27 @@ jobs:
   BuildExe:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: 6.7.2
-          setup-python: false
-          no-qt-binaries: true
-      - name: Install poetry
-        run: pipx install poetry
+      - name: Install Qt Lrelease
+        run: |
+          (New-Object System.Net.WebClient).DownloadFile("https://st.mmk.pw/lrelease.zip","lrelease.zip");
+          Expand-Archive .\lrelease.zip ..\lrelease;
+          echo "$((Get-Item ..).FullName)/lrelease" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: 'poetry'
-      - name: Set up poetry environment
-        run: poetry install
-      - name: Change in-app version
-        run: python3 ./scripts/bump_version.py git
-      - name: Run build script
-        run: .\scripts/build_win32\make_portable.cmd
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v2
+        with:
+          poetry-version: "1.8.3"
+      - uses: actions/checkout@v4
+      - run: poetry install
+      - run: poetry run just env
+      - run: poetry run just gh_autobuild
       - name: Upload portable
         uses: actions/upload-artifact@v4
         with:
-          name: openfreebuds_test_win32
-          path: .\scripts\build_win32\dist\*_win32.exe
+          name: openfreebuds_win32
+          path: .\dist\*
           if-no-files-found: error
 
   BuildDeb:
@@ -58,22 +55,12 @@ jobs:
         with:
           poetry-version: "1.8.3"
       - uses: actions/checkout@v4
-      - name: Install dev-dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y build-essential
-          sudo ./scripts/install_dpkg_dependencies.sh
-      - name: Set up poetry environment
-        run: poetry install
-      - name: Change in-app version
-        run: python3 ./scripts/bump_version.py git
-      - name: Build
-        run: dpkg-buildpackage -b
-      - name: Move release to dist dir
-        run: mv ../*.deb ./dist
+      - run: poetry install
+      - run: poetry run just env
+      - run: poetry run just gh_autobuild
       - name: Upload bundle
         uses: actions/upload-artifact@v4
         with:
-          name: openfreebuds_test_debian
+          name: openfreebuds_debian
           path: ./dist/*
           if-no-files-found: error

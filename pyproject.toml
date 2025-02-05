@@ -33,6 +33,7 @@ dbus-next = "^0.2.3"
 [tool.poetry.group.no_flatpak.dependencies]
 pyqt6 = "^6.7.1"
 mmk-updater = "0.15.5"
+rust-just = "^1.39.0"
 
 [tool.poetry.group.extras.dependencies]
 aiocmd = ">=0.1.5,<0.2.0"
