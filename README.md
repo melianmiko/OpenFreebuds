@@ -54,10 +54,18 @@ May also work with newer/older devices in same series. If you want to get better
 Download & install
 -----------------
 
-[![Download for Windows](./docs/img/windows.png)](https://mmk.pw/en/openfreebuds/)
+[![Download for Windows](./docs/img/windows.png)](https://mmk.pw/en/openfreebuds/download/)
 [![Available in FlatHub](./docs/img/flathub.png)](https://flathub.org/apps/pw.mmk.OpenFreebuds)
 
-#### Scoop (Windows)
+#### Windows package managers
+
+Winget (preinstalled):
+
+```powershell
+winget install MelianMiko.OpenFreebuds
+```
+
+[Scoop](https://scoop.sh/):
 
 ```powershell
 scoop bucket add extras
@@ -97,7 +105,6 @@ continue:
 ```shell
 poetry install
 ```
-
 ### Just launch without installation
 
 ```shell
