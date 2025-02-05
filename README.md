@@ -57,6 +57,12 @@ Download & install
 [![Download for Windows](./docs/img/windows.png)](https://mmk.pw/en/openfreebuds/)
 [![Available in FlatHub](./docs/img/flathub.png)](https://flathub.org/apps/pw.mmk.OpenFreebuds)
 
+#### Scoop (Windows)
+
+```powershell
+scoop bucket add extras
+scoop install openfreebuds
+```
 
 #### Debian/Ubuntu
 
