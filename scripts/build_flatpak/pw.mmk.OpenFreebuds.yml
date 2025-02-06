@@ -58,12 +58,11 @@ modules:
   - name: OpenFreebuds
     buildsystem: simple
     build-commands:
-      - touch /app/is_container
-      - DESTDIR=/app PYTHONLIBDIR=/app/lib/python3.11/site-packages just install
-      - rm /app/bin/just
+      - just internal_flatpakinstall
+      - rm -rf /app/bin/just justfile dist
     sources:
       - type: file
         path: ../../justfile
-      - type: file
+      - type: dir
         dest: dist/
-        path: ../../dist/openfreebuds-0.0-py3-none-any.whl
+        path: ../../dist

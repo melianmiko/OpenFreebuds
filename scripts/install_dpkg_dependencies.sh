@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-apt install -y $(awk '
+apt install -y --no-install-recommends $(awk '
   /^(Build-)?Depends:/ || /^ / && deps {
     sub(/^[^ ]+: /, "")
     deps = 1

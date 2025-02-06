@@ -3,13 +3,14 @@ Section: utils
 Priority: optional
 Maintainer: MelianMiko <melianmiko@gmail.com>
 Build-Depends: debhelper-compat (= 12),
- python3 (>= 3.11),
+ build-essential,
+ python3-dev,
  python3-pip,
- pyqt6-dev-tools,
  libcairo2-dev,
  gobject-introspection,
  libgirepository1.0-dev,
  qt6-l10n-tools,
+ fakeroot,
  make,
  git
 Standards-Version: 4.4.1

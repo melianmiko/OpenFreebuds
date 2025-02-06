@@ -8,6 +8,7 @@
 /build
 /builddir
 /dist
+/.vagrant
 /scripts/tools
 /release.json
 /accent.json

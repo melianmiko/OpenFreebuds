@@ -33,10 +33,11 @@ jobs:
         uses: abatilo/actions-poetry@v2
         with:
           poetry-version: "1.8.3"
+      - name: Install Just
+        run: choco install just
       - uses: actions/checkout@v4
-      - run: poetry install
-      - run: poetry run just env
-      - run: poetry run just gh_autobuild
+      - run: just prepare
+      - run: just bump_version_git build pkg_win32_portable
       - name: Upload portable
         uses: actions/upload-artifact@v4
         with:
@@ -54,10 +55,11 @@ jobs:
         uses: abatilo/actions-poetry@v2
         with:
           poetry-version: "1.8.3"
+      - name: Install Just
+        run: curl -s https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
       - uses: actions/checkout@v4
-      - run: poetry install
-      - run: poetry run just env
-      - run: poetry run just gh_autobuild
+      - run: just dependencies_debian prepare
+      - run: just bump_version_git build pkg_debian
       - name: Upload bundle
         uses: actions/upload-artifact@v4
         with:
