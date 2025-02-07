@@ -4,17 +4,13 @@
 *.swp
 *#
 
-/test.py
-/build
-/builddir
-/dist
+/.idea
+/.flatpak
+/.flatpak-pip-generator
 /.vagrant
-/scripts/tools
-/release.json
-/accent.json
+/.pdm-python
+/dist
 
 # Portable mode data
 /data
 /is_portable
-
-/.idea

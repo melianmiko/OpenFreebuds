@@ -19,12 +19,12 @@ Homepage: https://github.com/melianmiko/OpenFreebuds
 Package: openfreebuds
 Architecture: all
 Depends:
- ${misc:Depends}, 
+ ${misc:Depends},
  python3 (>= 3.11),
- python3-dbus-next, 
- python3-pyqt6, 
- python3-pil, 
- python3-qasync, 
+ python3-dbus-next,
+ python3-pyqt6,
+ python3-pil,
+ python3-qasync,
  python3-aiohttp,
  python3-psutil
 Description:
