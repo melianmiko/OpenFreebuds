@@ -14,8 +14,8 @@ dependencies = [
     "qasync<1.0.0,>=0.27.1",
     "pynput<2.0.0,>=1.7.7",
     "pyqt6<7.0.0,>=6.7.1",
+    "dbus-next<1.0.0,>=0.2.3",
     "winsdk==1.0.0b10; sys_platform == 'win32'",
-    "dbus-next<1.0.0,>=0.2.3; sys_platform == 'linux'",
 ]
 
 [dependency-groups]
@@ -23,6 +23,8 @@ dev = [
     "pytest<9.0.0,>=8.3.2",
     "pytest-asyncio<1.0.0,>=0.24.0",
     "pyinstaller==6.10.0; sys_platform == 'win32'",
+    # lrelease.exe provider
+    "pyside6>=6.8.2.1; sys_platform == 'win32'",
 ]
 no_flatpak = [
     "pyqt6<7.0.0,>=6.7.1",

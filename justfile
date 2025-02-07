@@ -4,7 +4,7 @@ set windows-shell := ["powershell.exe", "-c"]
 set script-interpreter := ["python"]
 
 # Tools
-pyside6_dir := `python -c "
+pyside6_dir := `pdm run python -c "
 import os
 try:
     import PySide6
@@ -65,6 +65,9 @@ test:
 prepare:
     pdm install
 
+vg_all:
+    vagrant halt -f
+    vagrant up --parallel
 
 
 # ------------------------------------------------
@@ -203,8 +206,20 @@ debian_full:
 # Install build dependencies for Debian\Ubuntu
 [linux]
 deps_debian:
-    # TODO: Move inside Justfile
-    sudo bash ./scripts/install_dpkg_dependencies.sh
+    sudo apt install -y --no-install-recommends \
+        build-essential \
+        debhelper-compat \
+        python3-dbus-next \
+        python3-pyqt6 \
+        python3-pil \
+        python3-qasync \
+        python3-aiohttp \
+        python3-psutil \
+        python3-pip \
+        qt6-l10n-tools \
+        fakeroot \
+        make \
+        git
 
 
 
@@ -220,20 +235,20 @@ win32: win32_installer win32_portable
 [windows]
 win32_installer: win32_bundle
     New-Item -ItemType Directory -Force -Path ./dist
-    cd ./scripts/build_win32; makensis openfreebuds.nsi
-    mv ./scripts/build_win32/dist/openfreebuds.install.exe ./dist/openfreebuds_{{version}}_win32.exe
+    cd ./scripts; & "C:\Program Files (x86)\NSIS\Bin\makensis.exe" openfreebuds.nsi
+    mv -Force ./scripts/dist/openfreebuds.install.exe ./dist/openfreebuds_{{version}}_win32.exe
 
 # Make windows portable executable
 [windows]
 win32_portable:
     New-Item -ItemType Directory -Force -Path ./dist
-    cd ./scripts/build_win32; & pdm run pyinstaller openfreebuds_portable.spec
-    mv ./scripts/build_win32/dist/openfreebuds_portable.exe ./dist/openfreebuds_{{version}}_win32_portable.exe
+    cd ./scripts; & pdm run pyinstaller -y openfreebuds_portable.spec
+    mv -Force ./scripts/dist/openfreebuds_portable.exe ./dist/openfreebuds_{{version}}_win32_portable.exe
 
 # Prepare ./dist/ for win32 installer build
 [windows,private]
 win32_bundle:
-    cd ./scripts/build_win32; pdm run pyinstaller openfreebuds.spec
+    cd ./scripts; pdm run pyinstaller -y openfreebuds.spec
 
 
 

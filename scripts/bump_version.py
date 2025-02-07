@@ -142,7 +142,6 @@ def create_flatpak_staff():
             continue
         new_export_data.append(line)
 
-    # TODO: Other place
     with open(PROJECT_ROOT / ".flatpak/requirements.txt", "w") as f:
         f.write("\n".join(new_export_data))
 
@@ -176,19 +175,19 @@ def main():
         CHANGELOG.append("- Changelog not provided")
 
     # Set up tools
-    (PROJECT_ROOT / ".flatpak").mkdir(exist_ok=True, parents=True)
-    if not FLATPAK_PIP_GENERATOR_PATH.is_file():
-        print(f"-- Downloading flatpak-pip-generator")
-        urllib.request.urlretrieve(URL_FLATPAK_PIP_GENERATOR, FLATPAK_PIP_GENERATOR_PATH)
-        os.chmod(FLATPAK_PIP_GENERATOR_PATH, 0o755)
+    # (PROJECT_ROOT / ".flatpak").mkdir(exist_ok=True, parents=True)
+    # if not FLATPAK_PIP_GENERATOR_PATH.is_file():
+    #     print(f"-- Downloading flatpak-pip-generator")
+    #     urllib.request.urlretrieve(URL_FLATPAK_PIP_GENERATOR, FLATPAK_PIP_GENERATOR_PATH)
+    #     os.chmod(FLATPAK_PIP_GENERATOR_PATH, 0o755)
 
     # Launch everything
     bump_pyproject(str(PROJECT_ROOT / "pyproject.toml"))
-    bump_nsis(str(PROJECT_ROOT / "scripts/build_win32/openfreebuds.nsi"))
+    bump_nsis(str(PROJECT_ROOT / "scripts/openfreebuds.nsi"))
     bump_debian(PROJECT_ROOT / "debian/changelog")
     bump_metainfo(str(PROJECT_ROOT / "openfreebuds_qt/assets/pw.mmk.OpenFreebuds.metainfo.xml"))
     create_version_info(PROJECT_ROOT / "openfreebuds_qt/version_info.py")
-    create_flatpak_staff()
+    # create_flatpak_staff()
 
     # Create release.json
     # with open(PROJECT_ROOT / "release.json", "w") as f:
@@ -203,6 +202,7 @@ def main():
 
 if __name__ == "__main__":
     if NEW_VERSION == "flatpak_deps":
+        # TODO: Move inside Justfile
         create_flatpak_staff()
     else:
         main()

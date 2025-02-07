@@ -2,16 +2,16 @@ name: Build & Test
 on: push
 
 jobs:
-  BuildExe:
+  build_exe:
+    name: Windows portable build
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
       - uses: pdm-project/setup-pdm@v4
         with:
-            python-version: 3.13
-            cache: true
+            python-version: 3.12.8
       - name: Install Just
-        run: choco install just
+        run: choco install -y just
+      - uses: actions/checkout@v4
       - run: just prepare
       - run: just --evaluate
       - run: just bump_version_git build win32_portable
@@ -22,7 +22,8 @@ jobs:
           path: .\dist\*
           if-no-files-found: error
 
-  TestAndBuildDebian:
+  build_deb:
+    name: Run PyTest and build Debian package
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -32,7 +33,8 @@ jobs:
             cache: true
       - name: Install Just
         run: curl -s https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
-      - run: just deps_debian prepare
+      - name: Install project dependencies
+        run: just deps_debian prepare
       - run: just --evaluate
       - run: just test
       - run: just bump_version_git build debian
