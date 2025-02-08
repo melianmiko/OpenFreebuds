@@ -3,13 +3,9 @@ Section: utils
 Priority: optional
 Maintainer: MelianMiko <melianmiko@gmail.com>
 Build-Depends: debhelper-compat (= 12),
- python3 (>= 3.11),
+ build-essential,
  python3-pip,
- pyqt6-dev-tools,
- libcairo2-dev,
- gobject-introspection,
- libgirepository1.0-dev,
- qt6-l10n-tools,
+ fakeroot,
  make,
  git
 Standards-Version: 4.4.1
@@ -18,12 +14,12 @@ Homepage: https://github.com/melianmiko/OpenFreebuds
 Package: openfreebuds
 Architecture: all
 Depends:
- ${misc:Depends}, 
+ ${misc:Depends},
  python3 (>= 3.11),
- python3-dbus-next, 
- python3-pyqt6, 
- python3-pil, 
- python3-qasync, 
+ python3-dbus-next,
+ python3-pyqt6,
+ python3-pil,
+ python3-qasync,
  python3-aiohttp,
  python3-psutil
 Description:

@@ -5,7 +5,6 @@ import sys
 import urllib.request
 from datetime import date
 from pathlib import Path
-from xml.sax.saxutils import escape
 
 DEB_CODENAMES = "bookworm noble oracular"
 DEVELOPER_SIGN = "MelianMiko <support@mmk.pw>"
@@ -16,7 +15,7 @@ URL_FLATPAK_PIP_GENERATOR = ("https://github.com/flatpak/flatpak-builder-tools/r
 BASE_CHANGELOG_URL = "https://github.com/melianmiko/OpenFreebuds/blob/main/CHANGELOG.md"
 
 PROJECT_ROOT = Path(__file__).parents[1]
-FLATPAK_PIP_GENERATOR_PATH = PROJECT_ROOT / "scripts" / "tools" / "flatpak-pip-generator"
+FLATPAK_PIP_GENERATOR_PATH = PROJECT_ROOT / ".flatpak/flatpak-pip-generator"
 
 if len(sys.argv) < 2:
     print("Usage: ./bump_version.py [<version>|git|flatpak_deps]")
@@ -136,22 +135,21 @@ def create_flatpak_staff():
         print("-- Skip Flatpak staff: win32 not supported")
         return
 
-    export_data = subprocess.getoutput("poetry export --without no_flatpak,dev --without-hashes").splitlines()
+    export_data = subprocess.getoutput("pdm export --without-hashes --without no_flatpak --without dev").splitlines()
     new_export_data = []
     for line in export_data:
-        if 'sys_platform == "win32"' in line:
+        if 'sys_platform == "win32"' in line or 'sys_platform == "darwin"' in line:
             continue
-        if 'sys_platform == "darwin"' in line:
-            continue
-        new_export_data.append(line.replace(' and python_version < "3.11"', ''))
+        new_export_data.append(line)
 
-    with open(PROJECT_ROOT / "scripts/build_flatpak/requirements.txt", "w") as f:
+    with open(PROJECT_ROOT / ".flatpak/requirements.txt", "w") as f:
         f.write("\n".join(new_export_data))
-    print('-- Create requirements.txt for flatpak, will trigger flatpak-pip-generator')
+
+    print('-- Create python3-requirements.txt for flatpak, will trigger flatpak-pip-generator')
     subprocess.run(
-        ['./scripts/tools/flatpak-pip-generator',
-         '-r', './scripts/build_flatpak/requirements.txt',
-         '-o', './scripts/build_flatpak/python3-requirements'],
+        [FLATPAK_PIP_GENERATOR_PATH,
+         '-r', './.flatpak/requirements.txt',
+         '-o', './scripts/python3-requirements.json'],
         cwd=PROJECT_ROOT,
     )
 
@@ -177,35 +175,34 @@ def main():
         CHANGELOG.append("- Changelog not provided")
 
     # Set up tools
-    subprocess.getoutput("poetry config warnings.export false")
-    if not (PROJECT_ROOT / "scripts" / "tools").is_dir():
-        (PROJECT_ROOT / "scripts" / "tools").mkdir()
-    if not FLATPAK_PIP_GENERATOR_PATH.is_file():
-        print(f"-- Downloading flatpak-pip-generator")
-        urllib.request.urlretrieve(URL_FLATPAK_PIP_GENERATOR, FLATPAK_PIP_GENERATOR_PATH)
-        os.chmod(FLATPAK_PIP_GENERATOR_PATH, 0o755)
+    # (PROJECT_ROOT / ".flatpak").mkdir(exist_ok=True, parents=True)
+    # if not FLATPAK_PIP_GENERATOR_PATH.is_file():
+    #     print(f"-- Downloading flatpak-pip-generator")
+    #     urllib.request.urlretrieve(URL_FLATPAK_PIP_GENERATOR, FLATPAK_PIP_GENERATOR_PATH)
+    #     os.chmod(FLATPAK_PIP_GENERATOR_PATH, 0o755)
 
     # Launch everything
     bump_pyproject(str(PROJECT_ROOT / "pyproject.toml"))
-    bump_nsis(str(PROJECT_ROOT / "scripts/build_win32/openfreebuds.nsi"))
+    bump_nsis(str(PROJECT_ROOT / "scripts/openfreebuds.nsi"))
     bump_debian(PROJECT_ROOT / "debian/changelog")
     bump_metainfo(str(PROJECT_ROOT / "openfreebuds_qt/assets/pw.mmk.OpenFreebuds.metainfo.xml"))
     create_version_info(PROJECT_ROOT / "openfreebuds_qt/version_info.py")
-    create_flatpak_staff()
+    # create_flatpak_staff()
 
     # Create release.json
-    with open(PROJECT_ROOT / "release.json", "w") as f:
-        f.write(json.dumps({
-            "version": NEW_VERSION,
-            "changelog": CHANGELOG,
-        }, indent=2))
-    print(f'-- Created {PROJECT_ROOT / "release.json"}')
+    # with open(PROJECT_ROOT / "release.json", "w") as f:
+    #     f.write(json.dumps({
+    #         "version": NEW_VERSION,
+    #         "changelog": CHANGELOG,
+    #     }, indent=2))
+    # print(f'-- Created {PROJECT_ROOT / "release.json"}')
 
     print('-- Done')
 
 
 if __name__ == "__main__":
     if NEW_VERSION == "flatpak_deps":
+        # TODO: Move inside Justfile
         create_flatpak_staff()
     else:
         main()
