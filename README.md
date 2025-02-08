@@ -61,7 +61,7 @@ Common installation options:
 
 All installation options:
 
-| Platform | Package manager | Command/Linux |
+| Platform | Package manager | Command / Link |
 |---|---|---|
 | ![](./docs/img/i_win32.png) Windows | Direct install | [Website](https://mmk.pw/en/openfreebuds/download) or [releases](./releases)|
 | ![](./docs/img/i_win32.png) Windows | [Winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) (preinstalled) | <pre>winget install MelianMiko.OpenFreebuds</pre> |
