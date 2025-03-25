@@ -12,6 +12,7 @@ DEVICE_TO_DRIVER_MAP = {
     "HUAWEI FreeBuds Pro 2": OfbDriverHuaweiPro2,
     "HUAWEI FreeBuds Pro 3": OfbDriverHuaweiPro3,
     "HUAWEI FreeBuds Pro 4": OfbDriverHuaweiPro3,
+    "HUAWEI FreeClip": OfbDriverHuaweiPro3,
     "HUAWEI FreeBuds SE": OfbDriverHuaweiSe,
     "HUAWEI FreeBuds SE 2": OfbDriverHuaweiSe2,
     "HUAWEI FreeBuds Studio": OfbDriverHuaweiStudio,
