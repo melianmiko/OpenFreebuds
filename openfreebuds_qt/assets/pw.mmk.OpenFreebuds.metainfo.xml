@@ -91,6 +91,12 @@
   <content_rating type="oars-1.1" />
 
   <releases>
+    <release version="0.17.0" date="2025-04-04">
+      <url type="details">https://github.com/melianmiko/OpenFreebuds/blob/main/CHANGELOG.md#v0.17.0</url>
+      <description>
+        <p>Simplified Chinese translation, initial FreeClip support, minor bug fixes</p>
+      </description>
+    </release>
     <release version="0.16.1" date="2025-02-03">
       <url type="details">https://github.com/melianmiko/OpenFreebuds/blob/main/CHANGELOG.md#v0.16.1</url>
       <description>

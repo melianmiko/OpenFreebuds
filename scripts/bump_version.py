@@ -135,6 +135,13 @@ def create_flatpak_staff():
         print("-- Skip Flatpak staff: win32 not supported")
         return
 
+    # Set up tools
+    (PROJECT_ROOT / ".flatpak").mkdir(exist_ok=True, parents=True)
+    if not FLATPAK_PIP_GENERATOR_PATH.is_file():
+        print(f"-- Downloading flatpak-pip-generator")
+        urllib.request.urlretrieve(URL_FLATPAK_PIP_GENERATOR, FLATPAK_PIP_GENERATOR_PATH)
+        os.chmod(FLATPAK_PIP_GENERATOR_PATH, 0o755)
+
     export_data = subprocess.getoutput("pdm export --without-hashes --without no_flatpak --without dev").splitlines()
     new_export_data = []
     for line in export_data:
@@ -149,7 +156,7 @@ def create_flatpak_staff():
     subprocess.run(
         [FLATPAK_PIP_GENERATOR_PATH,
          '-r', './.flatpak/requirements.txt',
-         '-o', './scripts/python3-requirements.json'],
+         '-o', './scripts/python3-requirements'],
         cwd=PROJECT_ROOT,
     )
 
@@ -173,13 +180,6 @@ def main():
 
     if len(CHANGELOG) == 0:
         CHANGELOG.append("- Changelog not provided")
-
-    # Set up tools
-    # (PROJECT_ROOT / ".flatpak").mkdir(exist_ok=True, parents=True)
-    # if not FLATPAK_PIP_GENERATOR_PATH.is_file():
-    #     print(f"-- Downloading flatpak-pip-generator")
-    #     urllib.request.urlretrieve(URL_FLATPAK_PIP_GENERATOR, FLATPAK_PIP_GENERATOR_PATH)
-    #     os.chmod(FLATPAK_PIP_GENERATOR_PATH, 0o755)
 
     # Launch everything
     bump_pyproject(str(PROJECT_ROOT / "pyproject.toml"))
