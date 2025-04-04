@@ -1,3 +1,14 @@
+openfreebuds (0.17.0-1) bookworm noble oracular; urgency=medium
+
+  Simplified Chinese translation, initial FreeClip support, minor bug fixes
+  
+  - [i18n] Add Simplified Chinese translation (#65)
+  - [Device compatibility] Mark FreeClip as an alias for Pro 3
+  - [Fix] Copy unsupported equalizer preset dialog failure
+  
+
+ -- MelianMiko <support@mmk.pw>  Fri, 04 Apr 2025 18:00:40 +0700
+
 openfreebuds (0.16.1-1) bookworm noble oracular; urgency=medium
 
   HUAWEI FreeBuds SE 2 is now supported. Added automation actions (beta).

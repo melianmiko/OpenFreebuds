@@ -1,3 +1,10 @@
+# v0.17.0
+Simplified Chinese translation, initial FreeClip support, minor bug fixes
+
+- [i18n] Add Simplified Chinese translation (#65)
+- [Device compatibility] Mark FreeClip as an alias for Pro 3
+- [Fix] Copy unsupported equalizer preset dialog failure
+
 # v0.16.2
 HUAWEI FreeBuds SE 2 is now supported. Added automation actions (beta).
 Added portable version for Windows 10-11.
@@ -9,7 +16,7 @@ Added portable version for Windows 10-11.
 HUAWEI FreeBuds SE 2 is now supported. Added automation actions (beta).
 Added portable version for Windows 10-11.
 
-- [FDevice compatibility] HUAWEI FreeBuds Pro 4 (as alias for Pro 3)
+- [Device compatibility] HUAWEI FreeBuds Pro 4 (as alias for Pro 3)
 - [Fix] Couple of FreeBuds SE 2 related bugs
 
 # v0.16.0
