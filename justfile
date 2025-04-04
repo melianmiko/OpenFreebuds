@@ -4,20 +4,19 @@ set windows-shell := ["powershell.exe", "-c"]
 set script-interpreter := ["python"]
 
 # Tools
-pyside6_dir := `pdm run python -c "
+python := require(if os_family() == "windows" { "python.exe" } else { "python" })
+pip := which(if os_family() == "windows" { "pip.exe" } else { "pip" })
+pdm := which(if os_family() == "windows" { "pdm.exe" } else { "pdm" })
+
+lrelease := which(if os_family() == "windows" { \
+    `pdm run python -c "
 import os
 try:
     import PySide6
     print(os.path.dirname(PySide6.__file__))
 except ModuleNotFoundError:
     print('.')
-"`
-
-python := require(if os_family() == "windows" { "python.exe" } else { "python" })
-pip := which(if os_family() == "windows" { "pip.exe" } else { "pip" })
-pdm := which(if os_family() == "windows" { "pdm.exe" } else { "pdm" })
-lrelease := which(if os_family() == "windows" { \
-    pyside6_dir / 'lrelease.exe'
+"` / 'lrelease.exe'
 } else if path_exists("/usr/lib64/qt6/bin/lrelease") == "true" {
     "/usr/lib64/qt6/bin/lrelease"
 } else if path_exists("/usr/lib/qt6/bin/lrelease") == "true" {

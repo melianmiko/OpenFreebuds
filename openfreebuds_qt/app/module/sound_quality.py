@@ -33,6 +33,19 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
             (self.tr("Load file…"), self.load_file),
         ]
 
+        self.dialog_preset_copy = QMessageBox(QMessageBox.Icon.Information,
+                             self.tr("Notice"),
+                             self.tr("This preset isn't available in your device, it will be created as "
+                                     "custom preset."),
+                             QMessageBox.StandardButton.Ok)
+        self.dialog_preset_copy.setWindowModality(Qt.WindowModality.WindowModal)
+
+        self.dialog_too_many_presets = QMessageBox(QMessageBox.Icon.Critical,
+                             self.tr("Failed"),
+                             self.tr("Can't create: too many custom preset created in device."),
+                             QMessageBox.StandardButton.Ok)
+        self.dialog_too_many_presets.setWindowModality(Qt.WindowModality.WindowModal)
+
         self._eq_last_options: list[str] = []
         self._eq_rows: list[QSlider] = []
         self._last_preset_data: list[int] = []
@@ -146,23 +159,12 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
             value = self._eq_last_options[index]
 
             if value in self._last_copy_options:
-                dialog = QMessageBox(QMessageBox.Icon.Information,
-                                     self.tr("Notice"),
-                                     self.tr("This preset isn't available in your device, it will be created as "
-                                             "custom preset."),
-                                     QMessageBox.StandardButton.Ok)
-                dialog.setWindowModality(Qt.WindowModality.WindowModal)
-                await run_dialog_async(dialog)
+                self.dialog_preset_copy.show()
 
             try:
                 await self.ofb.set_property("sound", "equalizer_preset", value)
             except OfbTooManyItemsError:
-                dialog = QMessageBox(QMessageBox.Icon.Critical,
-                                     self.tr("Failed"),
-                                     self.tr("Can't create: too many custom preset created in device."),
-                                     QMessageBox.StandardButton.Ok)
-                dialog.setWindowModality(Qt.WindowModality.WindowModal)
-                await run_dialog_async(dialog)
+                self.dialog_too_many_presets.show()
 
     @asyncSlot()
     async def new_preset(self):
@@ -180,12 +182,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
                 await self.ofb.set_property("sound", "equalizer_preset", dialog.textValue())
                 return True
             except OfbTooManyItemsError:
-                dialog = QMessageBox(QMessageBox.Icon.Critical,
-                                     self.tr("Failed"),
-                                     self.tr("Can't create: too many custom preset created in device."),
-                                     QMessageBox.StandardButton.Ok)
-                dialog.setWindowModality(Qt.WindowModality.WindowModal)
-                await run_dialog_async(dialog)
+                self.dialog_too_many_presets.show()
                 return False
 
     @asyncSlot()
