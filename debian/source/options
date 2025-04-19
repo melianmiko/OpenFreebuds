@@ -1,4 +1,7 @@
 tar-ignore = ".git"
 tar-ignore = ".vagrant"
+tar-ignore = ".flatpak"
 tar-ignore = "dist"
-tar-ignore = "scripts/build_flatpak"
+tar-ignore = "scripts/build"
+tar-ignore = "scripts/dist"
+

@@ -6,7 +6,7 @@ import urllib.request
 from datetime import date
 from pathlib import Path
 
-DEB_CODENAMES = "bookworm noble oracular"
+DEB_CODENAMES = "bookworm trixie noble oracular plucky"
 DEVELOPER_SIGN = "MelianMiko <support@mmk.pw>"
 DEBUG = False
 
