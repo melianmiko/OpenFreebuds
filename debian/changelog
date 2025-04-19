@@ -1,3 +1,9 @@
+openfreebuds (0.17.0-3) bookworm trixie noble oracular plucky; urgency=medium
+
+  Add Debian 13 and Ubuntu 25.04 to supported distributions.
+
+ -- MelianMiko <support@mmk.pw>  Sat, 19 Apr 2025 15:08:20 +0700
+
 openfreebuds (0.17.0-1) bookworm noble oracular; urgency=medium
 
   Simplified Chinese translation, initial FreeClip support, minor bug fixes
