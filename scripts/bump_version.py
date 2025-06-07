@@ -80,9 +80,11 @@ def bump_nsis(line: str):
 
 
 def create_version_info(path: Path):
-    export_data = subprocess.getoutput("poetry export --without-hashes -n --with extras --with no_flatpak")
+    export_data = subprocess.getoutput("pdm export --format=requirements --without-hashes --with no_flatpak")
     libraries = []
     for line in export_data.replace("\r", "").splitlines():
+        if line.startswith("#"):
+            continue
         libraries.append(f"  '{line}',")
 
     write_file(path, [
