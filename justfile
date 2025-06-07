@@ -140,6 +140,12 @@ build_check:
 # Flatpak linux packaging
 # ------------------------------------------------
 
+# Install dependencies for Flatpak build
+[linux]
+flatpak_deps:
+    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    flatpak install --user org.flatpak.Builder
+
 # Install OpenFreebuds as Flatpak package
 [linux]
 flatpak_install: build
@@ -168,6 +174,9 @@ sync_flatpak:
     # TODO: Move inside Justfile
     mkdir -p ./.flatpak
     pdm run ./scripts/bump_version.py flatpak_deps
+    sed -i \
+        's/--verbose --exists-action=i/--verbose --no-deps --exists-action=i/g' \
+        scripts/python3-requirements.json
 
 # (Internal) Install OpenFreebuds inside Flatpak
 [private,linux]
@@ -178,7 +187,7 @@ internal_flatpakinstall:
         xargs -I {} cp {} ./dist/openfreebuds-0.0-py3-none-any.whl
     # Install to /app
     touch /app/is_container
-    DESTDIR=/app PYTHONLIBDIR=/app/lib/python3.11/site-packages just install
+    DESTDIR=/app PYTHONLIBDIR=/app/lib/python3.12/site-packages just install
 
 
 

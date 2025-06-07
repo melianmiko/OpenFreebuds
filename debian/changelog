@@ -1,3 +1,19 @@
+openfreebuds (0.17.1-1) bookworm trixie noble oracular plucky; urgency=medium
+
+  Minor fixes, added Turkish translation
+  
+  - [i18n] Add Turkish language (#71)
+  - [Fix] Libraries list in about tab
+  
+
+ -- MelianMiko <support@mmk.pw>  Sat, 07 Jun 2025 14:49:12 +0700
+
+openfreebuds (0.17.0-3) bookworm trixie noble oracular plucky; urgency=medium
+
+  Add Debian 13 and Ubuntu 25.04 to supported distributions.
+
+ -- MelianMiko <support@mmk.pw>  Sat, 19 Apr 2025 15:08:20 +0700
+
 openfreebuds (0.17.0-1) bookworm noble oracular; urgency=medium
 
   Simplified Chinese translation, initial FreeClip support, minor bug fixes

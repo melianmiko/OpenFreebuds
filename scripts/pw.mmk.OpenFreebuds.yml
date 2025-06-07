@@ -4,8 +4,8 @@ command: openfreebuds_qt
 sdk: org.kde.Sdk
 runtime: org.kde.Platform
 base: com.riverbankcomputing.PyQt.BaseApp
-runtime-version: '6.7'
-base-version: '6.7'
+runtime-version: '6.9'
+base-version: '6.9'
 
 finish-args:
   # Connect to Bluetooth devices through RFCOMM / SPP protocol
@@ -34,12 +34,8 @@ modules:
   - name: python3_extras
     buildsystem: simple
     build-commands:
-      - pip3 install --prefix=/app --no-deps *.whl
       - tar xzf just.tar.gz just && install just /app/bin
     sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/df/b3/072c28eace372ba7630ea187b7efd7f09cc8bcebf847a96b5e03e9cc0828/expandvars-0.12.0-py3-none-any.whl
-        sha256: 7432c1c2ae50c671a8146583177d60020dd210ada7d940e52af91f1f84f753b2
       - type: file
         url: f1b9acdb4374983539c765d60374350932527df807b25975e05abb152c9021e7
         sha256: https://github.com/casey/just/releases/download/1.39.0/just-1.39.0-aarch64-unknown-linux-musl.tar.gz

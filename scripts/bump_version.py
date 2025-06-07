@@ -6,16 +6,13 @@ import urllib.request
 from datetime import date
 from pathlib import Path
 
-DEB_CODENAMES = "bookworm noble oracular"
+DEB_CODENAMES = "bookworm trixie noble oracular plucky"
 DEVELOPER_SIGN = "MelianMiko <support@mmk.pw>"
 DEBUG = False
 
-URL_FLATPAK_PIP_GENERATOR = ("https://github.com/flatpak/flatpak-builder-tools/raw/refs/heads/master"
-                             "/pip/flatpak-pip-generator")
 BASE_CHANGELOG_URL = "https://github.com/melianmiko/OpenFreebuds/blob/main/CHANGELOG.md"
 
 PROJECT_ROOT = Path(__file__).parents[1]
-FLATPAK_PIP_GENERATOR_PATH = PROJECT_ROOT / ".flatpak/flatpak-pip-generator"
 
 if len(sys.argv) < 2:
     print("Usage: ./bump_version.py [<version>|git|flatpak_deps]")
@@ -80,9 +77,11 @@ def bump_nsis(line: str):
 
 
 def create_version_info(path: Path):
-    export_data = subprocess.getoutput("poetry export --without-hashes -n --with extras --with no_flatpak")
+    export_data = subprocess.getoutput("pdm export --format=requirements --without-hashes --with no_flatpak")
     libraries = []
     for line in export_data.replace("\r", "").splitlines():
+        if line.startswith("#"):
+            continue
         libraries.append(f"  '{line}',")
 
     write_file(path, [
@@ -137,10 +136,6 @@ def create_flatpak_staff():
 
     # Set up tools
     (PROJECT_ROOT / ".flatpak").mkdir(exist_ok=True, parents=True)
-    if not FLATPAK_PIP_GENERATOR_PATH.is_file():
-        print(f"-- Downloading flatpak-pip-generator")
-        urllib.request.urlretrieve(URL_FLATPAK_PIP_GENERATOR, FLATPAK_PIP_GENERATOR_PATH)
-        os.chmod(FLATPAK_PIP_GENERATOR_PATH, 0o755)
 
     export_data = subprocess.getoutput("pdm export --without-hashes --without no_flatpak --without dev").splitlines()
     new_export_data = []
@@ -152,11 +147,13 @@ def create_flatpak_staff():
     with open(PROJECT_ROOT / ".flatpak/requirements.txt", "w") as f:
         f.write("\n".join(new_export_data))
 
-    print('-- Create python3-requirements.txt for flatpak, will trigger flatpak-pip-generator')
+    print('-- Create python3-requirements.txt for flatpak, will trigger req2flatpak')
     subprocess.run(
-        [FLATPAK_PIP_GENERATOR_PATH,
-         '-r', './.flatpak/requirements.txt',
-         '-o', './scripts/python3-requirements'],
+        ['pdm', 'run', 'req2flatpak',
+         '--requirements-file', './.flatpak/requirements.txt',
+         '--outfile', './scripts/python3-requirements.json',
+         '--target-platforms', '312-x86_64', '312-aarch64',
+         ],
         cwd=PROJECT_ROOT,
     )
 

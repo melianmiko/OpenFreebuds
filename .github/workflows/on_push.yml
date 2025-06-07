@@ -33,6 +33,8 @@ jobs:
             cache: true
       - name: Install Just
         run: curl -s https://just.systems/install.sh | sudo bash -s -- --to /usr/local/bin
+      - name: Do APT update
+        run: sudo apt update
       - name: Install project dependencies
         run: just deps_debian prepare
       - run: just --evaluate
