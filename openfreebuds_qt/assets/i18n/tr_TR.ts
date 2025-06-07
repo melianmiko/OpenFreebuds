@@ -82,7 +82,7 @@
     <message>
       <location filename="../../tray/menu_anc_level.py" line="16" />
       <source>Intensity…</source>
-      <translation>Yoğunluk...</translation>
+      <translation>Yoğunluk…</translation>
     </message>
   </context>
   <context>
@@ -90,7 +90,7 @@
     <message>
       <location filename="../../tray/menu_dual_connect.py" line="14" />
       <source>Dual-connect…</source>
-      <translation>Çift bağlantı...</translation>
+      <translation>Çift bağlantı…</translation>
     </message>
   </context>
   <context>
@@ -98,7 +98,7 @@
     <message>
       <location filename="../../tray/menu_equalizer.py" line="17" />
       <source>Equalizer preset…</source>
-      <translation>Ekolayzer ön ayarı...</translation>
+      <translation>Ekolayzer ön ayarı…</translation>
     </message>
   </context>
   <context>
@@ -257,7 +257,7 @@
     <message>
       <location filename="../../app/helper/device_control_view_helper.py" line="78" />
       <source>Connecting…</source>
-      <translation>Bağlanıyor...</translation>
+      <translation>Bağlanıyor…</translation>
     </message>
   </context>
   <context>
@@ -265,17 +265,17 @@
     <message>
       <location filename="../../designer/device_info.ui" line="0" />
       <source>Firmware version:</source>
-      <translation>Donanım yazılımı(Firmware) Sürümü: </translation>
+      <translation>Donanım yazılımı(Firmware) Sürümü:</translation>
     </message>
     <message>
       <location filename="../../designer/device_info.ui" line="0" />
       <source>Bluetooth address:</source>
-      <translation>Bluetooth adresi: </translation>
+      <translation>Bluetooth adresi:</translation>
     </message>
     <message>
       <location filename="../../designer/device_info.ui" line="0" />
       <source>All available device information fields:</source>
-      <translation>Tüm mevcut cihazların bilgi alanları: </translation>
+      <translation>Tüm mevcut cihazların bilgi alanları:</translation>
     </message>
     <message>
       <location filename="../../designer/device_info.ui" line="0" />
@@ -648,7 +648,7 @@
     <message>
       <location filename="../../app/module/hotkeys_module.py" line="64" />
       <source>Press new shortcut…</source>
-      <translation>Yeni kısayol için basın...</translation>
+      <translation>Yeni kısayol için basın…</translation>
     </message>
   </context>
   <context>
@@ -779,7 +779,7 @@
     <message>
       <location filename="../../app/main.py" line="86" />
       <source>About…</source>
-      <translation>Hakkında...</translation>
+      <translation>Hakkında…</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="94" />
@@ -794,17 +794,17 @@
     <message>
       <location filename="../../app/main.py" line="102" />
       <source>Bugreport…</source>
-      <translation>Hata raporu...</translation>
+      <translation>Hata raporu…</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="107" />
       <source>Check for updates…</source>
-      <translation>Güncellemeri kontrol edin...</translation>
+      <translation>Güncellemeri kontrol edin…</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="114" />
       <source>Remote access…</source>
-      <translation>Uzaktan erişim...</translation>
+      <translation>Uzaktan erişim…</translation>
     </message>
     <message>
       <location filename="../../app/main.py" line="118" />
@@ -827,7 +827,7 @@
     <message>
       <location filename="../../designer/dialog_manual_connect.ui" line="0" />
       <source>Manual connect…</source>
-      <translation>Manuel bağlantı...</translation>
+      <translation>Manuel bağlantı…</translation>
     </message>
     <message>
       <location filename="../../designer/dialog_manual_connect.ui" line="0" />
@@ -850,7 +850,7 @@
     <message>
       <location filename="../../designer/stupid_rpc_setup.ui" line="0" />
       <source>Remote access…</source>
-      <translation>Uzaktan erişim...</translation>
+      <translation>Uzaktan erişim…</translation>
     </message>
     <message>
       <location filename="../../designer/stupid_rpc_setup.ui" line="0" />
@@ -933,22 +933,22 @@
     <message>
       <location filename="../../app/module/sound_quality.py" line="29" />
       <source>New preset…</source>
-      <translation>Yeni ön ayar...</translation>
+      <translation>Yeni ön ayar…</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="30" />
       <source>Delete…</source>
-      <translation>Sil...</translation>
+      <translation>Sil…</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="32" />
       <source>Export to file…</source>
-      <translation>Dosyayı dışa aktar...</translation>
+      <translation>Dosyayı dışa aktar…</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="33" />
       <source>Load file…</source>
-      <translation>Dosyayı yükle...</translation>
+      <translation>Dosyayı yükle…</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="150" />
@@ -980,7 +980,7 @@
     <message>
       <location filename="../../app/module/sound_quality.py" line="175" />
       <source>Enter new preset name:</source>
-      <translation>Yeni ön ayar adı gir: </translation>
+      <translation>Yeni ön ayar adı gir:</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="198" />
@@ -995,12 +995,12 @@
     <message>
       <location filename="../../app/module/sound_quality.py" line="215" />
       <source>Save equalizer preset to file…</source>
-      <translation>Ekolayzır ön ayarı dosyaya kaydedilecek...</translation>
+      <translation>Ekolayzır ön ayarı dosyaya kaydedilecek…</translation>
     </message>
     <message>
       <location filename="../../app/module/sound_quality.py" line="230" />
       <source>Load equalizer preset from file…</source>
-      <translation>Dosyadan ekolayzır ön ayarı yükle...</translation>
+      <translation>Dosyadan ekolayzır ön ayarı yükle…</translation>
     </message>
   </context>
   <context>
@@ -1053,12 +1053,12 @@
     <message>
       <location filename="../../tray/menu.py" line="77" />
       <source>Settings…</source>
-      <translation>Ayarlar...</translation>
+      <translation>Ayarlar…</translation>
     </message>
     <message>
       <location filename="../../tray/menu.py" line="86" />
       <source>Bugreport…</source>
-      <translation>Hata raporu...</translation>
+      <translation>Hata raporu…</translation>
     </message>
     <message>
       <location filename="../../tray/menu.py" line="87" />
@@ -1169,7 +1169,7 @@
     <message>
       <location filename="../../tray/main.py" line="91" />
       <source>OpenFreebuds: Connecting to device…</source>
-      <translation>OpenFreebuds: Cihaza bağlanıyor...</translation>
+      <translation>OpenFreebuds: Cihaza bağlanıyor…</translation>
     </message>
   </context>
   <context>
