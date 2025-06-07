@@ -184,7 +184,7 @@ internal_flatpakinstall:
         xargs -I {} cp {} ./dist/openfreebuds-0.0-py3-none-any.whl
     # Install to /app
     touch /app/is_container
-    DESTDIR=/app PYTHONLIBDIR=/app/lib/python3.11/site-packages just install
+    DESTDIR=/app PYTHONLIBDIR=/app/lib/python3.12/site-packages just install
 
 
 
