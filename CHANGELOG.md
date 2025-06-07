@@ -1,3 +1,9 @@
+# v0.17.1
+Minor fixes, added Turkish translation
+
+- [i18n] Add Turkish language (#71)
+- [Fix] Libraries list in about tab
+
 # v0.17.0
 Simplified Chinese translation, initial FreeClip support, minor bug fixes
 

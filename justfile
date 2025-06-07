@@ -140,6 +140,12 @@ build_check:
 # Flatpak linux packaging
 # ------------------------------------------------
 
+# Install dependencies for Flatpak build
+[linux]
+flatpak_deps:
+    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    flatpak install --user org.flatpak.Builder
+
 # Install OpenFreebuds as Flatpak package
 [linux]
 flatpak_install: build
