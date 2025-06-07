@@ -174,6 +174,9 @@ sync_flatpak:
     # TODO: Move inside Justfile
     mkdir -p ./.flatpak
     pdm run ./scripts/bump_version.py flatpak_deps
+    sed -i \
+        's/--verbose --exists-action=i/--verbose --no-deps --exists-action=i/g' \
+        scripts/python3-requirements.json
 
 # (Internal) Install OpenFreebuds inside Flatpak
 [private,linux]
