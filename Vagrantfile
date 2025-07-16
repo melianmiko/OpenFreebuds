@@ -1,7 +1,9 @@
 Vagrant.configure("2") do |config|
   config.vm.define "debian", primary: true do |debian|
     debian.vm.box = "generic/debian12"
-    debian.vm.synced_folder ".", "/home/vagrant/openfreebuds"
+    debian.vm.synced_folder ".", "/home/vagrant/openfreebuds", 
+      type: "nfs",
+      nfs_version: 4
 
     debian.vm.provision "shell",
       run: 'once',
@@ -68,12 +70,12 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "windows", primary: true do |win|
-    win.vm.box = "gusztavvargadr/windows-11-24h2-enterprise"
+    # From https://github.com/rgl/windows-vagrant, built it or use any other image
+    win.vm.box = "windows-2025-amd64"
     win.vm.synced_folder ".", "C:\\openfreebuds"
-    win.vm.provider "vmware_desktop" do |v|
-      v.vmx["numvcpus"] = "4"
-      v.vmx["memsize"] = "4096"
-      v.gui = true
+    win.vm.provider :libvirt do |libvirt|
+      libvirt.cpus = 4
+      libvirt.memory = 4096
     end
 
     win.vm.provision "shell",
@@ -89,6 +91,8 @@ Vagrant.configure("2") do |config|
         if (-Not (Get-Command 'winget' -errorAction SilentlyContinue)) {
           echo 'Sleep for 60s for winget appear...'; Start-Sleep -s 60
         }
+
+        Add-AppPackage -path "https://cdn.winget.microsoft.com/cache/source.msix"
 
         winget install -e --accept-source-agreements --no-upgrade --id Casey.Just
         winget install -e --no-upgrade --id NSIS.NSIS
