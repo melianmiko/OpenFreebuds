@@ -64,9 +64,19 @@ test:
 prepare:
     pdm install
 
+clean:
+    rm -rf dist scripts/dist scripts/build .pdm-build
+
+vg_destroy:
+    vagrant destroy -f
+
 vg_all:
     vagrant halt -f
     vagrant up --parallel
+
+    # Grab files from windows due to rsync back isn't implemented
+    vagrant ssh-config > .vagrant/sshconfig
+    scp -F .vagrant/sshconfig windows:/openfreebuds/dist/*.exe dist
 
 
 # ------------------------------------------------
@@ -113,7 +123,7 @@ install_check:
 # Build everything
 build: qt_i18n
     pdm run pyuic6 ./openfreebuds_qt/designer/
-    pdm build
+    pdm build --no-clean
 
 # Compile Qt Linguist translation files
 [script]
