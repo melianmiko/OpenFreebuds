@@ -12,7 +12,7 @@ log = create_logger("ConfigLock")
 
 
 class ConfigLock:
-    _path: Path = STORAGE_PATH / "openfreebuds_qt.pid"
+    _path: Path = Path(STORAGE_PATH) / "openfreebuds_qt.pid"
     owned: bool = False
 
     @staticmethod

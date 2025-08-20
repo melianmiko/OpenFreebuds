@@ -63,7 +63,18 @@ class OfbHuaweiAncHandler(OfbDriverHandlerHuawei):
         data = pkg.find_param(1)
 
         if len(data) == 2:
+            old_mode = self.active_mode
             self.active_mode = data[1]
+            
+            # DETECÇÃO IN-EAR via mudança ANC: FreeBuds Pro 4 muda para "awareness" quando removido
+            if old_mode != self.active_mode:
+                if self.active_mode == 2:  # awareness = FreeBuds removido
+                    print("[ANC-IN-EAR] FreeBuds REMOVIDO - mudou para awareness")
+                    await self.driver.put_property("state", "in_ear", "false")
+                elif old_mode == 2 and self.active_mode != 2:  # saiu do awareness = FreeBuds colocado
+                    print("[ANC-IN-EAR] FreeBuds COLOCADO - saiu do awareness")
+                    await self.driver.put_property("state", "in_ear", "true")
+            
             new_props = {
                 "mode": self.mode_options.get(data[1], data[1]),
                 "mode_options": ",".join(self.mode_options.values()),
