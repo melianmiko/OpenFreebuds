@@ -37,6 +37,7 @@ Device compatibility
 See device page to get information about supported features.
 If your device isn't listed here, you could try to use it with profile for other model.
 
+- [HUAWEI FreeArc](./docs/devices/HUAWEI_FreeArc.md)
 - [HUAWEI FreeBuds 4i](./docs/devices/HUAWEI_FreeBuds_4i.md)
   - **HONOR Earbuds 2 / 2 SE / 2 Lite** is same
 - [HUAWEI FreeBuds 5i](./docs/devices/HUAWEI_FreeBuds_5i.md)

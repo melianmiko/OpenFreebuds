@@ -1,0 +1,45 @@
+{
+  "info": {
+    "software_ver": "NotHarmonyOS 0.0.0",
+    "device_submodel": "idk",
+    "device_model": "idk",
+    "is_debug": true
+  },
+  "battery": {
+    "global": 100,
+    "left": 100,
+    "right": 100,
+    "case": 70,
+    "is_charging": "false"
+  },
+  "action": {
+    "double_tap_left": "tap_action_pause",
+    "double_tap_right": "tap_action_pause",
+    "double_tap_options": "tap_action_pause,tap_action_next,tap_action_prev,tap_action_off",
+    "double_tap_in_call": "tap_action_answer",
+    "double_tap_in_call_options": "tap_action_off,tap_action_answer",
+    "triple_tap_left": "tap_action_next",
+    "triple_tap_right": "tap_action_next",
+    "triple_tap_options": "tap_action_next,tap_action_prev,tap_action_off",
+    "long_tap_left": "tap_action_off",
+    "long_tap_right": "tap_action_off",
+    "long_tap_options": "tap_action_off,tap_action_assistant",
+    "long_tap_in_call": "tap_action_answer",
+    "long_tap_in_call_options": "tap_action_off,tap_action_answer",
+    "swipe_gesture_left": "tap_action_change_volume",
+    "swipe_gesture_right": "tap_action_change_volume",
+    "swipe_gesture_options": "tap_action_change_volume,tap_action_nextprev,tap_action_off"
+  },
+  "sound": {
+    "equalizer_preset": "equalizer_preset_default",
+    "equalizer_preset_options": "equalizer_preset_default,equalizer_preset_dynamic,equalizer_preset_hardbass,equalizer_preset_treble,equalizer_preset_voices"
+  },
+  "config": {
+    "low_latency": "false"
+  },
+  "dual_connect": {
+    "enabled": "true",
+    "preferred_device": "dba7f2d384e4",
+    "devices": "{\"010000000000\":{\"name\":\"Device 1\",\"auto_connect\":true,\"preferred\":false,\"connected\":true,\"playing\":true},\"020000000000\":{\"name\":\"Device 2\",\"auto_connect\":false,\"preferred\":false,\"connected\":false,\"playing\":false},\"030000000000\":{\"name\":\"Device 3\",\"auto_connect\":true,\"preferred\":true,\"connected\":true,\"playing\":false}}"
+  }
+}
