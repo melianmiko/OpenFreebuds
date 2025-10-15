@@ -61,16 +61,19 @@ Common installation options:
 
 All installation options:
 
-| Platform | Package manager | Command / Link |
-|---|---|---|
-| ![](./docs/img/i_win32.png) Windows | Direct install | [Website](https://mmk.pw/en/openfreebuds/download) or [releases](./releases)|
-| ![](./docs/img/i_win32.png) Windows | [Winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) (preinstalled) | <pre>winget install MelianMiko.OpenFreebuds</pre> |
-| ![](./docs/img/i_win32.png) Windows | [Scoop](https://scoop.sh/) | <pre>scoop bucket add extras<br/>scoop install openfreebuds</pre> |
-| ![](./docs/img/i_linux.png) Any linux | [Available at Flathub](https://flathub.org/apps/pw.mmk.OpenFreebuds) | <pre>flatpak install pw.mmk.OpenFreebuds</pre> |
-| ![](./docs/img/i_debian.png) Debian/Ubuntu | APT | <pre>curl -s https://deb.mmk.pw/setup \| sudo bash -<br/>sudo apt install openfreebuds</pre> |
-| ![](./docs/img/i_arch.png) ArchLinux | [Yay](https://github.com/Jguer/yay) for AUR | <pre>yay -S openfreebuds</pre> |
+| Platform                                   | Package manager                                                                            | Command / Link                                                                               |
+|--------------------------------------------|--------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| ![](./docs/img/i_win32.png) Windows        | Direct install                                                                             | [Website](https://mmk.pw/en/openfreebuds/download) or [releases](./releases)                 |
+| ![](./docs/img/i_win32.png) Windows¹       | [Winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) (preinstalled) | <pre>winget install MelianMiko.OpenFreebuds</pre>                                            |
+| ![](./docs/img/i_win32.png) Windows¹       | [Scoop](https://scoop.sh/)                                                                 | <pre>scoop bucket add extras<br/>scoop install openfreebuds</pre>                            |
+| ![](./docs/img/i_linux.png) Any linux      | [Available at Flathub](https://flathub.org/apps/pw.mmk.OpenFreebuds)                       | <pre>flatpak install pw.mmk.OpenFreebuds</pre>                                               |
+| ![](./docs/img/i_debian.png) Debian/Ubuntu | APT                                                                                        | <pre>curl -s https://deb.mmk.pw/setup \| sudo bash -<br/>sudo apt install openfreebuds</pre> |
+| ![](./docs/img/i_arch.png) ArchLinux       | [Yay](https://github.com/Jguer/yay) for AUR                                                | <pre>yay -S openfreebuds</pre>                                                               |
+| ![](./docs/img/i_nix.png) NixOS¹ 25.11+    | NixPkgs                                                                                    | [openfreebuds](https://search.nixos.org/packages?channel=unstable&query=openfreebuds)        |
 
 Most recent `dev`-binaries can be found as [GitHub Actions](https://github.com/melianmiko/OpenFreebuds/actions/workflows/on_push.yml) build artifacts.
+
+> ¹community-maintained
 
 Build from sources
 -------------
