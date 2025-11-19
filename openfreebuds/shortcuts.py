@@ -84,6 +84,14 @@ class OfbShortcuts:
     async def do_show_main_window(self):
         await self.ofb.send_message(OfbEventKind.QT_BRING_SETTINGS_UP)
 
+    async def do_refresh_battery(self):
+        """Request battery update from device"""
+        await self.ofb.request_property_update("battery")
+
+    async def is_refresh_battery_available(self):
+        state = await self.ofb.get_state()
+        return state == IOpenFreebuds.STATE_CONNECTED
+
     async def do_disconnect(self):
         state = await self.ofb.get_state()
         if state == IOpenFreebuds.STATE_DISCONNECTED:

@@ -131,6 +131,14 @@ class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
         for pkg_id in handler.ignore_commands:
             self.__on_package_handlers[pkg_id] = _empty_handler
 
+    async def request_property_update(self, handler_id: str):
+        """Request a property update from a specific handler"""
+        for handler in self.handlers:
+            if handler.handler_id == handler_id and hasattr(handler, 'request_update'):
+                await handler.request_update()
+                return True
+        return False
+
 
 class OfbDriverHandlerHuawei(OfbDriverHandlerGeneric):
     handler_id: str = ""

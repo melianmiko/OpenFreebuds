@@ -32,3 +32,8 @@ class OfbHuaweiBatteryHandler(OfbDriverHandlerHuawei):
         if 3 in package.parameters and len(package.parameters[3]) > 0:
             out["is_charging"] = json.dumps(b"\x01" in package.parameters[3])
         await self.driver.put_property("battery", None, out)
+
+    async def request_update(self):
+        """Request battery update from device"""
+        resp = await self.driver.send_package(HuaweiSppPackage.read_rq(CMD_BATTERY_READ, [1, 2, 3]))
+        await self.on_package(resp)

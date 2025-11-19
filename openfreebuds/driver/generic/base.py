@@ -100,3 +100,7 @@ class OfbDriverGeneric:
             self._store[group][prop] = value
 
         await self.changes.send_message(OfbEventKind.PROPERTY_CHANGED, group, prop, value)
+
+    async def request_property_update(self, handler_id: str):
+        """Request a property update from a specific handler"""
+        raise NotImplementedError()

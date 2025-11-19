@@ -42,6 +42,9 @@ class IOpenFreebuds(Subscription):
     async def run_shortcut(self, *args, no_catch: bool = False):
         raise NotImplementedError("Not implemented")
 
+    async def request_property_update(self, handler_id: str):
+        raise NotImplementedError("Not implemented")
+
     @asynccontextmanager
     async def locked_device(self):
         raise NotImplementedError("Not implemented")

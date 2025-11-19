@@ -60,6 +60,9 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
             "case": self.add_item("", visible=False, enabled=False),
             "global": self.add_item("", visible=False, enabled=False),
         }
+        self.refresh_battery_action = self.add_item(text=self.tr("Refresh battery"),
+                                                     callback=self.do_refresh_battery,
+                                                     visible=False)
         self.add_separator()
 
         # ANC settings
@@ -98,6 +101,7 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
             self.connect_action.setVisible(state == IOpenFreebuds.STATE_DISCONNECTED)
             self.disconnect_action.setVisible(self.is_connected)
             self.set_section_visible(self.battery_section, self.is_connected)
+            self.refresh_battery_action.setVisible(self.is_connected)
             self.set_section_visible(self.anc_section, self.is_connected)
             self.equalizer_action.setVisible(
                 self.is_connected
@@ -197,6 +201,10 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
     @asyncSlot()
     async def do_bugreport(self):
         await OfbQtReportTool(self.ctx).create_and_show()
+
+    @asyncSlot()
+    async def do_refresh_battery(self):
+        await self.ofb.run_shortcut("refresh_battery")
 
     @asyncSlot()
     async def do_exit(self):

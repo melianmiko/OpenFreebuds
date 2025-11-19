@@ -113,6 +113,13 @@ class OfbManager(IOpenFreebuds):
         log.info(f"Execute shortcut action {args}")
         return await self._shortcuts.execute(*args, no_catch=no_catch)
 
+    @rpc
+    async def request_property_update(self, handler_id: str):
+        """Request a property update from a specific handler"""
+        if self._driver is None:
+            raise OfbNoDeviceError("Attempt to request update without device")
+        return await self._driver.request_property_update(handler_id)
+
     @asynccontextmanager
     async def locked_device(self):
         try:
