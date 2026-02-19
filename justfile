@@ -181,9 +181,11 @@ flatpak: flatpak_install
 # Sync Python dependencies for Flatpak
 [linux]
 sync_flatpak:
-    # TODO: Move inside Justfile
     mkdir -p ./.flatpak
-    pdm run ./scripts/bump_version.py flatpak_deps
+    python -m venv ./.flatpak/venv
+    ./.flatpak/venv/bin/pip install req2flatpak==0.3.1
+    # TODO: Move inside Justfile
+    ./.flatpak/venv/bin/python ./scripts/bump_version.py flatpak_deps
     sed -i \
         's/--verbose --exists-action=i/--verbose --no-deps --exists-action=i/g' \
         scripts/python3-requirements.json

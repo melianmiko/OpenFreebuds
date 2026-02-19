@@ -5,7 +5,7 @@
 groups = ["default", "dev", "no-flatpak"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:5100893e3c4ffb277cddc718f946cda3e5d533b7b0c86765b20586377b1ab194"
+content_hash = "sha256:1963ab233eff81d6a0b9e60bd1dfdd3ad622e3faf4ab37392aab0daded2bcfff"
 
 [[metadata.targets]]
 requires_python = ">=3.11,<3.14"
@@ -951,18 +951,6 @@ files = [
 ]
 
 [[package]]
-name = "req2flatpak"
-version = "0.2.0"
-requires_python = ">=3.7.2,<4.0.0"
-summary = "Generates a flatpak-builder build module for installing python packages defined in requirements.txt files."
-groups = ["dev"]
-marker = "python_version >= \"3.11\" and python_version < \"3.14\""
-files = [
-    {file = "req2flatpak-0.2.0-py3-none-any.whl", hash = "sha256:15f7c719b6c4f3cdd44c836a023d7d968ee5b2ff9de4091695e59f930a1dc086"},
-    {file = "req2flatpak-0.2.0.tar.gz", hash = "sha256:61b81cf53c845c2a528de5c22338052771c7c7b2ecf4f8f19131232b5b0d5a85"},
-]
-
-[[package]]
 name = "requirements-parser"
 version = "0.13.0"
 requires_python = "<4.0,>=3.8"
@@ -979,14 +967,14 @@ files = [
 
 [[package]]
 name = "setuptools"
-version = "80.9.0"
+version = "82.0.0"
 requires_python = ">=3.9"
 summary = "Easily download, build, install, upgrade, and uninstall Python packages"
 groups = ["dev"]
-marker = "python_version >= \"3.11\" and python_version < \"3.14\" and sys_platform == \"win32\""
+marker = "python_version >= \"3.11\" and python_version < \"3.14\""
 files = [
-    {file = "setuptools-80.9.0-py3-none-any.whl", hash = "sha256:062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922"},
-    {file = "setuptools-80.9.0.tar.gz", hash = "sha256:f36b47402ecde768dbfafc46e8e4207b4360c654f1f3bb84475f0a28628fb19c"},
+    {file = "setuptools-82.0.0-py3-none-any.whl", hash = "sha256:70b18734b607bd1da571d097d236cfcfacaf01de45717d59e6e04b96877532e0"},
+    {file = "setuptools-82.0.0.tar.gz", hash = "sha256:22e0a2d69474c6ae4feb01951cb69d515ed23728cf96d05513d36e42b62b37cb"},
 ]
 
 [[package]]

@@ -91,6 +91,12 @@
   <content_rating type="oars-1.1" />
 
   <releases>
+    <release version="0.17.3" date="2026-02-19">
+      <url type="details">https://github.com/melianmiko/OpenFreebuds/blob/main/CHANGELOG.md#v0.17.3</url>
+      <description>
+        <p>Minor fixes, added German translation.</p>
+      </description>
+    </release>
     <release version="0.17.1" date="2025-06-07">
       <url type="details">https://github.com/melianmiko/OpenFreebuds/blob/main/CHANGELOG.md#v0.17.1</url>
       <description>

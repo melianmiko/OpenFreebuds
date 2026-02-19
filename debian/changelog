@@ -1,3 +1,13 @@
+openfreebuds (0.17.3-1) bookworm trixie noble oracular plucky; urgency=medium
+
+  Minor fixes, added German translation.
+  
+  - [i18n] Add German translation (#87)
+  - [Fix] Python 3.14 compatibility
+  
+
+ -- MelianMiko <support@mmk.pw>  Thu, 19 Feb 2026 05:26:10 +0000
+
 openfreebuds (0.17.1-1) bookworm trixie noble oracular plucky; urgency=medium
 
   Minor fixes, added Turkish translation

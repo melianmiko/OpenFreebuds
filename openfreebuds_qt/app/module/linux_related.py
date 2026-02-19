@@ -5,7 +5,6 @@ from PyQt6.QtCore import pyqtSlot
 from PyQt6.QtWidgets import QMessageBox
 from qasync import asyncSlot
 
-from openfreebuds import STORAGE_PATH
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.constants import LINK_WEBSITE_HELP
