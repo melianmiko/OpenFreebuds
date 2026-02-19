@@ -3,7 +3,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
-DEB_CODENAMES = "bookworm trixie noble oracular plucky"
+DEB_CODENAMES = "trixie noble questing"
 DEVELOPER_SIGN = "MelianMiko <support@mmk.pw>"
 DEBUG = False
 
