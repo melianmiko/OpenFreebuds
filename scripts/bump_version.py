@@ -1,8 +1,5 @@
-import json
-import os
 import subprocess
 import sys
-import urllib.request
 from datetime import date
 from pathlib import Path
 
@@ -149,7 +146,7 @@ def create_flatpak_staff():
 
     print('-- Create python3-requirements.txt for flatpak, will trigger req2flatpak')
     subprocess.run(
-        ['pdm', 'run', 'req2flatpak',
+        ['.flatpak/venv/bin/req2flatpak',
          '--requirements-file', './.flatpak/requirements.txt',
          '--outfile', './scripts/python3-requirements.json',
          '--target-platforms', '312-x86_64', '312-aarch64',

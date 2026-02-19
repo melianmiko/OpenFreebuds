@@ -1,6 +1,6 @@
 [project]
 name = "OpenFreebuds"
-version = "0.17.1"
+version = "0.17.3"
 description = "FOSS Windows/Linux client for HUAWEI FreeBuds headset series"
 authors = [
     {name = "MelianMiko", email = "support@mmk.pw"},
@@ -24,7 +24,7 @@ dev = [
     "pyinstaller==6.10.0; sys_platform == 'win32'",
     "pyside6>=6.8.2.1; sys_platform == 'win32'",
     "requirements-parser>=0.11.0",
-    "req2flatpak>=0.2.0",
+    "setuptools>=82.0.0",
 ]
 no_flatpak = [
     "pyqt6<7.0.0,>=6.9.1",

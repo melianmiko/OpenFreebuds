@@ -1,3 +1,9 @@
+# v0.17.3
+Minor fixes, added German translation.
+
+- [i18n] Add German translation (#87)
+- [Fix] Python 3.14 compatibility
+
 # v0.17.1
 Minor fixes, added Turkish translation
 
