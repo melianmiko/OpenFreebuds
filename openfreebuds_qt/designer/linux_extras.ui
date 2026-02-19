@@ -37,20 +37,6 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QCheckBox" name="force_x11_checkbox">
-        <property name="text">
-         <string>Force use X11 backend (may look better in GNOME-based desktop environments)</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Restart application to apply.</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
@@ -118,7 +104,7 @@
    <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
-      <enum>Qt::Vertical</enum>
+      <enum>Qt::Orientation::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
@@ -161,22 +147,6 @@
     <hint type="destinationlabel">
      <x>293</x>
      <y>206</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>force_x11_checkbox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>OfbQtLinuxExtrasModule</receiver>
-   <slot>on_force_x11_toggle(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>293</x>
-     <y>182</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>293</x>
-     <y>266</y>
     </hint>
    </hints>
   </connection>
