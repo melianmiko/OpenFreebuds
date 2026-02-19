@@ -80,9 +80,6 @@ class OfbQtApplication(IOfbQtApplication):
 
     @staticmethod
     def start(args):
-        if (STORAGE_PATH / "force_xorg").is_file():
-            print("Enforce xcb Qt backend due to setting")
-            os.environ["QT_QPA_PLATFORM"] = "xcb"
         return OfbQtApplication(args).exec_async()
 
     async def boot(self):
