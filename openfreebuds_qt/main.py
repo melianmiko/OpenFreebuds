@@ -203,8 +203,11 @@ class OfbQtApplication(IOfbQtApplication):
 
     def exec_async(self):
         self.event_loop.create_task(self.boot())
-        self.event_loop.run_until_complete(self.close_event.wait())
-        self.event_loop.close()
+        try:
+            self.event_loop.run_until_complete(self.close_event.wait())
+            self.event_loop.close()
+        except RuntimeError:
+            pass
 
     def show_no_tray_warning(self):
         if self.config.get("warn", "no_tray", False):
