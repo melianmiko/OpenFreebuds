@@ -123,9 +123,9 @@ class OfbQtApplication(IOfbQtApplication):
             await self.updater_service.boot()
 
             # Qt version check & warn
-            with suppress(Exception):
-                if float(".".join(QT_VERSION_STR.split(".")[:2])) < 6.7:
-                    self.show_old_qt_warning()
+            # with suppress(Exception):
+            #     if float(".".join(QT_VERSION_STR.split(".")[:2])) < 6.7:
+            #         self.show_old_qt_warning()
 
             # Show UI
             self.tray.show()
