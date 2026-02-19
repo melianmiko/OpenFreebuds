@@ -158,7 +158,8 @@ flatpak_deps:
 
 # Install OpenFreebuds as Flatpak package
 [linux]
-flatpak_install: build
+flatpak_install:
+    just build || true
     mkdir -p {{flatpak_dir}}
     echo "*" > {{flatpak_dir}}/.gitignore
     flatpak run org.flatpak.Builder \
