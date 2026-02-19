@@ -1,6 +1,6 @@
 Vagrant.configure("2") do |config|
   config.vm.define "debian", primary: true do |debian|
-    debian.vm.box = "generic/debian12"
+    debian.vm.box = "debian12"
     debian.vm.synced_folder ".", "/home/vagrant/openfreebuds", 
       type: "nfs",
       nfs_version: 4
@@ -72,7 +72,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "windows", primary: true do |win|
     # From https://github.com/rgl/windows-vagrant, built it or use any other image
     win.vm.box = "windows-2025-amd64"
-    win.vm.synced_folder ".", "C:\\openfreebuds"
+    win.vm.synced_folder ".", "C:\\openfreebuds", type: "rsync"
     win.vm.provider :libvirt do |libvirt|
       libvirt.cpus = 4
       libvirt.memory = 4096

@@ -21,7 +21,7 @@ dependencies = [
 dev = [
     "pytest<9.0.0,>=8.3.2",
     "pytest-asyncio<1.0.0,>=0.24.0",
-    "pyinstaller==6.10.0; sys_platform == 'win32'",
+    "pyinstaller==6.19.0; sys_platform == 'win32'",
     "pyside6>=6.8.2.1; sys_platform == 'win32'",
     "requirements-parser>=0.11.0",
     "setuptools>=82.0.0",
