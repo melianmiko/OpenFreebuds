@@ -11,6 +11,7 @@ KNOWN_BUILT_IN_PRESETS = {
     2: "equalizer_preset_hardbass",
     3: "equalizer_preset_treble",
     9: "equalizer_preset_voices",
+    10: "equalizer_preset_dynamic",
 }
 FAKE_BUILT_IN_PRESETS = [
     (-56, "equalizer_preset_symphony", "0f0f0afb0f190ffb322d"),

@@ -57,6 +57,7 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
             "tap_action_change_volume": self.tr("Adjust volume"),
             "tap_action_assistant": self.tr("Voice assistant"),
             "tap_action_next": self.tr("Next track"),
+            "tap_action_nextprev": self.tr("Next/prev track"),
             "tap_action_off": self.tr("Disabled"),
             "tap_action_pause": self.tr("Play/pause"),
             "tap_action_prev": self.tr("Prev track"),
@@ -121,7 +122,7 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
                                      ui_names_map=self.gesture_names,
                                      label=self.swipe_label,
                                      left_combo=self.swipe_left,
-                                     is_separate=False))
+                                     right_combo=self.swipe_right))
 
     async def update_ui(self, event: OfbCoreEvent):
         if not event.is_changed("action") and not event.kind_match(OfbEventKind.DEVICE_CHANGED):

@@ -5,6 +5,7 @@ DEVICE_TO_DRIVER_MAP = {
     "HONOR Earbuds 2": OfbDriverHuawei4I,
     "HONOR Earbuds 2 SE": OfbDriverHuawei4I,
     "HONOR Earbuds 2 Lite": OfbDriverHuawei4I,
+    "HUAWEI FreeArc": OfbDriverHuaweiArc,
     "HUAWEI FreeBuds 4i": OfbDriverHuawei4I,
     "HUAWEI FreeBuds 5i": OfbDriverHuawei5I,
     "HUAWEI FreeBuds 6i": OfbDriverHuawei6I,
