@@ -159,7 +159,7 @@
     <message>
       <location filename="../../designer/about_module.ui" line="0" />
       <source>Client application for HUAWEI FreeBuds wireless earphone series. Free and open source.</source>
-      <translation>Huawei FreeBuds kablosuz kulaklık serisi için istemci uygulaması. Özügr ve açık kaynak.</translation>
+      <translation>Huawei FreeBuds kablosuz kulaklık serisi için istemci uygulaması. Özgür ve açık kaynak.</translation>
     </message>
     <message>
       <location filename="../../designer/about_module.ui" line="0" />
