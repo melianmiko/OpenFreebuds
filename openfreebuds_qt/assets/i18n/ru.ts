@@ -160,7 +160,7 @@
     <message>
         <location filename="../../designer/about_module.ui" line="0"/>
         <source>Client application for HUAWEI FreeBuds wireless earphone series. Free and open source.</source>
-        <translation>Приложения для управления наушниками серии HUAWEI FreeBuds. Бесплатное и с открытым исходным кодом.</translation>
+        <translation>Приложение для управления наушниками серии HUAWEI FreeBuds. Бесплатное и с открытым исходным кодом.</translation>
     </message>
     <message>
         <location filename="../../designer/about_module.ui" line="0"/>
@@ -193,7 +193,7 @@
     <message>
         <location filename="../../main.py" line="218"/>
         <source>If you&apos;re running under GNOME shell, please, check FAQ. This warning will be shown only once.</source>
-        <translation>Если вы используете GNOME Shell, ознакомьтесь с ЧаВо.Это предупреждение больше не будет показано.</translation>
+        <translation>Если вы используете GNOME Shell, ознакомьтесь с ЧаВо. Это предупреждение больше не будет показано.</translation>
     </message>
     <message>
         <location filename="../../main.py" line="233"/>
@@ -467,7 +467,7 @@
     <message>
         <location filename="../../designer/first_run_dialog.ui" line="0"/>
         <source>Left-click on this icon will cycle through noise cancellation modes (can be configured), right-click will provide access to full battery status and main options. Settings window provides access to all features.</source>
-        <translation>Левый клик по этой иконке будет переключать режимы шумоподавления (поведение можно настроить), правый клик предоставит доступ к полной информации о состоянии батареи утройства и основным опциям. Окно &quot;Настройки&quot; предоставит полный доступ до всех опций, доступных в устройстве.</translation>
+        <translation>Левый клик по этой иконке будет переключать режимы шумоподавления (поведение можно настроить), правый клик предоставит доступ к полной информации о состоянии батареи устройства и основным опциям. Окно &quot;Настройки&quot; предоставит полный доступ ко всем опциям, доступных в устройстве.</translation>
     </message>
     <message>
         <location filename="../../designer/first_run_dialog.ui" line="0"/>
@@ -477,7 +477,7 @@
     <message>
         <location filename="../../designer/first_run_dialog.ui" line="0"/>
         <source>Mininize to system tray instead of closing</source>
-        <translation>Скрывать в облесть уведомлений вместо закрытия</translation>
+        <translation>Скрывать в область уведомлений вместо закрытия</translation>
     </message>
     <message>
         <location filename="../../designer/first_run_dialog.ui" line="0"/>
@@ -662,7 +662,7 @@
     <message>
         <location filename="../../designer/linux_extras.ui" line="0"/>
         <source>Enable MPRIS helper service</source>
-        <translation>Включить службу урпаления MPRIS</translation>
+        <translation>Включить службу управления MPRIS</translation>
     </message>
     <message>
         <location filename="../../designer/linux_extras.ui" line="0"/>
@@ -971,7 +971,7 @@
         <location filename="../../app/module/sound_quality.py" line="185"/>
         <location filename="../../app/module/sound_quality.py" line="162"/>
         <source>Can&apos;t create: too many custom preset created in device.</source>
-        <translation>Не удалось: достигнут лимит кол-ва предустановок в памяти устройства.</translation>
+        <translation>Не удалось: достигнут лимит количества предустановок в памяти устройства.</translation>
     </message>
     <message>
         <location filename="../../app/module/sound_quality.py" line="174"/>
@@ -1082,7 +1082,7 @@
     <message>
         <location filename="../../designer/ui_settings.ui" line="0"/>
         <source>Restart OpenFeebuds to apply changes</source>
-        <translation>Перезапустите OpenFreebuds для применения изменения</translation>
+        <translation>Перезапустите OpenFreebuds для применения изменений</translation>
     </message>
     <message>
         <location filename="../../designer/ui_settings.ui" line="0"/>
