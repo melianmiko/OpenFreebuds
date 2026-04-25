@@ -32,7 +32,7 @@ class OfbQtFirstRunDialog(Ui_OfbQtFirstRunDialog, QDialog):
         self.autostart_checkbox.setChecked(AUTOSTART_AVAILABLE)
         self.autostart_checkbox.setEnabled(AUTOSTART_AVAILABLE)
 
-        preview_fn = "ofb_linux_preview" if sys.platform == 'linux' else "ofb_win32_preview"
+        preview_fn = "ofb_win32_preview" if sys.platform == "win32" else "ofb_linux_preview"
         preview_image = get_img_colored(preview_fn,
                                         color=self.palette().text().color().getRgb(),
                                         base_dir="image")
