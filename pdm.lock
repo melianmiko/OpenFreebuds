@@ -5,7 +5,7 @@
 groups = ["default", "dev", "no-flatpak"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:802b5f17f512f55c2ceebf7e3a056562be1f2f285b7e9241ee9471c170e81143"
+content_hash = "sha256:1179171ccc263dfae880a81b4a13ec10965b3d31e826fc2750a91ff8d392ff1e"
 
 [[metadata.targets]]
 requires_python = ">=3.11,<3.14"
@@ -738,6 +738,25 @@ files = [
     {file = "pyobjc_framework_coretext-12.1-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:7cbb2c28580e6704ce10b9a991ccd9563a22b3a75f67c36cf612544bd8b21b5f"},
     {file = "pyobjc_framework_coretext-12.1-cp313-cp313t-macosx_10_13_universal2.whl", hash = "sha256:14100d1e39efb30f57869671fb6fce8d668f80c82e25e7930fb364866e5c0dab"},
     {file = "pyobjc_framework_coretext-12.1.tar.gz", hash = "sha256:e0adb717738fae395dc645c9e8a10bb5f6a4277e73cba8fa2a57f3b518e71da5"},
+]
+
+[[package]]
+name = "pyobjc-framework-iobluetooth"
+version = "12.1"
+requires_python = ">=3.10"
+summary = "Wrappers for the framework IOBluetooth on macOS"
+groups = ["default"]
+marker = "python_version >= \"3.11\" and python_version < \"3.14\" and sys_platform == \"darwin\""
+dependencies = [
+    "pyobjc-core>=12.1",
+    "pyobjc-framework-Cocoa>=12.1",
+]
+files = [
+    {file = "pyobjc_framework_iobluetooth-12.1-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:77959f2ecf379aa41eb0848fdb25da7c322f9f4a82429965c87c4bc147137953"},
+    {file = "pyobjc_framework_iobluetooth-12.1-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:111a6e54be9e9dcf77fa2bf84fdac09fae339aa33087d8647ea7ffbd34765d4c"},
+    {file = "pyobjc_framework_iobluetooth-12.1-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:2ee0d4fdddf871fb89c49033495ae49973cc8b0e8de50c2e60c92355ce3bea86"},
+    {file = "pyobjc_framework_iobluetooth-12.1-cp313-cp313t-macosx_10_13_universal2.whl", hash = "sha256:0cd2ea9384e93913703bf40641196a930af83c2f6f62f59f8606b7162fe1caa3"},
+    {file = "pyobjc_framework_iobluetooth-12.1.tar.gz", hash = "sha256:8a434118812f4c01dfc64339d41fe8229516864a59d2803e9094ee4cbe2b7edd"},
 ]
 
 [[package]]
