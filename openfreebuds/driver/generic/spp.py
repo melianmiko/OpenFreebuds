@@ -1,8 +1,8 @@
 import asyncio
-import socket
 from contextlib import suppress
 
 from openfreebuds.driver.generic import OfbDriverGeneric
+from openfreebuds.driver.generic.spp_transport import get_default_transport
 from openfreebuds.exceptions import FbStartupError
 from openfreebuds.utils.logger import create_logger
 
@@ -26,12 +26,11 @@ class OfbDriverSppGeneric(OfbDriverGeneric):
 
     async def start(self):
         try:
-            sock = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
-            sock.settimeout(2)
-            await asyncio.sleep(self._spp_connect_delay)
-
-            sock.connect((self.device_address, self._spp_service_port))
-            reader, writer = await asyncio.open_connection(sock=sock)
+            reader, writer = await get_default_transport().open(
+                self.device_address,
+                self._spp_service_port,
+                connect_delay=self._spp_connect_delay,
+            )
         except (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError, OSError, ValueError):
             raise FbStartupError("Driver startup failed")
 
