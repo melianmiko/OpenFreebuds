@@ -6,6 +6,7 @@ from .buds_pro_2 import OfbDriverHuaweiPro2
 from .buds_pro_3 import OfbDriverHuaweiPro3
 from .buds_se import OfbDriverHuaweiSe
 from .buds_se_2 import OfbDriverHuaweiSe2
+from .buds_se_4 import OfbDriverHuaweiSe4
 from .lace_pro import OfbDriverHuaweiLacePro
 from .lace_pro_2 import OfbDriverHuaweiLacePro2
 from .buds_studio import OfbDriverHuaweiStudio
