@@ -53,8 +53,10 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
         super().__init__(*args, **kwargs)
 
         self.gesture_names = {
-            "tap_action_answer": self.tr("Answer to call"),
+            "tap_action_answer": self.tr("Answer call"),
             "tap_action_change_volume": self.tr("Adjust volume"),
+            "tap_action_vol_up": self.tr("Increase volume"),
+            "tap_action_vol_down": self.tr("Decrease volume"),
             "tap_action_assistant": self.tr("Voice assistant"),
             "tap_action_next": self.tr("Next track"),
             "tap_action_off": self.tr("Disabled"),
