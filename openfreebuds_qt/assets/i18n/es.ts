@@ -553,7 +553,7 @@
     </message>
     <message>
       <location filename="../../app/module/gestures.py" line="56" />
-      <source>Answer to call</source>
+      <source>Answer call</source>
       <translation>Responder una llamada</translation>
     </message>
     <message>
