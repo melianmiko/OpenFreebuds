@@ -3,16 +3,23 @@ from .action_triple_tap import OfbHuaweiActionTripleTapHandler
 from .action_long_tap import OfbHuaweiActionLongTapHandler
 from .action_long_tap import OfbHuaweiActionLongTapHandler
 from .action_long_tap_split import OfbHuaweiActionLongTapSplitHandler
+from .action_light_long_tap import HuaweiLightTapSpec, OfbHuaweiActionLightLongTapHandler
 from .action_power_button import OfbHuaweiActionsPowerButtonHandler
 from .action_swipe_gesture import OfbHuaweiActionSwipeGestureHandler
 from .anc import OfbHuaweiAncHandler, OfbHuaweiAncLegacyChangeHandler
 from .battery import OfbHuaweiBatteryHandler
+from .big_volume import OfbHuaweiBigVolumeHandler
 from .config_auto_pause import OfbHuaweiConfigAutoPauseHandler
 from .config_equalizer import OfbHuaweiEqualizerPresetHandler
 from .sound_quality_preference import OfnHuaweiSoundQualityPreferenceHandler
 from .info import OfbHuaweiInfoHandler
+from .left_right_ear_recognition import OfbHuaweiLeftRightEarRecognitionHandler
 from .logs import OfbHuaweiLogsHandler
 from .service_language import OfbHuaweiVoiceLanguageHandler
 from .state_in_ear import OfbHuaweiStateInEarHandler
 from .low_latency import OfbHuaweiLowLatencyPreferenceHandler
 from .dual_connect import OfbHuaweiDualConnectHandler
+from .feature_switch import HuaweiFeatureSwitchSpec, OfbHuaweiFeatureSwitchHandler
+from .find_device import OfbHuaweiFindDeviceHandler
+from .prompt_tone import OfbHuaweiPromptToneHandler
+from .smart_call_volume import OfbHuaweiSmartCallVolumeHandler

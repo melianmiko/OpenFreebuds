@@ -3,14 +3,17 @@ import json
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QSlider, QMenu, QInputDialog, QMessageBox, QFileDialog
+from PyQt6.QtWidgets import (QCheckBox, QComboBox, QGroupBox, QHBoxLayout, QLabel, QSlider, QMenu, QInputDialog,
+                             QMessageBox, QFileDialog, QVBoxLayout, QWidget)
 from qasync import asyncSlot
 
+from openfreebuds import OfbEventKind
 from openfreebuds.exceptions import OfbTooManyItemsError
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
+from openfreebuds_qt.app.widget import make_settings_row
 from openfreebuds_qt.designer.sound_quality import Ui_OfbQtSoundQualityModule
-from openfreebuds_qt.qt_i18n import get_eq_preset_names
+from openfreebuds_qt.qt_i18n import get_eq_preset_names, get_sound_option_names, get_sound_toggle_names
 from openfreebuds_qt.utils import get_img_colored
 from openfreebuds_qt.utils.async_dialog import run_dialog_async
 from openfreebuds_qt.utils.core_event import OfbCoreEvent
@@ -24,6 +27,8 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         super().__init__(*args, **kwargs)
 
         self.eq_preset_option_names = get_eq_preset_names()
+        self.sound_toggle_names = get_sound_toggle_names()
+        self.sound_option_names = get_sound_option_names()
 
         self.menu_actions = [
             (self.tr("New preset…"), self.new_preset),
@@ -50,8 +55,16 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         self._eq_rows: list[QSlider] = []
         self._last_preset_data: list[int] = []
         self._last_copy_options: list[str] = []
+        self.sound_toggles: dict[str, QCheckBox] = {}
+        self.sound_option_rows: dict[str, QWidget] = {}
+        self.sound_toggle_handlers = []
+        self.sound_option_boxes: dict[str, QComboBox] = {}
+        self.sound_option_values: dict[str, list[str]] = {}
+        self.sound_option_handlers = []
 
         self.setupUi(self)
+        self.label_4.setProperty("pageLead", True)
+        self._setup_sound_toggles()
 
         self.undo_btn.setIcon(
             QIcon(get_img_colored("undo", self.palette().text().color().getRgb()))
@@ -69,6 +82,74 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         for i in range(10):
             self._add_slider(i)
         self.custom_eq.setVisible(False)
+
+    def _setup_sound_toggles(self):
+        self.sound_options_root = QGroupBox(self.tr("Sound options"), self)
+        self.sound_options_layout = QVBoxLayout(self.sound_options_root)
+        self.sound_options_layout.setContentsMargins(0, 0, 0, 0)
+        self.sound_options_layout.setSpacing(12)
+
+        for prop, label in self.sound_toggle_names.items():
+            toggle = QCheckBox("", self.sound_options_root)
+            toggle.setObjectName(f"sound_{prop}_toggle")
+            row = make_settings_row(self.sound_options_root, label, "", [toggle])
+            self.sound_options_layout.addWidget(row)
+            self.sound_toggles[prop] = toggle
+            self.sound_option_rows[prop] = row
+
+            handler = self._make_sound_toggle_handler(prop, toggle)
+            self.sound_toggle_handlers.append(handler)
+            toggle.toggled.connect(handler)
+
+        for prop, (label, options) in self.sound_option_names.items():
+            box = QComboBox(self.sound_options_root)
+            values = list(options.keys())
+            box.addItems([options[value] for value in values])
+            row = make_settings_row(self.sound_options_root, label, "", [box])
+
+            self.sound_options_layout.addWidget(row)
+            self.sound_option_boxes[prop] = box
+            self.sound_option_rows[prop] = row
+            self.sound_option_values[prop] = values
+
+            handler = self._make_sound_option_handler(prop, box)
+            self.sound_option_handlers.append(handler)
+            box.currentIndexChanged.connect(handler)
+
+        self.verticalLayout_2.insertWidget(2, self.sound_options_root)
+        self.sound_options_root.setVisible(False)
+
+    def _sync_sound_option_visibility(self, sound: dict):
+        sound_toggle_visible = False
+        for prop, toggle in self.sound_toggles.items():
+            visible = prop in sound
+            self.sound_option_rows[prop].setVisible(visible)
+            sound_toggle_visible = sound_toggle_visible or visible
+        for prop, box in self.sound_option_boxes.items():
+            visible = prop in sound
+            self.sound_option_rows[prop].setVisible(visible)
+            sound_toggle_visible = sound_toggle_visible or visible
+        self.sound_options_root.setVisible(sound_toggle_visible)
+
+    def _make_sound_toggle_handler(self, prop: str, toggle: QCheckBox):
+        @asyncSlot(bool)
+        async def _handler(value: bool):
+            async with qt_error_handler("OfbQtSoundQualityModule_SetSoundToggle", self.ctx):
+                toggle.setEnabled(False)
+                await self.ofb.set_property("sound", prop, json.dumps(value))
+
+        return _handler
+
+    def _make_sound_option_handler(self, prop: str, box: QComboBox):
+        @asyncSlot(int)
+        async def _handler(index: int):
+            if index < 0:
+                return
+            async with qt_error_handler("OfbQtSoundQualityModule_SetSoundOption", self.ctx):
+                box.setEnabled(False)
+                await self.ofb.set_property("sound", prop, self.sound_option_values[prop][index])
+
+        return _handler
 
     def _add_slider(self, i):
         lock = asyncio.Lock()
@@ -97,6 +178,9 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         self.list_item.setVisible(sound is not None)
         if sound is None:
             return
+
+        if event.kind_match(OfbEventKind.DEVICE_CHANGED) or event.is_changed("sound"):
+            self._sync_sound_option_visibility(sound)
 
         self.custom_edit_button.setVisible(int(sound.get("equalizer_max_custom_modes", "0")) > 0)
         self.save_panel.setVisible(not json.loads(sound.get("equalizer_saved", "true")))
@@ -133,23 +217,37 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
                         self._eq_rows[i].setValue(value)
                         self._eq_rows[i].setToolTip(str(value))
 
+        for prop, toggle in self.sound_toggles.items():
+            if event.is_changed("sound", prop):
+                with blocked_signals(toggle):
+                    toggle.setChecked(await self.ofb.get_property("sound", prop) == "true")
+                    toggle.setEnabled(True)
+
+        for prop, box in self.sound_option_boxes.items():
+            if event.is_changed("sound", prop):
+                value = await self.ofb.get_property("sound", prop)
+                with blocked_signals(box):
+                    index = self.sound_option_values[prop].index(value) if value in self.sound_option_values[prop] else -1
+                    box.setCurrentIndex(index)
+                    box.setEnabled(True)
+
     @asyncSlot()
-    async def on_custom_save(self):
+    async def on_custom_save(self, *_args):
         async with qt_error_handler("OfbQtSoundQualityModule_EqCustomSave", self.ctx):
             await self.ofb.set_property("sound", "equalizer_saved", "true")
 
     @asyncSlot()
-    async def on_custom_reset(self):
+    async def on_custom_reset(self, *_args):
         async with qt_error_handler("OfbQtSoundQualityModule_EqCustomReset", self.ctx):
             await self.ofb.set_property("sound", "equalizer_saved", "false")
 
     @asyncSlot()
-    async def on_sq_set_connectivity(self):
+    async def on_sq_set_connectivity(self, *_args):
         async with qt_error_handler("OfbQtSoundQualityModule_SetConnectivity", self.ctx):
             await self.ofb.set_property("sound", "quality_preference", "sqp_connectivity")
 
     @asyncSlot()
-    async def on_sq_set_quality(self):
+    async def on_sq_set_quality(self, *_args):
         async with qt_error_handler("OfbQtSoundQualityModule_SetQuality", self.ctx):
             await self.ofb.set_property("sound", "quality_preference", "sqp_quality")
 
@@ -167,7 +265,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
                 self.dialog_too_many_presets.show()
 
     @asyncSlot()
-    async def new_preset(self):
+    async def new_preset(self, *_args):
         async with qt_error_handler("OfbQtSoundQualityModule_NewPreset", self.ctx):
             try:
                 dialog = QInputDialog(self)
@@ -186,7 +284,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
                 return False
 
     @asyncSlot()
-    async def delete_preset(self):
+    async def delete_preset(self, *_args):
         if await self.ofb.get_property("sound", "equalizer_rows") is None:
             return
 
@@ -204,7 +302,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
             await self.ofb.set_property("sound", "equalizer_rows", "null")
 
     @asyncSlot()
-    async def export_file(self):
+    async def export_file(self, *_args):
         if await self.ofb.get_property("sound", "equalizer_rows") is None:
             return
 
@@ -222,7 +320,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
                 f.write(await self.ofb.get_property("sound", "equalizer_rows"))
 
     @asyncSlot()
-    async def load_file(self):
+    async def load_file(self, *_args):
         async with qt_error_handler("OfbQtSoundQualityModule_LoadFile", self.ctx):
             dialog = QFileDialog(self, self.tr("Load equalizer preset from file…"))
             dialog.setWindowModality(Qt.WindowModality.WindowModal)
