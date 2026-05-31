@@ -181,10 +181,12 @@ class OfbHuaweiPromptToneHandler(OfbDriverHandlerHuawei):
             cache: HuaweiPromptToneResourceCache | None = None,
             device_id_provider=None,
             transfer_settle_delay: float = 1.5,
+            ota_write_delay: float = 0.012,
     ):
         self.cache = cache or HuaweiPromptToneResourceCache()
         self._device_id_provider = device_id_provider or _local_tone_device_id
         self._transfer_settle_delay = transfer_settle_delay
+        self._ota_write_delay = max(0.0, ota_write_delay)
         self._state = HuaweiPromptToneState()
         self._ota_queue: asyncio.Queue[HuaweiSppPackage] | None = None
         self._transfer_lock = asyncio.Lock()
@@ -500,6 +502,9 @@ class OfbHuaweiPromptToneHandler(OfbDriverHandlerHuawei):
             await self.driver.send_package(
                 HuaweiSppPackage.raw(CMD_PROMPT_TONE_OTA_DATA, payload)
             )
+            # Pace raw OTA writes so the headset firmware does not overflow its
+            # SPP receive buffer and drop the socket mid-transfer.
+            await asyncio.sleep(self._ota_write_delay)
         return offset_location + bytes([bitmap])
 
     async def _handle_progress(self, package: HuaweiSppPackage) -> int:
@@ -619,4 +624,4 @@ def _format_ota_error(code: int | None) -> str:
 
 def _local_tone_device_id() -> str:
     value = uuid.getnode() & 0xffffffffffff
-    return f"{value:012X}"
+    return f"{value:012X}"

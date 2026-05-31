@@ -18,7 +18,7 @@ from openfreebuds.driver.huawei.handler.prompt_tone import PROMPT_TONES
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.qt_i18n import get_prompt_tone_names
 from openfreebuds_qt.utils.core_event import OfbCoreEvent
-from openfreebuds_qt.utils.qt_utils import blocked_signals, qt_error_handler
+from openfreebuds_qt.utils.qt_utils import blocked_signals
 
 
 class OfbQtCaseSoundModule(OfbQtCommonModule):
@@ -68,32 +68,40 @@ class OfbQtCaseSoundModule(OfbQtCommonModule):
 
     @asyncSlot(bool)
     async def _on_enabled_change(self, value: bool):
-        async with qt_error_handler("OfbQtCaseSoundModule_SetEnabled", self.ctx):
-            self.enabled_toggle.setEnabled(False)
-            await self.ofb.set_property("case_sound", "enabled", json.dumps(value))
+        self.enabled_toggle.setEnabled(False)
+        await self.try_set_property(
+            "case_sound", "enabled", json.dumps(value), "OfbQtCaseSoundModule_SetEnabled"
+        )
+        self.enabled_toggle.setEnabled(True)
 
     @asyncSlot(int)
     async def _on_tone_change(self, index: int):
         if index < 0 or index >= len(self.tone_values):
             return
-        async with qt_error_handler("OfbQtCaseSoundModule_SetTone", self.ctx):
-            self.tone_box.setEnabled(False)
-            await self.ofb.set_property("case_sound", "tone_id", self.tone_values[index])
+        self.tone_box.setEnabled(False)
+        await self.try_set_property(
+            "case_sound", "tone_id", self.tone_values[index], "OfbQtCaseSoundModule_SetTone"
+        )
+        self.tone_box.setEnabled(True)
 
     def _on_volume_preview(self, value: int):
         self.volume_label.setText(str(value))
 
     @asyncSlot()
     async def _on_volume_change(self, *_args):
-        async with qt_error_handler("OfbQtCaseSoundModule_SetVolume", self.ctx):
-            self.volume_slider.setEnabled(False)
-            await self.ofb.set_property("case_sound", "volume", str(self.volume_slider.value()))
+        self.volume_slider.setEnabled(False)
+        await self.try_set_property(
+            "case_sound", "volume", str(self.volume_slider.value()), "OfbQtCaseSoundModule_SetVolume"
+        )
+        self.volume_slider.setEnabled(True)
 
     @asyncSlot()
     async def _on_prepare(self, *_args):
-        async with qt_error_handler("OfbQtCaseSoundModule_Prepare", self.ctx):
-            self.prepare_button.setEnabled(False)
-            await self.ofb.set_property("case_sound", "prepare", "true")
+        self.prepare_button.setEnabled(False)
+        await self.try_set_property(
+            "case_sound", "prepare", "true", "OfbQtCaseSoundModule_Prepare"
+        )
+        self.prepare_button.setEnabled(True)
 
     async def update_ui(self, event: OfbCoreEvent):
         if not event.is_changed("case_sound") and not event.kind_match(OfbEventKind.DEVICE_CHANGED):
