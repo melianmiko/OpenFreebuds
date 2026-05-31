@@ -64,6 +64,11 @@ class OfbDriverGeneric:
 
         raise FbMissingHandlerError(f"No handler for {target_handler_id}")
 
+    def has_set_property_handler(self, group: str, prop: str) -> bool:
+        target_handler_id = f"{group}//{prop}"
+        group_handler_id = f"{group}//"
+        return target_handler_id in self.__set_prop_handlers or group_handler_id in self.__set_prop_handlers
+
     async def get_property(self, group: str | None, prop: str | None, fallback: str | None = None) -> str | dict:
         if group is None:
             return self._store

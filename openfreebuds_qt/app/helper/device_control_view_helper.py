@@ -1,9 +1,9 @@
 import asyncio
 from typing import Optional
 
-from PyQt6.QtCore import pyqtSlot
+from PyQt6.QtCore import Qt, pyqtSlot
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication, QHBoxLayout, QLabel, QSlider, QVBoxLayout, QWidget
 from qasync import asyncSlot
 
 from openfreebuds import OfbEventKind, IOpenFreebuds
@@ -39,7 +39,43 @@ class OfbQtDeviceControlViewHelper:
         self.ui.anc_off.clicked.connect(self.set_anc_off)
         self.ui.anc_awr.clicked.connect(self.set_anc_awr)
         self.ui.anc_level.currentTextChanged.connect(self.set_anc_level)
+        self._setup_awareness_level_control()
         self.ui.control_root.setVisible(False)
+
+    def _setup_awareness_level_control(self):
+        self.awareness_level_root = QWidget(self.ui.control_root)
+        root_layout = QVBoxLayout(self.awareness_level_root)
+        root_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.awareness_level_slider = QSlider(Qt.Orientation.Horizontal, self.awareness_level_root)
+        self.awareness_level_slider.setRange(0, 10)
+        self.awareness_level_slider.setTickInterval(1)
+        self.awareness_level_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.awareness_level_slider.sliderReleased.connect(self.set_awareness_level)
+        root_layout.addWidget(self.awareness_level_slider)
+
+        labels = QWidget(self.awareness_level_root)
+        labels_layout = QHBoxLayout(labels)
+        labels_layout.setContentsMargins(0, 0, 0, 0)
+        labels_layout.addWidget(QLabel(
+            QApplication.translate("OfbQtDeviceControlViewHelper", "More noise"),
+            labels,
+        ))
+        default_label = QLabel(QApplication.translate("OfbQtDeviceControlViewHelper", "Default"), labels)
+        default_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        labels_layout.addWidget(default_label)
+        less_noise_label = QLabel(QApplication.translate("OfbQtDeviceControlViewHelper", "Less noise"), labels)
+        less_noise_label.setAlignment(Qt.AlignmentFlag.AlignRight)
+        labels_layout.addWidget(less_noise_label)
+        root_layout.addWidget(labels)
+
+        self.ui.control_root.layout().addWidget(self.awareness_level_root)
+        self.awareness_level_root.setVisible(False)
+
+    def set_awareness_level(self):
+        self._task = asyncio.create_task(
+            self.ofb.set_property("anc", "awareness_level", str(self.awareness_level_slider.value()))
+        )
 
     def set_anc_level(self, value):
         code = reverse_dict(self.anc_level_option_names).get(value)
@@ -90,22 +126,34 @@ class OfbQtDeviceControlViewHelper:
                 await self._update_anc(anc)
             else:
                 self.ui.anc_level.setVisible(False)
+                self.awareness_level_root.setVisible(False)
 
     async def _update_anc(self, anc: dict):
-        mode = anc["mode"]
+        mode = anc.get("mode", "normal")
         self.ui.anc_on.setChecked(mode == "cancellation")
         self.ui.anc_awr.setChecked(mode == "awareness")
         self.ui.anc_off.setChecked(mode == "normal")
 
         level = anc.get("level", None)
-        self.ui.anc_level.setVisible(level is not None)
-        if level is not None:
-            options = anc["level_options"].split(",")
+        level_options = anc.get("level_options")
+        show_level = level is not None and level_options is not None
+        self.ui.anc_level.setVisible(show_level)
+        if show_level:
+            options = level_options.split(",")
             with blocked_signals(self.ui.anc_level):
                 self.ui.anc_level.clear()
                 for opt_code in options:
                     self.ui.anc_level.addItem(self.anc_level_option_names.get(opt_code, opt_code))
                 self.ui.anc_level.setCurrentText(self.anc_level_option_names.get(level, level))
+
+        awareness_level = anc.get("awareness_level", None)
+        show_awareness_level = mode == "awareness" and level == "adaptive_transparency" and awareness_level is not None
+        self.awareness_level_root.setVisible(show_awareness_level)
+        if show_awareness_level:
+            self.awareness_level_slider.setMinimum(int(anc.get("awareness_level_min", 0) or 0))
+            self.awareness_level_slider.setMaximum(int(anc.get("awareness_level_max", 10) or 10))
+            with blocked_signals(self.awareness_level_slider):
+                self.awareness_level_slider.setValue(int(awareness_level))
 
     async def _update_battery(self, battery: dict):
         is_tws = "case" in battery

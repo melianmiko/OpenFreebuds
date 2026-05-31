@@ -4,6 +4,10 @@ from openfreebuds.exceptions import OfbPackageChecksumError
 
 class HuaweiSppPackage:
     @staticmethod
+    def raw(cmd: bytes, payload: bytes, resp: bytes = b""):
+        return HuaweiSppPackage(cmd=cmd, resp=resp, raw_payload=payload)
+
+    @staticmethod
     def change_rq(cmd: bytes, parameters: list[tuple[int, bytes | int]]):
         return HuaweiSppPackage(cmd=cmd, resp=cmd, parameters=parameters)
 
@@ -17,14 +21,23 @@ class HuaweiSppPackage:
                                 resp=cmd,
                                 parameters=[(i, b"") for i in parameters])
 
-    def __init__(self, cmd: bytes, parameters: list[tuple[int, bytes | int]] = None, resp: bytes = b""):
+    def __init__(
+            self,
+            cmd: bytes,
+            parameters: list[tuple[int, bytes | int]] = None,
+            resp: bytes = b"",
+            raw_payload: bytes | None = None,
+    ):
         """
         Build new package
         """
         assert len(cmd) == 2
+        if raw_payload is not None and parameters is not None:
+            raise ValueError("Raw Huawei package payload cannot be combined with TLV parameters")
         self.command_id = cmd
         self.response_id = resp
         self.parameters: dict[int, bytes] = {}
+        self.raw_payload = raw_payload
 
         if parameters is not None:
             for p_type, p_value in parameters:
@@ -34,6 +47,9 @@ class HuaweiSppPackage:
 
     def __str__(self):
         out = [f"command={self.command_id.hex()}"]
+        if self.raw_payload is not None:
+            out.append(f"raw_payload={self.raw_payload}")
+            return ", ".join(out)
         for p_type in self.parameters:
             p_value = self.parameters[p_type]
             out.append(f"param_{p_type}={p_value}")
@@ -43,6 +59,18 @@ class HuaweiSppPackage:
         """
         Pretty-print this pacakge contents
         """
+        if self.raw_payload is not None:
+            return (
+                build_table_row(12, "COMMAND_ID")
+                + build_table_row(10, "2 bytes")
+                + build_table_row(40, self.command_id.hex(), [])
+                + "\n"
+                + build_table_row(12, "RAW")
+                + build_table_row(10, f"{len(self.raw_payload)} bytes")
+                + build_table_row(max(40, len(self.raw_payload.hex())), self.raw_payload.hex())
+                + "\n"
+            )
+
         hex_len = 40
         for p_type in self.parameters:
             cand_l = self.parameters[p_type].hex()
@@ -76,18 +104,39 @@ class HuaweiSppPackage:
 
         return b""
 
+    def has_param(self, *args) -> bool:
+        """
+        Check whether one of provided parameter types is present.
+        """
+        return any(p_type in self.parameters for p_type in args)
+
+    def error_code(self) -> int | None:
+        """
+        Huawei replies with param 127 when a command is rejected.
+        """
+        if not self.has_param(127):
+            return None
+
+        return int.from_bytes(self.parameters[127], byteorder="big")
+
+    def is_error_response(self) -> bool:
+        return self.error_code() is not None
+
     def to_bytes(self):
         """
         Convert this package to bytes.
         Used to send them to device
         """
-        # Build body (command_id + parameters)
-        body = self.command_id
-        for p_type in self.parameters:
-            p_value = self.parameters[p_type]
-            p_type = p_type.to_bytes(1, byteorder="big")
-            p_length = len(p_value).to_bytes(1, byteorder="big")
-            body += p_type + p_length + p_value
+        if self.raw_payload is None:
+            # Build body (command_id + parameters)
+            body = self.command_id
+            for p_type in self.parameters:
+                p_value = self.parameters[p_type]
+                p_type = p_type.to_bytes(1, byteorder="big")
+                p_length = self._encode_param_length(len(p_value))
+                body += p_type + p_length + p_value
+        else:
+            body = self.command_id + self.raw_payload
 
         # Build package
         result = b"Z" + (len(body) + 1).to_bytes(2, byteorder="big") + b"\x00" + body
@@ -121,9 +170,25 @@ class HuaweiSppPackage:
         position = 6
         while position < length + 3:
             p_type = data[position]
-            p_length = data[position + 1]
-            p_value = data[position + 2:position + p_length + 2]
+            p_length, length_size = HuaweiSppPackage._decode_param_length(data, position + 1)
+            p_value_start = position + 1 + length_size
+            p_value = data[p_value_start:p_value_start + p_length]
             package.parameters[p_type] = p_value
-            position += p_length + 2
+            position += p_length + 1 + length_size
 
         return package
+
+    @staticmethod
+    def _encode_param_length(value: int) -> bytes:
+        if value < 0x80:
+            return value.to_bytes(1, byteorder="big")
+        if value > 0x3fff:
+            raise ValueError(f"Huawei SPP parameter is too large: {value}")
+        return bytes([0x80 | ((value >> 7) & 0x7f), value & 0x7f])
+
+    @staticmethod
+    def _decode_param_length(data: bytes, position: int) -> tuple[int, int]:
+        first = data[position]
+        if first & 0x80:
+            return ((first & 0x7f) << 7) | (data[position + 1] & 0x7f), 2
+        return first & 0x7f, 1

@@ -6,6 +6,8 @@ from .device_info import OfbQtDeviceInfoModule
 from .device_other import OfbQtDeviceOtherSettingsModule
 from .dual_connect import OfbQtDualConnectModule
 from .gestures import OfbQtGesturesModule
+from .find_device import OfbQtFindDeviceModule
+from .case_sound import OfbQtCaseSoundModule
 from .hotkeys_module import OfbQtHotkeysModule
 from .linux_related import OfbQtLinuxExtrasModule
 from .sound_quality import OfbQtSoundQualityModule

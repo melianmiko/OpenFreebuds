@@ -61,6 +61,12 @@ class OfbQtConfigParser:
             log.warn("Ignore config save request, load_failed flag set")
             return
 
+        # Make sure the storage directory exists. In portable mode it lives next
+        # to the executable and may be missing (e.g. when the .exe is launched
+        # straight from an archive into a temp folder), which previously raised
+        # FileNotFoundError on every save.
+        os.makedirs(os.path.dirname(CONFIG_PATH), exist_ok=True)
+
         with open(CONFIG_PATH, "w") as f:
             f.write(json.dumps(self.data, ensure_ascii=False, indent=4))
 

@@ -35,7 +35,7 @@ class OfbQtChooseDeviceModule(Ui_OfbQtDeviceSelectModule, OfbQtCommonModule):
                 await self._update_list()
 
     @asyncSlot()
-    async def on_refresh_list(self):
+    async def on_refresh_list(self, *_args):
         async with qt_error_handler("OfbQtChooseDeviceModule_ManualRefresh", self.ctx):
             await self._update_list()
 
@@ -72,7 +72,7 @@ class OfbQtChooseDeviceModule(Ui_OfbQtDeviceSelectModule, OfbQtCommonModule):
             await self._update_list()
 
     @asyncSlot()
-    async def on_manual_config(self):
+    async def on_manual_config(self, *_args):
         async with qt_error_handler("OfbQtChooseDeviceModule_ManualSetup", self.ctx):
             result, name, address = await OfbQtManualConnectDialog(self).get_user_response()
             if not result:

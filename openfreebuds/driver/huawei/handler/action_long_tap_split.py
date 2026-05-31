@@ -30,21 +30,24 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
         ("action", "noise_control_right"),
     ]
 
-    def __init__(self, w_left=True, w_right=False, w_in_call=False, w_anc=True):
+    def __init__(self, w_left=True, w_right=False, w_in_call=False, w_anc=True,
+                 options_lt: dict[int, str] | None = None,
+                 options_lt_call: dict[int, str] | None = None,
+                 options_anc: dict[int, str] | None = None):
         self.w_left = w_left
         self.w_right = w_right
         self.w_in_call = w_in_call
         self.w_anc = w_anc
 
-        self._options_lt = {
+        self._options_lt = options_lt or {
             -1: "tap_action_off",
             10: "tap_action_switch_anc"
         }
-        self._options_lt_call = {
+        self._options_lt_call = options_lt_call or {
             -1: "tap_action_off",
             0: "tap_action_answer"
         }
-        self._options_anc = {
+        self._options_anc = options_anc or {
             1: "noise_control_off_on",
             2: "noise_control_off_on_aw",
             3: "noise_control_on_aw",

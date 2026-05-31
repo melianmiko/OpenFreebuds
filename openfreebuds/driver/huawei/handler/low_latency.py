@@ -17,6 +17,9 @@ class OfbHuaweiLowLatencyPreferenceHandler(OfbDriverHandlerHuawei):
         ("config", "low_latency"),
     ]
 
+    def __init__(self, write_param: int = 1):
+        self.write_param = write_param
+
     async def on_init(self):
         resp = await self.driver.send_package(HuaweiSppPackage.read_rq(CMD_LOW_LATENCY, [2]))
         await self.on_package(resp)
@@ -29,8 +32,10 @@ class OfbHuaweiLowLatencyPreferenceHandler(OfbDriverHandlerHuawei):
         await self.driver.put_property("config", "low_latency", "true" if value[0] == 1 else "false")
 
     async def set_property(self, group: str, prop: str, value: str):
-        await self.driver.send_package(HuaweiSppPackage.change_rq(CMD_LOW_LATENCY, [
-            (1, b"\x01" if value == "true" else b"\x00"),
+        resp = await self.driver.send_package(HuaweiSppPackage.change_rq(CMD_LOW_LATENCY, [
+            (self.write_param, b"\x01" if value == "true" else b"\x00"),
         ]))
+        if resp is not None and not resp.is_error_response():
+            await self.on_package(resp)
         await asyncio.sleep(1)
         await self.on_init()
