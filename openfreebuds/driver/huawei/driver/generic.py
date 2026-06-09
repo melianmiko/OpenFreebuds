@@ -117,8 +117,8 @@ class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
         if len(heading) == 0:
             log.debug("Got empty package, seems like socked is closed")
             raise ConnectionResetError
-        if heading[0:2] == b"Z\x00":
-            length = heading[2]
+        if heading[0] == 0x5A:
+            length = int.from_bytes(heading[1:3], byteorder="big")
             if length < 4:
                 await reader.read(length)
             else:
