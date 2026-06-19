@@ -184,7 +184,7 @@ class OfbTrayIcon(IOfbTrayIcon):
             device_name,
             {
                 "left": 10,
-                "right": 18,
+                "right": 20,
                 "case": 42,
             },
             10,
