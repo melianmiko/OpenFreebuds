@@ -12,6 +12,9 @@ class LowBatteryOverlay(QWidget):
     SLIDE_OFFSET = 22
     TOP_MARGIN = 18
     ICON_COLOR = (244, 246, 248, 255)
+    VALUE_COLOR_DEFAULT = "#f4f6f8"
+    VALUE_COLOR_WARNING = "#ffb454"
+    VALUE_COLOR_CRITICAL = "#ff5f57"
     WIDTH_BY_ITEM_COUNT = {
         1: 148,
         2: 182,
@@ -94,6 +97,7 @@ class LowBatteryOverlay(QWidget):
             value_label = QLabel(f"{value}%", frame)
             value_label.setProperty("role", "value")
             value_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            value_label.setStyleSheet(f"color: {self._battery_value_color(key, value)};")
             item.addWidget(value_label)
 
             battery_layout.addLayout(item)
@@ -170,3 +174,13 @@ class LowBatteryOverlay(QWidget):
             return get_img_colored(icon_name, cls.ICON_COLOR, "icon/main_window", (18, 18))
         except Exception:
             return None
+
+    @classmethod
+    def _battery_value_color(cls, key: str, value):
+        if key not in ("left", "right") or isinstance(value, bool) or not isinstance(value, int):
+            return cls.VALUE_COLOR_DEFAULT
+        if value <= 10:
+            return cls.VALUE_COLOR_CRITICAL
+        if value <= 20:
+            return cls.VALUE_COLOR_WARNING
+        return cls.VALUE_COLOR_DEFAULT
