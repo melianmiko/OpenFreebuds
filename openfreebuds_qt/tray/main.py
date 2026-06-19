@@ -47,6 +47,8 @@ class OfbTrayIcon(IOfbTrayIcon):
             20: False,
         }
         self._low_battery_device_addr = ""
+        self._battery_summary_device_addr = ""
+        self._battery_summary_overlay_shown = False
 
         self.menu = OfbQtTrayMenu(self, self.ctx, self.ofb)
         self.setContextMenu(self.menu)
@@ -103,10 +105,15 @@ class OfbTrayIcon(IOfbTrayIcon):
         else:
             self.setToolTip("OpenFreebuds")
 
-        if state == IOpenFreebuds.STATE_CONNECTED and event.is_changed("battery", ""):
-            await self._check_low_battery_overlay()
-        elif state != IOpenFreebuds.STATE_CONNECTED:
+        if state == IOpenFreebuds.STATE_CONNECTED:
+            summary_shown = False
+            if event.kind_match(OfbEventKind.STATE_CHANGED) or event.is_changed("battery", ""):
+                summary_shown = await self._check_battery_summary_overlay()
+            if event.is_changed("battery", "") and not summary_shown:
+                await self._check_low_battery_overlay()
+        else:
             self._reset_low_battery_alerts()
+            self._reset_battery_summary_overlay()
 
         await self.menu.on_core_event(event, state)
 
@@ -120,6 +127,26 @@ class OfbTrayIcon(IOfbTrayIcon):
             self._last_tooltip = f"{device_name}: {battery}%"
 
         return self._last_tooltip
+
+    async def _check_battery_summary_overlay(self):
+        if not self.config.get("ui", "battery_overlay_on_connect", False):
+            return False
+
+        battery = await self.ofb.get_property("battery")
+        if battery is None:
+            return False
+
+        device_name, device_addr = await self.ofb.get_device_tags()
+        if device_addr != self._battery_summary_device_addr:
+            self._battery_summary_device_addr = device_addr
+            self._battery_summary_overlay_shown = False
+
+        if self._battery_summary_overlay_shown:
+            return False
+
+        self._battery_summary_overlay_shown = True
+        self._show_low_battery_overlay(device_name, battery, 0)
+        return True
 
     async def _check_low_battery_overlay(self):
         if not self.config.get("ui", "low_battery_overlay", True):
@@ -193,6 +220,10 @@ class OfbTrayIcon(IOfbTrayIcon):
     def _reset_low_battery_alerts(self):
         self._low_battery_alert_shown[10] = False
         self._low_battery_alert_shown[20] = False
+
+    def _reset_battery_summary_overlay(self):
+        self._battery_summary_device_addr = ""
+        self._battery_summary_overlay_shown = False
 
     @staticmethod
     def _get_min_battery_level(battery: dict):

@@ -69,6 +69,11 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
         with blocked_signals(self.low_battery_overlay_toggle):
             self.low_battery_overlay_toggle.setChecked(self.config.get("ui", "low_battery_overlay", True))
 
+        with blocked_signals(self.battery_overlay_on_connect_toggle):
+            self.battery_overlay_on_connect_toggle.setChecked(
+                self.config.get("ui", "battery_overlay_on_connect", False)
+            )
+
         self.low_battery_overlay_test_button.setVisible(bool(getattr(self.ctx.args, "virtual_device", None)))
 
     async def update_ui(self, event: OfbCoreEvent):
@@ -113,6 +118,11 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
     @asyncSlot(bool)
     async def on_low_battery_overlay_toggle(self, value: bool):
         self.config.set("ui", "low_battery_overlay", value)
+        self.config.save()
+
+    @asyncSlot(bool)
+    async def on_battery_overlay_on_connect_toggle(self, value: bool):
+        self.config.set("ui", "battery_overlay_on_connect", value)
         self.config.save()
 
     @asyncSlot()

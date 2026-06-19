@@ -1143,6 +1143,11 @@
     </message>
     <message>
         <location filename="../../designer/ui_settings.ui" line="0" />
+        <source>Show battery popup when device connects</source>
+        <translation>Показывать всплывающее окно батареи при подключении устройства</translation>
+    </message>
+    <message>
+        <location filename="../../designer/ui_settings.ui" line="0" />
         <source>Preview low battery popup</source>
         <translation>Предпросмотр всплывающего окна о низком заряде</translation>
     </message>

@@ -1145,6 +1145,11 @@
     </message>
     <message>
         <location filename="../../designer/ui_settings.ui" line="0" />
+        <source>Show battery popup when device connects</source>
+        <translation>Akku-Popup anzeigen, wenn ein Gerät verbunden wird</translation>
+    </message>
+    <message>
+        <location filename="../../designer/ui_settings.ui" line="0" />
         <source>Preview low battery popup</source>
         <translation>Vorschau des Popups bei niedrigem Akkustand</translation>
     </message>

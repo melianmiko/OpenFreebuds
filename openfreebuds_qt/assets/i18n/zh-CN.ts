@@ -1142,6 +1142,11 @@
     </message>
     <message>
         <location filename="../../designer/ui_settings.ui" line="0" />
+        <source>Show battery popup when device connects</source>
+        <translation>设备连接时显示电量弹窗</translation>
+    </message>
+    <message>
+        <location filename="../../designer/ui_settings.ui" line="0" />
         <source>Preview low battery popup</source>
         <translation>预览低电量弹窗</translation>
     </message>
