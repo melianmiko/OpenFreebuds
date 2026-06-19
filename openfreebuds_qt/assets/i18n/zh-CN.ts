@@ -1130,6 +1130,21 @@
         <source>Show equalizer preset switcher in menu (if available)</source>
         <translation>在菜单中显示均衡器预设切换器（如果可用）</translation>
     </message>
+    <message>
+        <location filename="../../designer/ui_settings.ui" line="0" />
+        <source>Battery alerts</source>
+        <translation>电量提醒</translation>
+    </message>
+    <message>
+        <location filename="../../designer/ui_settings.ui" line="0" />
+        <source>Show low battery popup</source>
+        <translation>显示低电量弹窗</translation>
+    </message>
+    <message>
+        <location filename="../../designer/ui_settings.ui" line="0" />
+        <source>Preview low battery popup</source>
+        <translation>预览低电量弹窗</translation>
+    </message>
 </context><context>
     <name>OfbTrayIcon</name>
     <message>

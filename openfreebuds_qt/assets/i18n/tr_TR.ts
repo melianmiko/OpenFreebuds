@@ -1130,6 +1130,21 @@
         <source>Show equalizer preset switcher in menu (if available)</source>
         <translation>Menüde ekolayzır ön ayarını göster (varsa)</translation>
     </message>
+    <message>
+        <location filename="../../designer/ui_settings.ui" line="0" />
+        <source>Battery alerts</source>
+        <translation>Pil uyarıları</translation>
+    </message>
+    <message>
+        <location filename="../../designer/ui_settings.ui" line="0" />
+        <source>Show low battery popup</source>
+        <translation>Düşük pil açılır penceresini göster</translation>
+    </message>
+    <message>
+        <location filename="../../designer/ui_settings.ui" line="0" />
+        <source>Preview low battery popup</source>
+        <translation>Düşük pil açılır penceresini önizle</translation>
+    </message>
 </context><context>
     <name>OfbTrayIcon</name>
     <message>

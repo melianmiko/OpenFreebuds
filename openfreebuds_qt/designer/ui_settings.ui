@@ -153,6 +153,29 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="low_battery_overlay_group">
+     <property name="title">
+      <string>Battery alerts</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0" colspan="2">
+       <widget class="QCheckBox" name="low_battery_overlay_toggle">
+        <property name="text">
+         <string>Show low battery popup</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="QPushButton" name="low_battery_overlay_test_button">
+        <property name="text">
+         <string>Preview low battery popup</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Orientation::Vertical</enum>
@@ -297,6 +320,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>low_battery_overlay_toggle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OfbQtUiSettingsModule</receiver>
+   <slot>on_low_battery_overlay_toggle(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>247</x>
+     <y>323</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>low_battery_overlay_test_button</sender>
+   <signal>clicked()</signal>
+   <receiver>OfbQtUiSettingsModule</receiver>
+   <slot>on_low_battery_overlay_test()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>247</x>
+     <y>352</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>on_tray_eq_toggle(bool)</slot>
@@ -307,5 +362,7 @@
   <slot>on_autostart_toggle(bool)</slot>
   <slot>on_updater_policy_choose(int)</slot>
   <slot>on_background_toggle()</slot>
+  <slot>on_low_battery_overlay_toggle(bool)</slot>
+  <slot>on_low_battery_overlay_test()</slot>
  </slots>
 </ui>
