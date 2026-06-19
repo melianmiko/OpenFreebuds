@@ -1142,6 +1142,11 @@
     </message>
     <message>
         <location filename="../../designer/ui_settings.ui" line="0" />
+        <source>Show battery popup when device connects</source>
+        <translation>Mostrar ventana emergente de batería al conectar el dispositivo</translation>
+    </message>
+    <message>
+        <location filename="../../designer/ui_settings.ui" line="0" />
         <source>Preview low battery popup</source>
         <translation>Vista previa de la ventana emergente de batería baja</translation>
     </message>

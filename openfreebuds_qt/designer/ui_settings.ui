@@ -166,6 +166,13 @@
        </widget>
       </item>
       <item row="1" column="0" colspan="2">
+       <widget class="QCheckBox" name="battery_overlay_on_connect_toggle">
+        <property name="text">
+         <string>Show battery popup when device connects</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
        <widget class="QPushButton" name="low_battery_overlay_test_button">
         <property name="text">
          <string>Preview low battery popup</string>
@@ -337,6 +344,22 @@
    </hints>
   </connection>
   <connection>
+   <sender>battery_overlay_on_connect_toggle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OfbQtUiSettingsModule</receiver>
+   <slot>on_battery_overlay_on_connect_toggle(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>247</x>
+     <y>352</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
    <sender>low_battery_overlay_test_button</sender>
    <signal>clicked()</signal>
    <receiver>OfbQtUiSettingsModule</receiver>
@@ -363,6 +386,7 @@
   <slot>on_updater_policy_choose(int)</slot>
   <slot>on_background_toggle()</slot>
   <slot>on_low_battery_overlay_toggle(bool)</slot>
+  <slot>on_battery_overlay_on_connect_toggle(bool)</slot>
   <slot>on_low_battery_overlay_test()</slot>
  </slots>
 </ui>
