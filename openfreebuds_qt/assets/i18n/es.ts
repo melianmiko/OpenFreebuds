@@ -1130,6 +1130,21 @@
         <source>Show equalizer preset switcher in menu (if available)</source>
         <translation>Mostrar los perfiles del equalizador en el menu (si está disponible)</translation>
     </message>
+    <message>
+        <location filename="../../designer/ui_settings.ui" line="0" />
+        <source>Battery alerts</source>
+        <translation>Alertas de batería</translation>
+    </message>
+    <message>
+        <location filename="../../designer/ui_settings.ui" line="0" />
+        <source>Show low battery popup</source>
+        <translation>Mostrar ventana emergente de batería baja</translation>
+    </message>
+    <message>
+        <location filename="../../designer/ui_settings.ui" line="0" />
+        <source>Preview low battery popup</source>
+        <translation>Vista previa de la ventana emergente de batería baja</translation>
+    </message>
 </context><context>
     <name>OfbTrayIcon</name>
     <message>

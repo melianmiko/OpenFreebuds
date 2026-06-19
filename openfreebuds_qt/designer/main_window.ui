@@ -128,7 +128,7 @@
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>24</height>
+            <height>32</height>
            </size>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -139,7 +139,7 @@
             <number>4</number>
            </property>
            <property name="rightMargin">
-            <number>4</number>
+            <number>24</number>
            </property>
            <property name="bottomMargin">
             <number>4</number>
@@ -181,14 +181,14 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>24</width>
-               <height>24</height>
+               <width>22</width>
+               <height>22</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
-               <width>24</width>
-               <height>24</height>
+               <width>22</width>
+               <height>22</height>
               </size>
              </property>
              <property name="styleSheet">
@@ -199,8 +199,8 @@
              </property>
              <property name="iconSize">
               <size>
-               <width>24</width>
-               <height>24</height>
+               <width>18</width>
+               <height>18</height>
               </size>
              </property>
              <property name="flat">

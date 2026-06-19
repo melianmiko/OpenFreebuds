@@ -66,6 +66,11 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
         with blocked_signals(self.tray_dc_toggle):
             self.tray_dc_toggle.setChecked(self.config.get("ui", "tray_show_dual_connect", False))
 
+        with blocked_signals(self.low_battery_overlay_toggle):
+            self.low_battery_overlay_toggle.setChecked(self.config.get("ui", "low_battery_overlay", True))
+
+        self.low_battery_overlay_test_button.setVisible(bool(getattr(self.ctx.args, "virtual_device", None)))
+
     async def update_ui(self, event: OfbCoreEvent):
         if not event.kind_match(OfbEventKind.QT_SETTINGS_CHANGED):
             return
@@ -104,6 +109,15 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
         self.config.set("ui", "tray_show_dual_connect", value)
         self.config.save()
         await self.ofb.send_message(OfbEventKind.QT_SETTINGS_CHANGED)
+
+    @asyncSlot(bool)
+    async def on_low_battery_overlay_toggle(self, value: bool):
+        self.config.set("ui", "low_battery_overlay", value)
+        self.config.save()
+
+    @asyncSlot()
+    async def on_low_battery_overlay_test(self):
+        await self.ctx.tray.show_low_battery_overlay_preview()
 
     @asyncSlot(int)
     async def on_language_choose(self, index: int):

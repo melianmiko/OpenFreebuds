@@ -15,6 +15,11 @@ from openfreebuds_qt.generic import IOfbTrayIcon
 from openfreebuds_qt.tray.menu import OfbQtTrayMenu
 from openfreebuds_qt.utils import OfbCoreEvent, qt_error_handler, create_tray_icon
 
+try:
+    from openfreebuds_qt.app.widget.low_battery_overlay import LowBatteryOverlay
+except ImportError:
+    LowBatteryOverlay = None
+
 log = create_logger("OfbTrayIcon")
 
 
@@ -36,6 +41,12 @@ class OfbTrayIcon(IOfbTrayIcon):
         self.config = OfbQtConfigParser.get_instance()
 
         self.ui_update_task: Optional[asyncio.Task] = None
+        self._low_battery_overlay = None
+        self._low_battery_alert_shown = {
+            10: False,
+            20: False,
+        }
+        self._low_battery_device_addr = ""
 
         self.menu = OfbQtTrayMenu(self, self.ctx, self.ofb)
         self.setContextMenu(self.menu)
@@ -92,6 +103,11 @@ class OfbTrayIcon(IOfbTrayIcon):
         else:
             self.setToolTip("OpenFreebuds")
 
+        if state == IOpenFreebuds.STATE_CONNECTED and event.is_changed("battery", ""):
+            await self._check_low_battery_overlay()
+        elif state != IOpenFreebuds.STATE_CONNECTED:
+            self._reset_low_battery_alerts()
+
         await self.menu.on_core_event(event, state)
 
     async def _get_tooltip_text(self, event: OfbCoreEvent):
@@ -104,6 +120,95 @@ class OfbTrayIcon(IOfbTrayIcon):
             self._last_tooltip = f"{device_name}: {battery}%"
 
         return self._last_tooltip
+
+    async def _check_low_battery_overlay(self):
+        if not self.config.get("ui", "low_battery_overlay", True):
+            return
+
+        battery = await self.ofb.get_property("battery")
+        if battery is None:
+            return
+
+        device_name, device_addr = await self.ofb.get_device_tags()
+        if device_addr != self._low_battery_device_addr:
+            self._low_battery_device_addr = device_addr
+            self._reset_low_battery_alerts()
+
+        min_battery = self._get_min_battery_level(battery)
+        if min_battery is None:
+            return
+
+        if min_battery > 25:
+            self._low_battery_alert_shown[20] = False
+        if min_battery > 15:
+            self._low_battery_alert_shown[10] = False
+
+        threshold = None
+        if min_battery <= 10:
+            threshold = 10
+        elif min_battery <= 20:
+            threshold = 20
+
+        if threshold is None or self._low_battery_alert_shown[threshold]:
+            return
+
+        self._low_battery_alert_shown[threshold] = True
+        self._show_low_battery_overlay(device_name, battery, threshold)
+
+    def _show_low_battery_overlay(self, device_name: str, battery: dict, threshold: int):
+        if LowBatteryOverlay is None:
+            log.warning("Low battery overlay is not available")
+            return
+
+        try:
+            if self._low_battery_overlay is not None:
+                self._low_battery_overlay.close()
+
+            overlay = LowBatteryOverlay(device_name, battery, threshold)
+            overlay.destroyed.connect(lambda _=None, current=overlay: self._on_low_battery_overlay_destroyed(current))
+            self._low_battery_overlay = overlay
+            overlay.show_overlay()
+        except Exception:
+            log.exception("Failed to show low battery overlay")
+
+    def _on_low_battery_overlay_destroyed(self, overlay):
+        if self._low_battery_overlay is overlay:
+            self._low_battery_overlay = None
+
+    async def show_low_battery_overlay_preview(self):
+        if await self.ofb.get_state() != IOpenFreebuds.STATE_CONNECTED:
+            return
+
+        device_name, _ = await self.ofb.get_device_tags()
+        self._show_low_battery_overlay(
+            device_name,
+            {
+                "left": 10,
+                "right": 18,
+                "case": 42,
+            },
+            10,
+        )
+
+    def _reset_low_battery_alerts(self):
+        self._low_battery_alert_shown[10] = False
+        self._low_battery_alert_shown[20] = False
+
+    @staticmethod
+    def _get_min_battery_level(battery: dict):
+        levels = []
+        for key in ("left", "right", "case", "global"):
+            value = battery.get(key)
+            if isinstance(value, bool):
+                continue
+            if isinstance(value, int):
+                levels.append(value)
+            elif isinstance(value, str) and value.isdigit():
+                levels.append(int(value))
+
+        if not levels:
+            return None
+        return min(levels)
 
     async def _update_loop(self):
         """
