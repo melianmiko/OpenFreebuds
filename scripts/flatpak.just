@@ -2,7 +2,7 @@
 [group("flatpak"),linux]
 deps_flatpak:
     flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    flatpak install --user org.flatpak.Builder
+    flatpak install -y --user org.flatpak.Builder
 
 # Install OpenFreebuds as Flatpak package
 [group("flatpak"),linux]
@@ -21,10 +21,10 @@ flatpak_install:
 # Build Flatpak package file
 [group("flatpak"),linux]
 flatpak: flatpak_install
-    mkdir -p dist/flatpak
+    mkdir -p dist
     flatpak build-bundle \
         {{flatpak_dir}}/repo \
-        ./dist/flatpak/openfreebuds_{{version}}.flatapk \
+        ./dist/openfreebuds_{{version}}.flatapk \
         pw.mmk.OpenFreebuds
 
 # Sync Python dependencies for Flatpak
