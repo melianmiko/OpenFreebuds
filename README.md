@@ -89,44 +89,17 @@ Requirements:
 
 - Windows 10/11, or enough modern Linux;
 - Qt 6.0+ development tools, at least Linguist's `lrelease` (under Windows, will be used auto-obtained from `PySide6`;
-- [Just](https://github.com/casey/just)
-- [Python](https://www.python.org/downloads/) (3.11+), [PDM](https://pdm-project.org/en/latest/);
-- (Windows, optional) [NSIS](https://nsis.sourceforge.io/Download), [UPX](https://upx.github.io/);
-- (Debian/Ubuntu, optional) For Debian packaging, some native libs (command: `just deps_debian`).
+- [Just](https://github.com/casey/just);
+- [Python](https://www.python.org/downloads/) (3.13+), [PDM](https://pdm-project.org/en/latest/);
+- (Windows, optional) [NSIS](https://nsis.sourceforge.io/Download), [UPX](https://upx.github.io/).
 
-<details>
-<summary>Get all dependencies for Windows</summary>
-<pre>
-winget install -e --no-upgrade --id Casey.Just
-winget install -e --no-upgrade --id NSIS.NSIS
-winget install -e --no-upgrade --id UPX.UPX
-winget install -e --no-upgrade --id Python.Python.3.12
-powershell -ExecutionPolicy ByPass -c "irm https://pdm-project.org/install-pdm.py | python -"
-# Only for Python 3.13+
-# winget install -e --no-upgrade --id Microsoft.VisualStudio.2022.BuildTools --override "--passive --wait --add Microsoft.VisualStudio.Workload.VCTools;includeRecommended"
-</pre>
-</details>
+To install all other dependencies, do `just prepare` (may require administrator/root privileges).
 
 When dependencies listed above are resolved, parepare project environment and build Python
-wheel by running: `just prepare build`.
+wheel by running: `just build`.
 
 Now, you can try launching OpenFreebuds by `just start` command or package it via:
 
 - `just win32` for Windows portable and installer;
 - `just debian` for Debian `deb`-package;
 - `just flatpak` for Flatpak bundle (will also automatically install application).
-
-### VM-based build (Vagrant)
-
-> [!WARNING]
-> This build method will require a machine with at least 16 GB of RAM and fast internet conneciton.
-
-Install [Vagrant](https://developer.hashicorp.com/vagrant/install?product_intent=vagrant) and any
-suitable hypervisor, I'm using VMware. Then just `vagrant up` in project root, it will automatically
-deply Debian 12 & Windows 11 machines that will build OpenFreebuds in (mostly) all packages.
-
-Don't forgot to `vagrant halt` after finish, to free CPU/RAM usage.
-
----
-
-![Extra dialogs preview](docs/preview_2.png)

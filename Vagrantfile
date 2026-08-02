@@ -93,21 +93,6 @@ Vagrant.configure("2") do |config|
         }
 
         Add-AppPackage -path "https://cdn.winget.microsoft.com/cache/source.msix"
-
-        winget install -e --accept-source-agreements --no-upgrade --id Casey.Just
-        winget install -e --no-upgrade --id NSIS.NSIS
-        winget install -e --no-upgrade --id UPX.UPX
-        winget install -e --no-upgrade --id Python.Python.3.12
-        # Only for Python 3.13+
-        # winget install -e --no-upgrade --id Microsoft.VisualStudio.2022.BuildTools --override "--passive --wait --add Microsoft.VisualStudio.Workload.VCTools;includeRecommended"
-      SHELL
-
-    win.vm.provision "shell",
-      run: 'once',
-      name: "Prepare PDM",
-      privileged: true,
-      inline: <<-SHELL
-        powershell -ExecutionPolicy ByPass -c "irm https://pdm-project.org/install-pdm.py | python -"
       SHELL
 
     win.vm.provision "shell",
