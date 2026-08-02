@@ -1,5 +1,6 @@
 set unstable
 set lists
+set allow-duplicate-recipes
 
 set windows-shell := ["powershell.exe", "-c"]
 set script-interpreter := ["python"]
@@ -8,7 +9,7 @@ python := require(if os_family() == "windows" { "python.exe" } else { "python" }
 pip := which(if os_family() == "windows" { "pip.exe" } else { "pip" })
 pdm := which(if os_family() == "windows" { "pdm.exe" } else { "pdm" })
 
-lrelease := which(if os_family() == "windows" { \
+lrelease := which(if os_family() == "windows" && pdm { \
     `pdm run python -c "
 import os
 try:
@@ -39,6 +40,11 @@ except Exception:
     print('0.0')
 "`
 
+# List available actions
+@default:
+    just -l
+
+# Imports
 import? 'scripts/build.just'
 import? 'scripts/vagrant.just'
 import? 'scripts/manage.just'
@@ -46,10 +52,7 @@ import? 'scripts/manage.just'
 import? 'scripts/flatpak.just'
 import? 'scripts/debian.just'
 import? 'scripts/windows.just'
-
-# List available actions
-@default:
-    just -l
+import? 'scripts/release.just'
 
 # Start Qt version without instalation
 start:
@@ -63,24 +66,6 @@ start_cmd:
 # Start PyTest
 test:
     pdm run pytest
-
-# Prepare project environment (linux)
-[linux]
-prepare:
-    [ -f /usr/bin/apt ] && just deps_debian
-    [ -f /usr/bin/flatpak ] && just deps_flatpak
-    pdm install
-
-# Prepare project environment (windows)
-[windows]
-prepare:
-    just deps_winget
-    pdm install
-
-# Cleanup project directory
-[linux]
-clean:
-    rm -rf dist scripts/dist scripts/build .pdm-build
 
 # Install OpenFreebuds
 [group("linux"),linux]
