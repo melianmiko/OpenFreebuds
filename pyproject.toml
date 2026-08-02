@@ -8,7 +8,7 @@ authors = [
 requires-python = "<3.15,>=3.11"
 dependencies = [
     "aiocmd<0.2.0,>=0.1.5",
-    "pillow<12.0.0,>=11.3.0",
+    "pillow<13.0.0,>=12.3.0",
     "psutil<8.0.0,>=7.1.0",
     "aiohttp<4.0.0,>=3.13.0",
     "qasync<1.0.0,>=0.28.0",
@@ -20,8 +20,8 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "pytest<9.0.0,>=8.3.2",
-    "pytest-asyncio<1.0.0,>=0.24.0",
+    "pytest<10.0.0,>=9.1.1",
+    "pytest-asyncio<1.4.0,>=0.26.0",
     "pyinstaller==6.19.0; sys_platform == 'win32'",
     "pyside6>=6.8.2.1; sys_platform == 'win32'",
     "requirements-parser>=0.11.0",

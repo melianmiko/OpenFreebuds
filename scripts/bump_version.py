@@ -134,7 +134,14 @@ def create_flatpak_staff():
     # Set up tools
     (PROJECT_ROOT / ".flatpak").mkdir(exist_ok=True, parents=True)
 
-    export_data = subprocess.getoutput("pdm export --without-hashes --without no_flatpak --without dev").splitlines()
+    export_data = (subprocess.check_output(
+                        ["pdm", "export", 
+                            "--without-hashes", 
+                            "--without", "no_flatpak", 
+                            "--without", "dev"]
+                    )
+                   .decode("utf8")
+                   .splitlines())
     new_export_data = []
     for line in export_data:
         if 'sys_platform == "win32"' in line or 'sys_platform == "darwin"' in line:
@@ -149,7 +156,7 @@ def create_flatpak_staff():
         ['.flatpak/venv/bin/req2flatpak',
          '--requirements-file', './.flatpak/requirements.txt',
          '--outfile', './scripts/python3-requirements.json',
-         '--target-platforms', '312-x86_64', '312-aarch64',
+         '--target-platforms', '313-x86_64', '313-aarch64',
          ],
         cwd=PROJECT_ROOT,
     )

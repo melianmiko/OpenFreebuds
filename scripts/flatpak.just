@@ -1,0 +1,40 @@
+# Install dependencies for Flatpak build
+[group("flatpak"),linux]
+deps_flatpak:
+    flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    flatpak install --user org.flatpak.Builder
+
+# Install OpenFreebuds as Flatpak package
+[group("flatpak"),linux]
+flatpak_install:
+    just build || true
+    mkdir -p {{flatpak_dir}}
+    echo "*" > {{flatpak_dir}}/.gitignore
+    flatpak run org.flatpak.Builder \
+            --force-clean --user --install \
+            --install-deps-from=flathub \
+            --repo={{flatpak_dir}}/repo \
+            --state-dir={{flatpak_dir}}/state \
+        {{flatpak_dir}}/builddir \
+        ./scripts/pw.mmk.OpenFreebuds.yml
+
+# Build Flatpak package file
+[group("flatpak"),linux]
+flatpak: flatpak_install
+    mkdir -p dist/flatpak
+    flatpak build-bundle \
+        {{flatpak_dir}}/repo \
+        ./dist/flatpak/openfreebuds_{{version}}.flatapk \
+        pw.mmk.OpenFreebuds
+
+# Sync Python dependencies for Flatpak
+[group("manage"),linux]
+sync_flatpak:
+    mkdir -p ./.flatpak
+    python -m venv ./.flatpak/venv
+    ./.flatpak/venv/bin/pip install req2flatpak==0.3.1
+    # TODO: Move inside Justfile
+    ./.flatpak/venv/bin/python ./scripts/bump_version.py flatpak_deps
+    sed -i \
+        's/--verbose --exists-action=i/--verbose --no-deps --exists-action=i/g' \
+        scripts/python3-requirements.json
