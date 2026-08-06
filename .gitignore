@@ -4,6 +4,8 @@
 *.swp
 *#
 
+.*
+.venv/
 /.idea
 /.flatpak
 /.flatpak-pip-generator
