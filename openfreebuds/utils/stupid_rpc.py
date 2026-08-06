@@ -1,4 +1,5 @@
 import asyncio
+import hmac
 import json
 import logging
 import traceback
@@ -96,6 +97,15 @@ async def run_rpc_server(
 ):
     logging.getLogger('aiohttp.access').setLevel(logging.WARNING)
 
+    # An empty key would make the header check below pass for any request,
+    # so treat it as "no authorization configured" instead.
+    require_authorization = require_authorization and secret_key != ""
+
+    if allow_remote and not require_authorization:
+        log.error("Remote RPC access requires a non-empty secret key, "
+                  "falling back to local-only mode")
+        allow_remote = False
+
     host = "127.0.0.1" if not allow_remote else "0.0.0.0"
     routes = web.RouteTableDef()
 
@@ -107,7 +117,8 @@ async def run_rpc_server(
 
     @routes.route('*', "/__rpc__/{path}")
     async def handle(request: web.Request):
-        if require_authorization and request.headers.get("X-Secret", "") != secret_key:
+        if require_authorization and not hmac.compare_digest(
+                request.headers.get("X-Secret", ""), secret_key):
             return json_response({"error": "Unauthorized"}, status=401)
 
         data = None

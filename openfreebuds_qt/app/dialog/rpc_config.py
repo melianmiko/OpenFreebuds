@@ -2,13 +2,13 @@ import json
 import sys
 from contextlib import suppress
 
-from PyQt6.QtWidgets import QWidget
+from PyQt6.QtWidgets import QMessageBox, QWidget
 
 from openfreebuds import STORAGE_PATH
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.constants import WIN32_BODY_STYLE
 from openfreebuds_qt.designer.stupid_rpc_setup import Ui_OfbQtRpcConfig
-from openfreebuds_qt.utils import OfbQtAsyncDialog
+from openfreebuds_qt.utils import OfbQtAsyncDialog, exec_msg_box_async
 
 log = create_logger("OfbQtRpcConfig")
 
@@ -34,10 +34,27 @@ class OfbQtRpcConfig(Ui_OfbQtRpcConfig, OfbQtAsyncDialog):
         if not res:
             return
 
+        allow_remote = self.cb_remote_access.isChecked()
+        require_authorization = self.cb_secret_key.isChecked()
+        secret_key = self.field_secret.text()
+
+        if allow_remote and (not require_authorization or secret_key == ""):
+            # Binding on all interfaces without a key would let anyone on the
+            # network control the device, so refuse to store such a setup.
+            await exec_msg_box_async(QMessageBox(
+                QMessageBox.Icon.Warning,
+                "OpenFreebuds",
+                self.tr("Remote access requires a secret key. Please enable "
+                        "authorization and set a key, or turn remote access off."),
+                QMessageBox.StandardButton.Ok,
+                self,
+            ))
+            return await self.get_user_response()
+
         # Save settings
         with open(STORAGE_PATH / "openfreebuds_rpc.json", "w") as f:
             json.dump({
-                "allow_remote": self.cb_remote_access.isChecked(),
-                "require_authorization": self.cb_secret_key.isChecked(),
-                "secret_key": self.field_secret.text(),
+                "allow_remote": allow_remote,
+                "require_authorization": require_authorization,
+                "secret_key": secret_key,
             }, f)
