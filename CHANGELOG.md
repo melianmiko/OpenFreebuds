@@ -1,3 +1,11 @@
+# v0.17.3.1
+HUAWEI FreeBuds 6 is now supported. Hardened StupidRPC remote access.
+
+- [Device compatibility] Add HUAWEI FreeBuds 6
+- [Fix] In-call long tap action was read from the wrong parameter
+- [Security] Refuse remote RPC access when no secret key is set
+- [Security] Treat an empty secret key as "no authorization configured"
+
 # v0.17.3
 Minor fixes, added German translation.
 

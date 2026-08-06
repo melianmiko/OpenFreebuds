@@ -1,3 +1,15 @@
+openfreebuds (0.17.3.1-1) trixie noble questing; urgency=medium
+
+  HUAWEI FreeBuds 6 is now supported. Hardened StupidRPC remote access.
+  
+  - [Device compatibility] Add HUAWEI FreeBuds 6
+  - [Fix] In-call long tap action was read from the wrong parameter
+  - [Security] Refuse remote RPC access when no secret key is set
+  - [Security] Treat an empty secret key as "no authorization configured"
+  
+
+ -- MelianMiko <support@mmk.pw>  Thu, 06 Aug 2026 17:24:57 +0000
+
 openfreebuds (0.17.3-1) trixie noble questing; urgency=medium
 
   Minor fixes, added German translation.
