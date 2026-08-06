@@ -111,7 +111,7 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
                 await self.driver.put_property("action", "long_tap_right",
                                                self._options_lt.get(value, value))
             if len(in_call) == 1 and self.w_in_call:
-                value = int.from_bytes(right, byteorder="big", signed=True)
+                value = int.from_bytes(in_call, byteorder="big", signed=True)
                 await self.driver.put_property("action", "long_tap_in_call",
                                                self._options_lt_call.get(value, value))
                 await self.driver.put_property("action", "long_tap_in_call_options",
