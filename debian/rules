@@ -13,4 +13,4 @@ override_dh_auto_install:
 	just install
 
 override_dh_clean:
-	true
+	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
