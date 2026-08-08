@@ -1,3 +1,12 @@
+# v0.18.0
+FreeBuds Pro 5, FreeClip compactibility, initial macOS build ability (no release binaries 
+currently), low battery pop-up.
+
+- [Platform] Initial macOS compatibility (thx @IAL32)
+- [Device compatibility] HUAWEI FreeBuds Pro 5 (thx @JehuAlv)
+- [Device compatibility] HUAWEI FreeClip / FreeClip 2 (thx @hereshui3)
+- [Feature] Low battery / device connection popup (thx @Ast1va)
+
 # v0.17.3
 Minor fixes, added German translation.
 

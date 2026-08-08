@@ -91,6 +91,12 @@
   <content_rating type="oars-1.1" />
 
   <releases>
+    <release version="0.18.0" date="2026-08-08">
+      <url type="details">https://github.com/melianmiko/OpenFreebuds/blob/main/CHANGELOG.md#v0.18.0</url>
+      <description>
+        <p>FreeBuds Pro 5, FreeClip compactibility, initial macOS build ability (no release binaries currently), low battery pop-up.</p>
+      </description>
+    </release>
     <release version="0.17.3" date="2026-02-19">
       <url type="details">https://github.com/melianmiko/OpenFreebuds/blob/main/CHANGELOG.md#v0.17.3</url>
       <description>
