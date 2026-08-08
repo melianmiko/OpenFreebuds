@@ -34,7 +34,7 @@ modules:
   - name: python3_extras
     buildsystem: simple
     build-commands:
-      - tar xzf just.tar.gz just && install just /app/bin
+      - tar --no-same-owner -moxzf just.tar.gz just && install just /app/bin
     sources:
       - type: file
         url: https://github.com/casey/just/releases/download/1.57.0/just-1.57.0-aarch64-unknown-linux-musl.tar.gz

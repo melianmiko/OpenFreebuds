@@ -30,6 +30,7 @@ except ModuleNotFoundError:
 dest_dir := env("DESTDIR", "/usr")
 python_lib := env("PYTHONLIBDIR", `python -c 'import site; print(site.getsitepackages()[0])'`)
 python_venv := env("VIRTUAL_ENV", "")
+sources_dir := absolute_path('.')
 flatpak_dir := absolute_path(env("FLATPAKBUILDDIR", './.flatpak'))
 
 # Version auto-detect
@@ -51,8 +52,9 @@ import? 'scripts/manage.just'
 
 import? 'scripts/flatpak.just'
 import? 'scripts/debian.just'
-import? 'scripts/windows.just'
+import? 'scripts/windows/justfile'
 import? 'scripts/release.just'
+import? 'scripts/ansible/justfile'
 
 # Start Qt version without instalation
 start:

@@ -1,0 +1,26 @@
+misc:
+  hosts:
+    localhost:
+      ansible_connection: local
+      ansible_python_interpreter: /usr/bin/python3
+
+runners:
+  hosts:
+    # This nodes are deployed through Docker-Compose, you don't need to worry about them
+    cicd_debian:
+      ansible_connection: docker
+      ansible_host: ansible-cicd_debian-1
+      ansible_python_interpreter: /usr/bin/python3
+
+    # To perform Windows builds, deploy w11 machine, enable & start OpenSSH server
+    # on them, change SSH shell to PowerShell and them add it bellow. Use following
+    # as example
+    # - Windows 11 on ARM also require full Visual Studio instalation
+    # - Additional info: 
+    #   https://docs.ansible.com/projects/ansible/latest/os_guide/windows_ssh.html
+
+    # cicd_windows11:
+    #   ansible_host: x.x.x.x
+    #   ansible_user: Administrator
+    #   ansible_password: yyy
+    #   ansible_shell_type: powershell

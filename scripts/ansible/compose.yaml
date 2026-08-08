@@ -1,0 +1,32 @@
+services:
+  cicd_debian:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM debian:13
+        RUN apt update && apt install -y python3 dbus-daemon
+        COPY ./entrypoint.sh /
+        WORKDIR /root
+        CMD ["/entrypoint.sh"]
+    environment:
+      PATH: "/usr/bin:/usr/sbin:/root/.local/bin"
+      DBUS_SESSION_BUS_ADDRESS: unix:path=/run/user/0/bus
+    # required for flatpak build
+    privileged: true
+
+  controller:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM debian:13
+        RUN apt update && apt install -y ansible docker-cli git rsync
+        COPY ./entrypoint.sh /
+        WORKDIR /app
+        CMD ["/entrypoint.sh"]
+    hostname: controller
+    volumes:
+      - ../../:/app
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${HOME}/.ssh:/ssh_config:ro
+    depends_on:
+      - cicd_debian

@@ -1,0 +1,6 @@
+core_dependencies:
+  - python-is-python3
+  - pipx
+  - flatpak
+  - sudo
+  - rsync

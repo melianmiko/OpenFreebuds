@@ -1,0 +1,117 @@
+- hosts: localhost
+  name: Prepare contents
+  tasks:
+    - name: Clear dist folder
+      raw: rm -rf ../../dist/*
+    - name: Prepare source archive
+      raw: |
+        cd ../../
+        rm -f /tmp/ansible_openfreebuds.tar
+        git ls-files | tar Tcf - /tmp/ansible_openfreebuds.tar
+      changed_when: false
+
+# TODO: GPG set up for Debian
+
+- hosts: runners
+  vars_files:
+    - vars/{{ ansible_facts.distribution | default("Debian") }}.yaml
+  tasks:
+    - name: Prepare core dependencies (Linux)
+      package:
+        name: "{{ core_dependencies }}"
+        state: present
+      when: "ansible_facts.system == 'Linux'"
+
+    - name: Prepare pipx dependencies
+      raw: |
+        pipx ensurepath
+        pipx install rust-just pdm
+      when: "ansible_facts.system == 'Linux'"
+
+    - name: Prepare core dependencies (Windows)
+      raw: "{{ item }}"
+      register: core_win_ret
+      failed_when: core_win_ret.rc not in [0, 1]
+      changed_when: core_win_ret.rc == 0
+      loop:
+        - winget install --accept-source-agreements --no-upgrade --exact --id Git.Git
+        - winget install --accept-source-agreements --no-upgrade --exact --id Casey.Just
+        - winget install --accept-source-agreements --no-upgrade --exact --id Python.Python.3.14
+      when: "ansible_facts.system == 'Win32NT'"
+
+    - name: Fix Flatpak builder access if running as root (in container)
+      raw: flatpak override --user org.flatpak.Builder --filesystem=/root
+      when: ansible_facts.system == 'Linux' and ansible_facts.user_uid == 0
+
+    - ansible.builtin.meta: reset_connection
+      when: core_win_ret[2].changed
+
+    - name: Prepare PDM (Windows)
+      raw: |
+        powershell -ExecutionPolicy ByPass -c "irm https://pdm-project.org/install-pdm.py | python -"
+      changed_when: false
+      when: "ansible_facts.system == 'Win32NT'"
+
+    - ansible.builtin.meta: reset_connection
+
+    - name: Prepare directory
+      file:
+        path: ansible_openfreebuds
+        state: directory
+      when: "ansible_facts.system == 'Linux'"
+
+    - name: Prepare sources (Linux)
+      unarchive:
+        src: /tmp/ansible_openfreebuds.tar
+        dest: ansible_openfreebuds
+      when: ansible_facts.system == 'Linux'
+
+    - name: Copy sources archive (Windows)
+      win_copy:
+        src: /tmp/ansible_openfreebuds.tar
+        dest: "{{ ansible_env.TEMP }}\\ansible_openfreebuds.tar"
+      when: ansible_facts.system == 'Win32NT'
+
+    - name: Prepare sources (Windows)
+      raw: |
+        if (Test-Path "ansible_openfreebuds") {
+          Remove-Item -Path "ansible_openfreebuds" -Recurse -Force
+        }
+        mkdir ansible_openfreebuds
+        cd ansible_openfreebuds
+        tar xf "{{ ansible_facts.env.TEMP }}\\ansible_openfreebuds.tar"
+      when: ansible_facts.system == 'Win32NT'
+    
+    - name: Prepare environment
+      raw: |
+        cd ansible_openfreebuds
+        just prepare
+
+    - name: Prepare release artifacts
+      raw: |
+        cd ansible_openfreebuds
+        just release
+
+    - name: Find release artifacts (windows)
+      win_find:
+        paths: ansible_openfreebuds\dist
+      register: dist_files
+      when: ansible_facts.system == 'Win32NT'
+
+    - name: Fetch release artifacts (windows)
+      fetch:
+        src: ansible_openfreebuds/dist/{{ item.filename }}
+        dest: ../../dist/
+        flat: true
+      loop: "{{ dist_files.files }}"
+      when: ansible_facts.system == 'Win32NT'
+
+    - name: Fetch release artifacts (linux)
+      synchronize:
+        mode: pull
+        src: ./ansible_openfreebuds/dist/
+        dest: ../../dist
+      when: ansible_facts.system == 'Linux'
+
+    - name: Create exit flag (to stop Docker containers)
+      raw: echo 'true' > ansible_openfreebuds/exit.flag

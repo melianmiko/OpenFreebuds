@@ -15,8 +15,9 @@ flatpak_install:
             --install-deps-from=flathub \
             --repo={{flatpak_dir}}/repo \
             --state-dir={{flatpak_dir}}/state \
+            --disable-rofiles-fuse \
         {{flatpak_dir}}/builddir \
-        ./scripts/pw.mmk.OpenFreebuds.yml
+        {{sources_dir}}/scripts/pw.mmk.OpenFreebuds.yml
 
 # Build Flatpak package file
 [group("flatpak"),linux]
@@ -24,7 +25,7 @@ flatpak: flatpak_install
     mkdir -p dist
     flatpak build-bundle \
         {{flatpak_dir}}/repo \
-        ./dist/openfreebuds_{{version}}.flatapk \
+        ./dist/openfreebuds_{{version}}_{{arch()}}.flatapk \
         pw.mmk.OpenFreebuds
 
 # Sync Python dependencies for Flatpak
