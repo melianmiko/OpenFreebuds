@@ -24,6 +24,9 @@ services:
         WORKDIR /app
         CMD ["/entrypoint.sh"]
     hostname: controller
+    environment:
+      HOST_UID: "${UID}"
+      HOST_GID: "${GID}"
     volumes:
       - ../../:/app
       - /var/run/docker.sock:/var/run/docker.sock:ro

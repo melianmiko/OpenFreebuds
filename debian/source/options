@@ -4,4 +4,3 @@ tar-ignore = ".flatpak"
 tar-ignore = "dist"
 tar-ignore = "scripts/build"
 tar-ignore = "scripts/dist"
-

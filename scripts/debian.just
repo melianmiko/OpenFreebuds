@@ -1,6 +1,7 @@
 # Build Debian binary package
 [group("debian"),linux]
 debian: build
+    rm -f debian/files
     mkdir -p dist/debian
     dpkg-buildpackage -b
     cp ../openfreebuds_*.deb ./dist
@@ -9,10 +10,12 @@ debian: build
 [group("debian"),linux]
 debian_full: build
     # Remove old build artifacts
+    rm -f debian/files debian/openfreebuds
     bash -c 'rm -f ../openfreebuds_*.{deb,changes,buildinfo,dsc} dist/debian/*'
     # Build and move to ./dist/debian
+    dpkg-buildpackage -S
     dpkg-buildpackage -b
-    cp ../openfreebuds_* ./dist/
+    mv ../openfreebuds_* ./dist/
 
 # Install build dependencies for Debian\Ubuntu
 [group("debian"),linux]

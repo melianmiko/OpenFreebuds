@@ -34,6 +34,7 @@ then
     cd /app/scripts/ansible
     [ ! -f inventory.yaml ] && cp inventory.example.yaml inventory.yaml
     exec ansible-playbook -i inventory.yaml playbook.yaml
+    chown -R $HOST_UID:$HOST_GID /app/dist
     exit 0
 fi
 
