@@ -184,7 +184,7 @@ def main():
 
     # Launch everything
     bump_pyproject(str(PROJECT_ROOT / "pyproject.toml"))
-    bump_nsis(str(PROJECT_ROOT / "scripts/openfreebuds.nsi"))
+    bump_nsis(str(PROJECT_ROOT / "scripts/windows/openfreebuds.nsi"))
     bump_debian(PROJECT_ROOT / "debian/changelog")
     bump_metainfo(str(PROJECT_ROOT / "openfreebuds_qt/assets/pw.mmk.OpenFreebuds.metainfo.xml"))
     create_version_info(PROJECT_ROOT / "openfreebuds_qt/version_info.py")

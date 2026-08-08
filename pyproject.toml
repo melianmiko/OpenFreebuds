@@ -1,6 +1,6 @@
 [project]
 name = "OpenFreebuds"
-version = "0.17.3"
+version = "0.18.0"
 description = "FOSS Windows/Linux client for HUAWEI FreeBuds headset series"
 authors = [
     {name = "MelianMiko", email = "support@mmk.pw"},
