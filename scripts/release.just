@@ -19,7 +19,9 @@ clean:
 # Cleanup project directory
 [windows]
 clean:
-    -rmdir build dist .pdm-build /s /q
+    -rmdir build /s /q
+    -rmdir dist /s /q
+    -rmdir .pdm-build /s /q
 
 # Build release binaries (linux)
 [linux,script("/usr/bin/bash")]
