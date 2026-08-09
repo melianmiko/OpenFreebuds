@@ -9,6 +9,7 @@
 /.flatpak-pip-generator
 /.vagrant
 /.pdm-python
+/build
 /dist
 
 # Portable mode data

@@ -1,0 +1,173 @@
+- changes:
+  - note: '[Platform] Initial macOS compatibility (thx @IAL32)'
+  - note: '[Device compatibility] HUAWEI FreeBuds Pro 5 (thx @JehuAlv)'
+  - note: '[Device compatibility] HUAWEI FreeClip / FreeClip 2 (thx @hereshui3)'
+  - note: '[Feature] Low battery / device connection popup (thx @Ast1va)'
+  date: 2026-08-08T17:11:04Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.18.0
+
+- changes:
+  - note: '[i18n] Add German translation (#87)'
+  - note: '[Fix] Python 3.14 compatibility'
+  date: 2026-02-19T05:26:10Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.17.3
+
+- changes:
+  - note: '[i18n] Add Turkish language (#71)'
+  - note: '[Fix] Libraries list in about tab'
+  date: 2025-06-07T14:49:12Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.17.1
+
+- changes:
+  - note: '[i18n] Add Simplified Chinese translation (#65)'
+  - note: '[Device compatibility] Mark FreeClip as an alias for Pro 3'
+  - note: '[Fix] Copy unsupported equalizer preset dialog failure'
+  date: 2025-04-04T18:00:40Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.17.0
+
+- changes:
+  - note: '[Fix] Windows portable version data location'
+  - note: This release will be available only as win32 portable version
+  date: 2025-02-03T19:01:45Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.16.2
+
+- changes:
+  - note: '[Device compatibility] HUAWEI FreeBuds Pro 4 (as alias for Pro 3)'
+  - note: '[Fix] Couple of FreeBuds SE 2 related bugs'
+  date: 2025-02-03T19:01:45Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.16.1
+
+- changes:
+  - note: ' [Device compatibility] HUAWEI FreeBuds SE 2'
+  - note: ' [Feature] Self-repair if config file is broken '
+  - note: ' [Feature] Automation on device connect'
+  - note: ' [Feature] Add long-tap in-call gesture setting field '
+  - note: ' [Feature] win32 portable build '
+  - note: ' [Dep] Add py3.13 to supported '
+  date: 2025-02-02T12:19:33Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.16.0
+
+- changes:
+  - note: '[Fix] Rework Flatpak autostart management mechanism'
+  - note: This version would be only released as Flatpak package
+  date: 2024-11-18T20:28:07Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.15.1
+
+- changes:
+  - note: '[Device compatibility] Add HUAWEI FreeBuds 6i compatibility'
+  - note: '[Device compatibility] Add HUAWEI FreeBuds Studio compatibility'
+  - note: '[Feature] ANC & battery available in main window;'
+  - note: '[Feature] "Show main window" action, available in hotkeys, tray icon click
+      and web-server;'
+  - note: '[Feature] Ability to disable background mode & work without system tray,
+      for Linux environments like GNOME;'
+  - note: '[Fix] Flatpak multi-instance detection & "Run at boot" setting.'
+  date: 2024-11-17T14:34:46Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.15.0
+
+- changes:
+  - note: '[Fix] Crash when using with old devices, like 4i / SE'
+  date: 2024-10-02T18:29:46Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.14.1
+
+- changes:
+  - note: '[Core] Client-server architecture, close #14;'
+  - note: '[Core] Web-server authorization'
+  - note: '[Core] Rewritten (mostly from scratch) to asyncio ;'
+  - note: '[Core] Drop pybluez  from dependencies, now will use predefined port numbers
+      instead of SDP detection;'
+  - note: '[UI] Rewritten from scratch to asyncio  and PyQT6, introduce redesigned
+      Settings UI;'
+  - note: '[UI] Disable logging to CLI / `journalctl` if -v  isn''t present, close
+      #29;'
+  - note: '[Device compatibility] Bug fixes for modern HUAWEI Devices (5i, Pro 2,
+      Pro 3);'
+  - note: '[HUAWEI FreeBuds 5i & other] Better Dual-Connect configuration;'
+  - note: '[HUAWEI FreeBuds 5i & other] Add low-latency mode setting;'
+  - note: '[HUAWEI FreeBuds 5i & other] Add triple-tap settings;'
+  - note: '[HUAWEI FreeBuds 5i & other] Fix SQ preference switch;'
+  - note: '[Device compatibility] Add HUAWEI FreeLace Pro 2 compatibility;'
+  - note: '[Linux] Flatpak as installation option'
+  - note: '[i18n] Add Spanish translation, thanks to @Pedro-vk (GitHub)'
+  - note: '[i18n] Add  partial Portuguese (Brazilian), thanks to  @Lobo (Accent)'
+  date: 2024-09-28T11:15:46Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.14.0
+
+- changes:
+  - note: 'Fix: Random crash when enumerating dual-connect devices'
+  - note: 'Fix: Crash when disabling Bluetooth under windows'
+  date: 2024-03-23T15:18:23Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.13.3
+
+- changes:
+  - note: 'Fix: Crash due to unknown equalizer preset'
+  date: 2024-02-28T19:58:38Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.13.2
+
+- changes:
+  - note: 'New: HUAWEI FreeBuds Pro 2 support (add profile, partial)'
+  - note: 'New: add equalizer presets & device switch to context menu (can be disabled
+      in settings)'
+  - note: 'Fix: HUAWEI FreeBuds Pro: remove double-tap, add dual-connect'
+  - note: 'Fix: crash when iterating paired devices in 5i, Pro 2, Pro 3'
+  - note: 'Fix: disable "Settings" button on non-configurable modules'
+  - note: 'Fix: add correct WM_CLASS for better desktop integration (linux)'
+  - note: 'Fix: missing i18n'
+  date: 2024-02-07T07:01:58Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.13.1
+
+- changes:
+  - note: 'New: HUAWEI FreeBuds 5i support (full)'
+  - note: 'New: HUAWEI FreeBuds SE support (full)'
+  - note: 'New: HUAWEI FreeBuds Pro support (partial)'
+  - note: 'New: HUAWEI FreeBuds Pro 3 support (partial)'
+  - note: 'New: Workaround for non-working "Pause when plug off headphone" under Linux
+      (MPRIS-helper)'
+  - note: 'New: Advanced bug-report log generator, auto-view bugreport when app crashes'
+  - note: 'Fix: Remove WMI-console dependency (win32)'
+  - note: 'Fix: Updater crash (win32)'
+  - note: 'Minor: Move uncommon features to separate modules'
+  - note: 'Minor: Redesign some UI parts'
+  date: 2024-02-03T12:25:19Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.13.0
+
+- changes:
+  - note: Fix update checker crash
+  date: 2023-07-21T15:19:00Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.12.3
+
+- changes:
+  - note: 'Fix: Crash in Windows 10-11'
+  - note: 'Packaging: declare min Python version'
+  - note: Update dependencies (Pillow, mmk_updater, sv_ttk)
+  - note: Begin migration from Launchpad PPA
+  date: 2023-05-09T15:11:38Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.12.2
+
+- changes:
+  - note: 'New: HUAWEI FreeLace Pro support (full)'
+  - note: 'New: HUAWEI FreeBuds 5i support (partial)'
+  - note: 'New: HUAWEI FreeBuds Pro 2 support (partial)'
+  - note: Update RU translations
+  - note: Disable adapter validation at start
+  - note: Minor bugfixes
+  date: 2022-12-23T15:11:16Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.12.1

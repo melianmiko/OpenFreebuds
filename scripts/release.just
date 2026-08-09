@@ -27,7 +27,7 @@ clean:
 [linux,script("/usr/bin/bash")]
 release: clean
     set -euxo pipefail
-    [ -f /usr/bin/apt ] && just debian_full
+    [ -f /usr/bin/apt ] && just debian
     [ -f /usr/bin/flatpak ] && just flatpak
 
 # Build release binaries (windows)

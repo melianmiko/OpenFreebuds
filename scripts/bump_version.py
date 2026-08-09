@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import yaml
 from datetime import date
 from pathlib import Path
 
@@ -7,7 +8,7 @@ DEB_CODENAMES = "trixie forky noble resolute"
 DEVELOPER_SIGN = "MelianMiko <support@mmk.pw>"
 DEBUG = False
 
-BASE_CHANGELOG_URL = "https://github.com/melianmiko/OpenFreebuds/blob/main/CHANGELOG.md"
+BASE_CHANGELOG_URL = "https://github.com/melianmiko/OpenFreebuds/blob/main/docs/CHANGELOG.md"
 
 PROJECT_ROOT = Path(__file__).parents[1]
 
@@ -16,9 +17,12 @@ if len(sys.argv) < 2:
     raise SystemExit(1)
 
 NEW_VERSION = sys.argv[1]
-CHANGELOG = []
 if NEW_VERSION == "git":
     NEW_VERSION = f"0.99.git.{subprocess.getoutput('git rev-parse HEAD')}"
+
+with open(PROJECT_ROOT / "docs/changelog.yml", "r") as changelog_file:
+    RELEASE_LIST = list(yaml.load(changelog_file, loader=yaml.Loader))
+    RELEASE_INFO = RELEASE_LIST[0]
 
 NEW_VERSION_SHORT = ".".join(NEW_VERSION.replace("git", '99').split(".")[0:3])
 
@@ -94,7 +98,7 @@ def bump_debian(path: Path):
     with open(path) as f:
         exiting_data = f.read()
 
-    debian_changelog = [f"  {line}" for line in CHANGELOG]
+    debian_changelog = [f"  {line['note']}" for line in RELEASE_INFO["changes"]]
     write_file(path, [
         f"openfreebuds ({NEW_VERSION}-1) {DEB_CODENAMES}; urgency=medium",
         f"",
@@ -111,8 +115,8 @@ def bump_metainfo(line: str):
     if not line.strip().startswith('<releases>'):
         return line
     non_nerd_changelog = 'Not provided'
-    if '' in CHANGELOG:
-        non_nerd_changelog = CHANGELOG[:CHANGELOG.index('')]
+    if 'title' in RELEASE_INFO:
+        non_nerd_changelog = RELEASE_INFO['title']
     new_data = [
         line,
         f'    <release version="{NEW_VERSION}" date="{date.today()}">',
@@ -167,20 +171,8 @@ def main():
         print("Version shouldn't start with v")
         raise SystemExit(1)
 
-    # Read changelog
-    with open(PROJECT_ROOT / "CHANGELOG.md", "r") as changelog_file:
-        reach_section = False
-        for changelog_line in changelog_file:
-            if not reach_section:
-                reach_section = changelog_line.startswith(f"# v{NEW_VERSION}")
-                continue
-            if changelog_line[0] == "#":
-                break
-
-            CHANGELOG.append(changelog_line.strip())
-
-    if len(CHANGELOG) == 0:
-        CHANGELOG.append("- Changelog not provided")
+    if RELEASE_INFO["version"] != NEW_VERSION and "git" not in NEW_VERSION:
+        raise KeyError(f"Changelog for {NEW_VERSION} not provided")
 
     # Launch everything
     bump_pyproject(str(PROJECT_ROOT / "pyproject.toml"))

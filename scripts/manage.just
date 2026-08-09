@@ -1,6 +1,23 @@
+[private,script]
+sync_changelogs:
+    import yaml
+    with open('docs/changelog.yml', 'r') as f:
+        log = yaml.load(f, Loader=yaml.Loader)
+    md = []
+    for row in log:
+        md.append(f"# {row['semver']}")
+        if 'title' in row:
+            md.append(row['title'])
+            md.append('')
+        for c in row['changes']:
+            md.append(f'- {c['note']}')
+        md.append('')
+    with open('docs/CHANGELOG.md', 'w') as f:
+        f.write('\n'.join(md))
+
 # Bump application version
 [group("manage"),positional-arguments]
-bump_version code:
+bump_version code: sync_changelogs
     {{python}} ./scripts/bump_version.py {{code}}
 
 # Bump application version to git commit identifier
