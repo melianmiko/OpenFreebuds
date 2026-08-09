@@ -4,9 +4,18 @@ nfpm := if path_exists("/usr/bin/nfpm") == "true" {
     "npx nfpm" 
 }
 
+[private,linux]
+prepare_dummysign:
+    # ------------------------------------------------
+    # Signature key not found. Will generate dummy one
+    # ------------------------------------------------
+    -gpg --quick-gen-key --batch --passphrase '' testsign@localhost
+    gpg --armor --export-secret-keys testsign@localhost > $HOME/.gnupg/sign.key
+
 # Create build rootfs
-[private]
+[private,linux]
 prepare_nfpm: build
+    [ ! -f "$HOME/.gnupg/sign.key" ] && just prepare_dummysign
     rm -rf "{{ build_dir }}/usr"
     DESTDIR="{{ build_dir }}/usr" just install
     find "{{ build_dir }}" -type d -name "__pycache__" -exec rm -r {} +

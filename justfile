@@ -32,12 +32,17 @@ dest_dir := env("DESTDIR", "/usr/local")
 
 sources_dir := absolute_path('.')
 build_dir := sources_dir + "/build"
+python_venv := env("VIRTUAL_ENV", "")
+
 python_path := env("PYTHONLIBPATH", `python -c "
 import site
-v = site.getsitepackages()[0]
-print(v[11:] if v.startswith(\"/usr/local/\") else v)
+try:
+    v = site.getsitepackages()[0]
+    print(v[11:] if v.startswith('/usr/local/') else v)
+except SyntaxError:
+    # Windows moment
+    pass
 "`)
-python_venv := env("VIRTUAL_ENV", "")
 
 # Version auto-detect
 version := `python -c "import tomllib

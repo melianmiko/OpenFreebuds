@@ -21,7 +21,7 @@ if NEW_VERSION == "git":
     NEW_VERSION = f"0.99.git.{subprocess.getoutput('git rev-parse HEAD')}"
 
 with open(PROJECT_ROOT / "docs/changelog.yml", "r") as changelog_file:
-    RELEASE_LIST = list(yaml.load(changelog_file, loader=yaml.Loader))
+    RELEASE_LIST = list(yaml.load(changelog_file, Loader=yaml.Loader))
     RELEASE_INFO = RELEASE_LIST[0]
 
 NEW_VERSION_SHORT = ".".join(NEW_VERSION.replace("git", '99').split(".")[0:3])
@@ -68,6 +68,16 @@ def bump_pyproject(line: str):
 
 
 @file_mutator
+def bump_nfpm(line: str):
+    """
+    Replaces version in nfpm.yaml
+    """
+    if line.startswith("version: "):
+        return f"version: \"{NEW_VERSION_SHORT}\""
+    return line
+
+
+@file_mutator
 def bump_nsis(line: str):
     """
     Replaces version in NSIS config
@@ -94,22 +104,6 @@ def create_version_info(path: Path):
     ])
 
 
-def bump_debian(path: Path):
-    with open(path) as f:
-        exiting_data = f.read()
-
-    debian_changelog = [f"  {line['note']}" for line in RELEASE_INFO["changes"]]
-    write_file(path, [
-        f"openfreebuds ({NEW_VERSION}-1) {DEB_CODENAMES}; urgency=medium",
-        f"",
-        *debian_changelog,
-        f"",
-        f" -- {DEVELOPER_SIGN}  {subprocess.getoutput('date -R')}",
-        f"",
-        *exiting_data.splitlines()
-    ])
-
-
 @file_mutator
 def bump_metainfo(line: str):
     if not line.strip().startswith('<releases>'):
@@ -122,7 +116,7 @@ def bump_metainfo(line: str):
         f'    <release version="{NEW_VERSION}" date="{date.today()}">',
         f'      <url type="details">{BASE_CHANGELOG_URL}#v{NEW_VERSION}</url>',
         f'      <description>',
-        f'        <p>{" ".join(" ".join(non_nerd_changelog).split(" "))}</p>',
+        f'        <p>{non_nerd_changelog}</p>',
         f'      </description>',
         f'    </release>',
     ]
@@ -171,13 +165,13 @@ def main():
         print("Version shouldn't start with v")
         raise SystemExit(1)
 
-    if RELEASE_INFO["version"] != NEW_VERSION and "git" not in NEW_VERSION:
+    if RELEASE_INFO["semver"] != NEW_VERSION and "git" not in NEW_VERSION:
         raise KeyError(f"Changelog for {NEW_VERSION} not provided")
 
     # Launch everything
     bump_pyproject(str(PROJECT_ROOT / "pyproject.toml"))
+    bump_nfpm(str(PROJECT_ROOT / "nfpm.yaml"))
     bump_nsis(str(PROJECT_ROOT / "scripts/windows/openfreebuds.nsi"))
-    bump_debian(PROJECT_ROOT / "debian/changelog")
     bump_metainfo(str(PROJECT_ROOT / "openfreebuds_qt/assets/pw.mmk.OpenFreebuds.metainfo.xml"))
     create_version_info(PROJECT_ROOT / "openfreebuds_qt/version_info.py")
     # create_flatpak_staff()
