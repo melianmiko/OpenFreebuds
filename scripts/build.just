@@ -48,12 +48,12 @@ clean:
     -rmdir dist /s /q
     -rmdir .pdm-build /s /q
 
-# Build release binaries (linux)
+# Build all release binaries (linux)
 [group("release"),linux]
 release: clean
-    just debian
+    just debian fedora
     just flatpak
 
 # Build release binaries (windows)
 [group("release"),windows]
-release: clean win32
+release: clean win32_installer win32_portable

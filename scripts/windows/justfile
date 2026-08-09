@@ -1,9 +1,5 @@
 winget_install := "winget install -e --no-upgrade --id"
 
-# Make windows portable & installer
-[group("windows"),windows]
-win32: win32_installer win32_portable
-
 # Make windows installer
 [group("windows"),windows]
 win32_installer: win32_bundle
