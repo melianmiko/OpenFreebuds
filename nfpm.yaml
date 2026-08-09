@@ -33,6 +33,14 @@ overrides:
       - python3-aiohttp
       - python3-psutil
 
+deb:
+  signature:
+    key_file: ${HOME}/.gnupg/sign.key
+
+rpm:
+  signature:
+    key_file: ${HOME}/.gnupg/sign.key
+
 description: |
  Open-source client application for HUAWEI FreeBuds bluetooth headset series.
 
@@ -43,5 +51,4 @@ changelog: "docs/changelog.yml"
 
 contents:
   - src: ./build/usr/
-    dst: /usr/
-    type: tree
+    dst: /usr

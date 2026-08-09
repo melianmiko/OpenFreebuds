@@ -71,8 +71,9 @@ All installation options:
 | ![](./docs/img/i_win32.png) Windows        | Direct install                                                                             | [Website](https://mmk.pw/en/openfreebuds/download) or [releases](./releases)                 |
 | ![](./docs/img/i_win32.png) Windows¹       | [Winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) (preinstalled) | <pre>winget install MelianMiko.OpenFreebuds</pre>                                            |
 | ![](./docs/img/i_win32.png) Windows¹       | [Scoop](https://scoop.sh/)                                                                 | <pre>scoop bucket add extras<br/>scoop install openfreebuds</pre>                            |
-| ![](./docs/img/i_linux.png) Any linux      | [Available at Flathub](https://flathub.org/apps/pw.mmk.OpenFreebuds)                       | <pre>flatpak install pw.mmk.OpenFreebuds</pre>                                               |
-| ![](./docs/img/i_debian.png) Debian/Ubuntu | APT                                                                                        | <pre>curl -s https://deb.mmk.pw/setup \| sudo bash -<br/>sudo apt install openfreebuds</pre> |
+| ![](./docs/img/i_linux.png) Any linux      | [Flathub](https://flathub.org/apps/pw.mmk.OpenFreebuds)                       | <pre>flatpak install pw.mmk.OpenFreebuds</pre>                                               |
+| ![](./docs/img/i_debian.png) Debian/Ubuntu | APT                                                                                        | <pre>curl -s https://st.mmk.pw/debiansetup \| sudo bash -<br/>sudo apt install openfreebuds</pre> |
+| ![](./docs/img/i_fedora.png) Fedora | DNF | <pre> sudo dnf config-manager addrepo --from-repofile https://download.docker.com/linux/fedora/docker-ce.repo<br/>sudo dnf install</pre> |
 | ![](./docs/img/i_arch.png) ArchLinux       | [Yay](https://github.com/Jguer/yay) for AUR                                                | <pre>yay -S openfreebuds</pre>                                                               |
 | ![](./docs/img/i_nix.png) NixOS¹ 25.11+    | NixPkgs                                                                                    | [openfreebuds](https://search.nixos.org/packages?channel=unstable&query=openfreebuds)        |
 
@@ -102,4 +103,5 @@ Now, you can try launching OpenFreebuds by `just start` command or package it vi
 
 - `just win32` for Windows portable and installer;
 - `just debian` for Debian `deb`-package;
+- `just fedora` for Fedora (potentially other RHEL's) `rpm`-package;
 - `just flatpak` for Flatpak bundle (will also automatically install application).

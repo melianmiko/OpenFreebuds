@@ -13,12 +13,14 @@ prepare_nfpm: build
 
 # Create Debian package
 [group("linux")]
-debian: prepare_nfpm
-    PYTHONLIBPATH="lib/python3/dist-packages" {{nfpm}} pkg --packager deb --target "{{ sources_dir }}/dist/"
+debian: 
+    PYTHONLIBPATH="lib/python3/dist-packages" just prepare_nfpm
+    {{nfpm}} pkg --packager deb --target "{{ sources_dir }}/dist/"
 
 # Create Fedora package
 [group("linux")]
-fedora: prepare_nfpm
+fedora:
+    PYTHONLIBPATH="lib64/python3.14/site-packages" just prepare_nfpm
     {{nfpm}} pkg --packager rpm --target "{{ sources_dir }}/dist/"
 
 # Install build dependencies for Debian\Ubuntu
