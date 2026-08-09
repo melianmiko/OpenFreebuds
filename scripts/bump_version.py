@@ -159,7 +159,7 @@ def create_flatpak_staff():
     subprocess.run(
         ['.flatpak/venv/bin/req2flatpak',
          '--requirements-file', './.flatpak/requirements.txt',
-         '--outfile', './scripts/python3-requirements.json',
+         '--outfile', './scripts/flatpak/python3-requirements.json',
          '--target-platforms', '313-x86_64', '313-aarch64',
          ],
         cwd=PROJECT_ROOT,

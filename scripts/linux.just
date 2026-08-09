@@ -8,15 +8,21 @@ nfpm := if path_exists("/usr/bin/nfpm") == "true" {
 [private]
 prepare_nfpm: build
     rm -rf "{{ build_dir }}/usr"
-    DESTDIR="{{ build_dir }}/usr" PYTHONLIBPATH="lib/python3/dist-packages" just install
+    DESTDIR="{{ build_dir }}/usr" just install
     find "{{ build_dir }}" -type d -name "__pycache__" -exec rm -r {} +
 
 # Create Debian package
+[group("linux")]
 debian: prepare_nfpm
-    {{nfpm}} pkg --packager deb --target "{{ sources_dir }}/dist/"
+    PYTHONLIBPATH="lib/python3/dist-packages" {{nfpm}} pkg --packager deb --target "{{ sources_dir }}/dist/"
+
+# Create Fedora package
+[group("linux")]
+fedora: prepare_nfpm
+    {{nfpm}} pkg --packager rpm --target "{{ sources_dir }}/dist/"
 
 # Install build dependencies for Debian\Ubuntu
-[group("debian"),linux]
+[group("prepare"),linux]
 deps_debian:
     sudo apt install -y --no-install-recommends \
         python3-dbus-next \
@@ -30,5 +36,22 @@ deps_debian:
         nodejs \
         npm \
         qt6-l10n-tools \
+        git
+    sudo npm install -g @goreleaser/nfpm
+
+# Install build dependencies for Fedora
+[group("prepare"),linux]
+deps_fedora:
+    sudo dnf install -y \
+        python3-dbus-next \
+        python3-pyqt6 \
+        python3-pillow \
+        python3-pillow-qt \
+        python3-aiohttp \
+        python3-psutil \
+        python3-yaml \
+        python3-pip \
+        nodejs22-npm \
+        qt6-linguist \
         git
     sudo npm install -g @goreleaser/nfpm
