@@ -1,11 +1,11 @@
 # Install dependencies for Flatpak build
-[group("flatpak"),linux]
+[group("prepare"),linux]
 deps_flatpak:
     flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     flatpak install -y --user org.flatpak.Builder
 
 # Install OpenFreebuds as Flatpak package
-[group("flatpak"),linux]
+[group("linux"),linux]
 flatpak_install:
     just build || true
     mkdir -p {{flatpak_dir}}
@@ -17,10 +17,10 @@ flatpak_install:
             --state-dir={{flatpak_dir}}/state \
             --disable-rofiles-fuse \
         {{flatpak_dir}}/builddir \
-        {{sources_dir}}/scripts/pw.mmk.OpenFreebuds.yml
+        {{sources_dir}}/scripts/flatpak/pw.mmk.OpenFreebuds.yml
 
 # Build Flatpak package file
-[group("flatpak"),linux]
+[group("linux"),linux]
 flatpak: flatpak_install
     mkdir -p dist
     flatpak build-bundle \
@@ -38,4 +38,4 @@ sync_flatpak:
     ./.flatpak/venv/bin/python ./scripts/bump_version.py flatpak_deps
     sed -i \
         's/--verbose --exists-action=i/--verbose --no-deps --exists-action=i/g' \
-        scripts/python3-requirements.json
+        scripts/flatpak/python3-requirements.json

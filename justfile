@@ -27,11 +27,22 @@ except ModuleNotFoundError:
 })
 
 # Env
-dest_dir := env("DESTDIR", "/usr")
-python_lib := env("PYTHONLIBDIR", `python -c 'import site; print(site.getsitepackages()[0])'`)
-python_venv := env("VIRTUAL_ENV", "")
-sources_dir := absolute_path('.')
 flatpak_dir := absolute_path(env("FLATPAKBUILDDIR", './.flatpak'))
+dest_dir := env("DESTDIR", "/usr/local")
+
+sources_dir := absolute_path('.')
+build_dir := sources_dir + "/build"
+python_venv := env("VIRTUAL_ENV", "")
+
+python_path := env("PYTHONLIBPATH", `python -c "
+import site
+try:
+    v = site.getsitepackages()[0]
+    print(v[11:] if v.startswith('/usr/local/') else v)
+except SyntaxError:
+    # Windows moment
+    pass
+"`)
 
 # Version auto-detect
 version := `python -c "import tomllib
@@ -42,18 +53,16 @@ except Exception:
 "`
 
 # List available actions
+[private]
 @default:
     just -l
 
 # Imports
 import? 'scripts/build.just'
-import? 'scripts/vagrant.just'
 import? 'scripts/manage.just'
-
-import? 'scripts/flatpak.just'
-import? 'scripts/debian.just'
+import? 'scripts/linux.just'
+import? 'scripts/flatpak/justfile'
 import? 'scripts/windows/justfile'
-import? 'scripts/release.just'
 import? 'scripts/ansible/justfile'
 
 # Start Qt version without instalation
@@ -72,23 +81,22 @@ test:
 # Install OpenFreebuds
 [group("linux"),linux]
 install: install_check
-    mkdir -p "{{python_lib}}"
-    {{pip}} install -q --upgrade --no-dependencies --target "{{python_lib}}" \
+    mkdir -p "{{dest_dir}}/{{python_path}}"
+    {{pip}} install -q --upgrade --no-dependencies --target "{{dest_dir}}/{{python_path}}" \
         "./dist/openfreebuds-{{version}}-py3-none-any.whl"
     mkdir -p "{{dest_dir}}/bin" \
              "{{dest_dir}}/share/applications" \
              "{{dest_dir}}/share/metainfo" \
              "{{dest_dir}}/share/icons/hicolor/256x256/apps"
     # Install binaries
-    cp "{{python_lib}}/bin/openfreebuds_qt" "{{dest_dir}}/bin/openfreebuds_qt"
-    cp "{{python_lib}}/bin/openfreebuds_cmd" "{{dest_dir}}/bin/openfreebuds_cmd"
-    ln -sf ./openfreebuds_qt "{{dest_dir}}/bin/openfreebuds"
+    cp "{{dest_dir}}/{{python_path}}/bin/openfreebuds_qt" "{{dest_dir}}/bin/openfreebuds_qt"
+    cp "{{dest_dir}}/{{python_path}}/bin/openfreebuds_cmd" "{{dest_dir}}/bin/openfreebuds_cmd"
     # Install desktop integration
-    cp "{{python_lib}}/openfreebuds_qt/assets/pw.mmk.OpenFreebuds.desktop" \
+    cp "{{dest_dir}}/{{python_path}}/openfreebuds_qt/assets/pw.mmk.OpenFreebuds.desktop" \
        "{{dest_dir}}/share/applications"
-    cp "{{python_lib}}/openfreebuds_qt/assets/pw.mmk.OpenFreebuds.metainfo.xml" \
+    cp "{{dest_dir}}/{{python_path}}/openfreebuds_qt/assets/pw.mmk.OpenFreebuds.metainfo.xml" \
        "{{dest_dir}}/share/metainfo"
-    cp "{{python_lib}}/openfreebuds_qt/assets/pw.mmk.OpenFreebuds.png" \
+    cp "{{dest_dir}}/{{python_path}}/openfreebuds_qt/assets/pw.mmk.OpenFreebuds.png" \
        "{{dest_dir}}/share/icons/hicolor/256x256/apps"
 
 # Check Linux instalation restrictions
@@ -97,8 +105,8 @@ install_check:
     import os
     assert os.path.isfile("./dist/openfreebuds-{{version}}-py3-none-any.whl"), \
         "Prebuilt wheel not found, did you called `just build` before?"
-    assert "{{python_venv}}" == "" or os.environ.get("PYTHONLIBDIR", "") != "", \
-        "Leave virtualenv or set PYTHONLIBDIR to install"
+    assert "{{python_venv}}" == "" or os.environ.get("PYTHONLIBPATH", "") != "", \
+        "Leave virtualenv or set PYTHONLIBPATH to install"
 
 # (Internal) Install OpenFreebuds inside Flatpak
 [private,linux]
@@ -109,4 +117,4 @@ internal_flatpakinstall:
         xargs -I {} cp {} ./dist/openfreebuds-0.0-py3-none-any.whl
     # Install to /app
     touch /app/is_container
-    DESTDIR=/app PYTHONLIBDIR=/app/lib/python3.13/site-packages just install
+    DESTDIR=/app PYTHONLIBPATH=lib/python3.13/site-packages just install

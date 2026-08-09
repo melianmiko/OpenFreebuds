@@ -1,49 +1,31 @@
-# v0.18.0
-FreeBuds Pro 5, FreeClip compactibility, initial macOS build ability (no release binaries 
-currently), low battery pop-up.
-
+# 0.18.0
 - [Platform] Initial macOS compatibility (thx @IAL32)
 - [Device compatibility] HUAWEI FreeBuds Pro 5 (thx @JehuAlv)
 - [Device compatibility] HUAWEI FreeClip / FreeClip 2 (thx @hereshui3)
 - [Feature] Low battery / device connection popup (thx @Ast1va)
 
-# v0.17.3
-Minor fixes, added German translation.
-
+# 0.17.3
 - [i18n] Add German translation (#87)
 - [Fix] Python 3.14 compatibility
 
-# v0.17.1
-Minor fixes, added Turkish translation
-
+# 0.17.1
 - [i18n] Add Turkish language (#71)
 - [Fix] Libraries list in about tab
 
-# v0.17.0
-Simplified Chinese translation, initial FreeClip support, minor bug fixes
-
+# 0.17.0
 - [i18n] Add Simplified Chinese translation (#65)
 - [Device compatibility] Mark FreeClip as an alias for Pro 3
 - [Fix] Copy unsupported equalizer preset dialog failure
 
-# v0.16.2
-HUAWEI FreeBuds SE 2 is now supported. Added automation actions (beta).
-Added portable version for Windows 10-11.
-
+# 0.16.2
 - [Fix] Windows portable version data location
 - This release will be available only as win32 portable version
 
-# v0.16.1
-HUAWEI FreeBuds SE 2 is now supported. Added automation actions (beta).
-Added portable version for Windows 10-11.
-
+# 0.16.1
 - [Device compatibility] HUAWEI FreeBuds Pro 4 (as alias for Pro 3)
 - [Fix] Couple of FreeBuds SE 2 related bugs
 
-# v0.16.0
-HUAWEI FreeBuds SE 2 is now supported. Added automation actions (beta).
-Added portable version for Windows 10-11.
-
+# 0.16.0
 -  [Device compatibility] HUAWEI FreeBuds SE 2
 -  [Feature] Self-repair if config file is broken 
 -  [Feature] Automation on device connect
@@ -51,19 +33,11 @@ Added portable version for Windows 10-11.
 -  [Feature] win32 portable build 
 -  [Dep] Add py3.13 to supported 
 
-# v0.15.1
-This release introduces compatibility with FeeeBuds 6i and Studio models.
-Also, since this version OpenFreebuds can be used in desktop environments
-without system tray.
-
+# 0.15.1
 - [Fix] Rework Flatpak autostart management mechanism
 - This version would be only released as Flatpak package
 
-# v0.15.0
-This release introduces compatibility with FeeeBuds 6i and Studio models.
-Also, since this version OpenFreebuds can be used in desktop environments
-without system tray.
-
+# 0.15.0
 - [Device compatibility] Add HUAWEI FreeBuds 6i compatibility
 - [Device compatibility] Add HUAWEI FreeBuds Studio compatibility
 - [Feature] ANC & battery available in main window;
@@ -71,14 +45,11 @@ without system tray.
 - [Feature] Ability to disable background mode & work without system tray, for Linux environments like GNOME;
 - [Fix] Flatpak multi-instance detection & "Run at boot" setting.
 
-# v0.14.1
+# 0.14.1
 - [Fix] Crash when using with old devices, like 4i / SE
 
-# v0.14.0
+# 0.14.0
 - [Core] Client-server architecture, close #14;
-	- Now multiple instances of OpenFreebuds could be launched, for multi-user usage for example;
-	- Built-in HTTP-server is now used as cross process communication protocol, so it can't be fully disabled, remote access is still disallowed out-of-box;
-	- If you need to launch multiple instances from single user, use -c  CLI flag;
 - [Core] Web-server authorization
 - [Core] Rewritten (mostly from scratch) to asyncio ;
 - [Core] Drop pybluez  from dependencies, now will use predefined port numbers instead of SDP detection;
@@ -90,10 +61,51 @@ without system tray.
 - [HUAWEI FreeBuds 5i & other] Add triple-tap settings;
 - [HUAWEI FreeBuds 5i & other] Fix SQ preference switch;
 - [Device compatibility] Add HUAWEI FreeLace Pro 2 compatibility;
-	- Custom equalizer preset configuration (should also work with Pro 3);
 - [Linux] Flatpak as installation option
 - [i18n] Add Spanish translation, thanks to @Pedro-vk (GitHub)
 - [i18n] Add  partial Portuguese (Brazilian), thanks to  @Lobo (Accent)
 
-# Older releases
-WIP
+# 0.13.3
+- Fix: Random crash when enumerating dual-connect devices
+- Fix: Crash when disabling Bluetooth under windows
+
+# 0.13.2
+- Fix: Crash due to unknown equalizer preset
+
+# 0.13.1
+- New: HUAWEI FreeBuds Pro 2 support (add profile, partial)
+- New: add equalizer presets & device switch to context menu (can be disabled in settings)
+- Fix: HUAWEI FreeBuds Pro: remove double-tap, add dual-connect
+- Fix: crash when iterating paired devices in 5i, Pro 2, Pro 3
+- Fix: disable "Settings" button on non-configurable modules
+- Fix: add correct WM_CLASS for better desktop integration (linux)
+- Fix: missing i18n
+
+# 0.13.0
+- New: HUAWEI FreeBuds 5i support (full)
+- New: HUAWEI FreeBuds SE support (full)
+- New: HUAWEI FreeBuds Pro support (partial)
+- New: HUAWEI FreeBuds Pro 3 support (partial)
+- New: Workaround for non-working "Pause when plug off headphone" under Linux (MPRIS-helper)
+- New: Advanced bug-report log generator, auto-view bugreport when app crashes
+- Fix: Remove WMI-console dependency (win32)
+- Fix: Updater crash (win32)
+- Minor: Move uncommon features to separate modules
+- Minor: Redesign some UI parts
+
+# 0.12.3
+- Fix update checker crash
+
+# 0.12.2
+- Fix: Crash in Windows 10-11
+- Packaging: declare min Python version
+- Update dependencies (Pillow, mmk_updater, sv_ttk)
+- Begin migration from Launchpad PPA
+
+# 0.12.1
+- New: HUAWEI FreeLace Pro support (full)
+- New: HUAWEI FreeBuds 5i support (partial)
+- New: HUAWEI FreeBuds Pro 2 support (partial)
+- Update RU translations
+- Disable adapter validation at start
+- Minor bugfixes

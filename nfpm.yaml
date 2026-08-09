@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://nfpm.goreleaser.com/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+name: "openfreebuds"
+vendor: "MelianMiko"
+maintainer: "MelianMiko <support@mmk.pw>"
+homepage: "https://github.com/melianmiko/OpenFreebuds"
+version: "0.18.0"
+license: "GPLv3"
+
+arch: "all"
+platform: "linux"
+section: "default"
+
+overrides:
+  deb:
+    depends:
+      - python3 (>= 3.13)
+      - python3-dbus-next
+      - python3-pyqt6
+      - python3-pil
+      - python3-qasync
+      - python3-aiohttp
+      - python3-psutil
+  rpm:
+    depends:
+      - python3
+      - python3-dbus-next
+      - python3-pyqt6
+      - python3-pillow
+      - python3-pillow-qt
+      - python3-qasync
+      - python3-aiohttp
+      - python3-psutil
+
+deb:
+  signature:
+    key_file: ${HOME}/.gnupg/sign.key
+
+rpm:
+  signature:
+    key_file: ${HOME}/.gnupg/sign.key
+
+description: |
+ Open-source client application for HUAWEI FreeBuds bluetooth headset series.
+
+ This application can view device info, change ANC settings, configure gestures
+ and more.
+
+changelog: "docs/changelog.yml"
+
+contents:
+  - src: ./build/usr/
+    dst: /usr

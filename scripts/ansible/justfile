@@ -1,4 +1,4 @@
 # Automatically create all release binaries with Docker/Ansible
-[linux]
+[group("release"),linux]
 autorelease:
     cd scripts/ansible && docker compose up --build
