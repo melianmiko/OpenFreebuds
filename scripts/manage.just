@@ -46,7 +46,7 @@ sync_qt_translations:
 # Lock dependencies in PDM for two platforms
 [group("manage")]
 pdm_lock:
-    rm pdm.lock
-    pdm lock
+    -rm pdm.lock
+    pdm lock --platform=linux
     pdm lock --platform=windows_amd64 --append
     pdm lock --platform=windows_arm64 --append

@@ -24,4 +24,3 @@ win32_bundle: build
 deps_winget:
     -{{ winget_install }} NSIS.NSIS
     -{{ winget_install }} UPX.UPX
-    -{{ winget_install }} Microsoft.VisualStudio.2022.BuildTools --override "--passive --wait --add Microsoft.VisualStudio.Workload.VCTools;includeRecommended"

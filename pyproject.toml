@@ -50,6 +50,13 @@ includes = [
 openfreebuds_qt = "openfreebuds_qt:main"
 openfreebuds_cmd = "openfreebuds_cmd:main"
 
+# Python repository with precompiled winsdk for amd64/arm64
+# You can disable it, but you'll need to install Visual Studio and SDK
+[[tool.pdm.source]]
+name = "precompiled"
+url = "https://code.mmk.pw/api/packages/precompiled/pypi/simple/"
+verify_ssl = false
+
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
