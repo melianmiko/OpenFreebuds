@@ -11,6 +11,9 @@ services:
     environment:
       PATH: "/usr/bin:/usr/sbin:/root/.local/bin"
       DBUS_SESSION_BUS_ADDRESS: unix:path=/run/user/0/bus
+    volumes:
+      # Signing keys
+      - ${HOME}/.gnupg:/root/.gnupg
     # required for flatpak build
     privileged: true
 
@@ -28,8 +31,11 @@ services:
       HOST_UID: "${UID}"
       HOST_GID: "${GID}"
     volumes:
+      # Source code
       - ../../:/app
+      # To start/stop containers (unused for now)
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      # SSH keys (for external hosts access)
       - ${HOME}/.ssh:/ssh_config:ro
     depends_on:
       - cicd_debian

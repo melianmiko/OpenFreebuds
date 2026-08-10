@@ -15,7 +15,7 @@ prepare_dummysign:
 # Create build rootfs
 [private,linux]
 prepare_nfpm: build
-    [ ! -f "$HOME/.gnupg/sign.key" ] && just prepare_dummysign
+    -[ ! -f "$HOME/.gnupg/sign.key" ] && just prepare_dummysign
     rm -rf "{{ build_dir }}/usr"
     DESTDIR="{{ build_dir }}/usr" just install
     find "{{ build_dir }}" -type d -name "__pycache__" -exec rm -r {} +
