@@ -7,14 +7,31 @@ misc:
 runners:
   hosts:
     # This nodes are deployed through Docker-Compose, you don't need to worry about them
-    cicd_debian:
+    cicd_linux:
       ansible_connection: docker
-      ansible_host: ansible-cicd_debian-1
       ansible_python_interpreter: /usr/bin/python3
+      x_build_role: debian fedora
+      x_prepare_role: prepare
 
-    # To perform Windows builds, deploy w11 machine, enable & start OpenSSH server
-    # on them, change SSH shell to PowerShell and them add it bellow. Use following
-    # as example
+    # Uses wine to product windows x64 binaries
+    cicd_wine:
+      ansible_connection: docker
+      ansible_python_interpreter: /usr/bin/python3
+      x_build_role: win32
+      x_prepare_role: enable_cc prepare
+
+    # Uses qemu-user + wine to produce arm64 binaries
+    cicd_wine_arm64:
+      ansible_connection: docker
+      ansible_python_interpreter: /usr/bin/python3
+      x_build_role: win32-arm64 win32
+      x_prepare_role: enable_cc prepare
+
+    # If you want to do Windows builds on real hardware or VM, deploy w11 machine, 
+    # enable & start OpenSSH server on them, change SSH shell to PowerShell and 
+    # add it bellow. Use following as example.
+    #
+    # Notes:
     # - Windows 11 on ARM also require full Visual Studio instalation
     # - Additional info: 
     #   https://docs.ansible.com/projects/ansible/latest/os_guide/windows_ssh.html

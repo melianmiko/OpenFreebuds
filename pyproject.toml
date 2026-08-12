@@ -33,6 +33,9 @@ no_flatpak = [
     "mmk-updater==0.15.6",
 ]
 
+[tool.pdm]
+build_dir = "build/pdm"
+
 [tool.pdm.resolution]
 excludes = ["evdev"]
 

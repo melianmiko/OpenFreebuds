@@ -1,26 +1,90 @@
+export WINEPATH := "C:\\openfreebuds_buildtools;C:\\openfreebuds_buildtools\\Scripts"
+export WINEDEBUG := '-all'
+export WINEARCH := env("WINEARCH", "win64")
+
+nsis_builddir := join(build_dir, "makensis")
+pyinstaller_builddir := join(build_dir, "pyinstaller")
+pyinstaller_distdir := join(build_dir, "pyinstaller_dist")
+pyinstaller := "pdm run pyinstaller -y" + \
+    " --workpath " + pyinstaller_builddir + \
+    " --distpath " + pyinstaller_distdir
+
+# -------------------------------------------------------------------------------------------------
+# Cross-compile on Linux host using wine / wine-arm64
+
+wineprefix := env("WINEPREFIX", sources_dir + "/build/wineprefix")
+wine := "WINEPREFIX=\"" + wineprefix + "\" " + env("WINEBINARY", "/usr/bin/wine")
+winetools := wineprefix + '/drive_c/openfreebuds_buildtools'
+w32_python_ver := "3.14.7"
+
+[private,linux,script("bash")]
+get_winearch:
+    WINARCH="amd64"
+    ({{wine}} systeminfo | grep "ARM64-based PC" > /dev/null) && WINARCH="arm64"
+    echo "$WINARCH"
+
+[private,linux,script("bash")]
+get_winearch2:
+    WINARCH="x86_64"
+    ({{wine}} systeminfo | grep "ARM64-based PC" > /dev/null) && WINARCH="aarch64"
+    echo "$WINARCH"
+
+[private,linux]
+winecmd:
+    {{ wine }} cmd.exe
+
+# Make windows installer
+[group("os_windows"),linux]
+win32_installer: build
+    # Do 'just enable_cc prepare' first!
+    [ ! -f build/enable_cc ] && exit 1 || true
+    mkdir -p ./dist {{ nsis_builddir }}
+    cd ./scripts/windows && {{ wine }} {{pyinstaller}} -y openfreebuds.spec
+    cd ./scripts/windows && makensis openfreebuds.nsi
+    mv {{ nsis_builddir }}/openfreebuds.install.exe ./dist/openfreebuds_{{version}}_`just get_winearch2`_windows.exe
+
+# Make windows installer
+[group("os_windows"),linux]
+win32_portable: build
+    # Do 'just enable_cc prepare' first!
+    [ ! -f build/enable_cc ] && exit 1 || true
+    mkdir -p ./dist
+    cd ./scripts/windows && {{ wine }} {{pyinstaller}} -y openfreebuds_portable.spec
+    mv {{ pyinstaller_distdir }}/openfreebuds_portable.exe ./dist/openfreebuds_{{version}}_`just get_winearch2`_windows_portable.exe
+
+# Wrapper for wine-arm64 environment
+[group("os_windows"),linux,private]
+win32-arm64 action:
+    WINEARCH=wow64 \
+        WINEPREFIX="{{ sources_dir }}/build/wineprefix-arm64" \
+        WINEBINARY=/usr/bin/wine-arm64 \
+        just "{{ action }}"
+
+# -------------------------------------------------------------------------------------------------
+# Windows native
+
 winget_install := "winget install -e --no-upgrade --id"
 
 # Make windows installer
-[group("windows"),windows]
-win32_installer: win32_bundle
+[group("os_windows"),windows]
+win32_installer: build
     New-Item -ItemType Directory -Force -Path ./dist
-    cd ./scripts/windows; & "C:\Program Files (x86)\NSIS\Bin\makensis.exe" openfreebuds.nsi
-    mv -Force ./scripts/windows/dist/openfreebuds.install.exe ./dist/openfreebuds_{{version}}_{{arch()}}_windows.exe
+    cd ./scripts/windows; & {{pyinstaller}} openfreebuds.spec
+    cd ./scripts/windows; & 'C:\Program Files (x86)\NSIS\Bin\makensis.exe' openfreebuds.nsi
+    mv -Force \
+        {{ nsis_builddir }}/openfreebuds.install.exe \
+        ./dist/openfreebuds_{{version}}_{{arch()}}_windows.exe
 
 # Make windows portable executable
-[group("windows"),windows]
+[group("os_windows"),windows]
 win32_portable:
     New-Item -ItemType Directory -Force -Path ./dist
-    cd ./scripts/windows; & pdm run pyinstaller -y openfreebuds_portable.spec
-    mv -Force ./scripts/windows/dist/openfreebuds_portable.exe ./dist/openfreebuds_{{version}}_{{arch()}}_windows_portable.exe
+    New-Item -ItemType Directory -Force -Path {{ nsis_builddir }}
+    cd ./scripts/windows; & {{pyinstaller}} openfreebuds_portable.spec
+    mv -Force \
+        {{ pyinstaller_distdir }}/openfreebuds_portable.exe \
+        ./dist/openfreebuds_{{version}}_{{arch()}}_windows_portable.exe
 
-# Prepare ./dist/ for win32 installer build
-[group("windows"),windows,private]
-win32_bundle: build
-    cd ./scripts/windows; & pdm run pyinstaller -y openfreebuds.spec
-
-# Install base project dependencies through WinGet
-[group("windows"),windows]
-deps_winget:
-    -{{ winget_install }} NSIS.NSIS
-    -{{ winget_install }} UPX.UPX
+# Make windows installer and portable
+[group("os_windows")]
+win32: win32_installer win32_portable

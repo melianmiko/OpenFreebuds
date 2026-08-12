@@ -4,16 +4,11 @@ import yaml
 from datetime import date
 from pathlib import Path
 
-DEB_CODENAMES = "trixie forky noble resolute"
-DEVELOPER_SIGN = "MelianMiko <support@mmk.pw>"
-DEBUG = False
-
 BASE_CHANGELOG_URL = "https://github.com/melianmiko/OpenFreebuds/blob/main/docs/CHANGELOG.md"
-
-PROJECT_ROOT = Path(__file__).parents[1]
+PROJECT_ROOT = Path(__file__).parents[2]
 
 if len(sys.argv) < 2:
-    print("Usage: ./bump_version.py [<version>|git|flatpak_deps]")
+    print("Usage: ./bump_version.py [<version>|git]")
     raise SystemExit(1)
 
 NEW_VERSION = sys.argv[1]
@@ -28,12 +23,6 @@ NEW_VERSION_SHORT = ".".join(NEW_VERSION.replace("git", '99').split(".")[0:3])
 
 
 def write_file(path: Path | str, new_data: list[str], win32_le: bool = False):
-    if DEBUG:
-        print(f"-- Override {path} with following content")
-        print("\n".join(new_data))
-        print("")
-        return
-
     with open(path, "w") as f:
         line_ending = "\r\n" if win32_le else "\n"
         f.write(line_ending.join(new_data) + line_ending)
@@ -124,42 +113,6 @@ def bump_metainfo(line: str):
     return "\n".join(new_data)
 
 
-def create_flatpak_staff():
-    if sys.platform == "win32":
-        print("-- Skip Flatpak staff: win32 not supported")
-        return
-
-    # Set up tools
-    (PROJECT_ROOT / ".flatpak").mkdir(exist_ok=True, parents=True)
-
-    export_data = (subprocess.check_output(
-                        ["pdm", "export", 
-                            "--without-hashes", 
-                            "--without", "no_flatpak", 
-                            "--without", "dev"]
-                    )
-                   .decode("utf8")
-                   .splitlines())
-    new_export_data = []
-    for line in export_data:
-        if 'sys_platform == "win32"' in line or 'sys_platform == "darwin"' in line:
-            continue
-        new_export_data.append(line)
-
-    with open(PROJECT_ROOT / ".flatpak/requirements.txt", "w") as f:
-        f.write("\n".join(new_export_data))
-
-    print('-- Create python3-requirements.txt for flatpak, will trigger req2flatpak')
-    subprocess.run(
-        ['.flatpak/venv/bin/req2flatpak',
-         '--requirements-file', './.flatpak/requirements.txt',
-         '--outfile', './scripts/flatpak/python3-requirements.json',
-         '--target-platforms', '313-x86_64', '313-aarch64',
-         ],
-        cwd=PROJECT_ROOT,
-    )
-
-
 def main():
     if NEW_VERSION[0] == "v":
         print("Version shouldn't start with v")
@@ -170,26 +123,13 @@ def main():
 
     # Launch everything
     bump_pyproject(str(PROJECT_ROOT / "pyproject.toml"))
-    bump_nfpm(str(PROJECT_ROOT / "nfpm.yaml"))
+    bump_nfpm(str(PROJECT_ROOT / "scripts/linux/nfpm.yaml"))
     bump_nsis(str(PROJECT_ROOT / "scripts/windows/openfreebuds.nsi"))
     bump_metainfo(str(PROJECT_ROOT / "openfreebuds_qt/assets/pw.mmk.OpenFreebuds.metainfo.xml"))
     create_version_info(PROJECT_ROOT / "openfreebuds_qt/version_info.py")
-    # create_flatpak_staff()
-
-    # Create release.json
-    # with open(PROJECT_ROOT / "release.json", "w") as f:
-    #     f.write(json.dumps({
-    #         "version": NEW_VERSION,
-    #         "changelog": CHANGELOG,
-    #     }, indent=2))
-    # print(f'-- Created {PROJECT_ROOT / "release.json"}')
 
     print('-- Done')
 
 
 if __name__ == "__main__":
-    if NEW_VERSION == "flatpak_deps":
-        # TODO: Move inside Justfile
-        create_flatpak_staff()
-    else:
-        main()
+    main()
