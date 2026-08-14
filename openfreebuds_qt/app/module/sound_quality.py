@@ -131,11 +131,14 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
             sound_toggle_visible = sound_toggle_visible or visible
         self.sound_options_root.setVisible(sound_toggle_visible)
 
+    # Controls stay enabled while a write is in flight. Disabling a focused
+    # widget makes Qt move focus to the next one in the chain, and the scroll
+    # area then jumps to wherever that widget happens to sit.
+
     def _make_sound_toggle_handler(self, prop: str, toggle: QCheckBox):
         @asyncSlot(bool)
         async def _handler(value: bool):
             async with qt_error_handler("OfbQtSoundQualityModule_SetSoundToggle", self.ctx):
-                toggle.setEnabled(False)
                 await self.ofb.set_property("sound", prop, json.dumps(value))
 
         return _handler
@@ -146,7 +149,6 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
             if index < 0:
                 return
             async with qt_error_handler("OfbQtSoundQualityModule_SetSoundOption", self.ctx):
-                box.setEnabled(False)
                 await self.ofb.set_property("sound", prop, self.sound_option_values[prop][index])
 
         return _handler

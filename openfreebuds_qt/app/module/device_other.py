@@ -22,6 +22,7 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
         super().__init__(*args, **kwargs)
 
         self.lang_options: list[str] = []
+        self.pending_writes: set[tuple[str, str]] = set()
         self.adaptive_audio_toggles: dict[str, QCheckBox] = {}
         self.feature_toggles: dict[str, QCheckBox] = {}
         self.feature_toggle_rows: dict[str, QGroupBox] = {}
@@ -195,13 +196,25 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
         A full update_ui() pass here would rebuild every group box and repopulate
         the language combo box, which discards the user's selection and makes the
         settings list scroll away from the control they just used.
+
+        The control is deliberately left enabled while the write is in flight.
+        Disabling a focused widget makes Qt hand focus to the next one in the
+        chain, and the scroll area then jumps to wherever that widget sits.
         """
+        key = (group, prop)
+        if key in self.pending_writes:
+            if widget is not None:
+                await self._resync_control(group, prop, widget)
+            return
+
+        self.pending_writes.add(key)
         try:
             await self.try_set_property(group, prop, value, action_name)
         except Exception:
             async with qt_error_handler(action_name, self.ctx):
                 raise
         finally:
+            self.pending_writes.discard(key)
             if widget is not None:
                 await self._resync_control(group, prop, widget)
 
@@ -221,7 +234,6 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
     def _make_feature_toggle_handler(self, prop: str, toggle: QCheckBox):
         @asyncSlot(bool)
         async def _handler(value: bool):
-            toggle.setEnabled(False)
             await self._apply_property_change(
                 "OfbQtDeviceOtherSettingsModule_SetFeatureSwitch",
                 "features",
@@ -237,7 +249,6 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
         async def _handler(index: int):
             if index < 0:
                 return
-            box.setEnabled(False)
             await self._apply_property_change(
                 "OfbQtDeviceOtherSettingsModule_SetConfigOption",
                 "config",
@@ -294,7 +305,6 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
 
     @asyncSlot(bool)
     async def on_low_latency_toggle(self, value: bool):
-        self.low_latency_toggle.setEnabled(False)
         await self._apply_property_change(
             "OfbQtDeviceOtherSettingsModule_SetLowLatency",
             "config",

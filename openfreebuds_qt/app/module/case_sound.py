@@ -66,42 +66,38 @@ class OfbQtCaseSoundModule(OfbQtCommonModule):
         self.volume_slider.sliderReleased.connect(self._on_volume_change)
         self.prepare_button.clicked.connect(self._on_prepare)
 
+    # Controls stay enabled while a write is in flight. Disabling a focused
+    # widget makes Qt move focus to the next one in the chain, and the scroll
+    # area then jumps to wherever that widget happens to sit.
+
     @asyncSlot(bool)
     async def _on_enabled_change(self, value: bool):
-        self.enabled_toggle.setEnabled(False)
         await self.try_set_property(
             "case_sound", "enabled", json.dumps(value), "OfbQtCaseSoundModule_SetEnabled"
         )
-        self.enabled_toggle.setEnabled(True)
 
     @asyncSlot(int)
     async def _on_tone_change(self, index: int):
         if index < 0 or index >= len(self.tone_values):
             return
-        self.tone_box.setEnabled(False)
         await self.try_set_property(
             "case_sound", "tone_id", self.tone_values[index], "OfbQtCaseSoundModule_SetTone"
         )
-        self.tone_box.setEnabled(True)
 
     def _on_volume_preview(self, value: int):
         self.volume_label.setText(str(value))
 
     @asyncSlot()
     async def _on_volume_change(self, *_args):
-        self.volume_slider.setEnabled(False)
         await self.try_set_property(
             "case_sound", "volume", str(self.volume_slider.value()), "OfbQtCaseSoundModule_SetVolume"
         )
-        self.volume_slider.setEnabled(True)
 
     @asyncSlot()
     async def _on_prepare(self, *_args):
-        self.prepare_button.setEnabled(False)
         await self.try_set_property(
             "case_sound", "prepare", "true", "OfbQtCaseSoundModule_Prepare"
         )
-        self.prepare_button.setEnabled(True)
 
     async def update_ui(self, event: OfbCoreEvent):
         if not event.is_changed("case_sound") and not event.kind_match(OfbEventKind.DEVICE_CHANGED):
