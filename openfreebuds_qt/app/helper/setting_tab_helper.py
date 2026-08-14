@@ -28,7 +28,10 @@ class OfbQtSettingsTabHelper:
 
             self.root, self.root_layout = widget_with_layout(parent, QBoxLayout.Direction.Down)
             self.list_item: OfbQListHeader = OfbQListHeader(self.root, self.root.tr(label)) if label else None
-            self.root_layout.addWidget(self.list_item)
+
+            # Unlabelled sections have no header widget to add.
+            if self.list_item is not None:
+                self.root_layout.addWidget(self.list_item)
 
         def set_visible(self, visible: bool):
             self.root.setVisible(visible)
