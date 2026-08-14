@@ -188,13 +188,35 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
             or config_options_visible
         )
 
-    async def _apply_property_change(self, action_name: str, group: str, prop: str, value: str):
+    async def _apply_property_change(self, action_name: str, group: str, prop: str, value: str, widget=None):
+        """
+        Write a property, then re-sync only the control that triggered the write.
+
+        A full update_ui() pass here would rebuild every group box and repopulate
+        the language combo box, which discards the user's selection and makes the
+        settings list scroll away from the control they just used.
+        """
         try:
             await self.try_set_property(group, prop, value, action_name)
-            await self.update_ui(OfbCoreEvent(None))
         except Exception:
             async with qt_error_handler(action_name, self.ctx):
                 raise
+        finally:
+            if widget is not None:
+                await self._resync_control(group, prop, widget)
+
+    async def _resync_control(self, group: str, prop: str, widget):
+        # The device may refuse a write without reporting an error, so the
+        # control has to follow the stored state rather than the click.
+        value = await self.ofb.get_property(group, prop)
+
+        with blocked_signals(widget):
+            if isinstance(widget, QComboBox):
+                values = self.lang_options if group == "service" else self.config_option_values.get(prop, [])
+                widget.setCurrentIndex(values.index(value) if value in values else -1)
+            else:
+                widget.setChecked(value == "true")
+            widget.setEnabled(True)
 
     def _make_feature_toggle_handler(self, prop: str, toggle: QCheckBox):
         @asyncSlot(bool)
@@ -205,6 +227,7 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                 "features",
                 prop,
                 json.dumps(value),
+                toggle,
             )
 
         return _handler
@@ -220,6 +243,7 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                 "config",
                 prop,
                 self.config_option_values[prop][index],
+                box,
             )
 
         return _handler
@@ -264,7 +288,9 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                         self.service_language_box.addItems(
                             [self.language_option_names.get(o, o) for o in self.lang_options]
                         )
-                        self.service_language_box.setCurrentIndex(-1)
+
+            if event.is_changed("service", "language"):
+                await self._resync_control("service", "language", self.service_language_box)
 
     @asyncSlot(bool)
     async def on_low_latency_toggle(self, value: bool):
@@ -274,6 +300,7 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
             "config",
             "low_latency",
             json.dumps(value),
+            self.low_latency_toggle,
         )
 
     @asyncSlot(bool)
@@ -283,13 +310,18 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
             "config",
             "auto_pause",
             json.dumps(value),
+            self.auto_pause_toggle,
         )
 
     @asyncSlot(int)
     async def on_language_select(self, index: int):
+        if index < 0:
+            return
+
         await self._apply_property_change(
             "OfbQtDeviceOtherSettingsModule_SetLanguage",
             "service",
             "language",
             self.lang_options[index],
+            self.service_language_box,
         )

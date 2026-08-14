@@ -85,12 +85,14 @@ def get_device_adaptive_audio_names():
 def get_device_config_option_names():
     return {
         "earplug_type": (
-            QApplication.translate("OfbQtDeviceOtherSettingsModule", "Ear tip type"),
+            QApplication.translate("OfbQtDeviceOtherSettingsModule", "Ear tip size"),
             {
-                "type_0": QApplication.translate("OfbQtDeviceOtherSettingsModule", "Type 0"),
-                "type_1": QApplication.translate("OfbQtDeviceOtherSettingsModule", "Type 1"),
-                "type_2": QApplication.translate("OfbQtDeviceOtherSettingsModule", "Type 2"),
-                "type_3": QApplication.translate("OfbQtDeviceOtherSettingsModule", "Type 3"),
+                # HUAWEI ships four silicone tips and lists them large first,
+                # which matches the order the firmware reports them in.
+                "type_0": QApplication.translate("OfbQtDeviceOtherSettingsModule", "Large (L)"),
+                "type_1": QApplication.translate("OfbQtDeviceOtherSettingsModule", "Medium (M)"),
+                "type_2": QApplication.translate("OfbQtDeviceOtherSettingsModule", "Small (S)"),
+                "type_3": QApplication.translate("OfbQtDeviceOtherSettingsModule", "Extra small (XS)"),
             },
         ),
     }

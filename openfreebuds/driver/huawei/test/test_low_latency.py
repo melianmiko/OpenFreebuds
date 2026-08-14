@@ -36,15 +36,20 @@ async def test_low_latency():
 
 
 @pytest.mark.asyncio
-async def test_low_latency_can_write_state_param_2():
+async def test_low_latency_writes_param_1_and_reads_state_back():
+    """
+    Devices report the toggle on parameter 2 but only accept writes on parameter 1.
+    A write to parameter 2 is answered with a success code and then ignored, so the
+    handler must send parameter 1 and trust the follow-up read over the request.
+    """
     read_rq = bytes.fromhex("5a0005002b6c0200b820")
     read_resp = bytes.fromhex("5a0006002b6c020100ed60")
-    write_rq = HuaweiSppPackage.change_rq(b"\x2b\x6c", [(2, 1)]).to_bytes()
-    write_resp = HuaweiSppPackage(b"\x2b\x6c", [(2, 1)]).to_bytes()
+    write_rq = bytes.fromhex("5a0006002b6c010101a411")
+    write_resp = bytes.fromhex("5a0009002b6c7f04000186a0a497")
 
     driver = FbDriverHuaweiGenericFixture(
         handlers=[
-            OfbHuaweiLowLatencyPreferenceHandler(write_param=2)
+            OfbHuaweiLowLatencyPreferenceHandler()
         ],
         package_response_model={
             read_rq: [read_resp],
@@ -53,9 +58,10 @@ async def test_low_latency_can_write_state_param_2():
     )
 
     await driver.start()
-
-    driver.package_response_model[read_rq] = [write_resp]
     await driver.set_property("config", "low_latency", "true")
 
-    assert await driver.get_property("config", "low_latency") == "true"
-    assert driver.package_log[0] == ("send", write_rq)
+    assert HuaweiSppPackage.change_rq(b"\x2b\x6c", [(1, b"\x01")]).to_bytes() == write_rq
+    assert ("send", write_rq) in driver.package_log
+
+    # Device kept reporting "off", so the property must not follow the request.
+    assert await driver.get_property("config", "low_latency") == "false"

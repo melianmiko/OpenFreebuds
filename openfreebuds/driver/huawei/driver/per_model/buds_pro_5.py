@@ -143,5 +143,5 @@ class OfbDriverHuaweiPro5(OfbDriverHuaweiGeneric):
             OfbHuaweiActionSwipeGestureHandler(),
             OfbHuaweiFindDeviceHandler(),
             OfbHuaweiPromptToneHandler(),
-            OfbHuaweiLowLatencyPreferenceHandler(write_param=2),
+            OfbHuaweiLowLatencyPreferenceHandler(),
         ]
