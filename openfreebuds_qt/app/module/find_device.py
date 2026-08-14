@@ -6,7 +6,7 @@ from qasync import asyncSlot
 from openfreebuds import OfbEventKind
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.utils.core_event import OfbCoreEvent
-from openfreebuds_qt.utils.qt_utils import qt_error_handler
+from openfreebuds_qt.utils.qt_utils import qt_error_handler, set_enabled_no_scroll
 
 
 class OfbQtFindDeviceModule(OfbQtCommonModule):
@@ -63,8 +63,8 @@ class OfbQtFindDeviceModule(OfbQtCommonModule):
         @asyncSlot()
         async def _handler(*_args):
             try:
-                self.start_buttons[side].setEnabled(False)
-                self.stop_buttons[side].setEnabled(False)
+                set_enabled_no_scroll(self.start_buttons[side], False)
+                set_enabled_no_scroll(self.stop_buttons[side], False)
                 await self.try_set_property(
                     "find_device",
                     side,
@@ -98,5 +98,5 @@ class OfbQtFindDeviceModule(OfbQtCommonModule):
             self.status_labels[side].setVisible(True)
             self.start_buttons[side].parentWidget().setVisible(True)
             self.status_labels[side].setText(self.tr("Playing") if playing else self.tr("Idle"))
-            self.start_buttons[side].setEnabled(not playing)
-            self.stop_buttons[side].setEnabled(playing)
+            set_enabled_no_scroll(self.start_buttons[side], not playing)
+            set_enabled_no_scroll(self.stop_buttons[side], playing)

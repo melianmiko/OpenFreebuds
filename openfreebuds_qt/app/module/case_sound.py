@@ -18,7 +18,7 @@ from openfreebuds.driver.huawei.handler.prompt_tone import PROMPT_TONES
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.qt_i18n import get_prompt_tone_names
 from openfreebuds_qt.utils.core_event import OfbCoreEvent
-from openfreebuds_qt.utils.qt_utils import blocked_signals
+from openfreebuds_qt.utils.qt_utils import blocked_signals, set_enabled_no_scroll
 
 
 class OfbQtCaseSoundModule(OfbQtCommonModule):
@@ -116,20 +116,20 @@ class OfbQtCaseSoundModule(OfbQtCommonModule):
 
         with blocked_signals(self.enabled_toggle):
             self.enabled_toggle.setChecked(state.get("enabled") == "true")
-        self.enabled_toggle.setEnabled(not busy)
+        set_enabled_no_scroll(self.enabled_toggle, not busy)
 
         with blocked_signals(self.volume_slider):
             volume = int(state.get("volume", "0"))
             self.volume_slider.setValue(volume)
             self.volume_label.setText(str(volume))
-        self.volume_slider.setEnabled(not busy and state.get("enabled") == "true")
+        set_enabled_no_scroll(self.volume_slider, not busy and state.get("enabled") == "true")
 
         tone_id = state.get("tone_id", "0")
         with blocked_signals(self.tone_box):
             index = self.tone_values.index(tone_id) if tone_id in self.tone_values else 0
             self.tone_box.setCurrentIndex(index)
-        self.tone_box.setEnabled(not busy and state.get("enabled") == "true")
-        self.prepare_button.setEnabled(not busy)
+        set_enabled_no_scroll(self.tone_box, not busy and state.get("enabled") == "true")
+        set_enabled_no_scroll(self.prepare_button, not busy)
 
     def _update_status(self, state: dict):
         status = state.get("transfer_status", "idle")
