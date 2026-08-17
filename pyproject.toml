@@ -5,6 +5,7 @@ description = "FOSS Windows/Linux client for HUAWEI FreeBuds headset series"
 authors = [
     {name = "MelianMiko", email = "support@mmk.pw"},
     {name = "Sherzod Norkulov"},
+    {name = "JehuAlv"}
 ]
 requires-python = "<3.15,>=3.11"
 dependencies = [
