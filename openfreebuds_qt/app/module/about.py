@@ -24,12 +24,6 @@ class OfbQtAboutModule(Ui_OfbQtAboutModule, OfbQtCommonModule):
                 continue
             devices.addChild(QTreeWidgetItem(devices, [name]))
 
-        # Contributors
-        contributors = QTreeWidgetItem(None, [self.tr("Contributors")])
-        contributors.addChild(QTreeWidgetItem(
-            contributors,
-            [self.tr("Sherzod Norkulov — HUAWEI FreeBuds Pro 5 support")]
-        ))
 
         # Using libraries list
         dependencies = QTreeWidgetItem(None, [self.tr("Libraries")])
@@ -39,11 +33,9 @@ class OfbQtAboutModule(Ui_OfbQtAboutModule, OfbQtCommonModule):
 
         self.tree.addTopLevelItems([
             devices,
-            contributors,
             dependencies
         ])
         self.tree.expandItem(devices)
-        self.tree.expandItem(contributors)
 
     @pyqtSlot()
     def open_website(self):
