@@ -110,7 +110,12 @@ def _service_class_uuids(svc):
     scl = attrs.get(_ATTR_SERVICE_CLASS_ID_LIST)
     if scl is None:
         return out
-    for entry in _seq(scl):
+    seq = _seq(scl)
+    if not seq:
+        u = _uuid16(scl)
+        if u is not None:
+            return [u]
+    for entry in seq:
         u = _uuid16(entry)
         if u is not None:
             out.append(u)
