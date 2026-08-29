@@ -1,4 +1,21 @@
-# Build everything
+lrelease := which(if os_family() == "windows" && pdm { \
+    `pdm run python -c "
+import os
+try:
+    import PySide6
+    print(os.path.dirname(PySide6.__file__))
+except ModuleNotFoundError:
+    print('.')
+"` / 'lrelease.exe'
+} else if path_exists("/usr/lib64/qt6/bin/lrelease") == "true" {
+    "/usr/lib64/qt6/bin/lrelease"
+} else if path_exists("/usr/lib/qt6/bin/lrelease") == "true" {
+    "/usr/lib/qt6/bin/lrelease"
+} else {
+    "lrelease"
+})
+
+# Build Qt staff and Python wheel
 build: qt_i18n
     pdm run pyuic6 ./openfreebuds_qt/designer/
     pdm build --no-clean
@@ -22,38 +39,22 @@ build_check:
     assert "{{pdm}}" != "", "PDM not found"
     assert "{{lrelease}}" != "", "Qt lrelease not found"
 
-# Prepare project environment (linux)
-[group("release"),linux,script("/usr/bin/bash")]
-prepare:
-    set -euxo pipefail
-    [ -f /usr/bin/apt ] && just deps_debian
-    [ -f /usr/bin/dnf ] && just deps_fedora
-    [ -f /usr/bin/flatpak ] && just deps_flatpak
-    pdm install
-
-# Prepare project environment (windows)
-[group("release"),windows]
-prepare: deps_winget
-    pdm install
-
 # Cleanup project directory
-[group("release"),linux]
+[group("release"),script]
 clean:
-    rm -rf dist scripts/dist scripts/build .pdm-build
-
-# Cleanup project directory
-[group("release"),windows]
-clean:
-    -rmdir build /s /q
-    -rmdir dist /s /q
-    -rmdir .pdm-build /s /q
-
-# Build all release binaries (linux)
-[group("release"),linux]
-release: clean
-    just debian fedora
-    just flatpak
+    import shutil
+    for name in ["build", "dist", ".pdm-build"]:
+        shutil.rmtree(f"{{ sources_dir }}/{name}")
 
 # Build release binaries (windows)
 [group("release"),windows]
-release: clean win32_installer win32_portable
+release: win32_installer win32_portable
+
+# Build all possible release binaries (linux)
+[group("release"),linux,script("bash")]
+release:
+    set -euxo pipefail
+    just debian fedora
+    [ -f /usr/bin/flatpak ] && just flatpak
+    [ -f /usr/bin/wine ] && [ -f build/enable_cc ] && just win32
+    [ -f /usr/bin/wine-arm64 ] && [ -f build/enable_cc ] && just win32-arm64 win32

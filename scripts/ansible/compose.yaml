@@ -1,41 +1,54 @@
 services:
-  cicd_debian:
+  cicd_linux:
+    container_name: cicd_linux
     build:
       context: .
-      dockerfile_inline: |
-        FROM debian:13
-        RUN apt update && apt install -y python3 dbus-daemon
-        COPY ./entrypoint.sh /
-        WORKDIR /root
-        CMD ["/entrypoint.sh"]
+      dockerfile: ./Dockerfile.linux
     environment:
       PATH: "/usr/bin:/usr/sbin:/root/.local/bin"
       DBUS_SESSION_BUS_ADDRESS: unix:path=/run/user/0/bus
     volumes:
       # Signing keys
-      - ${HOME}/.gnupg:/root/.gnupg
+      - ${HOME}/.gnupg:/root/.gnupg:z
     # required for flatpak build
     privileged: true
 
-  controller:
+  cicd_wine:
+    container_name: cicd_wine
     build:
       context: .
-      dockerfile_inline: |
-        FROM debian:13
-        RUN apt update && apt install -y ansible docker-cli git rsync
-        COPY ./entrypoint.sh /
-        WORKDIR /app
-        CMD ["/entrypoint.sh"]
-    hostname: controller
+      dockerfile: ./Dockerfile.wine
     environment:
-      HOST_UID: "${UID}"
-      HOST_GID: "${GID}"
+      PATH: "/usr/bin:/usr/sbin:/root/.local/bin"
+
+  cicd_wine_arm64:
+    container_name: cicd_wine_arm64
+    build:
+      context: .
+      dockerfile: ./Dockerfile.wine_arm64
+    environment:
+      PATH: "/usr/bin:/usr/sbin:/root/.local/bin"
+
+  controller:
+    container_name: cicd_controller
+    build:
+      context: .
+      dockerfile: ./Dockerfile.linux
+    hostname: controller
+    security_opt: 
+      - label=disable
+    environment:
+      HOST_UID: "${HOST_UID}"
     volumes:
       # Source code
-      - ../../:/app
-      # To start/stop containers (unused for now)
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ../../:/app:z
+      # To interact with containers
+      - ${DOCKER_SOCKET:-/var/run/docker.sock}:/var/run/docker.sock
+      # To manage VMs
+      - /run/libvirt:/run/libvirt:ro
       # SSH keys (for external hosts access)
-      - ${HOME}/.ssh:/ssh_config:ro
+      - ${HOME}/.ssh:/ssh_config:roZ
     depends_on:
-      - cicd_debian
+      - cicd_linux
+      - cicd_wine
+      - cicd_wine_arm64

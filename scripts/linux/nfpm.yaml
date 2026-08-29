@@ -35,11 +35,11 @@ overrides:
 
 deb:
   signature:
-    key_file: ${HOME}/.gnupg/sign.key
+    key_file: ${NFPM_KEY}
 
 rpm:
   signature:
-    key_file: ${HOME}/.gnupg/sign.key
+    key_file: ${NFPM_KEY}
 
 description: |
  Open-source client application for HUAWEI FreeBuds bluetooth headset series.
@@ -47,8 +47,8 @@ description: |
  This application can view device info, change ANC settings, configure gestures
  and more.
 
-changelog: "docs/changelog.yml"
+changelog: "../../docs/changelog.yml"
 
 contents:
-  - src: ./build/usr/
+  - src: ../../build/usr/
     dst: /usr

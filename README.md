@@ -73,7 +73,7 @@ All installation options:
 | ![](./docs/img/i_win32.png) Windows¹       | [Scoop](https://scoop.sh/)                                                                 | <pre>scoop bucket add extras<br/>scoop install openfreebuds</pre>                            |
 | ![](./docs/img/i_linux.png) Any linux      | [Flathub](https://flathub.org/apps/pw.mmk.OpenFreebuds)                       | <pre>flatpak install pw.mmk.OpenFreebuds</pre>                                               |
 | ![](./docs/img/i_debian.png) Debian/Ubuntu | APT                                                                                        | <pre>curl -s https://st.mmk.pw/debiansetup \| sudo bash -<br/>sudo apt install openfreebuds</pre> |
-| ![](./docs/img/i_fedora.png) Fedora | DNF | <pre> sudo dnf config-manager addrepo --from-repofile https://download.docker.com/linux/fedora/docker-ce.repo<br/>sudo dnf install</pre> |
+| ![](./docs/img/i_fedora.png) Fedora | DNF | <pre>sudo dnf config-manager addrepo \\<br/>    --from-repofile https://st.mmk.pw/melianmiko.repo<br/>sudo dnf install openfreebuds</pre> |
 | ![](./docs/img/i_arch.png) ArchLinux       | [Yay](https://github.com/Jguer/yay) for AUR                                                | <pre>yay -S openfreebuds</pre>                                                               |
 | ![](./docs/img/i_nix.png) NixOS¹ 25.11+    | NixPkgs                                                                                    | [openfreebuds](https://search.nixos.org/packages?channel=unstable&query=openfreebuds)        |
 

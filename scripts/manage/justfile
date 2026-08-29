@@ -18,12 +18,12 @@ sync_changelogs:
 # Bump application version
 [group("manage"),positional-arguments]
 bump_version code: sync_changelogs
-    {{pdm}} run python ./scripts/bump_version.py {{code}}
+    {{pdm}} run python ./scripts/manage/bump_version.py {{code}}
 
 # Bump application version to git commit identifier
 [group("manage")]
 bump_version_git:
-    {{pdm}} run python ./scripts/bump_version.py git
+    {{pdm}} run python ./scripts/manage/bump_version.py git
 
 # Sync Qt Linguist translation files
 [group("manage"), script]

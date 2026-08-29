@@ -1,4 +1,15 @@
+export HOST_UID := env("UID", "1000")
+
+docker := if which("podman") != [] {
+    which("podman")
+} else if which("docker") != [] {
+    which("docker")
+} else if which("distrobox-host-exec") != [] {
+    which("distrobox-host-exec") + " podman"
+}
+
 # Automatically create all release binaries with Docker/Ansible
 [group("release"),linux]
 autorelease:
-    cd scripts/ansible && docker compose up --build
+    [[ "{{ docker }}" == "" ]] && exit 1 || true # Docker/Podman not found
+    cd scripts/ansible && {{ docker }} compose up --build

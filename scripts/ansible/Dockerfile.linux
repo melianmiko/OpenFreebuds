@@ -1,0 +1,23 @@
+FROM debian:13
+
+WORKDIR /root
+CMD ["/entrypoint.sh"]
+
+RUN dpkg --add-architecture i386 \
+ && apt update \
+ && apt install -y \
+    ansible \
+    docker-cli \
+    git \
+    python3-libvirt \
+    python3-lxml \
+    python3 \
+    dbus-daemon \
+    flatpak \
+    python-is-python3 \
+    pipx \
+    sudo \
+    curl \
+    rsync
+
+COPY ./entrypoint.sh /

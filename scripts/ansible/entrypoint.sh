@@ -17,9 +17,8 @@ if [ -d /ssh_config ]
 then
     echo "Setting up SSH..."
     mkdir -p /root/.ssh
-    cp -r /ssh_config/* /root/.ssh
+    cp -r /ssh_config/* /root/.ssh || true
     chown -R root:root /root/.ssh
-    ls -l /root/.ssh
 fi
 
 # Ya tvoy rot dral
@@ -33,8 +32,9 @@ if [ "$HOSTNAME" == "controller" ]
 then
     cd /app/scripts/ansible
     [ ! -f inventory.yaml ] && cp inventory.example.yaml inventory.yaml
-    exec ansible-playbook -i inventory.yaml playbook.yaml
-    chown -R $HOST_UID:$HOST_GID /app/dist
+
+    ansible-playbook -i inventory.yaml playbook.yaml
+    chown -R $HOST_UID:root /app/dist
     exit 0
 fi
 

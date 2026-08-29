@@ -1,0 +1,18 @@
+# Special version of Wine that runs arm64 staff on amd64
+FROM linaro/wine-arm64
+
+WORKDIR /root
+CMD ["/entrypoint.sh"]
+
+RUN apt update \
+ && apt install -y \
+    python3 \
+    python-is-python3 \
+    pipx \
+    sudo \
+    rsync \
+    busybox \
+    curl \
+    nsis
+
+COPY ./entrypoint.sh /

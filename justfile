@@ -9,30 +9,12 @@ python := require(if os_family() == "windows" { "python.exe" } else { "python" }
 pip := which(if os_family() == "windows" { "pip.exe" } else { "pip" })
 pdm := which(if os_family() == "windows" { "pdm.exe" } else { "pdm" })
 
-lrelease := which(if os_family() == "windows" && pdm { \
-    `pdm run python -c "
-import os
-try:
-    import PySide6
-    print(os.path.dirname(PySide6.__file__))
-except ModuleNotFoundError:
-    print('.')
-"` / 'lrelease.exe'
-} else if path_exists("/usr/lib64/qt6/bin/lrelease") == "true" {
-    "/usr/lib64/qt6/bin/lrelease"
-} else if path_exists("/usr/lib/qt6/bin/lrelease") == "true" {
-    "/usr/lib/qt6/bin/lrelease"
-} else {
-    "lrelease"
-})
-
 # Env
-flatpak_dir := absolute_path(env("FLATPAKBUILDDIR", './.flatpak'))
 dest_dir := env("DESTDIR", "/usr/local")
+python_venv := env("VIRTUAL_ENV", "")
 
 sources_dir := absolute_path('.')
 build_dir := sources_dir + "/build"
-python_venv := env("VIRTUAL_ENV", "")
 
 python_path := env("PYTHONLIBPATH", `python -c "
 import site
@@ -59,11 +41,22 @@ except Exception:
 
 # Imports
 import? 'scripts/build.just'
-import? 'scripts/manage.just'
-import? 'scripts/linux.just'
+import? 'scripts/manage/justfile'
+import? 'scripts/linux/justfile'
 import? 'scripts/flatpak/justfile'
 import? 'scripts/windows/justfile'
 import? 'scripts/ansible/justfile'
+import? 'scripts/devenv.just'
+
+# Cleanup project directory
+[script]
+clean:
+    import shutil
+    from pathlib import Path
+    base = Path(r"{{ sources_dir }}")
+    for name in ["build", "dist", ".pdm-build"]:
+        if (base / name).exists():
+            shutil.rmtree(base / name)
 
 # Start Qt version without instalation
 start:
@@ -76,10 +69,10 @@ start_cmd:
 
 # Start PyTest
 test:
-    pdm run pytest
+    pdm run pytest -o cache_dir=build/pytest-cache
 
 # Install OpenFreebuds
-[group("linux"),linux]
+[group("os_linux"),linux]
 install: install_check
     mkdir -p "{{dest_dir}}/{{python_path}}"
     {{pip}} install -q --upgrade --no-dependencies --target "{{dest_dir}}/{{python_path}}" \
@@ -100,7 +93,7 @@ install: install_check
        "{{dest_dir}}/share/icons/hicolor/256x256/apps"
 
 # Check Linux instalation restrictions
-[group("linux"),private,linux,script]
+[group("os_linux"),private,linux,script]
 install_check:
     import os
     assert os.path.isfile("./dist/openfreebuds-{{version}}-py3-none-any.whl"), \
