@@ -12,6 +12,7 @@ class OfbHuaweiBatteryHandler(OfbDriverHandlerHuawei):
 
     handler_id = "battery"
     commands = [CMD_BATTERY_READ, CMD_BATTERY_NOTIFY]
+    tws_battery_fields = ("left", "right", "case")
 
     def __init__(self, w_tws: bool = True):
         self.w_tws = w_tws
@@ -24,11 +25,11 @@ class OfbHuaweiBatteryHandler(OfbDriverHandlerHuawei):
         out = {}
         if 1 in package.parameters and len(package.parameters[1]) == 1:
             out["global"] = int(package.parameters[1][0])
-        if 2 in package.parameters and len(package.parameters[2]) == 3 and self.w_tws:
+        if 2 in package.parameters and len(package.parameters[2]) > 0 and self.w_tws:
             level = package.parameters[2]
-            out["left"] = int(level[0])
-            out["right"] = int(level[1])
-            out["case"] = int(level[2])
+            for code, value in zip(self.tws_battery_fields, level):
+                out[code] = int(value)
         if 3 in package.parameters and len(package.parameters[3]) > 0:
             out["is_charging"] = json.dumps(b"\x01" in package.parameters[3])
-        await self.driver.put_property("battery", None, out)
+        if out:
+            await self.driver.put_property("battery", None, out, extend_group=True)

@@ -45,6 +45,8 @@ If your device isn't listed here, you could try to use it with profile for other
 - [HUAWEI FreeBuds Pro 2](./docs/devices/HUAWEI_FreeBuds_Pro_2.md)
 - [HUAWEI FreeBuds Pro 3](./docs/devices/HUAWEI_FreeBuds_Pro_3.md)
   - **HUAWEI FreeBuds Pro 4** is same
+- [HUAWEI FreeBuds Pro 5](./docs/devices/HUAWEI_FreeBuds_Pro_5.md)
+  - Support added by **Sherzod Norkulov**
 - [HUAWEI FreeBuds SE](./docs/devices/HUAWEI_FreeBuds_SE.md)
 - [HUAWEI FreeBuds SE 2](./docs/devices/HUAWEI_FreeBuds_SE_2.md)
 - [HUAWEI FreeBuds SE 4 ANC](./docs/devices/HUAWEI_FreeBuds_SE_4.md)
