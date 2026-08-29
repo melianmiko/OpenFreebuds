@@ -12,7 +12,7 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
     For devices who store this option in two separate parameters:
     long tap action and preferred modes
 
-    Tested on 4i
+    Tested on 4i and arc
     """
 
     handler_id = "gesture_long_split"
@@ -36,10 +36,18 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
         self.w_in_call = w_in_call
         self.w_anc = w_anc
 
-        self._options_lt = {
+        self._options_lt_with_assistant = {
             -1: "tap_action_off",
-            10: "tap_action_switch_anc"
+             0: "tap_action_assistant",
         }
+        self._options_lt_with_anc = {
+            -1: "tap_action_off",
+            10: "tap_action_switch_anc",
+        }
+        self._options_lt = (
+            self._options_lt_with_anc if self.w_anc
+            else self._options_lt_with_assistant
+        )
         self._options_lt_call = {
             -1: "tap_action_off",
             0: "tap_action_answer"
