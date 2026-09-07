@@ -795,6 +795,11 @@
         <source>Exit OpenFreebuds</source>
         <translation>OpenFreebuds'tan çıkış yap</translation>
     </message>
+
+    <message>
+        <source>Tray battery</source>
+        <translation>Tray pil göstergeleri</translation>
+    </message>
 </context><context>
     <name>OfbQtManualConnectDialog</name>
     <message>
@@ -1157,6 +1162,19 @@
         <source>OpenFreebuds: Connecting to device…</source>
         <translation>OpenFreebuds: Cihaza bağlanıyor…</translation>
     </message>
+
+    <message>
+        <source>Left earbud</source>
+        <translation>Sol kulaklık</translation>
+    </message>
+    <message>
+        <source>Right earbud</source>
+        <translation>Sağ kulaklık</translation>
+    </message>
+    <message>
+        <source>Charging case</source>
+        <translation>Şarj kutusu</translation>
+    </message>
 </context><context>
     <name>ShortcutName</name>
     <message>
@@ -1204,4 +1222,56 @@
         <source>Enable low-latency mode</source>
         <translation>Düşük gecikme modunu etkinleştirin</translation>
     </message>
-</context></TS>
+</context><context>
+    <name>OfbQtTrayBatteryModule</name>
+    <message><source>Font weight</source><translation>Yazı kalınlığı</translation></message>
+    <message><source>Normal</source><translation>Normal</translation></message>
+    <message><source>Bold</source><translation>Kalın</translation></message>
+    <message>
+        <source>Show battery percentages in the system tray</source>
+        <translation>Pil yüzdelerini sistem tepsisinde göster</translation>
+    </message>
+    <message>
+        <source>Text color</source>
+        <translation>Yazı rengi</translation>
+    </message>
+    <message>
+        <source>Background color</source>
+        <translation>Arka plan rengi</translation>
+    </message>
+    <message>
+        <source>Transparent background</source>
+        <translation>Şeffaf arka plan</translation>
+    </message>
+    <message>
+        <source>Preview</source>
+        <translation>Önizleme</translation>
+    </message>
+    <message>
+        <source>Left earbud</source>
+        <translation>Sol kulaklık</translation>
+    </message>
+    <message>
+        <source>Right earbud</source>
+        <translation>Sağ kulaklık</translation>
+    </message>
+    <message>
+        <source>Charging case</source>
+        <translation>Şarj kutusu</translation>
+    </message>
+    <message>
+        <source>Changes apply immediately. Icons appear when battery levels are available. On Windows, check the hidden icons (^) menu and drag the icons onto the taskbar.</source>
+        <translation>Değişiklikler hemen uygulanır. Pil bilgisi alındığında simgeler görünür. Windows’ta gizli simgeler (^) menüsüne bakın ve simgeleri görev çubuğuna sürükleyin.</translation>
+    </message>
+
+    <message>
+        <source>Customize indicator</source>
+        <translation>Düzenlenecek gösterge</translation>
+    </message>
+
+    <message>
+        <source>Text size (100% = largest that fits)</source>
+        <translation>Yazı boyutu (%100 = simgeye sığan en büyük boyut)</translation>
+    </message>
+</context>
+</TS>
