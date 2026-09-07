@@ -24,12 +24,31 @@ Features
 
 - Dynamic system tray icon that shows current active noise cancellation mode and battery level;
 - Tray menu with battery levels and active noise cancellation settings;
+- Optional separate numeric tray icons for the left earbud, right earbud, and charging case;
 - Ability to change voice language (not all devices supported);
 - Device settings dialog, eg. change equalizer preset, gesture actions, etc;
 - Built-in HTTP-server for remote control & scripting;
 - Built-in global hotkeys support (for Windows and Xorg-Linux)
 
 ![Settings preview](docs/preview_1.png)
+
+### Battery tray indicators
+
+Enable **Application → Tray battery → Show battery percentages in the system tray**
+to display each reported earbud/case level as a separate number, without a `%` sign.
+The indicators are disabled by default. Each indicator has independent text and
+background colors, optional transparency, and text size from 50% to 100% of the
+largest size that fits its tray icon. The preview uses sample battery levels;
+changes are saved and applied immediately.
+
+Hover over an indicator to identify the earbud or case. Left-click opens the
+settings window, and right-click opens the existing tray menu. Indicators hide
+when disconnected, disabled, or when their individual battery level is unavailable.
+Devices reporting only an aggregate battery level do not get additional indicators.
+
+The desktop controls tray visibility and ordering. On Windows, indicators may
+initially appear in the hidden-icons (`^`) menu. The application creates them in
+left/right/case order, but cannot force their final position in the Windows tray.
 
 Device compatibility
 ------------------------

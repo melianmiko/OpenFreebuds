@@ -19,6 +19,7 @@ from openfreebuds_qt.app.module import OfbQtAboutModule, OfbQtSoundQualityModule
     OfbQtHotkeysModule, OfbQtGesturesModule, OfbQtDualConnectModule, OfbQtDeviceOtherSettingsModule, \
     OfbQtDeviceInfoModule, OfbQtCommonModule, OfbQtChooseDeviceModule, OfbQtUiSettingsModule, OfbQtAutomationModule
 from openfreebuds_qt.config import ConfigLock, OfbQtConfigParser
+from openfreebuds_qt.app.module.tray_battery import OfbQtTrayBatteryModule
 from openfreebuds_qt.constants import ASSETS_PATH, LINK_RPC_HELP, LINK_WEBSITE_HELP, WIN32_BODY_STYLE
 from openfreebuds_qt.designer.main_window import Ui_OfbMainWindowDesign
 from openfreebuds_qt.generic import IOfbQtApplication, IOfbMainWindow
@@ -78,6 +79,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
         self.tabs.add_section(self.tr("Application"))
         if ConfigLock.owned:
             self._attach_module(self.tr("User interface"), OfbQtUiSettingsModule(self.tabs.root, self.ctx))
+            self._attach_module(self.tr("Tray battery"), OfbQtTrayBatteryModule(self.tabs.root, self.ctx))
             self._attach_module(self.tr("Automation"), OfbQtAutomationModule(self.tabs.root, self.ctx))
         if OfbQtHotkeysModule.available():
             self._attach_module(self.tr("Keyboard shortcuts"), OfbQtHotkeysModule(self.tabs.root, self.ctx))

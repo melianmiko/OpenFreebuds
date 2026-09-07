@@ -13,6 +13,7 @@ from openfreebuds_qt.config.main import OfbQtConfigParser
 from openfreebuds_qt.generic import IOfbQtApplication
 from openfreebuds_qt.generic import IOfbTrayIcon
 from openfreebuds_qt.tray.menu import OfbQtTrayMenu
+from openfreebuds_qt.tray.battery import battery_levels, battery_style, percentage_icon
 from openfreebuds_qt.utils import OfbCoreEvent, qt_error_handler, create_tray_icon
 
 try:
@@ -52,6 +53,8 @@ class OfbTrayIcon(IOfbTrayIcon):
 
         self.menu = OfbQtTrayMenu(self, self.ctx, self.ofb)
         self.setContextMenu(self.menu)
+        self._battery_icons = {}
+        self._battery_icon_values = {}
 
     @asyncSlot(QSystemTrayIcon.ActivationReason)
     async def _on_click(self, reason):
@@ -77,6 +80,8 @@ class OfbTrayIcon(IOfbTrayIcon):
         """
         Will stop UI update loop
         """
+        for icon in self._battery_icons.values():
+            icon.hide()
         if self.ui_update_task is not None:
             self.ui_update_task.cancel()
             await self.ui_update_task
@@ -96,6 +101,7 @@ class OfbTrayIcon(IOfbTrayIcon):
                                 await self.ofb.get_property("anc", "mode", "normal"))
         pixmap = QIcon(ImageQt.toqpixmap(icon))
         self.setIcon(pixmap)
+        await self._update_battery_icons(state)
 
         # Update menu and tooltip
         if state == IOpenFreebuds.STATE_CONNECTED:
@@ -116,6 +122,45 @@ class OfbTrayIcon(IOfbTrayIcon):
             self._reset_battery_summary_overlay()
 
         await self.menu.on_core_event(event, state)
+
+    async def _update_battery_icons(self, state):
+        levels = {}
+        if state == IOpenFreebuds.STATE_CONNECTED and self.config.get(
+            "ui", "tray_battery_percentages", False
+        ):
+            levels = battery_levels(await self.ofb.get_property("battery"))
+        labels = {
+            "left": self.tr("Left earbud"),
+            "right": self.tr("Right earbud"),
+            "case": self.tr("Charging case"),
+        }
+        theme = self.config.get_tray_icon_theme() if levels else None
+        device_name, _ = await self.ofb.get_device_tags() if levels else ("", "")
+        for key, icon in self._battery_icons.items():
+            if key not in levels:
+                icon.hide()
+        for key, level in levels.items():
+            text_color, background_color, transparent, font_scale = battery_style(self.config, key)
+            if transparent:
+                background_color = None
+            if key not in self._battery_icons:
+                icon = QSystemTrayIcon(self)
+                icon.setContextMenu(self.menu)
+                icon.activated.connect(self._on_battery_click)
+                self._battery_icons[key] = icon
+            icon = self._battery_icons[key]
+            appearance = (level, theme, text_color, background_color, font_scale)
+            if self._battery_icon_values.get(key) != appearance:
+                icon.setIcon(percentage_icon(*appearance))
+                self._battery_icon_values[key] = appearance
+            icon.setToolTip(f"{device_name} — {labels[key]}: {level}%")
+            icon.show()
+
+    def _on_battery_click(self, reason):
+        if reason == self.ActivationReason.Trigger:
+            self.ctx.main_window.show()
+            self.ctx.main_window.raise_()
+            self.ctx.main_window.activateWindow()
 
     async def _get_tooltip_text(self, event: OfbCoreEvent):
         """
@@ -265,6 +310,7 @@ class OfbTrayIcon(IOfbTrayIcon):
 
                     if event.kind_in([
                         OfbEventKind.STATE_CHANGED,
+                        OfbEventKind.DEVICE_CHANGED,
                         OfbEventKind.QT_SETTINGS_CHANGED,
                         OfbEventKind.PROPERTY_CHANGED,
                     ]):
