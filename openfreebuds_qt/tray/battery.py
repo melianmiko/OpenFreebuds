@@ -32,10 +32,12 @@ def battery_style(config, key):
     transparent = transparent if isinstance(transparent, bool) else False
     scale = value("font_scale", 100)
     scale = max(50, min(100, scale)) if type(scale) is int else 100
-    return text, background, transparent, scale
+    bold = value("bold", True)
+    bold = bold if isinstance(bold, bool) else True
+    return text, background, transparent, scale, bold
 
 
-def percentage_icon(level: int, theme: str, text_color=None, background_color=None, font_scale=100) -> QIcon:
+def percentage_icon(level: int, theme: str, text_color=None, background_color=None, font_scale=100, bold=True) -> QIcon:
     """Render numeric battery levels at native tray sizes for each DPI."""
     icon = QIcon()
     for size in (16, 20, 24, 32, 48, 64):
@@ -49,7 +51,7 @@ def percentage_icon(level: int, theme: str, text_color=None, background_color=No
             "#161616" if theme == "dark" else "#ffffff"
         ))
         font = QFont("Segoe UI")
-        font.setBold(True)
+        font.setBold(bold)
         text = str(level)
         for pixels in range(size, 3, -1):
             font.setPixelSize(pixels)

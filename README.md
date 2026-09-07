@@ -37,8 +37,8 @@ Features
 Enable **Application → Tray battery → Show battery percentages in the system tray**
 to display each reported earbud/case level as a separate number, without a `%` sign.
 The indicators are disabled by default. Each indicator has independent text and
-background colors, optional transparency, and text size from 50% to 100% of the
-largest size that fits its tray icon. The preview uses sample battery levels;
+background colors, optional transparency, Normal/Bold font weight (Bold by default),
+and text size from 50% to 100% of the largest size that fits its tray icon. The preview uses sample battery levels;
 changes are saved and applied immediately.
 
 Hover over an indicator to identify the earbud or case. Left-click opens the

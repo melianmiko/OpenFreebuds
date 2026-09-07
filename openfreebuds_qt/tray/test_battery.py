@@ -26,7 +26,7 @@ def test_reported_levels(data, expected):
 
 def test_invalid_saved_style_falls_back():
     config = SimpleNamespace(get=lambda *args: {"malformed": True})
-    assert battery_style(config, "left") == ("#ffffff", "#202020", False, 100)
+    assert battery_style(config, "left") == ("#ffffff", "#202020", False, 100, True)
 
 
 @pytest.mark.asyncio
@@ -99,8 +99,8 @@ async def test_appearance_settings_save_and_render(monkeypatch, tmp_path):
     await page.save("tray_battery_left_text_color", "#00ff00")
     await page.save("tray_battery_left_font_scale", 60)
     await page.save("tray_battery_right_background_color", "#0000ff")
-    assert battery_style(page.config, "left") == ("#00ff00", "#123456", False, 60)
-    assert battery_style(page.config, "right") == ("#ff0000", "#0000ff", False, 100)
+    assert battery_style(page.config, "left") == ("#00ff00", "#123456", False, 60, True)
+    assert battery_style(page.config, "right") == ("#ff0000", "#0000ff", False, 100, True)
     page.component.setCurrentIndex(1)
     assert page.text_button.text() == "#ff0000"
     assert page.background_button.text() == "#0000ff"
@@ -109,6 +109,11 @@ async def test_appearance_settings_save_and_render(monkeypatch, tmp_path):
     assert page.font_scale.value() == 60
     reloaded = OfbQtConfigParser()
     assert battery_style(reloaded, "left")[3] == 60
+    await page.save("tray_battery_left_bold", False)
+    assert page.font_weight.currentData() is False
+    page.component.setCurrentIndex(1)
+    assert page.font_weight.currentData() is True
+    assert battery_style(OfbQtConfigParser(), "left")[4] is False
     small = percentage_icon(50, "light", "#ff0000", None, 50).pixmap(32, 32).toImage()
     large = percentage_icon(50, "light", "#ff0000", None, 100).pixmap(32, 32).toImage()
     def painted_pixels(image):
