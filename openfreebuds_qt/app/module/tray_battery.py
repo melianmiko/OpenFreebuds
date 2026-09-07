@@ -37,6 +37,10 @@ class OfbQtTrayBatteryModule(OfbQtCommonModule):
         self.font_scale.setSuffix("%")
         self.font_scale.setSingleStep(5)
         form.addRow(self.tr("Text size (100% = largest that fits)"), self.font_scale)
+        self.font_weight = QComboBox()
+        self.font_weight.addItem(self.tr("Normal"), False)
+        self.font_weight.addItem(self.tr("Bold"), True)
+        form.addRow(self.tr("Font weight"), self.font_weight)
         layout.addLayout(form)
         self.transparent = QCheckBox(self.tr("Transparent background"))
         layout.addWidget(self.transparent)
@@ -66,6 +70,7 @@ class OfbQtTrayBatteryModule(OfbQtCommonModule):
         self.background_button.clicked.connect(self.on_background_color)
         self.component.currentIndexChanged.connect(self.refresh_preview)
         self.font_scale.valueChanged.connect(self.on_font_scale)
+        self.font_weight.currentIndexChanged.connect(self.on_font_weight)
         self.refresh_preview()
 
     def setting_key(self, name):
@@ -76,18 +81,20 @@ class OfbQtTrayBatteryModule(OfbQtCommonModule):
         return value if isinstance(value, str) and QColor(value).isValid() else fallback
 
     def refresh_preview(self, *_):
-        text, background, transparent, scale = battery_style(self.config, self.component.currentData())
+        text, background, transparent, scale, bold = battery_style(self.config, self.component.currentData())
         self.text_button.setText(text)
         self.background_button.setText(background)
         with blocked_signals(self.transparent):
             self.transparent.setChecked(bool(transparent))
         with blocked_signals(self.font_scale):
             self.font_scale.setValue(scale)
+        with blocked_signals(self.font_weight):
+            self.font_weight.setCurrentIndex(self.font_weight.findData(bold))
         self.background_button.setEnabled(not transparent)
         for icon, key, level in self.previews:
-            text, background, transparent, scale = battery_style(self.config, key)
+            text, background, transparent, scale, bold = battery_style(self.config, key)
             icon.setPixmap(percentage_icon(
-                level, "light", text, None if transparent else background, scale
+                level, "light", text, None if transparent else background, scale, bold
             ).pixmap(32, 32))
 
     async def save(self, key, value):
@@ -107,6 +114,10 @@ class OfbQtTrayBatteryModule(OfbQtCommonModule):
     @asyncSlot(int)
     async def on_font_scale(self, value):
         await self.save(self.setting_key("font_scale"), value)
+
+    @asyncSlot(int)
+    async def on_font_weight(self, _index):
+        await self.save(self.setting_key("bold"), self.font_weight.currentData())
 
     async def choose_color(self, key, fallback):
         dialog = QColorDialog(QColor(self.color(key, fallback)), self)

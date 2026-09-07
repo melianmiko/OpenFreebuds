@@ -140,7 +140,7 @@ class OfbTrayIcon(IOfbTrayIcon):
             if key not in levels:
                 icon.hide()
         for key, level in levels.items():
-            text_color, background_color, transparent, font_scale = battery_style(self.config, key)
+            text_color, background_color, transparent, font_scale, bold = battery_style(self.config, key)
             if transparent:
                 background_color = None
             if key not in self._battery_icons:
@@ -149,7 +149,7 @@ class OfbTrayIcon(IOfbTrayIcon):
                 icon.activated.connect(self._on_battery_click)
                 self._battery_icons[key] = icon
             icon = self._battery_icons[key]
-            appearance = (level, theme, text_color, background_color, font_scale)
+            appearance = (level, theme, text_color, background_color, font_scale, bold)
             if self._battery_icon_values.get(key) != appearance:
                 icon.setIcon(percentage_icon(*appearance))
                 self._battery_icon_values[key] = appearance

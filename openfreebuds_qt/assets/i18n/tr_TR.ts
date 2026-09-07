@@ -1224,6 +1224,9 @@
     </message>
 </context><context>
     <name>OfbQtTrayBatteryModule</name>
+    <message><source>Font weight</source><translation>Yazı kalınlığı</translation></message>
+    <message><source>Normal</source><translation>Normal</translation></message>
+    <message><source>Bold</source><translation>Kalın</translation></message>
     <message>
         <source>Show battery percentages in the system tray</source>
         <translation>Pil yüzdelerini sistem tepsisinde göster</translation>
