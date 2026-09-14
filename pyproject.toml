@@ -5,7 +5,7 @@ description = "FOSS Windows/Linux client for HUAWEI FreeBuds headset series"
 authors = [
     {name = "MelianMiko", email = "support@mmk.pw"},
 ]
-requires-python = "<3.15,>=3.11"
+requires-python = "<3.15,>=3.14"
 dependencies = [
     "aiocmd<0.2.0,>=0.1.5",
     "pillow<13.0.0,>=12.3.0",
@@ -14,7 +14,7 @@ dependencies = [
     "qasync<1.0.0,>=0.28.0",
     "pynput<2.0.0,>=1.7.7",
     "dbus-next<1.0.0,>=0.2.3",
-    "winsdk==1.0.0b10; sys_platform == 'win32'",
+    "winsdk>=1.0.0b10",
     "pyobjc-framework-IOBluetooth>=12.1; sys_platform == 'darwin'",
     "pyobjc-framework-ApplicationServices>=12.2.2; sys_platform == 'darwin'",
     "pyyaml>=6.0.3",
