@@ -30,13 +30,13 @@ prepare_nfpm: build
     find "{{ build_dir }}" -type d -name "__pycache__" -exec rm -r {} +
 
 # Create Debian package
-[group("os_linux")]
+[group("os_linux"),linux]
 debian: 
     PYTHONLIBPATH="lib/python3/dist-packages" just prepare_nfpm
     cd scripts/linux && {{nfpm}} pkg --packager deb --target "{{ sources_dir }}/dist/"
 
 # Create Fedora package
-[group("os_linux")]
+[group("os_linux"),linux]
 fedora:
     PYTHONLIBPATH="lib64/python3.14/site-packages" just prepare_nfpm
     cd scripts/linux && {{nfpm}} pkg --packager rpm --target "{{ sources_dir }}/dist/"

@@ -3,12 +3,15 @@
 *~
 *.swp
 *#
+.DS_Store
 
 /.idea
 /.flatpak
 /.flatpak-pip-generator
 /.vagrant
 /.pdm-python
+/.venv
+/.vscode
 /build
 /dist
 
