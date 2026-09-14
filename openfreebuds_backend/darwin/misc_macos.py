@@ -6,11 +6,13 @@ import subprocess
 import sys
 from pathlib import Path
 
+from ApplicationServices import AXIsProcessTrustedWithOptions, kAXTrustedCheckOptionPrompt
+
 log = logging.getLogger("OfbDarwinBackend")
 
 AUTOSTART_AVAILABLE = True
 AUTOUPDATE_AVAILABLE = False  # Defer to Homebrew or DMG-based updates
-GLOBAL_HOTKEYS_AVAILABLE = True  # pynput supports macOS (requires Accessibility permission)
+GLOBAL_HOTKEYS_AVAILABLE = False  # pynput conflicts with pyqt, need refactor
 
 _LAUNCH_AGENT_LABEL = "pw.mmk.OpenFreebuds"
 
@@ -25,6 +27,10 @@ def open_file(path):
 
 def is_run_at_boot():
     return _launch_agent_path().is_file()
+
+
+def trigger_hotkeys_permission():
+    return AXIsProcessTrustedWithOptions({kAXTrustedCheckOptionPrompt: True})
 
 
 async def set_run_at_boot(val):

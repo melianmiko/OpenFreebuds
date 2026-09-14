@@ -104,24 +104,31 @@ Most recent `dev`-binaries can be found as [GitHub Actions](https://github.com/m
 Build from sources
 -------------
 
-### Manual build
+### Build dependencies
 
-Requirements:
-
-- Windows 10/11, or enough modern Linux;
-- Qt 6.0+ development tools, at least Linguist's `lrelease` (under Windows, will be used auto-obtained from `PySide6`;
+**Windows 10/11**:
 - [Just](https://github.com/casey/just);
 - [Python](https://www.python.org/downloads/) (3.13+), [PDM](https://pdm-project.org/en/latest/);
-- (Windows, optional) [NSIS](https://nsis.sourceforge.io/Download), [UPX](https://upx.github.io/).
+  - Do not Python from Microsoft Store;
+- (optional) [NSIS](https://nsis.sourceforge.io/Download), [UPX](https://upx.github.io/).
 
-To install all other dependencies, do `just prepare` (may require administrator/root privileges).
+**Linux**:
+- [Just](https://github.com/casey/just);
+- Python (3.13+), [PDM](https://pdm-project.org/en/latest/);
+- Qt 6.0+ development tools, at least Linguist's `lrelease`.
 
-When dependencies listed above are resolved, parepare project environment and build Python
-wheel by running: `just build`.
+**macOS** (experimental, tested only on Intel-based macOS):
+- [Python](https://www.python.org/downloads/) (3.13+), [PDM](https://pdm-project.org/en/latest/);
+  - PDM with python from website can be added via `pip3 install -U pipx && python3 -m pipx install pdm && python3 -m pipx ensurepath`;
+  - For now, if using python from homebrew, you must symlink it to `python` since scripts doesn't use `python3` command;
+- [Just](https://github.com/casey/just) (`brew install just`);
+- Qt 6.0+ development tools, at least Linguist's `lrelease` (`brew install qttools`).
 
-Now, you can try launching OpenFreebuds by `just start` command or package it via:
+### Prepare environment
 
-- `just win32` for Windows portable and installer;
-- `just debian` for Debian `deb`-package;
-- `just fedora` for Fedora (potentially other RHEL's) `rpm`-package;
-- `just flatpak` for Flatpak bundle (will also automatically install application).
+1. Obtain dependencies: `pdm install`;
+2. Try to run it: `just start`;
+3. Make release binary:
+  - Windows: `just win32`;
+  - Linux: `just debian fedora`;
+  - macOS: `just macos`.

@@ -6,7 +6,7 @@ from contextlib import suppress
 from typing import Optional
 
 from PyQt6.QtCore import QLibraryInfo, QLocale, QTranslator, QT_VERSION_STR
-from PyQt6.QtWidgets import QMessageBox, QSystemTrayIcon
+from PyQt6.QtWidgets import QMenu, QMenuBar, QMessageBox, QSystemTrayIcon
 from qasync import QEventLoop
 
 from openfreebuds import IOpenFreebuds, create as create_ofb, OfbEventKind
@@ -47,6 +47,11 @@ class OfbQtApplication(IOfbQtApplication):
         self.tray: Optional[OfbTrayIcon] = None
         self.main_window: Optional[OfbQtMainWindow] = None
         self.updater_service: Optional[OfbQtUpdaterService] = None
+
+        # Global menu
+        self.global_menu: Optional[QMenuBar] = None
+        self.extra_menu: Optional[QMenu] = None
+        self.help_menu: Optional[QMenu] = None
 
         # Setup logging
         setup_logging(args.verbose)
@@ -103,6 +108,12 @@ class OfbQtApplication(IOfbQtApplication):
             self.tray = OfbTrayIcon(self)
             self.main_window = OfbQtMainWindow(self)
             self.updater_service = OfbQtUpdaterService(self.main_window)
+
+            # Global menu setup (for macOS)
+            self.global_menu = QMenuBar()
+            self.extra_menu = self.global_menu.addMenu("&File")
+            self.help_menu = self.global_menu.addMenu("&Help")
+            self.main_window.setup_menus(self.extra_menu, self.help_menu)
 
             if self.config.config_load_failed:
                 await self.show_config_load_failed_warning()

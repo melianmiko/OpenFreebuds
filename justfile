@@ -16,6 +16,7 @@ python_venv := env("VIRTUAL_ENV", "")
 sources_dir := absolute_path('.')
 build_dir := sources_dir + "/build"
 
+# TODO: Use python var instead of hardcded exec
 python_path := env("PYTHONLIBPATH", `python -c "
 import site
 try:
@@ -43,6 +44,7 @@ except Exception:
 import? 'scripts/build.just'
 import? 'scripts/manage/justfile'
 import? 'scripts/linux/justfile'
+import? 'scripts/macos/justfile'
 import? 'scripts/flatpak/justfile'
 import? 'scripts/windows/justfile'
 import? 'scripts/ansible/justfile'

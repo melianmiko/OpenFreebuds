@@ -49,9 +49,13 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
             QIcon(get_img_colored("settings", self.palette().text().color().getRgb()))
         )
 
-        self.extra_menu = QMenu()
-        self.extra_options_button.setMenu(self.extra_menu)
-        self._fill_extras_menu()
+        # Setup menu button (not on macOS)
+        if sys.platform == "darwin":
+            self.extra_options_button.setVisible(False)
+        else:
+            self.extra_menu = QMenu()
+            self.extra_options_button.setMenu(self.extra_menu)
+            self.setup_menus(self.extra_menu, self.extra_menu)
 
         # Helpers
         self.tabs = OfbQtSettingsTabHelper(self.tabs_list_content, self.body_content)
@@ -92,50 +96,52 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
         self.tabs.finalize_list()
         self.tabs.set_active_tab(*self.default_tab)
 
-    def _fill_extras_menu(self):
-        help_action = self.extra_menu.addAction(self.tr("Help: FAQ"))
+    def setup_menus(self, extra_menu, help_menu):
+        help_action = help_menu.addAction(self.tr("Help: FAQ"))
         # noinspection PyUnresolvedReferences
         help_action.triggered.connect(lambda: webbrowser.open(LINK_WEBSITE_HELP))
 
-        help_rpc_action = self.extra_menu.addAction(self.tr("Help: Remote control"))
+        help_rpc_action = help_menu.addAction(self.tr("Help: Remote control"))
         # noinspection PyUnresolvedReferences
         help_rpc_action.triggered.connect(lambda: webbrowser.open(LINK_RPC_HELP))
 
-        bugreport_action = self.extra_menu.addAction(self.tr("Bugreport…"))
+        bugreport_action = help_menu.addAction(self.tr("Bugreport…"))
         bugreport_action.setShortcut("F2")
         # noinspection PyUnresolvedReferences
         bugreport_action.triggered.connect(self.on_bugreport)
 
-        self.check_updates_action = self.extra_menu.addAction(self.tr("Check for updates…"))
+        self.check_updates_action = help_menu.addAction(self.tr("Check for updates…"))
         # noinspection PyUnresolvedReferences
         self.check_updates_action.triggered.connect(self.on_check_updates)
 
-        self.extra_menu.addSeparator()
+        if help_menu is extra_menu:
+            help_menu.addSeparator()
 
         if self.ofb.role == "standalone" and ConfigLock.owned:
-            rpc_config_action = self.extra_menu.addAction(self.tr("Remote access…"))
+            rpc_config_action = extra_menu.addAction(self.tr("Remote access…"))
             # noinspection PyUnresolvedReferences
             rpc_config_action.triggered.connect(self.on_rpc_config)
 
-        temp_device_action = self.extra_menu.addAction(self.tr("Temporary replace device"))
+        temp_device_action = extra_menu.addAction(self.tr("Temporary replace device"))
         temp_device_action.setShortcut("Ctrl+D")
         # noinspection PyUnresolvedReferences
         temp_device_action.triggered.connect(self.temporary_change_device)
 
-        self.extra_menu.addSeparator()
+        extra_menu.addSeparator()
 
-        hide_action = self.extra_menu.addAction(self.tr("Close this window"))
+        hide_action = extra_menu.addAction(self.tr("Close this window"))
         hide_action.setShortcut(QKeySequence('Ctrl+W'))
         # noinspection PyUnresolvedReferences
         hide_action.triggered.connect(self.hide_or_exit)
 
-        exit_action = self.extra_menu.addAction(self.tr("Exit OpenFreebuds"))
+        exit_action = extra_menu.addAction(self.tr("Exit OpenFreebuds"))
         exit_action.setShortcut(QKeySequence('Ctrl+Q'))
         # noinspection PyUnresolvedReferences
         exit_action.triggered.connect(self.on_exit)
 
     @asyncSlot()
     async def temporary_change_device(self):
+        self.show()
         async with qt_error_handler("OfbQtMain_TempConnect", self.ctx):
             result, name, address = await OfbQtManualConnectDialog(self).get_user_response()
             if not result:
@@ -148,10 +154,12 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
 
     @asyncSlot()
     async def on_rpc_config(self):
+        self.show()
         await OfbQtRpcConfig(self).get_user_response()
 
     @asyncSlot()
     async def on_exit(self):
+        self.show()
         async with qt_error_handler("OfbQtMain_OnExit", self.ctx):
             await self.ctx.exit()
 
@@ -161,6 +169,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
 
     @pyqtSlot()
     def on_check_updates(self):
+        self.show()
         self._update_check_task = asyncio.create_task(self.ctx.updater_service.check_now())
 
     def _attach_module(self, label: str, module: OfbQtCommonModule):
