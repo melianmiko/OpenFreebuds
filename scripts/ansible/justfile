@@ -1,3 +1,5 @@
+import "../base.just"
+
 export HOST_UID := env("UID", "1000")
 
 docker := if which("podman") != [] {
@@ -12,4 +14,5 @@ docker := if which("podman") != [] {
 [group("release"),linux]
 autorelease:
     [[ "{{ docker }}" == "" ]] && exit 1 || true # Docker/Podman not found
+    cd scripts/ansible && {{ docker }} compose down
     cd scripts/ansible && {{ docker }} compose up --build

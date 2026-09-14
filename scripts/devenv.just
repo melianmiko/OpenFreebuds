@@ -1,3 +1,11 @@
+import "build.just"
+import "windows/justfile"
+import "linux/justfile"
+
+winetools := wineprefix + '/drive_c/openfreebuds_buildtools'
+w32_python_ver := "3.14.7"
+winget_install := "winget install -e --no-upgrade --id"
+
 # Install base project dependencies through WinGet
 [group("prepare"),windows]
 deps_winget:
@@ -109,6 +117,7 @@ setup_wine_env:
 
      echo "[--] Prepare app dependencies"...
      cd "{{ sources_dir }}"
+     {{ wine }} pdm config venv.in_project false
      {{ wine }} pdm install
 
      touch "{{ wineprefix }}/ready"
@@ -137,5 +146,5 @@ prepare:
     [ -f /usr/bin/dnf ] && just deps_fedora
     [ -f /usr/bin/flatpak ] && just deps_flatpak
     [ -f /usr/bin/wine ] && [ -f build/enable_cc ] && just setup_wine_env
-    [ -f /usr/bin/wine-arm64 ] && [ -f build/enable_cc ] && just win32-arm64 setup_wine_env
+    [ -f /usr/bin/wine-arm64 ] && [ -f build/enable_cc ] && just win32_arm64 setup_wine_env
     pdm install

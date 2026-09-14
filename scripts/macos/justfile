@@ -1,5 +1,4 @@
-pyinstaller_env := build_dir / "mac_pyinstaller_venv"
-resolved_dir := build_dir / "mac_resolve"
+import "../build.just"
 
 # Install macOS build dependencies from Homebrew
 [group("prepare"),macos]
