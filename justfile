@@ -67,10 +67,6 @@ start:
 start_cmd:
     pdm run openfreebuds_cmd
 
-# Start PyTest
-test:
-    pdm run pytest -o cache_dir=build/pytest-cache
-
 # Install OpenFreebuds
 [group("os_linux"),linux]
 install: install_check
