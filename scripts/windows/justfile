@@ -68,6 +68,7 @@ win32_arm64 action:
 win32_installer: build
     New-Item -ItemType Directory -Force -Path ./dist
     cd ./scripts/windows; & {{pyinstaller}} openfreebuds.spec
+    New-Item -ItemType Directory -Force -Path {{ nsis_builddir }}
     cd ./scripts/windows; & 'C:\Program Files (x86)\NSIS\Bin\makensis.exe' openfreebuds.nsi
     mv -Force \
         {{ nsis_builddir }}/openfreebuds.install.exe \

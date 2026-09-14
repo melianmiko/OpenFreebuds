@@ -7,6 +7,7 @@ import 'scripts/flatpak/justfile'
 import 'scripts/windows/justfile'
 import 'scripts/ansible/justfile'
 import 'scripts/devenv.just'
+import 'scripts/release.just'
 
 # List available actions
 [private]

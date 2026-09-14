@@ -13,7 +13,7 @@ pip := which(if os_family() == "windows" { "pip.exe" } else { "pip" })
 dest_dir := env("DESTDIR", "/usr/local")
 python_venv := env("VIRTUAL_ENV", "")
 
-sources_dir := absolute_path('..')
+sources_dir := absolute_path('.')
 
 # TODO: Use python var instead of hardcded exec
 python_path := env("PYTHONLIBPATH", `python -c "
