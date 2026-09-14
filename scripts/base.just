@@ -57,7 +57,9 @@ start_cmd:
 [group("os_linux"),linux]
 install: install_check
     mkdir -p "{{dest_dir}}/{{python_path}}"
-    {{pip}} install -q --upgrade --no-dependencies --target "{{dest_dir}}/{{python_path}}" \
+    {{pip}} install \
+        -q --upgrade --no-dependencies --ignore-requires-python \
+        --target "{{dest_dir}}/{{python_path}}" \
         "./dist/openfreebuds-{{version}}-py3-none-any.whl"
     mkdir -p "{{dest_dir}}/bin" \
              "{{dest_dir}}/share/applications" \

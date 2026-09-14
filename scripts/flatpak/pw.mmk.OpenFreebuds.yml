@@ -52,7 +52,8 @@ modules:
       - rm -rf /app/bin/just justfile dist
     sources:
       - type: file
-        path: ../../justfile
+        dest: justfile
+        path: ../../scripts/base.justfile
       - type: dir
         dest: dist/
         path: ../../dist

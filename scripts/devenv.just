@@ -2,8 +2,6 @@ import "build.just"
 import "windows/justfile"
 import "linux/justfile"
 
-winetools := wineprefix + '/drive_c/openfreebuds_buildtools'
-w32_python_ver := "3.14.7"
 winget_install := "winget install -e --no-upgrade --id"
 
 # Install base project dependencies through WinGet
@@ -73,65 +71,6 @@ deps_fedora:
         curl \
         git
     just get_nfpm
-
-# Create wine prefix for windows corss-compilation
-[private,linux,script("bash")]
-setup_wine_env:
-    set -euo pipefail
-
-    if [ -f "{{ wineprefix }}/ready" ]
-    then
-        exit 0
-    fi
-    
-    rm -rf "{{ wineprefix }}"
-
-    echo "[--] Creating wine prefix"
-    mkdir -p `basename {{ wineprefix }}`
-    {{ wine }} cmd.exe /c "rem ready"
-    mkdir -p "{{ winetools }}"
-    cd "{{ winetools }}"
-    WINARCH=`just get_winearch`
-    echo "     Created, architecture is $WINARCH"
-
-    echo "[--] Downloading Python..."
-    curl -sL -o python.zip https://www.python.org/ftp/python/{{ w32_python_ver }}/python-{{ w32_python_ver }}-$WINARCH.zip
-    unzip python.zip
-
-    echo "[--] Downloading pip..."
-    {{ wine }} cmd.exe /c "mkdir %APPDATA%\\Python\\Scripts" || true
-    curl -s -o get-pip.py https://bootstrap.pypa.io/get-pip.py
-    {{ wine }} python.exe get-pip.py
-    {{ wine }} pip -h > test.log
-
-    echo "[--] Installing PDM..."
-    {{ wine }} pip install pdm
-
-    if [[ "$WINARCH" == "amd64" ]]
-    then
-        echo "[--] Installing UPX..."
-        curl -sL "https://github.com/upx/upx/releases/download/v5.2.0/upx-5.2.0-win64.zip" |
-            busybox unzip - > last.log || true
-        mv upx-*/* .
-    fi
-
-     echo "[--] Prepare app dependencies"...
-     cd "{{ sources_dir }}"
-     {{ wine }} pdm config venv.in_project false
-     {{ wine }} pdm install
-
-     touch "{{ wineprefix }}/ready"
-
-# Allow cross-compiling for Windows using wine
-[group("prepare"),script("bash")]
-enable_cc:
-    if [ ! -f "/usr/bin/wine" ] && [ ! -f "/usr/bin/wine-arm64" ]
-    then
-        echo "[!!] ERROR: wine not found, cross-compilation will fail"
-        exit 1
-    fi
-    mkdir -p {{ build_dir }}
-    touch {{ build_dir }}/enable_cc
 
 # Prepare development environment (windows)
 [group("prepare"),windows]
