@@ -151,12 +151,12 @@
 </context><context>
     <name>OfbQtAboutModule</name>
     <message>
-        <location filename="../../app/module/about.py" line="21" />
+        <location filename="../../app/module/about.py" line="24" />
         <source>Supported devices</source>
         <translation>Dispositivos soportados</translation>
     </message>
     <message>
-        <location filename="../../app/module/about.py" line="28" />
+        <location filename="../../app/module/about.py" line="31" />
         <source>Libraries</source>
         <translation>Librerias</translation>
     </message>
@@ -178,27 +178,27 @@
 </context><context>
     <name>OfbQtApplication</name>
     <message>
-        <location filename="../../main.py" line="216" />
+        <location filename="../../main.py" line="227" />
         <source>System tray not available, application won't work in background. This will make some features, like global hotkeys, unavailable.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../main.py" line="218" />
+        <location filename="../../main.py" line="229" />
         <source>If you're running under GNOME shell, please, check FAQ. This warning will be shown only once.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../main.py" line="233" />
+        <location filename="../../main.py" line="244" />
         <source>Failed to read configuration file. Default application settings was restored.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../main.py" line="248" />
+        <location filename="../../main.py" line="259" />
         <source>You're running under older version of Qt than expected. It's strongly recommended to switch to Flatpak release, because older Qt version may fail your experience of using OpenFreebuds.</source>
         <translation>Está ejecutando una versión de Qt antigua. Te recomendamos cambiar a la versión de Flatpak, ya que una versión anterior de Qt puede afectar negativamente a la experiencia de uso de OpenFreebuds.</translation>
     </message>
     <message>
-        <location filename="../../main.py" line="253" />
+        <location filename="../../main.py" line="264" />
         <source>This warning will be shown only once. Please, test Flatpak version before reporting bugs.</source>
         <translation>Este aviso sólo se mostrará una vez. Por favor, prueba la versión de Flatpak antes de informar de errores.</translation>
     </message>
@@ -607,7 +607,7 @@
 </context><context>
     <name>OfbQtHotkeysModule</name>
     <message>
-        <location filename="../../app/module/hotkeys_module.py" line="61" />
+        <location filename="../../app/module/hotkeys_module.py" line="66" />
         <source>Press new shortcut…</source>
         <translation>Pulsa nuevo acceso directo…</translation>
     </message>
@@ -696,102 +696,107 @@
 </context><context>
     <name>OfbQtMainWindow</name>
     <message>
-        <location filename="../../app/main.py" line="67" />
+        <location filename="../../app/main.py" line="72" />
         <source>Select device</source>
         <translation>Seleccionar dispositivo</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="71" />
+        <location filename="../../app/main.py" line="76" />
         <source>Device info</source>
         <translation>Información del dispositivo</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="72" />
+        <location filename="../../app/main.py" line="77" />
         <source>Dual-connect</source>
         <translation>Conexión dual</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="73" />
+        <location filename="../../app/main.py" line="78" />
         <source>Gestures</source>
         <translation>Gestos</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="74" />
+        <location filename="../../app/main.py" line="79" />
         <source>Sound quality</source>
         <translation>Calidad del sonido</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="75" />
+        <location filename="../../app/main.py" line="80" />
         <source>Other settings</source>
         <translation>Otros ajustes</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="78" />
+        <location filename="../../app/main.py" line="83" />
         <source>Application</source>
         <translation>Aplicación</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="80" />
+        <location filename="../../app/main.py" line="85" />
         <source>User interface</source>
         <translation>Interfaz de usuario</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="81" />
+        <location filename="../../app/main.py" line="86" />
+        <source>Tray battery</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../app/main.py" line="87" />
         <source>Automation</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../app/main.py" line="83" />
+        <location filename="../../app/main.py" line="89" />
         <source>Keyboard shortcuts</source>
         <translation>Atajo del teclado</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="85" />
+        <location filename="../../app/main.py" line="91" />
         <source>Linux-related</source>
         <translation>Ajustes de Linux</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="86" />
+        <location filename="../../app/main.py" line="92" />
         <source>About…</source>
         <translation>Acerca de…</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="94" />
+        <location filename="../../app/main.py" line="100" />
         <source>Help: FAQ</source>
         <translation>Ayuda: FAQ</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="98" />
+        <location filename="../../app/main.py" line="104" />
         <source>Help: Remote control</source>
         <translation>Ayuda: Control remoto</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="102" />
+        <location filename="../../app/main.py" line="108" />
         <source>Bugreport…</source>
         <translation>Reportar errores…</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="107" />
+        <location filename="../../app/main.py" line="113" />
         <source>Check for updates…</source>
         <translation>Comprobar actualizaciones…</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="114" />
+        <location filename="../../app/main.py" line="121" />
         <source>Remote access…</source>
         <translation>Acceso remoto…</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="118" />
+        <location filename="../../app/main.py" line="125" />
         <source>Temporary replace device</source>
         <translation>Reemplazar dispositivo temporalmente</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="125" />
+        <location filename="../../app/main.py" line="132" />
         <source>Close this window</source>
         <translation>Cerrar la ventana</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="130" />
+        <location filename="../../app/main.py" line="137" />
         <source>Exit OpenFreebuds</source>
         <translation>Cerrar OpenFreebuds</translation>
     </message>
@@ -970,6 +975,81 @@
         <location filename="../../designer/sound_quality.ui" line="0" />
         <source>Save</source>
         <translation>Guardar</translation>
+    </message>
+</context><context>
+    <name>OfbQtTrayBatteryModule</name>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="25" />
+        <source>Show battery percentages in the system tray</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="53" />
+        <location filename="../../app/module/tray_battery.py" line="30" />
+        <source>Left earbud</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="53" />
+        <location filename="../../app/module/tray_battery.py" line="30" />
+        <source>Right earbud</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="54" />
+        <location filename="../../app/module/tray_battery.py" line="31" />
+        <source>Charging case</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="33" />
+        <source>Customize indicator</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="36" />
+        <source>Text color</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="37" />
+        <source>Background color</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="42" />
+        <source>Text size (100% = largest that fits)</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="44" />
+        <source>Normal</source>
+        <translation type="unfinished">Normal</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="45" />
+        <source>Bold</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="46" />
+        <source>Font weight</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="48" />
+        <source>Transparent background</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="50" />
+        <source>Preview</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="65" />
+        <source>Changes apply immediately. Icons appear when battery levels are available. On Windows, check the hidden icons (^) menu and drag the icons onto the taskbar.</source>
+        <translation type="unfinished" />
     </message>
 </context><context>
     <name>OfbQtTrayMenu</name>
@@ -1153,9 +1233,24 @@
 </context><context>
     <name>OfbTrayIcon</name>
     <message>
-        <location filename="../../tray/main.py" line="91" />
+        <location filename="../../tray/main.py" line="110" />
         <source>OpenFreebuds: Connecting to device…</source>
         <translation>OpenFreebuds: Conectando al dispositivo…</translation>
+    </message>
+    <message>
+        <location filename="../../tray/main.py" line="133" />
+        <source>Left earbud</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../tray/main.py" line="134" />
+        <source>Right earbud</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../tray/main.py" line="135" />
+        <source>Charging case</source>
+        <translation type="unfinished" />
     </message>
 </context><context>
     <name>ShortcutName</name>
