@@ -104,8 +104,8 @@ class OfbQtDeviceControlViewHelper:
             with blocked_signals(self.ui.anc_level):
                 self.ui.anc_level.clear()
                 for opt_code in options:
-                    self.ui.anc_level.addItem(self.anc_level_option_names.get(opt_code, opt_code))
-                self.ui.anc_level.setCurrentText(self.anc_level_option_names.get(level, level))
+                    self.ui.anc_level.addItem(self.anc_level_option_names.get(opt_code, str(opt_code)))
+                self.ui.anc_level.setCurrentText(self.anc_level_option_names.get(level, str(level)))
 
     async def _update_battery(self, battery: dict):
         is_tws = "case" in battery
