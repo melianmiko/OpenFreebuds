@@ -151,12 +151,12 @@
 </context><context>
     <name>OfbQtAboutModule</name>
     <message>
-        <location filename="../../app/module/about.py" line="21" />
+        <location filename="../../app/module/about.py" line="24" />
         <source>Supported devices</source>
         <translation>Desteklenen cihazlar</translation>
     </message>
     <message>
-        <location filename="../../app/module/about.py" line="28" />
+        <location filename="../../app/module/about.py" line="31" />
         <source>Libraries</source>
         <translation>Kütüphaneler</translation>
     </message>
@@ -178,27 +178,27 @@
 </context><context>
     <name>OfbQtApplication</name>
     <message>
-        <location filename="../../main.py" line="216" />
+        <location filename="../../main.py" line="227" />
         <source>System tray not available, application won't work in background. This will make some features, like global hotkeys, unavailable.</source>
         <translation>Sistem tepsisi mevcut değil, uygulama arka planda çalışamıyor. Bu bazı global kısayollar gibi bazı özellikleri kullanılmaz hale getirir. </translation>
     </message>
     <message>
-        <location filename="../../main.py" line="218" />
+        <location filename="../../main.py" line="229" />
         <source>If you're running under GNOME shell, please, check FAQ. This warning will be shown only once.</source>
         <translation>Eğer Gnome kabuğu üzerinde çalışıyorsan, lütfen SSS sayfasını kontrol et. Bu uyarı sadece bir kere gösterilecektir.</translation>
     </message>
     <message>
-        <location filename="../../main.py" line="233" />
+        <location filename="../../main.py" line="244" />
         <source>Failed to read configuration file. Default application settings was restored.</source>
         <translation>Config dosyası okunamadı. Varsayılan uygulama ayarlarına geri dönüldü. </translation>
     </message>
     <message>
-        <location filename="../../main.py" line="248" />
+        <location filename="../../main.py" line="259" />
         <source>You're running under older version of Qt than expected. It's strongly recommended to switch to Flatpak release, because older Qt version may fail your experience of using OpenFreebuds.</source>
         <translation>Gerekenden daha eski bir Qt versiyonu kullanıyorsunuz. Flatpak versiyonuna geçmeniz şiddetle tavsiye edilir, çünkü eski Qt versiyonları OpenFreebds uygulama deneyiminizi kötüleştirebilir.</translation>
     </message>
     <message>
-        <location filename="../../main.py" line="253" />
+        <location filename="../../main.py" line="264" />
         <source>This warning will be shown only once. Please, test Flatpak version before reporting bugs.</source>
         <translation>Bu uyarı sadece bir kere gösterilecektir. Lütfen, hata raporlamadan önce Flatpak versiyonunu kontrol ediniz.  </translation>
     </message>
@@ -607,7 +607,7 @@
 </context><context>
     <name>OfbQtHotkeysModule</name>
     <message>
-        <location filename="../../app/module/hotkeys_module.py" line="61" />
+        <location filename="../../app/module/hotkeys_module.py" line="66" />
         <source>Press new shortcut…</source>
         <translation>Yeni kısayol için basın…</translation>
     </message>
@@ -696,109 +696,109 @@
 </context><context>
     <name>OfbQtMainWindow</name>
     <message>
-        <location filename="../../app/main.py" line="67" />
+        <location filename="../../app/main.py" line="72" />
         <source>Select device</source>
         <translation>Cihaz seç</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="71" />
+        <location filename="../../app/main.py" line="76" />
         <source>Device info</source>
         <translation>Cihaz bilgisi</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="72" />
+        <location filename="../../app/main.py" line="77" />
         <source>Dual-connect</source>
         <translation>Çift bağlantı</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="73" />
+        <location filename="../../app/main.py" line="78" />
         <source>Gestures</source>
         <translation>Hareketler</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="74" />
+        <location filename="../../app/main.py" line="79" />
         <source>Sound quality</source>
         <translation>Ses kalitesi</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="75" />
+        <location filename="../../app/main.py" line="80" />
         <source>Other settings</source>
         <translation>Diğer ayarlar</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="78" />
+        <location filename="../../app/main.py" line="83" />
         <source>Application</source>
         <translation>Uygulama</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="80" />
+        <location filename="../../app/main.py" line="85" />
         <source>User interface</source>
         <translation>Kullanıcı arayüzü</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="81" />
+        <location filename="../../app/main.py" line="86" />
+        <source>Tray battery</source>
+        <translation>Tray pil göstergeleri</translation>
+    </message>
+    <message>
+        <location filename="../../app/main.py" line="87" />
         <source>Automation</source>
         <translation>Otomasyon</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="83" />
+        <location filename="../../app/main.py" line="89" />
         <source>Keyboard shortcuts</source>
         <translation>Klavye kısayolları</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="85" />
+        <location filename="../../app/main.py" line="91" />
         <source>Linux-related</source>
         <translation>Linux ile ilgili</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="86" />
+        <location filename="../../app/main.py" line="92" />
         <source>About…</source>
         <translation>Hakkında…</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="94" />
+        <location filename="../../app/main.py" line="100" />
         <source>Help: FAQ</source>
         <translation>Yardım : SSS</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="98" />
+        <location filename="../../app/main.py" line="104" />
         <source>Help: Remote control</source>
         <translation>Yardım: Uzaktan kontrol</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="102" />
+        <location filename="../../app/main.py" line="108" />
         <source>Bugreport…</source>
         <translation>Hata raporu…</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="107" />
+        <location filename="../../app/main.py" line="113" />
         <source>Check for updates…</source>
         <translation>Güncellemeri kontrol edin…</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="114" />
+        <location filename="../../app/main.py" line="121" />
         <source>Remote access…</source>
         <translation>Uzaktan erişim…</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="118" />
+        <location filename="../../app/main.py" line="125" />
         <source>Temporary replace device</source>
         <translation>Cihazı geçici olarak değiştirin</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="125" />
+        <location filename="../../app/main.py" line="132" />
         <source>Close this window</source>
         <translation>Pencereyi kapat</translation>
     </message>
     <message>
-        <location filename="../../app/main.py" line="130" />
+        <location filename="../../app/main.py" line="137" />
         <source>Exit OpenFreebuds</source>
         <translation>OpenFreebuds'tan çıkış yap</translation>
-    </message>
-
-    <message>
-        <source>Tray battery</source>
-        <translation>Tray pil göstergeleri</translation>
     </message>
 </context><context>
     <name>OfbQtManualConnectDialog</name>
@@ -975,6 +975,81 @@
         <location filename="../../designer/sound_quality.ui" line="0" />
         <source>Save</source>
         <translation>Kaydet"</translation>
+    </message>
+</context><context>
+    <name>OfbQtTrayBatteryModule</name>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="25" />
+        <source>Show battery percentages in the system tray</source>
+        <translation>Pil yüzdelerini sistem tepsisinde göster</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="53" />
+        <location filename="../../app/module/tray_battery.py" line="30" />
+        <source>Left earbud</source>
+        <translation>Sol kulaklık</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="53" />
+        <location filename="../../app/module/tray_battery.py" line="30" />
+        <source>Right earbud</source>
+        <translation>Sağ kulaklık</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="54" />
+        <location filename="../../app/module/tray_battery.py" line="31" />
+        <source>Charging case</source>
+        <translation>Şarj kutusu</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="33" />
+        <source>Customize indicator</source>
+        <translation>Düzenlenecek gösterge</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="36" />
+        <source>Text color</source>
+        <translation>Yazı rengi</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="37" />
+        <source>Background color</source>
+        <translation>Arka plan rengi</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="42" />
+        <source>Text size (100% = largest that fits)</source>
+        <translation>Yazı boyutu (%100 = simgeye sığan en büyük boyut)</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="44" />
+        <source>Normal</source>
+        <translation>Normal</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="45" />
+        <source>Bold</source>
+        <translation>Kalın</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="46" />
+        <source>Font weight</source>
+        <translation>Yazı kalınlığı</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="48" />
+        <source>Transparent background</source>
+        <translation>Şeffaf arka plan</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="50" />
+        <source>Preview</source>
+        <translation>Önizleme</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/tray_battery.py" line="65" />
+        <source>Changes apply immediately. Icons appear when battery levels are available. On Windows, check the hidden icons (^) menu and drag the icons onto the taskbar.</source>
+        <translation>Değişiklikler hemen uygulanır. Pil bilgisi alındığında simgeler görünür. Windows’ta gizli simgeler (^) menüsüne bakın ve simgeleri görev çubuğuna sürükleyin.</translation>
     </message>
 </context><context>
     <name>OfbQtTrayMenu</name>
@@ -1158,20 +1233,22 @@
 </context><context>
     <name>OfbTrayIcon</name>
     <message>
-        <location filename="../../tray/main.py" line="91" />
+        <location filename="../../tray/main.py" line="110" />
         <source>OpenFreebuds: Connecting to device…</source>
         <translation>OpenFreebuds: Cihaza bağlanıyor…</translation>
     </message>
-
     <message>
+        <location filename="../../tray/main.py" line="133" />
         <source>Left earbud</source>
         <translation>Sol kulaklık</translation>
     </message>
     <message>
+        <location filename="../../tray/main.py" line="134" />
         <source>Right earbud</source>
         <translation>Sağ kulaklık</translation>
     </message>
     <message>
+        <location filename="../../tray/main.py" line="135" />
         <source>Charging case</source>
         <translation>Şarj kutusu</translation>
     </message>
@@ -1222,56 +1299,4 @@
         <source>Enable low-latency mode</source>
         <translation>Düşük gecikme modunu etkinleştirin</translation>
     </message>
-</context><context>
-    <name>OfbQtTrayBatteryModule</name>
-    <message><source>Font weight</source><translation>Yazı kalınlığı</translation></message>
-    <message><source>Normal</source><translation>Normal</translation></message>
-    <message><source>Bold</source><translation>Kalın</translation></message>
-    <message>
-        <source>Show battery percentages in the system tray</source>
-        <translation>Pil yüzdelerini sistem tepsisinde göster</translation>
-    </message>
-    <message>
-        <source>Text color</source>
-        <translation>Yazı rengi</translation>
-    </message>
-    <message>
-        <source>Background color</source>
-        <translation>Arka plan rengi</translation>
-    </message>
-    <message>
-        <source>Transparent background</source>
-        <translation>Şeffaf arka plan</translation>
-    </message>
-    <message>
-        <source>Preview</source>
-        <translation>Önizleme</translation>
-    </message>
-    <message>
-        <source>Left earbud</source>
-        <translation>Sol kulaklık</translation>
-    </message>
-    <message>
-        <source>Right earbud</source>
-        <translation>Sağ kulaklık</translation>
-    </message>
-    <message>
-        <source>Charging case</source>
-        <translation>Şarj kutusu</translation>
-    </message>
-    <message>
-        <source>Changes apply immediately. Icons appear when battery levels are available. On Windows, check the hidden icons (^) menu and drag the icons onto the taskbar.</source>
-        <translation>Değişiklikler hemen uygulanır. Pil bilgisi alındığında simgeler görünür. Windows’ta gizli simgeler (^) menüsüne bakın ve simgeleri görev çubuğuna sürükleyin.</translation>
-    </message>
-
-    <message>
-        <source>Customize indicator</source>
-        <translation>Düzenlenecek gösterge</translation>
-    </message>
-
-    <message>
-        <source>Text size (100% = largest that fits)</source>
-        <translation>Yazı boyutu (%100 = simgeye sığan en büyük boyut)</translation>
-    </message>
-</context>
-</TS>
+</context></TS>

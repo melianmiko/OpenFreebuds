@@ -91,6 +91,12 @@
   <content_rating type="oars-1.1" />
 
   <releases>
+    <release version="0.18.1" date="2026-09-14">
+      <url type="details">https://github.com/melianmiko/OpenFreebuds/blob/main/docs/CHANGELOG.md#v0.18.1</url>
+      <description>
+        <p>Not provided</p>
+      </description>
+    </release>
     <release version="0.18.0" date="2026-08-08">
       <url type="details">https://github.com/melianmiko/OpenFreebuds/blob/main/docs/CHANGELOG.md#v0.18.0</url>
       <description>

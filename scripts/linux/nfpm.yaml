@@ -5,7 +5,7 @@ name: "openfreebuds"
 vendor: "MelianMiko"
 maintainer: "MelianMiko <support@mmk.pw>"
 homepage: "https://github.com/melianmiko/OpenFreebuds"
-version: "0.18.0"
+version: "0.18.1"
 license: "GPLv3"
 
 arch: "all"

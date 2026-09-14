@@ -14,6 +14,9 @@ from openfreebuds_qt.utils import blocked_signals
 from openfreebuds_qt.utils.async_dialog import run_dialog_async
 
 
+# TODO: Use Qt Designer for layout instead of hardcoded Qt widgets
+# TODO: Combine with all tray-related settings
+
 class OfbQtTrayBatteryModule(OfbQtCommonModule):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
