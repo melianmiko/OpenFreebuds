@@ -1,3 +1,5 @@
+import "../build.just"
+
 export WINEPATH := "C:\\openfreebuds_buildtools;C:\\openfreebuds_buildtools\\Scripts"
 export WINEDEBUG := '-all'
 export WINEARCH := env("WINEARCH", "win64")
@@ -14,8 +16,6 @@ pyinstaller := "pdm run pyinstaller -y" + \
 
 wineprefix := env("WINEPREFIX", sources_dir + "/build/wineprefix")
 wine := "WINEPREFIX=\"" + wineprefix + "\" " + env("WINEBINARY", "/usr/bin/wine")
-winetools := wineprefix + '/drive_c/openfreebuds_buildtools'
-w32_python_ver := "3.14.7"
 
 [private,linux,script("bash")]
 get_winearch:
@@ -54,16 +54,14 @@ win32_portable: build
 
 # Wrapper for wine-arm64 environment
 [group("os_windows"),linux,private]
-win32-arm64 action:
+win32_arm64 action:
     WINEARCH=wow64 \
         WINEPREFIX="{{ sources_dir }}/build/wineprefix-arm64" \
         WINEBINARY=/usr/bin/wine-arm64 \
-        just "{{ action }}"
+        just {{ action }}
 
 # -------------------------------------------------------------------------------------------------
 # Windows native
-
-winget_install := "winget install -e --no-upgrade --id"
 
 # Make windows installer
 [group("os_windows"),windows]

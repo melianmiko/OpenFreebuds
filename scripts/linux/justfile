@@ -1,4 +1,7 @@
+import "../build.just"
+
 global_signkey := home_directory() / ".gnupg" / "sign.key"
+gpg_temp_home := build_dir / "tmp-gnupg"
 signkey := if path_exists(global_signkey) {
     global_signkey
 } else {
@@ -18,8 +21,10 @@ prepare_dummysign:
     # ------------------------------------------------
     # Signature key not found. Will generate dummy one
     # ------------------------------------------------
-    -gpg --quick-gen-key --batch --passphrase '' testsign@localhost
-    gpg --armor --export-secret-keys testsign@localhost > "{{ signkey }}"
+    mkdir -p "{{ gpg_temp_home }}"
+    -gpg --homedir "{{ gpg_temp_home }}" --quick-gen-key --batch --passphrase '' testsign@localhost
+    gpg --homedir "{{ gpg_temp_home }}" --armor --export-secret-keys testsign@localhost > "{{ signkey }}"
+    -rm -rf "{{ gpg_temp_home }}"
 
 # Create build rootfs
 [private,linux]

@@ -1,3 +1,5 @@
+import "../build.just"
+
 flatpak_dir := absolute_path(env("FLATPAKBUILDDIR", './build/flatpak'))
 
 # Install dependencies for Flatpak build

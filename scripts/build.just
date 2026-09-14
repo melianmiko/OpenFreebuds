@@ -1,3 +1,9 @@
+import "base.just"
+
+build_dir := sources_dir + "/build"
+
+pdm := which(if os_family() == "windows" { "pdm.exe" } else { "pdm" })
+
 lrelease := which(if os_family() == "windows" && pdm { \
     `pdm run python -c "
 import os
@@ -22,7 +28,7 @@ build: qt_i18n
 
 # Start PyTest
 test: build
-    pdm run pytest -o cache_dir=build/pytest-cache
+    pdm run pytest -o cache_dir={{ build_dir }}/pytest-cache
 
 # Compile Qt Linguist translation files
 [script,private]
@@ -42,23 +48,3 @@ qt_i18n:
 build_check:
     assert "{{pdm}}" != "", "PDM not found"
     assert "{{lrelease}}" != "", "Qt lrelease not found"
-
-# Cleanup project directory
-[group("release"),script]
-clean:
-    import shutil
-    for name in ["build", "dist", ".pdm-build"]:
-        shutil.rmtree(f"{{ sources_dir }}/{name}")
-
-# Build release binaries (windows)
-[group("release"),windows]
-release: win32_installer win32_portable
-
-# Build all possible release binaries (linux)
-[group("release"),linux,script("bash")]
-release:
-    set -euxo pipefail
-    just debian fedora
-    [ -f /usr/bin/flatpak ] && just flatpak
-    [ -f /usr/bin/wine ] && [ -f build/enable_cc ] && just win32
-    [ -f /usr/bin/wine-arm64 ] && [ -f build/enable_cc ] && just win32-arm64 win32
