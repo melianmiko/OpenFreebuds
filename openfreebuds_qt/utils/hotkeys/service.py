@@ -1,4 +1,6 @@
 import asyncio
+import sys
+import time
 from typing import Optional
 
 from openfreebuds import IOpenFreebuds
@@ -15,6 +17,7 @@ class OfbQtHotkeyService:
         self.ofb = ofb
         self.config = OfbQtConfigParser.get_instance()
         self.pynput: Optional[any] = None
+        self._init_time = time.time()
 
     @staticmethod
     def get_instance(ofb: IOpenFreebuds):
@@ -25,6 +28,9 @@ class OfbQtHotkeyService:
     def start(self):
         self.stop()
         if not self.config.get("hotkeys", "enabled", False):
+            return
+        if sys.platform == 'darwin' and time.time() > self._init_time + 5:
+            log.debug("Refuse runtime restart due to conflict with PyQt on OSX")
             return
 
         try:

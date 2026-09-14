@@ -1,26 +1,27 @@
-winget_install := "winget install -e --no-upgrade --id"
+import "./vars.just"
+import "./cc_linux.just"
 
 # Make windows installer
-[group("windows"),windows]
-win32_installer: win32_bundle
+[group("os_windows"),windows]
+win32_installer: build
     New-Item -ItemType Directory -Force -Path ./dist
-    cd ./scripts/windows; & "C:\Program Files (x86)\NSIS\Bin\makensis.exe" openfreebuds.nsi
-    mv -Force ./scripts/windows/dist/openfreebuds.install.exe ./dist/openfreebuds_{{version}}_{{arch()}}_windows.exe
+    cd ./scripts/windows; & {{pyinstaller}} openfreebuds.spec
+    New-Item -ItemType Directory -Force -Path {{ nsis_builddir }}
+    cd ./scripts/windows; & 'C:\Program Files (x86)\NSIS\Bin\makensis.exe' openfreebuds.nsi
+    mv -Force \
+        {{ nsis_builddir }}/openfreebuds.install.exe \
+        ./dist/openfreebuds_{{version}}_{{arch()}}_windows.exe
 
 # Make windows portable executable
-[group("windows"),windows]
+[group("os_windows"),windows]
 win32_portable:
     New-Item -ItemType Directory -Force -Path ./dist
-    cd ./scripts/windows; & pdm run pyinstaller -y openfreebuds_portable.spec
-    mv -Force ./scripts/windows/dist/openfreebuds_portable.exe ./dist/openfreebuds_{{version}}_{{arch()}}_windows_portable.exe
+    New-Item -ItemType Directory -Force -Path {{ nsis_builddir }}
+    cd ./scripts/windows; & {{pyinstaller}} openfreebuds_portable.spec
+    mv -Force \
+        {{ pyinstaller_distdir }}/openfreebuds_portable.exe \
+        ./dist/openfreebuds_{{version}}_{{arch()}}_windows_portable.exe
 
-# Prepare ./dist/ for win32 installer build
-[group("windows"),windows,private]
-win32_bundle: build
-    cd ./scripts/windows; & pdm run pyinstaller -y openfreebuds.spec
-
-# Install base project dependencies through WinGet
-[group("windows"),windows]
-deps_winget:
-    -{{ winget_install }} NSIS.NSIS
-    -{{ winget_install }} UPX.UPX
+# Make windows installer and portable
+[group("os_windows"),windows,linux]
+win32: win32_installer win32_portable

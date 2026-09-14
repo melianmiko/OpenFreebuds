@@ -17,6 +17,9 @@ class OfbQtAboutModule(Ui_OfbQtAboutModule, OfbQtCommonModule):
         self.setupUi(self)
         self.version_view.setText(VERSION)
 
+        # Copyright label setup
+        self.copyright_label.setOpenExternalLinks(True)
+
         # Supported devices tree
         devices = QTreeWidgetItem(None, [self.tr("Supported devices")])
         for name in DEVICE_TO_DRIVER_MAP.keys():

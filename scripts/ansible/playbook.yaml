@@ -1,7 +1,7 @@
 - hosts: localhost
   name: Prepare contents
   tasks:
-    - name: Clear dist folder
+    - name: Clear dist folder and pack sources
       raw: rm -rf ../../dist/*
     - name: Prepare source archive
       raw: |
@@ -10,22 +10,27 @@
         git ls-files | tar Tcf - /tmp/ansible_openfreebuds.tar
       changed_when: false
 
-# TODO: GPG set up for Debian
+- hosts: runners
+  gather_facts: false
+  tasks:
+    - name: Start VMs
+      delegate_to: localhost
+      community.libvirt.virt:
+        name: "{{ virt_domain }}"
+        state: running
+        uri: 'qemu:///system'
+      when: virt_domain is defined
+
+    - name: Wait for VMs
+      ansible.builtin.wait_for_connection:
 
 - hosts: runners
-  vars_files:
-    - vars/{{ ansible_facts.distribution | default("Debian") }}.yaml
   tasks:
-    - name: Prepare core dependencies (Linux)
-      package:
-        name: "{{ core_dependencies }}"
-        state: present
-      when: "ansible_facts.system == 'Linux'"
-
     - name: Prepare pipx dependencies
       raw: |
         pipx ensurepath
-        pipx install rust-just pdm
+        pipx install rust-just
+        pipx install pdm
       when: "ansible_facts.system == 'Linux'"
 
     - name: Prepare core dependencies (Windows)
@@ -42,6 +47,7 @@
     - name: Fix Flatpak builder access if running as root (in container)
       raw: flatpak override --user org.flatpak.Builder --filesystem=/root
       when: ansible_facts.system == 'Linux' and ansible_facts.user_uid == 0
+      failed_when: false
 
     - ansible.builtin.meta: reset_connection
       when: core_win_ret[2].changed
@@ -81,16 +87,16 @@
         cd ansible_openfreebuds
         tar xf "{{ ansible_facts.env.TEMP }}\\ansible_openfreebuds.tar"
       when: ansible_facts.system == 'Win32NT'
-    
+
     - name: Prepare environment
       raw: |
         cd ansible_openfreebuds
-        just prepare
+        just {{ x_prepare_role }}
 
     - name: Prepare release artifacts
       raw: |
         cd ansible_openfreebuds
-        just release
+        just {{ x_build_role }}
 
     - name: Find release artifacts (windows)
       win_find:
@@ -105,6 +111,7 @@
         flat: true
       loop: "{{ dist_files.files }}"
       when: ansible_facts.system == 'Win32NT'
+      throttle: 1
 
     - name: Fetch release artifacts (linux)
       synchronize:
@@ -112,6 +119,15 @@
         src: ./ansible_openfreebuds/dist/
         dest: ../../dist
       when: ansible_facts.system == 'Linux'
+      throttle: 1
 
     - name: Create exit flag (to stop Docker containers)
       raw: echo 'true' > ansible_openfreebuds/exit.flag
+
+    - name: Stop VMs
+      delegate_to: localhost
+      community.libvirt.virt:
+        name: "{{ virt_domain }}"
+        command: shutdown
+        uri: 'qemu:///system'
+      when: virt_domain is defined

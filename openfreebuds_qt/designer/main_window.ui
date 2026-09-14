@@ -79,8 +79,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>312</width>
-         <height>600</height>
+         <width>208</width>
+         <height>598</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -133,13 +133,13 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_8">
            <property name="leftMargin">
-            <number>16</number>
+            <number>9</number>
            </property>
            <property name="topMargin">
             <number>4</number>
            </property>
            <property name="rightMargin">
-            <number>24</number>
+            <number>9</number>
            </property>
            <property name="bottomMargin">
             <number>4</number>
@@ -182,13 +182,13 @@
              <property name="minimumSize">
               <size>
                <width>22</width>
-               <height>22</height>
+               <height>32</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>22</width>
-               <height>22</height>
+               <height>32</height>
               </size>
              </property>
              <property name="styleSheet">
@@ -642,6 +642,13 @@
                <height>48</height>
               </size>
              </property>
+             <property name="styleSheet">
+              <string notr="true">QToolButton:!checked {
+    background-color: transparent;
+    border: none;
+}
+</string>
+             </property>
              <layout class="QHBoxLayout" name="horizontalLayout_4">
               <property name="spacing">
                <number>0</number>
@@ -659,7 +666,7 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QPushButton" name="anc_on">
+               <widget class="QToolButton" name="anc_on">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
                   <horstretch>0</horstretch>
@@ -681,13 +688,10 @@
                 <property name="checkable">
                  <bool>true</bool>
                 </property>
-                <property name="flat">
-                 <bool>true</bool>
-                </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="anc_off">
+               <widget class="QToolButton" name="anc_off">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
                   <horstretch>0</horstretch>
@@ -709,13 +713,10 @@
                 <property name="checkable">
                  <bool>true</bool>
                 </property>
-                <property name="flat">
-                 <bool>true</bool>
-                </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="anc_awr">
+               <widget class="QToolButton" name="anc_awr">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
                   <horstretch>0</horstretch>
@@ -724,6 +725,9 @@
                 </property>
                 <property name="toolTip">
                  <string>Awareness</string>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
                 </property>
                 <property name="text">
                  <string notr="true"/>
@@ -735,9 +739,6 @@
                  </size>
                 </property>
                 <property name="checkable">
-                 <bool>true</bool>
-                </property>
-                <property name="flat">
                  <bool>true</bool>
                 </property>
                </widget>
@@ -857,8 +858,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>740</width>
-         <height>600</height>
+         <width>738</width>
+         <height>598</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -868,7 +869,7 @@
         </sizepolicy>
        </property>
        <property name="autoFillBackground">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
       </widget>
      </widget>

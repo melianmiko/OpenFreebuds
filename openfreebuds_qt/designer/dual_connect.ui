@@ -39,7 +39,7 @@
      </property>
      <property name="maximumSize">
       <size>
-       <width>180</width>
+       <width>220</width>
        <height>16777215</height>
       </size>
      </property>
@@ -80,7 +80,7 @@
         </property>
         <property name="maximumSize">
          <size>
-          <width>200</width>
+          <width>240</width>
           <height>16777215</height>
          </size>
         </property>
@@ -94,7 +94,7 @@
          <number>0</number>
         </property>
         <property name="viewMode">
-         <enum>QListView::ListMode</enum>
+         <enum>QListView::ViewMode::ListMode</enum>
         </property>
         <item>
          <property name="text">
@@ -146,7 +146,7 @@
          <item>
           <spacer name="horizontalSpacer_2">
            <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <enum>Qt::Orientation::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -301,7 +301,7 @@
          <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <enum>Qt::Orientation::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -317,7 +317,7 @@
       <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
-         <enum>Qt::Vertical</enum>
+         <enum>Qt::Orientation::Vertical</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>

@@ -29,7 +29,7 @@ class OfbQtUpdateWidgetHelper:
 
     def user_hide(self):
         updater = self.ctx.updater_service.updater
-        if updater is None:
+        if updater is None or updater.release_info is None:
             self.root_widget.setVisible(False)
             return
 

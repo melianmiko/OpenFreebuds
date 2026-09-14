@@ -1,13 +1,13 @@
 [project]
 name = "OpenFreebuds"
-version = "0.18.0"
+version = "0.18.1"
 description = "FOSS Windows/Linux client for HUAWEI FreeBuds headset series"
 authors = [
     {name = "MelianMiko", email = "support@mmk.pw"},
     {name = "Sherzod Norkulov"},
     {name = "JehuAlv"}
 ]
-requires-python = "<3.15,>=3.11"
+requires-python = "<3.15,>=3.14"
 dependencies = [
     "aiocmd<0.2.0,>=0.1.5",
     "pillow<13.0.0,>=12.3.0",
@@ -16,8 +16,9 @@ dependencies = [
     "qasync<1.0.0,>=0.28.0",
     "pynput<2.0.0,>=1.7.7",
     "dbus-next<1.0.0,>=0.2.3",
-    "winsdk==1.0.0b10; sys_platform == 'win32'",
+    "winsdk>=1.0.0b10; sys_platform == 'win32'",
     "pyobjc-framework-IOBluetooth>=12.1; sys_platform == 'darwin'",
+    "pyobjc-framework-ApplicationServices>=12.2.2; sys_platform == 'darwin'",
     "pyyaml>=6.0.3",
 ]
 
@@ -25,7 +26,7 @@ dependencies = [
 dev = [
     "pytest<10.0.0,>=9.1.1",
     "pytest-asyncio<1.4.0,>=0.26.0",
-    "pyinstaller==6.19.0; sys_platform == 'win32'",
+    "pyinstaller==6.19.0; sys_platform == 'win32' or sys_platform == 'darwin'",
     "pyside6>=6.8.2.1; sys_platform == 'win32'",
     "requirements-parser>=0.11.0",
     "setuptools>=82.0.0",
@@ -34,6 +35,9 @@ no_flatpak = [
     "pyqt6<7.0.0,>=6.9.1",
     "mmk-updater==0.15.6",
 ]
+
+[tool.pdm]
+build_dir = "build/pdm"
 
 [tool.pdm.resolution]
 excludes = ["evdev"]

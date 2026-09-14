@@ -1,0 +1,21 @@
+FROM debian:13
+
+WORKDIR /root
+CMD ["/entrypoint.sh"]
+
+RUN dpkg --add-architecture i386 \
+ && apt update \
+ && apt install -y \
+    python3 \
+    python-is-python3 \
+    pipx \
+    sudo \
+    rsync \
+    wine \
+    wine64 \
+    unzip \
+    busybox \
+    curl \
+    nsis
+
+COPY ./entrypoint.sh /

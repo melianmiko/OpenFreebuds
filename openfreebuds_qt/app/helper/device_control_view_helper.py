@@ -143,8 +143,8 @@ class OfbQtDeviceControlViewHelper:
             with blocked_signals(self.ui.anc_level):
                 self.ui.anc_level.clear()
                 for opt_code in options:
-                    self.ui.anc_level.addItem(self.anc_level_option_names.get(opt_code, opt_code))
-                self.ui.anc_level.setCurrentText(self.anc_level_option_names.get(level, level))
+                    self.ui.anc_level.addItem(self.anc_level_option_names.get(opt_code, str(opt_code)))
+                self.ui.anc_level.setCurrentText(self.anc_level_option_names.get(level, str(level)))
 
         awareness_level = anc.get("awareness_level", None)
         show_awareness_level = mode == "awareness" and level == "adaptive_transparency" and awareness_level is not None

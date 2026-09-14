@@ -3,14 +3,14 @@
 !include "FileFunc.nsh"
 
 !define APP_NAME "OpenFreebuds"
-!define APP_VERSION "0.18.0"
+!define APP_VERSION "0.18.1"
 !define APP_DEVELOPER "MelianMiko"
 !define APP_BUILD_NAME "openfreebuds"
 !define APP_EXE "openfreebuds.exe"
 !define REG_KEY
 
 Name "${APP_NAME}"
-OutFile "dist\${APP_BUILD_NAME}.install.exe"
+OutFile "..\..\build\makensis\${APP_BUILD_NAME}.install.exe"
 Unicode True
 AutoCloseWindow True
 
@@ -52,7 +52,7 @@ Section "Dummy Section" SecDummy
 
 	; Copy files
 	SetOutPath "$INSTDIR"
-	File /r "dist\${APP_BUILD_NAME}\"
+	File /r "..\..\build\pyinstaller_dist\${APP_BUILD_NAME}\"
 
 	;Shortcuts
 	ClearErrors

@@ -1,4 +1,13 @@
 - changes:
+  - note: '[Device compatibility] Initial Freebuds 3 support (thx @qiushixiang)'
+  - note: '[Feature] Configurable per-earbud and case battery tray indicators (thx @sinanakyazici)'
+  - note: '[Fix] Crash for unknown ANC level option'
+  - note: '[Platform] Initial macOS packaing config and UX enhancements (not ready for production)'
+  date: 2026-09-14T11:50:31+07:00
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.18.1
+
+- changes:
   - note: '[Platform] Initial macOS compatibility (thx @IAL32)'
   - note: '[Device compatibility] HUAWEI FreeBuds Pro 5 (thx @JehuAlv)'
   - note: '[Device compatibility] HUAWEI FreeClip / FreeClip 2 (thx @hereshui3)'

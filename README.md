@@ -24,6 +24,7 @@ Features
 
 - Dynamic system tray icon that shows current active noise cancellation mode and battery level;
 - Tray menu with battery levels and active noise cancellation settings;
+- Optional separate numeric tray icons for the left earbud, right earbud, and charging case;
 - Ability to change voice language (not all devices supported);
 - Device settings dialog, eg. change equalizer preset, gesture actions, etc;
 - Built-in HTTP-server for remote control & scripting;
@@ -31,12 +32,31 @@ Features
 
 ![Settings preview](docs/preview_1.png)
 
+### Battery tray indicators
+
+Enable **Application → Tray battery → Show battery percentages in the system tray**
+to display each reported earbud/case level as a separate number, without a `%` sign.
+The indicators are disabled by default. Each indicator has independent text and
+background colors, optional transparency, Normal/Bold font weight (Bold by default),
+and text size from 50% to 100% of the largest size that fits its tray icon. The preview uses sample battery levels;
+changes are saved and applied immediately.
+
+Hover over an indicator to identify the earbud or case. Left-click opens the
+settings window, and right-click opens the existing tray menu. Indicators hide
+when disconnected, disabled, or when their individual battery level is unavailable.
+Devices reporting only an aggregate battery level do not get additional indicators.
+
+The desktop controls tray visibility and ordering. On Windows, indicators may
+initially appear in the hidden-icons (`^`) menu. The application creates them in
+left/right/case order, but cannot force their final position in the Windows tray.
+
 Device compatibility
 ------------------------
 
 See device page to get information about supported features.
 If your device isn't listed here, you could try to use it with profile for other model.
 
+- [HUAWEI FreeBuds 3](./docs/devices/HUAWEI_FreeBuds_3.md)
 - [HUAWEI FreeBuds 4i](./docs/devices/HUAWEI_FreeBuds_4i.md)
   - **HONOR Earbuds 2 / 2 SE / 2 Lite** is same
 - [HUAWEI FreeBuds 5i](./docs/devices/HUAWEI_FreeBuds_5i.md)
@@ -75,7 +95,7 @@ All installation options:
 | ![](./docs/img/i_win32.png) Windows¹       | [Scoop](https://scoop.sh/)                                                                 | <pre>scoop bucket add extras<br/>scoop install openfreebuds</pre>                            |
 | ![](./docs/img/i_linux.png) Any linux      | [Flathub](https://flathub.org/apps/pw.mmk.OpenFreebuds)                       | <pre>flatpak install pw.mmk.OpenFreebuds</pre>                                               |
 | ![](./docs/img/i_debian.png) Debian/Ubuntu | APT                                                                                        | <pre>curl -s https://st.mmk.pw/debiansetup \| sudo bash -<br/>sudo apt install openfreebuds</pre> |
-| ![](./docs/img/i_fedora.png) Fedora | DNF | <pre> sudo dnf config-manager addrepo --from-repofile https://download.docker.com/linux/fedora/docker-ce.repo<br/>sudo dnf install</pre> |
+| ![](./docs/img/i_fedora.png) Fedora | DNF | <pre>sudo dnf config-manager addrepo \\<br/>    --from-repofile https://st.mmk.pw/melianmiko.repo<br/>sudo dnf install openfreebuds</pre> |
 | ![](./docs/img/i_arch.png) ArchLinux       | [Yay](https://github.com/Jguer/yay) for AUR                                                | <pre>yay -S openfreebuds</pre>                                                               |
 | ![](./docs/img/i_nix.png) NixOS¹ 25.11+    | NixPkgs                                                                                    | [openfreebuds](https://search.nixos.org/packages?channel=unstable&query=openfreebuds)        |
 
@@ -86,24 +106,31 @@ Most recent `dev`-binaries can be found as [GitHub Actions](https://github.com/m
 Build from sources
 -------------
 
-### Manual build
+### Build dependencies
 
-Requirements:
-
-- Windows 10/11, or enough modern Linux;
-- Qt 6.0+ development tools, at least Linguist's `lrelease` (under Windows, will be used auto-obtained from `PySide6`;
+**Windows 10/11**:
 - [Just](https://github.com/casey/just);
 - [Python](https://www.python.org/downloads/) (3.13+), [PDM](https://pdm-project.org/en/latest/);
-- (Windows, optional) [NSIS](https://nsis.sourceforge.io/Download), [UPX](https://upx.github.io/).
+  - Do not Python from Microsoft Store;
+- (optional) [NSIS](https://nsis.sourceforge.io/Download), [UPX](https://upx.github.io/).
 
-To install all other dependencies, do `just prepare` (may require administrator/root privileges).
+**Linux**:
+- [Just](https://github.com/casey/just);
+- Python (3.13+), [PDM](https://pdm-project.org/en/latest/);
+- Qt 6.0+ development tools, at least Linguist's `lrelease`.
 
-When dependencies listed above are resolved, parepare project environment and build Python
-wheel by running: `just build`.
+**macOS** (experimental, tested only on Intel-based macOS):
+- [Python](https://www.python.org/downloads/) (3.13+), [PDM](https://pdm-project.org/en/latest/);
+  - PDM with python from website can be added via `pip3 install -U pipx && python3 -m pipx install pdm && python3 -m pipx ensurepath`;
+  - For now, if using python from homebrew, you must symlink it to `python` since scripts doesn't use `python3` command;
+- [Just](https://github.com/casey/just) (`brew install just`);
+- Qt 6.0+ development tools, at least Linguist's `lrelease` (`brew install qttools`).
 
-Now, you can try launching OpenFreebuds by `just start` command or package it via:
+### Prepare environment
 
-- `just win32` for Windows portable and installer;
-- `just debian` for Debian `deb`-package;
-- `just fedora` for Fedora (potentially other RHEL's) `rpm`-package;
-- `just flatpak` for Flatpak bundle (will also automatically install application).
+1. Obtain dependencies: `pdm install`;
+2. Try to run it: `just start`;
+3. Make release binary:
+  - Windows: `just win32`;
+  - Linux: `just debian fedora`;
+  - macOS: `just macos`.
