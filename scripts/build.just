@@ -20,6 +20,10 @@ build: qt_i18n
     pdm run pyuic6 ./openfreebuds_qt/designer/
     pdm build --no-clean
 
+# Start PyTest
+test: build
+    pdm run pytest -o cache_dir=build/pytest-cache
+
 # Compile Qt Linguist translation files
 [script,private]
 qt_i18n:
