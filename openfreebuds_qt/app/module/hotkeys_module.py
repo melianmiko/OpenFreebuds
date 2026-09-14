@@ -3,11 +3,12 @@ from qasync import asyncSlot
 
 from openfreebuds.shortcuts import OfbShortcuts
 from openfreebuds.utils.logger import create_logger
-from openfreebuds_backend import GLOBAL_HOTKEYS_AVAILABLE
+from openfreebuds_backend import GLOBAL_HOTKEYS_AVAILABLE, trigger_hotkeys_permission
 from openfreebuds_qt.app.module import OfbQtCommonModule
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.designer.hotkeys import Ui_OfbQtHotkeysModule
 from openfreebuds_qt.qt_i18n import get_shortcut_names
+from openfreebuds_qt.utils.async_dialog import run_dialog_async
 from openfreebuds_qt.utils.hotkeys.recorder import OfbQtHotkeyRecorder
 from openfreebuds_qt.utils.hotkeys.service import OfbQtHotkeyService
 from openfreebuds_qt.utils.qt_utils import qt_error_handler, blocked_signals
@@ -43,6 +44,10 @@ class OfbQtHotkeysModule(Ui_OfbQtHotkeysModule, OfbQtCommonModule):
     @asyncSlot(bool)
     async def on_toggle_enabled(self, value: bool):
         async with qt_error_handler("OfbQtHotkeysModule_GlobalSwitch", self.ctx):
+            if value and not trigger_hotkeys_permission():
+                self.shortcuts_toggle.setChecked(False)
+                return
+
             self.config.set("hotkeys", "enabled", value)
             self.config.save()
             self.table.setEnabled(value)

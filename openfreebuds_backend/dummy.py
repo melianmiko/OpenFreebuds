@@ -39,6 +39,11 @@ async def bt_disconnect(address):
     return False
 
 
+def trigger_hotkeys_permission():
+    # Assue allowed by default
+    return True
+
+
 def bt_list_devices():
     return []
 

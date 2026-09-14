@@ -1,0 +1,16 @@
+pyinstaller_env := build_dir / "mac_pyinstaller_venv"
+resolved_dir := build_dir / "mac_resolve"
+
+# Install macOS build dependencies from Homebrew
+[group("prepare"),macos]
+deps_macos:
+    brew install qttools just
+
+# Build macOS release binary (requires XCode tools to cross-compile x86/arm)
+[group("os_macos"),macos]
+macos:
+    mkdir -p dist
+    rm -rf dist/OpenFreebuds.app
+    cd scripts/macos && {{pdm}} run pyinstaller -y openfreebuds.spec
+    mv scripts/macos/dist/OpenFreebuds.app dist/OpenFreebuds.app
+    cd dist && tar czf openfreebuds_{{version}}_macos.tar.gz OpenFreebuds.app

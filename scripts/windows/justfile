@@ -86,5 +86,5 @@ win32_portable:
         ./dist/openfreebuds_{{version}}_{{arch()}}_windows_portable.exe
 
 # Make windows installer and portable
-[group("os_windows")]
+[group("os_windows"),windows,linux]
 win32: win32_installer win32_portable
