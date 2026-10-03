@@ -21,26 +21,120 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QCheckBox" name="auto_pause_toggle">
-        <property name="text">
-         <string>Wear detection</string>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>16</width>
-          <height>32</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Pause audio or switch device when earphones are removed</string>
-        </property>
-        <property name="wordWrap">
+       <widget class="QWidget" name="auto_pause_row">
+        <property name="settingsRow" stdset="0">
          <bool>true</bool>
         </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <layout class="QHBoxLayout" name="auto_pause_row_layout">
+         <property name="spacing">
+          <number>18</number>
+         </property>
+         <property name="leftMargin">
+          <number>18</number>
+         </property>
+         <property name="topMargin">
+          <number>16</number>
+         </property>
+         <property name="rightMargin">
+          <number>18</number>
+         </property>
+         <property name="bottomMargin">
+          <number>16</number>
+         </property>
+         <item>
+          <widget class="QWidget" name="auto_pause_text">
+           <property name="settingsTextBlock" stdset="0">
+            <bool>true</bool>
+           </property>
+           <layout class="QVBoxLayout" name="auto_pause_text_layout">
+            <property name="spacing">
+             <number>4</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="auto_pause_title">
+              <property name="settingsRowTitle" stdset="0">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Wear detection</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="settingsRowDescription" stdset="0">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Pause audio or switch device when earphones are removed</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="auto_pause_controls">
+           <property name="settingsControls" stdset="0">
+            <bool>true</bool>
+           </property>
+           <layout class="QHBoxLayout" name="auto_pause_controls_layout">
+            <property name="spacing">
+             <number>10</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QCheckBox" name="auto_pause_toggle">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>32</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>
@@ -53,20 +147,114 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <widget class="QCheckBox" name="low_latency_toggle">
-        <property name="text">
-         <string>Enable low-latency mode</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Will try to reduce audio latency when using headphones in enviroments with high network load. This option is disabled when your earphones are disconnected. Applies only for current device.</string>
-        </property>
-        <property name="wordWrap">
+       <widget class="QWidget" name="low_latency_row">
+        <property name="settingsRow" stdset="0">
          <bool>true</bool>
         </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <layout class="QHBoxLayout" name="low_latency_row_layout">
+         <property name="spacing">
+          <number>18</number>
+         </property>
+         <property name="leftMargin">
+          <number>18</number>
+         </property>
+         <property name="topMargin">
+          <number>16</number>
+         </property>
+         <property name="rightMargin">
+          <number>18</number>
+         </property>
+         <property name="bottomMargin">
+          <number>16</number>
+         </property>
+         <item>
+          <widget class="QWidget" name="low_latency_text">
+           <property name="settingsTextBlock" stdset="0">
+            <bool>true</bool>
+           </property>
+           <layout class="QVBoxLayout" name="low_latency_text_layout">
+            <property name="spacing">
+             <number>4</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="low_latency_title">
+              <property name="settingsRowTitle" stdset="0">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Enable low-latency mode</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_3">
+              <property name="settingsRowDescription" stdset="0">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Will try to reduce audio latency when using headphones in enviroments with high network load. This option is disabled when your earphones are disconnected. Applies only for current device.</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="low_latency_controls">
+           <property name="settingsControls" stdset="0">
+            <bool>true</bool>
+           </property>
+           <layout class="QHBoxLayout" name="low_latency_controls_layout">
+            <property name="spacing">
+             <number>10</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QCheckBox" name="low_latency_toggle">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>
@@ -77,25 +265,112 @@
      <property name="title">
       <string>Service</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Device language:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="service_language_box"/>
-      </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Due to technical restrictions, current language can't be readden from device and this field will be empty.</string>
-        </property>
-        <property name="wordWrap">
+     <layout class="QVBoxLayout" name="service_language_layout">
+      <item>
+       <widget class="QWidget" name="service_language_row">
+        <property name="settingsRow" stdset="0">
          <bool>true</bool>
         </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <layout class="QHBoxLayout" name="service_language_row_layout">
+         <property name="spacing">
+          <number>18</number>
+         </property>
+         <property name="leftMargin">
+          <number>18</number>
+         </property>
+         <property name="topMargin">
+          <number>16</number>
+         </property>
+         <property name="rightMargin">
+          <number>18</number>
+         </property>
+         <property name="bottomMargin">
+          <number>16</number>
+         </property>
+         <item>
+          <widget class="QWidget" name="service_language_text">
+           <property name="settingsTextBlock" stdset="0">
+            <bool>true</bool>
+           </property>
+           <layout class="QVBoxLayout" name="service_language_text_layout">
+            <property name="spacing">
+             <number>4</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="settingsRowTitle" stdset="0">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Device language</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_4">
+              <property name="settingsRowDescription" stdset="0">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Due to technical restrictions, current language can't be readden from device and this field will be empty.</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="service_language_controls">
+           <property name="settingsControls" stdset="0">
+            <bool>true</bool>
+           </property>
+           <layout class="QHBoxLayout" name="service_language_controls_layout">
+            <property name="spacing">
+             <number>10</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QComboBox" name="service_language_box"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>

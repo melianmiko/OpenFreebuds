@@ -79,6 +79,20 @@ async def exec_msg_box_async(dialog: QMessageBox):
     return dialog.result()
 
 
+def set_enabled_no_scroll(widget: QWidget, enabled: bool):
+    """
+    Toggle a widget's enabled state without disturbing the scroll position.
+
+    Qt hands focus to the next widget in the tab chain when the focused one gets
+    disabled, and the surrounding scroll area then scrolls to make that widget
+    visible. Dropping focus first leaves Qt with nothing to hand over.
+    """
+    if not enabled and widget.hasFocus():
+        widget.clearFocus()
+
+    widget.setEnabled(enabled)
+
+
 @contextmanager
 def blocked_signals(widget: QWidget):
     try:

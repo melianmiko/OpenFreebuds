@@ -27,7 +27,6 @@ class OfbQtAboutModule(Ui_OfbQtAboutModule, OfbQtCommonModule):
                 continue
             devices.addChild(QTreeWidgetItem(devices, [name]))
 
-        # Using libraries list
         dependencies = QTreeWidgetItem(None, [self.tr("Libraries")])
         for row in LIBRARIES:
             name = row.split(";")[0]

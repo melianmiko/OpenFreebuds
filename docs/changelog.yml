@@ -1,4 +1,18 @@
 - changes:
+  - note: '[Device compatibility] HUAWEI FreeBuds Pro 5: full feature set (thx @JehuAlv)'
+  - note: '[Feature] Prompt tone / case sound selection with OTA upload'
+  - note: '[Feature] Adaptive transparency awareness level slider'
+  - note: '[Feature] Low latency mode, big volume, smart call volume and service language settings'
+  - note: '[Feature] Per-earbud and case wear detection'
+  - note: '[Fix] Case sound crash and prompt tone OTA write pacing'
+  - note: '[Fix] Report HONOR-branded devices as Honor instead of Huawei'
+  - note: '[Fix] Do not surface the phone number some firmware answers as device info'
+  - note: '[Fix] Settings list no longer scrolls away when toggling a switch'
+  date: 2026-10-02T00:00:00Z
+  packager: MelianMiko <support@mmk.pw>
+  semver: 0.18.2
+
+- changes:
   - note: '[Device compatibility] Initial Freebuds 3 support (thx @qiushixiang)'
   - note: '[Feature] Configurable per-earbud and case battery tray indicators (thx @sinanakyazici)'
   - note: '[Fix] Crash for unknown ANC level option'

@@ -24,7 +24,8 @@ class OfbQtConfigParser:
             self._load()
 
     def _load(self):
-        with open(CONFIG_PATH, "r") as f:
+        # utf-8-sig, config may be edited by hand on Windows
+        with open(CONFIG_PATH, "r", encoding="utf-8-sig") as f:
             raw_data = f.read()
 
         try:
@@ -61,7 +62,7 @@ class OfbQtConfigParser:
             log.warn("Ignore config save request, load_failed flag set")
             return
 
-        with open(CONFIG_PATH, "w") as f:
+        with open(CONFIG_PATH, "w", encoding="utf-8") as f:
             f.write(json.dumps(self.data, ensure_ascii=False, indent=4))
 
     def set_device_data(self, name: str, address: str):

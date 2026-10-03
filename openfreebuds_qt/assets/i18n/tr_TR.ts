@@ -319,8 +319,8 @@
     </message>
     <message>
         <location filename="../../designer/device_other.ui" line="0" />
-        <source>Device language:</source>
-        <translation>Cihaz dili:</translation>
+        <source>Device language</source>
+        <translation>Cihaz dili</translation>
     </message>
     <message>
         <location filename="../../designer/device_other.ui" line="0" />

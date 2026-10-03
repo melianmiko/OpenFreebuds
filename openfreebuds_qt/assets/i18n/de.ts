@@ -320,8 +320,8 @@
     </message>
     <message>
         <location filename="../../designer/device_other.ui" line="0" />
-        <source>Device language:</source>
-        <translation>Gerätesprache:</translation>
+        <source>Device language</source>
+        <translation>Gerätesprache</translation>
     </message>
     <message>
         <location filename="../../designer/device_other.ui" line="0" />

@@ -6,20 +6,20 @@ import "./cc_linux.just"
 win32_installer: build
     New-Item -ItemType Directory -Force -Path ./dist
     cd ./scripts/windows; & {{pyinstaller}} openfreebuds.spec
-    New-Item -ItemType Directory -Force -Path {{ nsis_builddir }}
-    cd ./scripts/windows; & 'C:\Program Files (x86)\NSIS\Bin\makensis.exe' openfreebuds.nsi
+    New-Item -ItemType Directory -Force -Path {{ quote(nsis_builddir) }}
+    cd ./scripts/windows; & {{ quote(nsis) }} openfreebuds.nsi
     mv -Force \
-        {{ nsis_builddir }}/openfreebuds.install.exe \
+        {{ quote(join(nsis_builddir, "openfreebuds.install.exe")) }} \
         ./dist/openfreebuds_{{version}}_{{arch()}}_windows.exe
 
 # Make windows portable executable
 [group("os_windows"),windows]
 win32_portable:
     New-Item -ItemType Directory -Force -Path ./dist
-    New-Item -ItemType Directory -Force -Path {{ nsis_builddir }}
+    New-Item -ItemType Directory -Force -Path {{ quote(nsis_builddir) }}
     cd ./scripts/windows; & {{pyinstaller}} openfreebuds_portable.spec
     mv -Force \
-        {{ pyinstaller_distdir }}/openfreebuds_portable.exe \
+        {{ quote(join(pyinstaller_distdir, "openfreebuds_portable.exe")) }} \
         ./dist/openfreebuds_{{version}}_{{arch()}}_windows_portable.exe
 
 # Make windows installer and portable

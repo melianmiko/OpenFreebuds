@@ -319,7 +319,7 @@
     </message>
     <message>
         <location filename="../../designer/device_other.ui" line="0" />
-        <source>Device language:</source>
+        <source>Device language</source>
         <translation type="unfinished" />
     </message>
     <message>

@@ -8,7 +8,13 @@ from qasync import asyncSlot
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.utils.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
-from openfreebuds_qt.utils import blocked_signals, exec_msg_box_async, qt_error_handler, format_mac_address
+from openfreebuds_qt.utils import (
+    blocked_signals,
+    exec_msg_box_async,
+    format_mac_address,
+    qt_error_handler,
+    set_enabled_no_scroll,
+)
 from openfreebuds_qt.designer.dual_connect import Ui_OfbQtDualConnectModule
 from openfreebuds_qt.utils.icon import create_dual_connect_icon
 
@@ -68,7 +74,7 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
         async with qt_error_handler("OfbQtDualConnectModule_ToggleConnect", self.ctx):
             addr, data = self._all_data[self._current_index]
 
-            self.button_toggle_connect.setEnabled(False)
+            set_enabled_no_scroll(self.button_toggle_connect, False)
             await self.ofb.set_property(
                 "dual_connect",
                 f"{addr}:connected",
@@ -92,14 +98,14 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
     async def on_set_preferred(self, state: bool):
         async with qt_error_handler("OfbQtDualConnectModule_SetPreferred", self.ctx):
             addr = "000000000000" if not state else self._all_data[self._current_index][0]
-            self.current_device_prefered.setEnabled(False)
+            set_enabled_no_scroll(self.current_device_prefered, False)
             await self.ofb.set_property("dual_connect", "preferred_device", addr)
 
     @asyncSlot(bool)
     async def on_set_auto_connect(self, state: bool):
         async with qt_error_handler("OfbQtDualConnectModule_AutoConnect", self.ctx):
             addr = self._all_data[self._current_index][0]
-            self.current_device_auto_connect.setEnabled(False)
+            set_enabled_no_scroll(self.current_device_auto_connect, False)
             await self.ofb.set_property("dual_connect", f"{addr}:auto_connect",
                                         json.dumps(state))
 
@@ -114,7 +120,7 @@ class OfbQtDualConnectModule(Ui_OfbQtDualConnectModule, OfbQtCommonModule):
 
     @asyncSlot()
     async def on_refresh(self):
-        self.refresh_button.setEnabled(False)
+        set_enabled_no_scroll(self.refresh_button, False)
         await self.ofb.set_property("dual_connect", "refresh", "1")
 
     @asyncSlot()

@@ -1,10 +1,16 @@
 import pytest
 
 from openfreebuds.driver.huawei.driver.debug import FbDriverHuaweiGenericFixture
+from openfreebuds.driver.huawei.driver.per_model.buds_pro_5 import PRO_5_LIGHT_LONG_TAP_OPTIONS
 from openfreebuds.driver.huawei.handler import (OfbHuaweiActionDoubleTapHandler,
+                                                HuaweiLightTapSpec,
+                                                OfbHuaweiActionLightLongTapHandler,
                                                 OfbHuaweiActionLongTapSplitHandler,
                                                 OfbHuaweiActionSwipeGestureHandler)
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
+
+
+HUAWEI_UNSUPPORTED_ERROR = b"\x00\x01\x86\xa3"
 
 
 @pytest.mark.asyncio
@@ -128,3 +134,162 @@ async def test_long_tap():
     assert await driver.get_property("action", "long_tap_left") == "tap_action_off"
     assert driver.package_log[0] == ('send', set_long_tap_off)
     assert driver.package_log[1] == ('recv', resp_long_tap_off)
+
+
+@pytest.mark.asyncio
+async def test_light_long_tap():
+    get_light_long_tap = HuaweiSppPackage(
+        b"\x2b\x93",
+        [(1, 3), (2, 0)],
+        resp=b"\x2b\x93",
+    ).to_bytes()
+    resp_light_long_tap = HuaweiSppPackage(
+        b"\x2b\x93",
+        [(1, 3), (2, 0), (3, -1), (4, -1), (5, b"\x00\x01\x02\x03\x04\xff")],
+    ).to_bytes()
+    set_right_to_off = HuaweiSppPackage.change_rq(
+        b"\x2b\x92",
+        [(1, 3), (2, 0), (4, -1)],
+    ).to_bytes()
+    resp_right_to_off = HuaweiSppPackage(
+        b"\x2b\x92",
+        [(1, 3), (2, 0), (5, 0)],
+    ).to_bytes()
+
+    driver = FbDriverHuaweiGenericFixture(
+        handlers=[
+            OfbHuaweiActionLightLongTapHandler(options=PRO_5_LIGHT_LONG_TAP_OPTIONS),
+        ],
+        package_response_model={
+            get_light_long_tap: [resp_light_long_tap],
+            set_right_to_off: [resp_right_to_off],
+        },
+    )
+
+    await driver.start()
+
+    assert await driver.get_property("action", "light_long_tap_left") == "tap_action_off"
+    assert await driver.get_property("action", "light_long_tap_right") == "tap_action_off"
+    assert await driver.get_property("action", "light_long_tap_options") == \
+        "tap_action_off,tap_action_assistant,tap_action_pause,tap_action_next,tap_action_switch_anc,tap_action_short_audio"
+
+    await driver.set_property("action", "light_long_tap_right", "tap_action_off")
+
+    assert await driver.get_property("action", "light_long_tap_right") == "tap_action_off"
+    assert driver.package_log[0] == ("send", set_right_to_off)
+    assert driver.package_log[1] == ("recv", resp_right_to_off)
+    assert driver.package_log[2] == ("send", get_light_long_tap)
+    assert driver.package_log[3] == ("recv", resp_light_long_tap)
+
+
+@pytest.mark.asyncio
+async def test_light_long_tap_maps_legacy_live_values():
+    get_light_long_tap = HuaweiSppPackage(
+        b"\x2b\x93",
+        [(1, 3), (2, 0)],
+        resp=b"\x2b\x93",
+    ).to_bytes()
+    resp_light_long_tap = HuaweiSppPackage(
+        b"\x2b\x93",
+        [(1, 3), (2, 0), (3, 6), (4, 6), (5, b"\x00\x01\x02\x03\x04\xff")],
+    ).to_bytes()
+
+    driver = FbDriverHuaweiGenericFixture(
+        handlers=[
+            OfbHuaweiActionLightLongTapHandler(options=PRO_5_LIGHT_LONG_TAP_OPTIONS),
+        ],
+        package_response_model={get_light_long_tap: [resp_light_long_tap]},
+    )
+
+    await driver.start()
+
+    assert await driver.get_property("action", "light_long_tap_left") == "tap_action_switch_anc"
+    assert await driver.get_property("action", "light_long_tap_right") == "tap_action_switch_anc"
+    assert await driver.get_property("action", "light_long_tap_options") == \
+        "tap_action_off,tap_action_assistant,tap_action_pause,tap_action_next,tap_action_switch_anc,tap_action_short_audio"
+
+
+@pytest.mark.asyncio
+async def test_light_long_tap_does_not_fake_state_on_write_error():
+    get_light_long_tap = HuaweiSppPackage(
+        b"\x2b\x93",
+        [(1, 3), (2, 0)],
+        resp=b"\x2b\x93",
+    ).to_bytes()
+    resp_light_long_tap = HuaweiSppPackage(
+        b"\x2b\x93",
+        [(1, 3), (2, 0), (3, -1), (4, -1), (5, b"\x00\x01\x02\x03\x04\xff")],
+    ).to_bytes()
+    set_left_to_assistant = HuaweiSppPackage.change_rq(
+        b"\x2b\x92",
+        [(1, 3), (2, 0), (3, 0)],
+    ).to_bytes()
+    resp_write_error = HuaweiSppPackage(
+        b"\x2b\x92",
+        [(127, HUAWEI_UNSUPPORTED_ERROR)],
+    ).to_bytes()
+
+    driver = FbDriverHuaweiGenericFixture(
+        handlers=[
+            OfbHuaweiActionLightLongTapHandler(options=PRO_5_LIGHT_LONG_TAP_OPTIONS),
+        ],
+        package_response_model={
+            get_light_long_tap: [resp_light_long_tap],
+            set_left_to_assistant: [resp_write_error],
+        },
+    )
+
+    await driver.start()
+
+    await driver.set_property("action", "light_long_tap_left", "tap_action_assistant")
+
+    assert await driver.get_property("action", "light_long_tap_left") == "tap_action_off"
+    assert driver.package_log[0] == ("send", set_left_to_assistant)
+    assert driver.package_log[1] == ("recv", resp_write_error)
+
+
+@pytest.mark.asyncio
+async def test_light_tap_shared_pro5_pages():
+    get_pinch_once = HuaweiSppPackage(
+        b"\x2b\x93",
+        [(1, 0), (2, 2)],
+        resp=b"\x2b\x93",
+    ).to_bytes()
+    resp_pinch_once = HuaweiSppPackage(
+        b"\x2b\x93",
+        [(1, 0), (2, 2), (3, 2), (4, 2), (5, b"\x02\xff")],
+    ).to_bytes()
+    set_pinch_once_off = HuaweiSppPackage.change_rq(
+        b"\x2b\x92",
+        [(1, 0), (2, 2), (3, -1), (4, -1)],
+    ).to_bytes()
+    resp_pinch_once_off = HuaweiSppPackage(
+        b"\x2b\x92",
+        [(1, 0), (2, 2), (3, -1), (4, -1), (5, 0)],
+    ).to_bytes()
+
+    driver = FbDriverHuaweiGenericFixture(
+        handlers=[
+            OfbHuaweiActionLightLongTapHandler(specs=[
+                HuaweiLightTapSpec("light_tap_once", 0, 2, shared=True, w_right=False, options={
+                    -1: "tap_action_off",
+                    2: "tap_action_pause",
+                }),
+            ]),
+        ],
+        package_response_model={
+            get_pinch_once: [resp_pinch_once],
+            set_pinch_once_off: [resp_pinch_once_off],
+        },
+    )
+
+    await driver.start()
+
+    assert await driver.get_property("action", "light_tap_once") == "tap_action_pause"
+    assert await driver.get_property("action", "light_tap_once_options") == "tap_action_off,tap_action_pause"
+
+    await driver.set_property("action", "light_tap_once", "tap_action_off")
+
+    assert await driver.get_property("action", "light_tap_once") == "tap_action_off"
+    assert driver.package_log[0] == ("send", set_pinch_once_off)
+    assert driver.package_log[1] == ("recv", resp_pinch_once_off)

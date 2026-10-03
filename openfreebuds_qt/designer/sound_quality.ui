@@ -152,7 +152,228 @@
           <height>200</height>
          </size>
         </property>
-        <layout class="QHBoxLayout" name="custom_eq_rows_layout"/>
+         <layout class="QHBoxLayout" name="custom_eq_rows_layout">
+          <item>
+           <widget class="QSlider" name="eq_row_0">
+            <property name="orientation">
+             <enum>Qt::Orientation::Vertical</enum>
+            </property>
+            <property name="minimum">
+             <number>-60</number>
+            </property>
+            <property name="maximum">
+             <number>60</number>
+            </property>
+            <property name="tickPosition">
+             <enum>QSlider::TickPosition::TicksBothSides</enum>
+            </property>
+            <property name="tickInterval">
+             <number>5</number>
+            </property>
+            <property name="toolTip">
+             <string>0</string>
+            </property>
+           </widget>
+          </item>
+            <item>
+             <widget class="QSlider" name="eq_row_1">
+              <property name="orientation">
+               <enum>Qt::Orientation::Vertical</enum>
+              </property>
+              <property name="minimum">
+               <number>-60</number>
+              </property>
+              <property name="maximum">
+               <number>60</number>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TickPosition::TicksBothSides</enum>
+              </property>
+              <property name="tickInterval">
+               <number>5</number>
+              </property>
+              <property name="toolTip">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+              <item>
+               <widget class="QSlider" name="eq_row_2">
+                <property name="orientation">
+                 <enum>Qt::Orientation::Vertical</enum>
+                </property>
+                <property name="minimum">
+                 <number>-60</number>
+                </property>
+                <property name="maximum">
+                 <number>60</number>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::TickPosition::TicksBothSides</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>5</number>
+                </property>
+                <property name="toolTip">
+                 <string>0</string>
+                </property>
+               </widget>
+              </item>
+                <item>
+                 <widget class="QSlider" name="eq_row_3">
+                  <property name="orientation">
+                   <enum>Qt::Orientation::Vertical</enum>
+                  </property>
+                  <property name="minimum">
+                   <number>-60</number>
+                  </property>
+                  <property name="maximum">
+                   <number>60</number>
+                  </property>
+                  <property name="tickPosition">
+                   <enum>QSlider::TickPosition::TicksBothSides</enum>
+                  </property>
+                  <property name="tickInterval">
+                   <number>5</number>
+                  </property>
+                  <property name="toolTip">
+                   <string>0</string>
+                  </property>
+                 </widget>
+                </item>
+                  <item>
+                   <widget class="QSlider" name="eq_row_4">
+                    <property name="orientation">
+                     <enum>Qt::Orientation::Vertical</enum>
+                    </property>
+                    <property name="minimum">
+                     <number>-60</number>
+                    </property>
+                    <property name="maximum">
+                     <number>60</number>
+                    </property>
+                    <property name="tickPosition">
+                     <enum>QSlider::TickPosition::TicksBothSides</enum>
+                    </property>
+                    <property name="tickInterval">
+                     <number>5</number>
+                    </property>
+                    <property name="toolTip">
+                     <string>0</string>
+                    </property>
+                   </widget>
+                  </item>
+                    <item>
+                     <widget class="QSlider" name="eq_row_5">
+                      <property name="orientation">
+                       <enum>Qt::Orientation::Vertical</enum>
+                      </property>
+                      <property name="minimum">
+                       <number>-60</number>
+                      </property>
+                      <property name="maximum">
+                       <number>60</number>
+                      </property>
+                      <property name="tickPosition">
+                       <enum>QSlider::TickPosition::TicksBothSides</enum>
+                      </property>
+                      <property name="tickInterval">
+                       <number>5</number>
+                      </property>
+                      <property name="toolTip">
+                       <string>0</string>
+                      </property>
+                     </widget>
+                    </item>
+                      <item>
+                       <widget class="QSlider" name="eq_row_6">
+                        <property name="orientation">
+                         <enum>Qt::Orientation::Vertical</enum>
+                        </property>
+                        <property name="minimum">
+                         <number>-60</number>
+                        </property>
+                        <property name="maximum">
+                         <number>60</number>
+                        </property>
+                        <property name="tickPosition">
+                         <enum>QSlider::TickPosition::TicksBothSides</enum>
+                        </property>
+                        <property name="tickInterval">
+                         <number>5</number>
+                        </property>
+                        <property name="toolTip">
+                         <string>0</string>
+                        </property>
+                       </widget>
+                      </item>
+                        <item>
+                         <widget class="QSlider" name="eq_row_7">
+                          <property name="orientation">
+                           <enum>Qt::Orientation::Vertical</enum>
+                          </property>
+                          <property name="minimum">
+                           <number>-60</number>
+                          </property>
+                          <property name="maximum">
+                           <number>60</number>
+                          </property>
+                          <property name="tickPosition">
+                           <enum>QSlider::TickPosition::TicksBothSides</enum>
+                          </property>
+                          <property name="tickInterval">
+                           <number>5</number>
+                          </property>
+                          <property name="toolTip">
+                           <string>0</string>
+                          </property>
+                         </widget>
+                        </item>
+                          <item>
+                           <widget class="QSlider" name="eq_row_8">
+                            <property name="orientation">
+                             <enum>Qt::Orientation::Vertical</enum>
+                            </property>
+                            <property name="minimum">
+                             <number>-60</number>
+                            </property>
+                            <property name="maximum">
+                             <number>60</number>
+                            </property>
+                            <property name="tickPosition">
+                             <enum>QSlider::TickPosition::TicksBothSides</enum>
+                            </property>
+                            <property name="tickInterval">
+                             <number>5</number>
+                            </property>
+                            <property name="toolTip">
+                             <string>0</string>
+                            </property>
+                           </widget>
+                          </item>
+                            <item>
+                             <widget class="QSlider" name="eq_row_9">
+                              <property name="orientation">
+                               <enum>Qt::Orientation::Vertical</enum>
+                              </property>
+                              <property name="minimum">
+                               <number>-60</number>
+                              </property>
+                              <property name="maximum">
+                               <number>60</number>
+                              </property>
+                              <property name="tickPosition">
+                               <enum>QSlider::TickPosition::TicksBothSides</enum>
+                              </property>
+                              <property name="tickInterval">
+                               <number>5</number>
+                              </property>
+                              <property name="toolTip">
+                               <string>0</string>
+                              </property>
+                             </widget>
+                            </item>
+         </layout>
        </widget>
       </item>
       <item>

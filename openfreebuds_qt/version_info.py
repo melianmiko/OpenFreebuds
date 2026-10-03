@@ -1,4 +1,4 @@
-VERSION = '0.18.1'
+VERSION = '0.18.2'
 LIBRARIES = [
   'INFO: PDM 2.29.0 is installed, while 2.29.1 is available.',
   'Please run `pipx upgrade pdm` to upgrade.',
