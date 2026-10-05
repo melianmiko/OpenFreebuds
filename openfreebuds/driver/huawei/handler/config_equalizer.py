@@ -16,6 +16,8 @@ FAKE_BUILT_IN_PRESETS = [
     (-56, "equalizer_preset_symphony", "0f0f0afb0f190ffb322d"),
     (-55, "equalizer_preset_hi_fi_live", "fb141e0a0000e7f60a00"),
 ]
+FAKE_BUILT_IN_PRESET_IDS = {i for i, _, _ in FAKE_BUILT_IN_PRESETS}
+EQ_LABEL_MAX_BYTES = 24
 FAKE_BUILT_IN_PRESETS_COPY_NAME = {
     "equalizer_preset_symphony": "Symphony (copy)",
     "equalizer_preset_hi_fi_live": "Hi-Fi Live (Copy)",
@@ -296,10 +298,24 @@ def _parse_custom_mode(data: bytes):
 def _build_payload(mode_id: int, mode_str: str, data: bytes | str, action: int):
     if isinstance(data, str):
         data = bytes.fromhex(data)
+    if mode_id in FAKE_BUILT_IN_PRESET_IDS:
+        # Same label as HUAWEI AI Life: preset id in decimal
+        label = str(mode_id & 0xFF).encode("utf8")
+    else:
+        label = _encode_label(mode_str)
     return [
         (1, mode_id),
         (2, len(data)),
         (3, data),
-        (4, mode_str.encode("utf8")),
+        (4, label),
         (5, action),
     ]
+
+
+def _encode_label(label: str):
+    # Devices store labels in a 24-byte field and silently drop writes with longer ones
+    data = label.encode("utf8")
+    while len(data) > EQ_LABEL_MAX_BYTES:
+        label = label[:-1]
+        data = label.encode("utf8")
+    return data

@@ -117,3 +117,41 @@ async def test_equalizer_builtin_preset():
     model[get_eq] = [resp_bass]
     await driver.set_property("sound", "equalizer_preset", "equalizer_preset_hardbass")
     assert await driver.get_property("sound", "equalizer_preset") == "equalizer_preset_hardbass"
+
+
+@pytest.mark.asyncio
+async def test_equalizer_fake_built_in_preset_label():
+    # The 7i ignores (never answers) 2b49 writes whose label is longer than 24 bytes.
+    # HUAWEI AI Life labels the Symphony / Hi-Fi Live presets with their id in decimal.
+    eq = [h for h in OfbDriverHuawei7I("").handlers if isinstance(h, OfbHuaweiEqualizerPresetHandler)][0]
+    get_eq = HuaweiSppPackage.read_rq(b"\x2b\x4a", [1, 2, 3, 4, 5, 6, 7, 8]).to_bytes()
+    resp_bass = HuaweiSppPackage(b"\x2b\x4a", [
+        (1, b"\x01"), (2, b"\x02"), (3, bytes.fromhex("01020309")), (4, b"\x01"), (8, b""),
+    ]).to_bytes()
+    set_symphony = HuaweiSppPackage(b"\x2b\x49", [
+        (1, b"\xc8"), (2, 10), (3, bytes.fromhex("0f0f0afb0f190ffb322d")), (4, b"200"), (5, 1),
+    ]).to_bytes()
+    resp_set = bytes.fromhex("5a0009002b497f04000186a0b3c6")
+    resp_symphony = HuaweiSppPackage(b"\x2b\x4a", [
+        (1, b"\x01"), (2, b"\xc8"), (3, bytes.fromhex("01020309")), (4, b"\x01"), (8, b""),
+    ]).to_bytes()
+
+    model = {get_eq: [resp_bass]}
+    driver = FbDriverHuaweiGenericFixture(handlers=[eq], package_response_model=model)
+    await driver.start()
+
+    model[set_symphony] = [resp_set]
+    model[get_eq] = [resp_symphony]
+    await driver.set_property("sound", "equalizer_preset", "equalizer_preset_symphony")
+    assert ("send", set_symphony) in driver.package_log
+    assert await driver.get_property("sound", "equalizer_preset") == "equalizer_preset_symphony"
+
+
+def test_equalizer_custom_label_is_truncated():
+    from openfreebuds.driver.huawei.handler.config_equalizer import _build_payload
+
+    payload = dict(_build_payload(100, "A very long custom preset name", b"\x00" * 10, 1))
+    assert payload[4] == b"A very long custom prese"
+    # Multibyte characters must not be cut in half
+    payload = dict(_build_payload(100, "ñ" * 13, b"\x00" * 10, 1))
+    assert payload[4] == ("ñ" * 12).encode("utf8")
