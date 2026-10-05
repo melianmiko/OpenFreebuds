@@ -113,17 +113,20 @@ class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
                 await asyncio.sleep(2)
 
     async def __recv_pacakge(self, reader: asyncio.StreamReader):
-        heading = await reader.read(4)
-        if len(heading) == 0:
+        try:
+            # Skip bytes until package start marker
+            if (await reader.readexactly(1))[0] != 0x5A:
+                return
+            # Frame: 5A, length (2 bytes), `length` bytes of body, CRC (2 bytes)
+            length_bytes = await reader.readexactly(2)
+            length = int.from_bytes(length_bytes, byteorder="big")
+            tail = await reader.readexactly(length + 2)
+        except asyncio.IncompleteReadError:
             log.debug("Got empty package, seems like socked is closed")
             raise ConnectionResetError
-        if heading[0] == 0x5A:
-            length = int.from_bytes(heading[1:3], byteorder="big")
-            if length < 4:
-                await reader.read(length)
-            else:
-                pkg = heading + await reader.read(length)
-                await self._handle_raw_pkg(pkg)
+
+        if length >= 4:
+            await self._handle_raw_pkg(b"\x5a" + length_bytes + tail)
 
     def _add_on_package_handler(self, handler):
         for pkg_id in handler.commands:
