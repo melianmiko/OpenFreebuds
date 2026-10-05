@@ -11,7 +11,7 @@ class OfbDriverHuawei7I(OfbDriverHuaweiGeneric):
         self._spp_service_port = 1
         self.handlers = [
             OfbHuaweiInfoHandler(),
-            OfbHuaweiStateInEarHandler(),
+            OfbHuaweiStateInEarHandler(w_wear_state=True),
             OfbHuaweiBatteryHandler(),
             OfbHuaweiAncHandler(w_cancel_lvl=True, w_cancel_dynamic=True, w_voice_boost=True),
             OfbHuaweiActionDoubleTapHandler(w_in_call=True),

@@ -155,3 +155,26 @@ def test_equalizer_custom_label_is_truncated():
     # Multibyte characters must not be cut in half
     payload = dict(_build_payload(100, "ñ" * 13, b"\x00" * 10, 1))
     assert payload[4] == ("ñ" * 12).encode("utf8")
+
+
+@pytest.mark.asyncio
+async def test_in_ear_state():
+    from openfreebuds.driver.huawei.handler import OfbHuaweiStateInEarHandler
+
+    handler = [h for h in OfbDriverHuawei7I("").handlers if isinstance(h, OfbHuaweiStateInEarHandler)][0]
+    get_state = HuaweiSppPackage.read_rq(b"\x2b\x25", [1, 2]).to_bytes()
+    resp_both_out = bytes.fromhex("5a000f002b25010100020100030100040100363f")
+    both_in = bytes.fromhex("5a000f002b25010101020101030100040100e11b")
+    right_out = bytes.fromhex("5a000f002b25010101020100030100040100597a")
+
+    driver = FbDriverHuaweiGenericFixture(handlers=[handler], package_response_model={
+        get_state: [resp_both_out],
+    })
+    await driver.start()
+    assert await driver.get_property("state", "in_ear") == "false"
+
+    await driver._handle_raw_pkg(both_in)
+    assert await driver.get_property("state", "in_ear") == "true"
+
+    await driver._handle_raw_pkg(right_out)
+    assert await driver.get_property("state", "in_ear") == "false"
