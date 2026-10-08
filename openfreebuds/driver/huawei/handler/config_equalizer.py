@@ -15,10 +15,14 @@ KNOWN_BUILT_IN_PRESETS = {
 FAKE_BUILT_IN_PRESETS = [
     (-56, "equalizer_preset_symphony", "0f0f0afb0f190ffb322d"),
     (-55, "equalizer_preset_hi_fi_live", "fb141e0a0000e7f60a00"),
+    (-54, "equalizer_preset_airpods", "05020000000000000305"),
+    (-53, "equalizer_preset_cas_harman", "28230ff6fb000f191e14"),
 ]
 FAKE_BUILT_IN_PRESETS_COPY_NAME = {
     "equalizer_preset_symphony": "Symphony (copy)",
     "equalizer_preset_hi_fi_live": "Hi-Fi Live (Copy)",
+    "equalizer_preset_airpods": "Airpods (Copy)",
+    "equalizer_preset_cas_harman": "CAS Harman (Copy)",
 }
 
 log = create_logger("OfbHuaweiEqualizerPresetHandler")
