@@ -66,6 +66,9 @@ class OfbQtLinuxExtrasModule(Ui_OfbQtLinuxExtrasModule, OfbQtCommonModule):
             if is_run_at_boot():
                 await set_run_at_boot(False)
             uninstall()
+            # Offer installation again if a downloaded copy is started later
+            self.config.set("appimage", "install_offered", False)
+            self.config.save()
             await self.ctx.exit()
 
     @pyqtSlot()
