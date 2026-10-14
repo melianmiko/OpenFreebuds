@@ -25,7 +25,7 @@ jobs:
       - run: pdm install
       - name: Set version from tag
         if: startsWith(github.ref, 'refs/tags/v')
-        run: pdm run python ./scripts/manage/bump_version.py "${GITHUB_REF_NAME#v}"
+        run: sed -i "s/^VERSION = .*/VERSION = '${GITHUB_REF_NAME#v}'/" openfreebuds_qt/version_info.py
       - run: just appimage
       - uses: actions/upload-artifact@v4
         with:
