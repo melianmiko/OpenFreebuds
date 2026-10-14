@@ -28,4 +28,5 @@ class OfbDriverHuawei7I(OfbDriverHuaweiGeneric):
                 9: "voices",
             }, w_fake_built_in=True, w_custom=True),
             OfbHuaweiDualConnectHandler(w_auto_connect=False),
+            OfbHuaweiFeaturesHandler(w_spatial_audio=True, w_head_gestures=True, w_single_bud_anc=True),
         ]

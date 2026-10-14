@@ -33,6 +33,7 @@ def test_driver_creation():
         "low_latency",
         "config_eq",
         "dual_connect",
+        "features",
     ]:
         assert handler_id in handler_ids, f"Missing handler: {handler_id}"
 

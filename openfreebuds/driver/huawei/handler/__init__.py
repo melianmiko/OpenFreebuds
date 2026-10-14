@@ -16,3 +16,4 @@ from .service_language import OfbHuaweiVoiceLanguageHandler
 from .state_in_ear import OfbHuaweiStateInEarHandler
 from .low_latency import OfbHuaweiLowLatencyPreferenceHandler
 from .dual_connect import OfbHuaweiDualConnectHandler
+from .features import OfbHuaweiFeaturesHandler
