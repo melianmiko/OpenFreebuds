@@ -25,13 +25,11 @@ Protocol: Huawei SPP, port 1
   - 4 built-in presets
   - 2 fake built-in presets (stored in application)
   - Custom presets in-device memory
-
-## Not implemented yet
-
-- Spatial audio (off / fixed / head tracking, 4 effects): `2bb4`, param 1 = `0x18`
-- Head gestures (nod / shake to answer or reject calls): `2bb4`, param 1 = `0x0b`
-- Noise cancellation with a single earbud: `2bb4`, param 1 = `0x05`
-- Voice prompt priority per device (dual connect)
+- Spatial audio: ✅
+  - Off, fixed, head tracking
+  - Default, theater, cinema, concert hall effects
+- Head gestures (nod / shake to answer or reject calls): ✅
+- Noise cancellation with a single earbud: ✅
 
 ## Not planned features
 
