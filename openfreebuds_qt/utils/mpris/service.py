@@ -1,4 +1,5 @@
 import asyncio
+import sys
 from contextlib import suppress
 from typing import Optional
 
@@ -8,9 +9,15 @@ from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.utils import OfbCoreEvent
 
 try:
-    from openfreebuds_backend.linux.dbus.mpris import MPRISPProxy
+    if sys.platform == "win32":
+        from openfreebuds_backend.windows.media_win32 import MPRISPProxy
+    else:
+        from openfreebuds_backend.linux.dbus.mpris import MPRISPProxy
 except ImportError:
     MPRISPProxy = None
+
+# Linux: opt-in (Settings). Windows: on by default, follows the device auto_pause setting.
+DEFAULT_ENABLED = sys.platform == "win32"
 
 log = create_logger("OfbQtMPRISHelperService")
 
@@ -27,6 +34,7 @@ class OfbQtMPRISHelperService:
         self.last_in_ear: bool = True
 
     async def _trigger(self):
+        log.debug(f"in_ear event, last={self.last_in_ear}")
         in_ear = await self.ofb.get_property("state", "in_ear", "false") == "true"
         enabled = await self.ofb.get_property("config", "auto_pause", "false") == "true"
 
@@ -61,7 +69,7 @@ class OfbQtMPRISHelperService:
 
     async def start(self):
         await self.stop()
-        if not self.config.get("mpris", "enabled", False):
+        if MPRISPProxy is None or not self.config.get("mpris", "enabled", DEFAULT_ENABLED):
             return
 
         self._task = asyncio.create_task(self._main())
