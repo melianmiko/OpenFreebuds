@@ -102,6 +102,32 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="single_bud_anc_root">
+     <property name="title">
+      <string>Noise control</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <widget class="QCheckBox" name="single_bud_anc_toggle">
+        <property name="text">
+         <string>Noise cancellation with one earbud</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Keep noise cancellation on while only one earbud is worn.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -151,10 +177,17 @@
    </hints>
   </connection>
   <connection>
+   <sender>single_bud_anc_toggle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OfbQtDeviceOtherSettingsModule</receiver>
+   <slot>on_single_bud_anc_toggle(bool)</slot>
+  </connection>
+  <connection>
    <sender>low_latency_toggle</sender>
    <signal>toggled(bool)</signal>
    <receiver>OfbQtDeviceOtherSettingsModule</receiver>
    <slot>on_low_latency_toggle(bool)</slot>
+  <slot>on_single_bud_anc_toggle(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>331</x>
@@ -171,5 +204,6 @@
   <slot>on_auto_pause_toggle(bool)</slot>
   <slot>on_language_select(int)</slot>
   <slot>on_low_latency_toggle(bool)</slot>
+  <slot>on_single_bud_anc_toggle(bool)</slot>
  </slots>
 </ui>

@@ -327,6 +327,21 @@
         <source>Due to technical restrictions, current language can't be readden from device and this field will be empty.</source>
         <translation>Debido a restricciones técnicas, el idioma actual no se puede leer desde el dispositivo y este campo estará vacío.</translation>
     </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Noise control</source>
+        <translation>Control de ruido</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Noise cancellation with one earbud</source>
+        <translation>Cancelación de ruido con un auricular</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Keep noise cancellation on while only one earbud is worn.</source>
+        <translation>Mantener la cancelación de ruido activa cuando solo se usa un auricular.</translation>
+    </message>
 </context><context>
     <name>OfbQtDeviceSelectModule</name>
     <message>
@@ -474,78 +489,83 @@
 </context><context>
     <name>OfbQtGesturesModule</name>
     <message>
-        <location filename="../../app/module/gestures.py" line="56" />
+        <location filename="../../app/module/gestures.py" line="57" />
         <source>Answer call</source>
         <translation>Responder una llamada</translation>
     </message>
     <message>
-        <location filename="../../app/module/gestures.py" line="57" />
+        <location filename="../../app/module/gestures.py" line="58" />
         <source>Adjust volume</source>
         <translation>Ajustar volumen</translation>
     </message>
     <message>
-        <location filename="../../app/module/gestures.py" line="58" />
+        <location filename="../../app/module/gestures.py" line="59" />
         <source>Increase volume</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../app/module/gestures.py" line="59" />
+        <location filename="../../app/module/gestures.py" line="60" />
         <source>Decrease volume</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../app/module/gestures.py" line="60" />
+        <location filename="../../app/module/gestures.py" line="61" />
         <source>Voice assistant</source>
         <translation>Asistente de voz</translation>
     </message>
     <message>
-        <location filename="../../app/module/gestures.py" line="61" />
+        <location filename="../../app/module/gestures.py" line="62" />
         <source>Next track</source>
         <translation>Siguiente canción</translation>
     </message>
     <message>
-        <location filename="../../app/module/gestures.py" line="70" />
-        <location filename="../../app/module/gestures.py" line="62" />
+        <location filename="../../app/module/gestures.py" line="72" />
+        <location filename="../../app/module/gestures.py" line="63" />
         <source>Disabled</source>
         <translation>Deshabilitado</translation>
     </message>
     <message>
-        <location filename="../../app/module/gestures.py" line="63" />
+        <location filename="../../app/module/gestures.py" line="64" />
         <source>Play/pause</source>
         <translation>Play/pausa</translation>
     </message>
     <message>
-        <location filename="../../app/module/gestures.py" line="64" />
+        <location filename="../../app/module/gestures.py" line="65" />
         <source>Prev track</source>
         <translation>Canción anterior</translation>
     </message>
     <message>
-        <location filename="../../app/module/gestures.py" line="65" />
+        <location filename="../../app/module/gestures.py" line="66" />
+        <source>Reject call</source>
+        <translation>Rechazar llamada</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/gestures.py" line="67" />
         <source>Switch device</source>
         <translation>Cambiar dispositivo</translation>
     </message>
     <message>
-        <location filename="../../app/module/gestures.py" line="66" />
+        <location filename="../../app/module/gestures.py" line="68" />
         <source>Switch noise control mode</source>
         <translation>Cambiar modo de cancelación de ruido</translation>
     </message>
     <message>
-        <location filename="../../app/module/gestures.py" line="71" />
+        <location filename="../../app/module/gestures.py" line="73" />
         <source>Off and cancellation</source>
         <translation>Apagado y cancelación</translation>
     </message>
     <message>
-        <location filename="../../app/module/gestures.py" line="72" />
+        <location filename="../../app/module/gestures.py" line="74" />
         <source>Cycle all modes</source>
         <translation>Rotar los modos</translation>
     </message>
     <message>
-        <location filename="../../app/module/gestures.py" line="73" />
+        <location filename="../../app/module/gestures.py" line="75" />
         <source>Cancellation and awareness</source>
         <translation>Cancelación y exterior</translation>
     </message>
     <message>
-        <location filename="../../app/module/gestures.py" line="74" />
+        <location filename="../../app/module/gestures.py" line="76" />
         <source>Off and awareness</source>
         <translation>Apagado y exterior</translation>
     </message>
@@ -573,6 +593,21 @@
         <location filename="../../designer/module_geatures.ui" line="0" />
         <source>Right</source>
         <translation>Derecho</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Answer or reject calls with head gestures</source>
+        <translation>Responder o rechazar llamadas con gestos de la cabeza</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Nod</source>
+        <translation>Asentir</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Shake</source>
+        <translation>Negar</translation>
     </message>
     <message>
         <location filename="../../designer/module_geatures.ui" line="0" />
@@ -852,72 +887,107 @@
 </context><context>
     <name>OfbQtSoundQualityModule</name>
     <message>
+        <location filename="../../app/module/sound_quality.py" line="28" />
+        <source>Disabled</source>
+        <translation>Deshabilitado</translation>
+    </message>
+    <message>
         <location filename="../../app/module/sound_quality.py" line="29" />
+        <source>Fixed</source>
+        <translation>Posición fija</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/sound_quality.py" line="30" />
+        <source>Head tracking</source>
+        <translation>Seguimiento de cabeza</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/sound_quality.py" line="31" />
+        <source>Default</source>
+        <translation>Por defecto</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/sound_quality.py" line="32" />
+        <source>Theater</source>
+        <translation>Teatro</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/sound_quality.py" line="33" />
+        <source>Cinema</source>
+        <translation>Cine</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/sound_quality.py" line="34" />
+        <source>Concert hall</source>
+        <translation>Sala de conciertos</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/sound_quality.py" line="39" />
         <source>New preset…</source>
         <translation>Nuevo perfil…</translation>
     </message>
     <message>
-        <location filename="../../app/module/sound_quality.py" line="30" />
+        <location filename="../../app/module/sound_quality.py" line="40" />
         <source>Delete…</source>
         <translation>Borrar…</translation>
     </message>
     <message>
-        <location filename="../../app/module/sound_quality.py" line="32" />
+        <location filename="../../app/module/sound_quality.py" line="42" />
         <source>Export to file…</source>
         <translation>Exportar a un archivo…</translation>
     </message>
     <message>
-        <location filename="../../app/module/sound_quality.py" line="33" />
+        <location filename="../../app/module/sound_quality.py" line="43" />
         <source>Load file…</source>
         <translation>Cargar archivo…</translation>
     </message>
     <message>
-        <location filename="../../app/module/sound_quality.py" line="37" />
+        <location filename="../../app/module/sound_quality.py" line="47" />
         <source>Notice</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../app/module/sound_quality.py" line="38" />
+        <location filename="../../app/module/sound_quality.py" line="48" />
         <source>This preset isn't available in your device, it will be created as custom preset.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../app/module/sound_quality.py" line="44" />
+        <location filename="../../app/module/sound_quality.py" line="54" />
         <source>Failed</source>
         <translation>Falló</translation>
     </message>
     <message>
-        <location filename="../../app/module/sound_quality.py" line="45" />
+        <location filename="../../app/module/sound_quality.py" line="55" />
         <source>Can't create: too many custom preset created in device.</source>
         <translation>No se puede crear: demasiados perfiles personalizados creados en el dispositivo.</translation>
     </message>
     <message>
-        <location filename="../../app/module/sound_quality.py" line="176" />
+        <location filename="../../app/module/sound_quality.py" line="207" />
         <source>Create new equalizer preset</source>
         <translation>Nuevo perfil del equalizador</translation>
     </message>
     <message>
-        <location filename="../../app/module/sound_quality.py" line="177" />
+        <location filename="../../app/module/sound_quality.py" line="208" />
         <source>Enter new preset name:</source>
         <translation>Nombre del perfil:</translation>
     </message>
     <message>
-        <location filename="../../app/module/sound_quality.py" line="195" />
+        <location filename="../../app/module/sound_quality.py" line="226" />
         <source>Delete equalizer mode?</source>
         <translation>¿Borrar el perfil de equalizador?</translation>
     </message>
     <message>
-        <location filename="../../app/module/sound_quality.py" line="196" />
+        <location filename="../../app/module/sound_quality.py" line="227" />
         <source>Will delete following mode:</source>
         <translation>Se borrará el siguiente perfil:</translation>
     </message>
     <message>
-        <location filename="../../app/module/sound_quality.py" line="212" />
+        <location filename="../../app/module/sound_quality.py" line="243" />
         <source>Save equalizer preset to file…</source>
         <translation>Guardar perfil del equalizador…</translation>
     </message>
     <message>
-        <location filename="../../app/module/sound_quality.py" line="227" />
+        <location filename="../../app/module/sound_quality.py" line="258" />
         <source>Load equalizer preset from file…</source>
         <translation>Cargar perfil del equalizador…</translation>
     </message>
@@ -950,6 +1020,21 @@
         <location filename="../../designer/sound_quality.ui" line="0" />
         <source>Device will prefer audio codec with better compression, like AAC</source>
         <translation>El dispositivo preferirá los codecs de audio con mejor compresión, como AAC</translation>
+    </message>
+    <message>
+        <location filename="../../designer/sound_quality.ui" line="0" />
+        <source>Spatial audio</source>
+        <translation>Audio espacial</translation>
+    </message>
+    <message>
+        <location filename="../../designer/sound_quality.ui" line="0" />
+        <source>Mode:</source>
+        <translation>Modo:</translation>
+    </message>
+    <message>
+        <location filename="../../designer/sound_quality.ui" line="0" />
+        <source>Effect:</source>
+        <translation>Efecto:</translation>
     </message>
     <message>
         <location filename="../../designer/sound_quality.ui" line="0" />

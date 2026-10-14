@@ -24,6 +24,16 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         super().__init__(*args, **kwargs)
 
         self.eq_preset_option_names = get_eq_preset_names()
+        self.spatial_option_names = {
+            "spatial_off": self.tr("Disabled"),
+            "spatial_fixed": self.tr("Fixed"),
+            "spatial_head_tracking": self.tr("Head tracking"),
+            "spatial_effect_default": self.tr("Default"),
+            "spatial_effect_theater": self.tr("Theater"),
+            "spatial_effect_cinema": self.tr("Cinema"),
+            "spatial_effect_concert_hall": self.tr("Concert hall"),
+        }
+        self._spatial_options: dict[str, list[str]] = {}
 
         self.menu_actions = [
             (self.tr("New preset…"), self.new_preset),
@@ -70,6 +80,18 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
             self._add_slider(i)
         self.custom_eq.setVisible(False)
 
+        self._bind_spatial_box(self.spatial_mode_box, "spatial_audio")
+        self._bind_spatial_box(self.spatial_effect_box, "spatial_audio_effect")
+
+    def _bind_spatial_box(self, box, prop: str):
+        @asyncSlot(int)
+        async def _on_change(index: int):
+            async with qt_error_handler("OfbQtSoundQualityModule_SetSpatialAudio", self.ctx):
+                await self.ofb.set_property("sound", prop, self._spatial_options[prop][index])
+
+        # noinspection PyUnresolvedReferences
+        box.currentIndexChanged[int].connect(_on_change)
+
     def _add_slider(self, i):
         lock = asyncio.Lock()
 
@@ -111,6 +133,15 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
             else:
                 self.sq_radio_sound.setChecked(False)
                 self.sq_radio_connection.setChecked(False)
+
+        if event.is_changed("sound", "spatial_audio") or event.is_changed("sound", "spatial_audio_effect"):
+            self.spatial_root.setVisible(sound.get("spatial_audio") is not None)
+            for prop, box in [("spatial_audio", self.spatial_mode_box),
+                              ("spatial_audio_effect", self.spatial_effect_box)]:
+                options = sound.get(f"{prop}_options")
+                if options is not None:
+                    self._spatial_options[prop] = list(options.split(","))
+                    fill_combo_box(box, self._spatial_options[prop], self.spatial_option_names, sound.get(prop))
 
         if event.is_changed("sound", "equalizer_preset"):
             value = sound.get("equalizer_preset")

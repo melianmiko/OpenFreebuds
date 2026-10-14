@@ -29,12 +29,15 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                 auto_pause_visible = await self.ofb.get_property("config", "auto_pause") is not None
                 low_latency_visible = await self.ofb.get_property("config", "low_latency") is not None
                 service_language_visible = await self.ofb.get_property("service", "language") is not None
+                single_bud_anc_visible = await self.ofb.get_property("config", "single_bud_anc") is not None
 
                 self.auto_pause_root.setVisible(auto_pause_visible)
                 self.low_latency_root.setVisible(low_latency_visible)
                 self.service_language_root.setVisible(service_language_visible)
+                self.single_bud_anc_root.setVisible(single_bud_anc_visible)
 
-                self.list_item.setVisible(auto_pause_visible or service_language_visible or low_latency_visible)
+                self.list_item.setVisible(auto_pause_visible or service_language_visible or low_latency_visible
+                                          or single_bud_anc_visible)
 
             if event.is_changed("config", "auto_pause"):
                 with blocked_signals(self.auto_pause_toggle):
@@ -44,6 +47,12 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                 with blocked_signals(self.low_latency_toggle):
                     self.low_latency_toggle.setChecked(await self.ofb.get_property("config", "low_latency") == "true")
                     self.low_latency_toggle.setEnabled(True)
+
+            if event.is_changed("config", "single_bud_anc"):
+                with blocked_signals(self.single_bud_anc_toggle):
+                    self.single_bud_anc_toggle.setChecked(
+                        await self.ofb.get_property("config", "single_bud_anc") == "true"
+                    )
 
             if event.is_changed("service", "language_options"):
                 options = await self.ofb.get_property("service", "language_options")
@@ -66,6 +75,11 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
     async def on_auto_pause_toggle(self, value: bool):
         async with qt_error_handler("OfbQtDeviceOtherSettingsModule_SetAutoPause", self.ctx):
             await self.ofb.set_property("config", "auto_pause", json.dumps(value))
+
+    @asyncSlot(bool)
+    async def on_single_bud_anc_toggle(self, value: bool):
+        async with qt_error_handler("OfbQtDeviceOtherSettingsModule_SetSingleBudAnc", self.ctx):
+            await self.ofb.set_property("config", "single_bud_anc", json.dumps(value))
 
     @asyncSlot(int)
     async def on_language_select(self, index: int):
