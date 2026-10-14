@@ -1,0 +1,46 @@
+name: AppImage
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  appimage:
+    name: Build AppImage
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pdm-project/setup-pdm@v4
+        with:
+            python-version: "3.14"
+            cache: true
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends qt6-l10n-tools zsync
+          pip install -U --break-system-packages rust-just
+      - run: pdm install
+      - name: Set version from tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: just bump_version "${GITHUB_REF_NAME#v}"
+      - run: just appimage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: openfreebuds_appimage
+          path: |
+            dist/*.AppImage
+            dist/*.AppImage.zsync
+            dist/*.AppImage.sha256
+          if-no-files-found: error
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1 \
+            || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes
+          gh release upload "$GITHUB_REF_NAME" --clobber \
+            dist/*.AppImage dist/*.AppImage.zsync dist/*.AppImage.sha256

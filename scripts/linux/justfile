@@ -45,3 +45,8 @@ debian:
 fedora:
     PYTHONLIBPATH="lib64/python3.14/site-packages" just prepare_nfpm
     cd scripts/linux && {{nfpm}} pkg --packager rpm --target "{{ sources_dir }}/dist/"
+
+# Create AppImage (self-updating from the GitHub releases of OFB_APPIMAGE_REPO)
+[group("os_linux"),linux]
+appimage: build
+    ./scripts/appimage/build.sh

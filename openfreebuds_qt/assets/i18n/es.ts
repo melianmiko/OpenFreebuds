@@ -51,6 +51,40 @@
         <translation type="unfinished" />
     </message>
 </context><context>
+    <name>OfbAppImage</name>
+    <message>
+        <location filename="../../utils/appimage/boot.py" line="28" />
+        <source>Install OpenFreebuds? It will be copied to {} and added to the application menu. You can also do it later from Linux-related settings.</source>
+        <translation>¿Instalar OpenFreebuds? Se copiará a {} y se agregará al menú de aplicaciones. También puedes hacerlo después desde los ajustes de Linux.</translation>
+    </message>
+</context><context>
+    <name>OfbAppImageUpdater</name>
+    <message>
+        <location filename="../../utils/appimage/updater.py" line="102" />
+        <source>You're using the latest version.</source>
+        <translation>Ya tienes la versión más reciente.</translation>
+    </message>
+    <message>
+        <location filename="../../utils/appimage/updater.py" line="105" />
+        <source>Version {} is available. Download and install it now?</source>
+        <translation>La versión {} está disponible. ¿Descargarla e instalarla ahora?</translation>
+    </message>
+    <message>
+        <location filename="../../utils/appimage/updater.py" line="111" />
+        <source>Downloading update…</source>
+        <translation>Descargando actualización…</translation>
+    </message>
+    <message>
+        <location filename="../../utils/appimage/updater.py" line="144" />
+        <source>Update failed: {}</source>
+        <translation>No se pudo actualizar: {}</translation>
+    </message>
+    <message>
+        <location filename="../../utils/appimage/updater.py" line="148" />
+        <source>Update installed. Restart OpenFreebuds now?</source>
+        <translation>Actualización instalada. ¿Reiniciar OpenFreebuds ahora?</translation>
+    </message>
+</context><context>
     <name>OfbDeviceAncLevelTrayMenu</name>
     <message>
         <location filename="../../qt_i18n.py" line="6" />
@@ -178,27 +212,27 @@
 </context><context>
     <name>OfbQtApplication</name>
     <message>
-        <location filename="../../main.py" line="227" />
+        <location filename="../../main.py" line="230" />
         <source>System tray not available, application won't work in background. This will make some features, like global hotkeys, unavailable.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../main.py" line="229" />
+        <location filename="../../main.py" line="232" />
         <source>If you're running under GNOME shell, please, check FAQ. This warning will be shown only once.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../main.py" line="244" />
+        <location filename="../../main.py" line="247" />
         <source>Failed to read configuration file. Default application settings was restored.</source>
         <translation type="unfinished" />
     </message>
     <message>
-        <location filename="../../main.py" line="259" />
+        <location filename="../../main.py" line="262" />
         <source>You're running under older version of Qt than expected. It's strongly recommended to switch to Flatpak release, because older Qt version may fail your experience of using OpenFreebuds.</source>
         <translation>Está ejecutando una versión de Qt antigua. Te recomendamos cambiar a la versión de Flatpak, ya que una versión anterior de Qt puede afectar negativamente a la experiencia de uso de OpenFreebuds.</translation>
     </message>
     <message>
-        <location filename="../../main.py" line="264" />
+        <location filename="../../main.py" line="267" />
         <source>This warning will be shown only once. Please, test Flatpak version before reporting bugs.</source>
         <translation>Este aviso sólo se mostrará una vez. Por favor, prueba la versión de Flatpak antes de informar de errores.</translation>
     </message>
@@ -639,14 +673,49 @@
 </context><context>
     <name>OfbQtLinuxExtrasModule</name>
     <message>
+        <location filename="../../app/module/linux_related.py" line="38" />
+        <source>Installed to {}</source>
+        <translation>Instalado en {}</translation>
+    </message>
+    <message>
         <location filename="../../app/module/linux_related.py" line="39" />
+        <source>Uninstall</source>
+        <translation>Desinstalar</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/linux_related.py" line="41" />
+        <source>Install to copy OpenFreebuds to {} and add it to the application menu.</source>
+        <translation>Instala para copiar OpenFreebuds a {} y agregarlo al menú de aplicaciones.</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/linux_related.py" line="43" />
+        <source>Install</source>
+        <translation>Instalar</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/linux_related.py" line="52" />
+        <source>Installed. OpenFreebuds will restart from {}.</source>
+        <translation>Instalado. OpenFreebuds se reiniciará desde {}.</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/linux_related.py" line="61" />
+        <source>Remove OpenFreebuds from {} and from the application menu? The application will close.</source>
+        <translation>¿Quitar OpenFreebuds de {} y del menú de aplicaciones? La aplicación se cerrará.</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/linux_related.py" line="80" />
         <source>Ensure bus access</source>
         <translation>Garantizar el acceso al bus</translation>
     </message>
     <message>
-        <location filename="../../app/module/linux_related.py" line="40" />
+        <location filename="../../app/module/linux_related.py" line="81" />
         <source>Looks like you're running under Flatpak. To use this feature, OpenFreebuds need to have access to entire session bus, otherwise it won't find any working media players. Ensure that you're granted this permission, refer to FAQ for more details.</source>
         <translation>Parece que estas ejecutando bajo Flatpak. Para utilizar esta función, OpenFreebuds necesita tener acceso a todo el bus de sesión, de lo contrario no encontrará ningún reproductor multimedia que funcione. Asegúrese de que se le concede este permiso, consulte las FAQ para más detalles.</translation>
+    </message>
+    <message>
+        <location filename="../../designer/linux_extras.ui" line="0" />
+        <source>AppImage</source>
+        <translation>AppImage</translation>
     </message>
     <message>
         <location filename="../../designer/linux_extras.ui" line="0" />
