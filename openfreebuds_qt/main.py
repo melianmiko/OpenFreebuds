@@ -128,6 +128,9 @@ class OfbQtApplication(IOfbQtApplication):
             await self.mpris.start()
             await self.tray.boot()
             await self.main_window.boot()
+            if sys.platform == "linux" and os.environ.get("APPIMAGE"):
+                from openfreebuds_qt.utils.appimage.boot import appimage_boot
+                await appimage_boot(self)
             await self.updater_service.boot()
 
             # Qt version check & warn
