@@ -1,3 +1,4 @@
+import json
 from dataclasses import dataclass
 from typing import Optional
 
@@ -8,7 +9,7 @@ from openfreebuds import OfbEventKind
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.utils.core_event import OfbCoreEvent
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
-from openfreebuds_qt.utils.qt_utils import fill_combo_box
+from openfreebuds_qt.utils.qt_utils import fill_combo_box, blocked_signals, qt_error_handler
 from openfreebuds_qt.designer.module_geatures import Ui_OfbQtGesturesModule
 
 log = create_logger("OfbQtGesturesModule")
@@ -62,6 +63,7 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
             "tap_action_off": self.tr("Disabled"),
             "tap_action_pause": self.tr("Play/pause"),
             "tap_action_prev": self.tr("Prev track"),
+            "tap_action_reject": self.tr("Reject call"),
             "tap_action_switch_device": self.tr("Switch device"),
             "tap_action_switch_anc": self.tr("Switch noise control mode"),
         }
@@ -124,6 +126,20 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
                                      label=self.swipe_label,
                                      left_combo=self.swipe_left,
                                      is_separate=False))
+        self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
+                                     settings_prefix="head_nod",
+                                     ui_names_map=self.gesture_names,
+                                     label=self.head_nod_label,
+                                     left_combo=self.head_nod_box,
+                                     is_separate=False))
+        self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
+                                     settings_prefix="head_shake",
+                                     ui_names_map=self.gesture_names,
+                                     label=self.head_shake_label,
+                                     left_combo=self.head_shake_box,
+                                     is_separate=False))
+        # noinspection PyUnresolvedReferences
+        self.head_gestures_toggle.toggled.connect(self.on_head_gestures_toggle)
 
     async def update_ui(self, event: OfbCoreEvent):
         if not event.is_changed("action") and not event.kind_match(OfbEventKind.DEVICE_CHANGED):
@@ -150,6 +166,18 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
             fill_combo_box(row.left_combo, row.options, row.ui_names_map, actions[current_id])
             if right_available:
                 fill_combo_box(row.right_combo, row.options, row.ui_names_map, actions[right_id])
+
+        head_gestures = actions.get("head_gestures")
+        self.head_gestures_toggle.setVisible(head_gestures is not None)
+        with blocked_signals(self.head_gestures_toggle):
+            self.head_gestures_toggle.setChecked(head_gestures == "true")
+        self.head_nod_box.setEnabled(head_gestures == "true")
+        self.head_shake_box.setEnabled(head_gestures == "true")
+
+    @asyncSlot(bool)
+    async def on_head_gestures_toggle(self, value: bool):
+        async with qt_error_handler("OfbQtGesturesModule_SetHeadGestures", self.ctx):
+            await self.ofb.set_property("action", "head_gestures", json.dumps(value))
 
     def setup_gesture_ui(self, row: _UiRow):
         @asyncSlot(int)

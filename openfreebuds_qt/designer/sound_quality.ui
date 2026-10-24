@@ -68,6 +68,35 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="spatial_root">
+     <property name="title">
+      <string>Spatial audio</string>
+     </property>
+     <layout class="QGridLayout" name="spatial_layout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="spatial_mode_label">
+        <property name="text">
+         <string>Mode:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="spatial_mode_box"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="spatial_effect_label">
+        <property name="text">
+         <string>Effect:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="spatial_effect_box"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="eq_root">
      <property name="title">
       <string>Equalizer</string>
