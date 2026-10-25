@@ -5,11 +5,11 @@ import "../build.just"
 deps_macos:
     brew install qttools just
 
-# Build macOS release binary (requires XCode tools to cross-compile x86/arm)
+# Build macOS release binary for the current Python architecture
 [group("os_macos"),macos]
-macos:
+macos: build
     mkdir -p dist
     rm -rf dist/OpenFreebuds.app
-    cd scripts/macos && {{pdm}} run pyinstaller -y openfreebuds.spec
+    cd scripts/macos && "{{pdm}}" run pyinstaller -y openfreebuds.spec
     mv scripts/macos/dist/OpenFreebuds.app dist/OpenFreebuds.app
     cd dist && tar czf openfreebuds_{{version}}_macos.tar.gz OpenFreebuds.app
