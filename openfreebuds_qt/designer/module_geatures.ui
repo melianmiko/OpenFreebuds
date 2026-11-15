@@ -147,6 +147,16 @@
    <item row="5" column="1">
     <widget class="QComboBox" name="long_left"/>
    </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="long_mode_label">
+     <property name="text">
+      <string>Long-press wake mode</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1" colspan="2">
+    <widget class="QComboBox" name="long_mode"/>
+   </item>
    <item row="7" column="0">
     <widget class="QLabel" name="long_anc_label">
      <property name="text">
@@ -184,6 +194,7 @@
   <tabstop>triple_right</tabstop>
   <tabstop>long_left</tabstop>
   <tabstop>long_right</tabstop>
+  <tabstop>long_mode</tabstop>
   <tabstop>long_anc_left</tabstop>
   <tabstop>long_in_call</tabstop>
   <tabstop>power_left</tabstop>

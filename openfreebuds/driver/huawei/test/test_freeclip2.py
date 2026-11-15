@@ -35,6 +35,10 @@ async def test_driver_creation():
         "tws_in_ear",
         "voice_language",
         "dual_connect",
+        "config_spatial_audio",
+        "config_adaptive_volume",
+        "config_box_tone",
+        "config_head_control",
     ]
     for handler_id in expected_handlers:
         assert handler_id in handler_ids, f"Missing handler: {handler_id}"

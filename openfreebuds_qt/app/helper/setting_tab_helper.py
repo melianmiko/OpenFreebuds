@@ -28,7 +28,10 @@ class OfbQtSettingsTabHelper:
 
             self.root, self.root_layout = widget_with_layout(parent, QBoxLayout.Direction.Down)
             self.list_item: OfbQListHeader = OfbQListHeader(self.root, self.root.tr(label)) if label else None
-            self.root_layout.addWidget(self.list_item)
+            # 无标题的分组本来就没有列表项，不要往布局里塞 None（Qt 会打
+            # "QLayout: Cannot add a null widget to QBoxLayout/" 警告）
+            if self.list_item is not None:
+                self.root_layout.addWidget(self.list_item)
 
         def set_visible(self, visible: bool):
             self.root.setVisible(visible)

@@ -7,8 +7,12 @@ from .action_power_button import OfbHuaweiActionsPowerButtonHandler
 from .action_swipe_gesture import OfbHuaweiActionSwipeGestureHandler
 from .anc import OfbHuaweiAncHandler, OfbHuaweiAncLegacyChangeHandler
 from .battery import OfbHuaweiBatteryHandler
+from .config_adaptive_volume import OfbHuaweiAdaptiveVolumeHandler
 from .config_auto_pause import OfbHuaweiConfigAutoPauseHandler
+from .config_box_tone import OfbHuaweiBoxToneHandler
 from .config_equalizer import OfbHuaweiEqualizerPresetHandler
+from .config_head_control import OfbHuaweiHeadControlHandler
+from .config_spatial_audio import OfbHuaweiSpatialAudioHandler
 from .sound_quality_preference import OfnHuaweiSoundQualityPreferenceHandler
 from .info import OfbHuaweiInfoHandler
 from .logs import OfbHuaweiLogsHandler
@@ -16,3 +20,4 @@ from .service_language import OfbHuaweiVoiceLanguageHandler
 from .state_in_ear import OfbHuaweiStateInEarHandler
 from .low_latency import OfbHuaweiLowLatencyPreferenceHandler
 from .dual_connect import OfbHuaweiDualConnectHandler
+from .find_earbud import OfbHuaweiFindEarbudHandler

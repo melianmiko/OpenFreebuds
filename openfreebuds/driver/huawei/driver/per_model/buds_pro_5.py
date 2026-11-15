@@ -16,7 +16,7 @@ class OfbDriverHuaweiPro5(OfbDriverHuaweiGeneric):
                 1: "hardbass",
                 2: "treble",
                 9: "voice",
-            }),
+            }, w_custom=True),
             OfbHuaweiConfigAutoPauseHandler(),
             OfbHuaweiDualConnectHandler(),
             OfbHuaweiStateInEarHandler(),
@@ -25,5 +25,8 @@ class OfbDriverHuaweiPro5(OfbDriverHuaweiGeneric):
             OfbHuaweiActionLongTapSplitHandler(w_right=True),
             OfbHuaweiActionSwipeGestureHandler(),
             OfbHuaweiLowLatencyPreferenceHandler(),
-            OfbHuaweiEqualizerPresetHandler(w_custom=True),
+            OfbHuaweiSpatialAudioHandler(),
+            OfbHuaweiAdaptiveVolumeHandler(),
+            OfbHuaweiBoxToneHandler(),
+            OfbHuaweiHeadControlHandler(),
         ]

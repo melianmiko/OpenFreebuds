@@ -1,0 +1,338 @@
+{
+  "version": 3,
+  "data": [
+    {
+      "id": 0,
+      "name": "Unfold",
+      "zhCn": "舒展"
+    },
+    {
+      "id": 43,
+      "name": "Whistle",
+      "zhCn": "口哨"
+    },
+    {
+      "id": 4,
+      "name": "Bongo",
+      "zhCn": "邦戈手鼓"
+    },
+    {
+      "id": 7,
+      "name": "Chess",
+      "zhCn": "棋"
+    },
+    {
+      "id": 10,
+      "name": "Dewdrop",
+      "zhCn": "晶莹"
+    },
+    {
+      "id": 11,
+      "name": "Doorbell",
+      "zhCn": "门铃"
+    },
+    {
+      "id": 12,
+      "name": "Drip",
+      "zhCn": "嘀嗒"
+    },
+    {
+      "id": 14,
+      "name": "Emerging",
+      "zhCn": "新发现"
+    },
+    {
+      "id": 15,
+      "name": "Fountain",
+      "zhCn": "喷泉"
+    },
+    {
+      "id": 18,
+      "name": "Huawei_Cascade",
+      "zhCn": "华为经典"
+    },
+    {
+      "id": 22,
+      "name": "Leap",
+      "zhCn": "跃动"
+    },
+    {
+      "id": 25,
+      "name": "Lit",
+      "zhCn": "点亮"
+    },
+    {
+      "id": 26,
+      "name": "Little_Wish",
+      "zhCn": "如愿以偿"
+    },
+    {
+      "id": 28,
+      "name": "Meditation",
+      "zhCn": "冥想"
+    },
+    {
+      "id": 31,
+      "name": "Pixies",
+      "zhCn": "精灵"
+    },
+    {
+      "id": 32,
+      "name": "Play",
+      "zhCn": "游戏"
+    },
+    {
+      "id": 34,
+      "name": "Pursue",
+      "zhCn": "追逐"
+    },
+    {
+      "id": 35,
+      "name": "Rise",
+      "zhCn": "昂扬"
+    },
+    {
+      "id": 36,
+      "name": "Shine",
+      "zhCn": "照耀"
+    },
+    {
+      "id": 200,
+      "name": "Chopin",
+      "zhCn": "肖邦"
+    },
+    {
+      "id": 100,
+      "name": "jntm",
+      "zhCn": "鸡你太美"
+    },
+    {
+      "id": 101,
+      "name": "mambo",
+      "zhCn": "曼波"
+    },
+    {
+      "id": 102,
+      "name": "j",
+      "zhCn": "鸡"
+    },
+    {
+      "id": 103,
+      "name": "Are_you_ok",
+      "zhCn": "Are You OK"
+    },
+    {
+      "id": 104,
+      "name": "yylx",
+      "zhCn": "遥遥领先"
+    },
+    {
+      "id": 105,
+      "name": "huawei_boot",
+      "zhCn": "华为开机"
+    },
+    {
+      "id": 106,
+      "name": "harmony_boot",
+      "zhCn": "鸿蒙开机"
+    },
+    {
+      "id": 107,
+      "name": "huawei_beautiful",
+      "zhCn": "华为美"
+    },
+    {
+      "id": 108,
+      "name": "huawei_intelligence",
+      "zhCn": "华为给我增智慧"
+    },
+    {
+      "id": 109,
+      "name": "cliip",
+      "zhCn": "恶夹式恶机"
+    },
+    {
+      "id": 110,
+      "name": "cliip2",
+      "zhCn": "恶夹式恶机2"
+    },
+    {
+      "id": 111,
+      "name": "report",
+      "zhCn": "报告同志们一个好消息"
+    },
+    {
+      "id": 112,
+      "name": "persia",
+      "zhCn": "波斯进贡的羊脂白玉耳坠一对儿"
+    },
+    {
+      "id": 113,
+      "name": "nmdb",
+      "zhCn": "南蛮大布"
+    },
+    {
+      "id": 114,
+      "name": "gugugaga",
+      "zhCn": "咕咕嘎嘎"
+    },
+    {
+      "id": 115,
+      "name": "tripgugugaga",
+      "zhCn": "凑企鹅嘟嘟嘟嘟嘟嘟嘟"
+    },
+    {
+      "id": 116,
+      "name": "eaguga",
+      "zhCn": "凑企鹅呃啊"
+    },
+    {
+      "id": 117,
+      "name": "hey",
+      "zhCn": "凑企鹅hey?"
+    },
+    {
+      "id": 118,
+      "name": "bangboo",
+      "zhCn": "麦当劳邦布"
+    },
+    {
+      "id": 119,
+      "name": "nocall",
+      "zhCn": "斗地主不叫"
+    },
+    {
+      "id": 120,
+      "name": "ding",
+      "zhCn": "叮"
+    },
+    {
+      "id": 121,
+      "name": "chimes",
+      "zhCn": "风铃"
+    },
+    {
+      "id": 122,
+      "name": "Mamba_Out",
+      "zhCn": "Mamba Out"
+    },
+    {
+      "id": 123,
+      "name": "What_Can_I_Say",
+      "zhCn": "What Can I Say"
+    },
+    {
+      "id": 124,
+      "name": "Man",
+      "zhCn": "Man"
+    },
+    {
+      "id": 125,
+      "name": "XP_Default",
+      "zhCn": "XP 默认"
+    },
+    {
+      "id": 126,
+      "name": "XP_Startup",
+      "zhCn": "XP 开机"
+    },
+    {
+      "id": 127,
+      "name": "XP_Shutdown",
+      "zhCn": "XP 关机"
+    },
+    {
+      "id": 128,
+      "name": "XP_Login",
+      "zhCn": "XP 登录"
+    },
+    {
+      "id": 129,
+      "name": "XP_Logout",
+      "zhCn": "XP 注销"
+    },
+    {
+      "id": 130,
+      "name": "XP_Plugin",
+      "zhCn": "XP 硬件插入"
+    },
+    {
+      "id": 131,
+      "name": "XP_Plugout",
+      "zhCn": "XP 硬件拔出"
+    },
+    {
+      "id": 132,
+      "name": "XP_HWFault",
+      "zhCn": "XP 硬件故障"
+    },
+    {
+      "id": 133,
+      "name": "XP_Critical_Stop",
+      "zhCn": "XP 严重错误"
+    },
+    {
+      "id": 134,
+      "name": "Windows_Login",
+      "zhCn": "Windows 登录"
+    },
+    {
+      "id": 135,
+      "name": "win11_insert",
+      "zhCn": "Windows 硬件插入"
+    },
+    {
+      "id": 136,
+      "name": "win11_notify",
+      "zhCn": "Windows 通知"
+    },
+    {
+      "id": 137,
+      "name": "hehehe",
+      "zhCn": "呵呵呵呵呵呵呵"
+    },
+    {
+      "id": 138,
+      "name": "bahaha",
+      "zhCn": "吧哈哈哈哈哈哈哈"
+    },
+    {
+      "id": 139,
+      "name": "bbb",
+      "zhCn": "冰冰冰"
+    },
+    {
+      "id": 140,
+      "name": "milkyfroglaugh",
+      "zhCn": "奶蛙大笑"
+    },
+    {
+      "id": 141,
+      "name": "milkyfroglaugh2",
+      "zhCn": "奶蛙大笑2"
+    },
+    {
+      "id": 142,
+      "name": "ggdlx",
+      "zhCn": "嘎嘎地辣虾"
+    },
+    {
+      "id": 143,
+      "name": "andy",
+      "zhCn": "安迪"
+    },
+    {
+      "id": 144,
+      "name": "holia",
+      "zhCn": "吼啦"
+    },
+    {
+      "id": 145,
+      "name": "gambade",
+      "zhCn": "干巴爹"
+    }
+  ],
+  "officialData": [
+
+  ]
+}

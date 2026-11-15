@@ -22,7 +22,7 @@ class OfbDriverHuaweiFreeClip2(OfbDriverHuaweiGeneric):
             # Gesture handlers
             OfbHuaweiActionDoubleTapHandler(),
             OfbHuaweiActionTripleTapHandler(),
-            OfbHuaweiActionLongTapSplitHandler(w_extra_options=True),
+            OfbHuaweiActionLongTapSplitHandler(w_agent_modes=True, w_anc=False),
             OfbHuaweiActionSwipeGestureHandler(),
 
             # Sound & audio quality
@@ -30,8 +30,8 @@ class OfbDriverHuaweiFreeClip2(OfbDriverHuaweiGeneric):
                 1: "default",
                 2: "hardbass",
                 3: "treble",
-                9: "voice",
-            }),
+                9: "voices",
+            }, w_custom=True, w_custom_rows=10, w_custom_max_count=3),
             OfnHuaweiSoundQualityPreferenceHandler(),
             OfbHuaweiLowLatencyPreferenceHandler(),
 
@@ -39,10 +39,12 @@ class OfbDriverHuaweiFreeClip2(OfbDriverHuaweiGeneric):
             OfbHuaweiStateInEarHandler(),
             OfbHuaweiVoiceLanguageHandler(),
             OfbHuaweiDualConnectHandler(),
+            OfbHuaweiSpatialAudioHandler(),
+            OfbHuaweiAdaptiveVolumeHandler(),
+            OfbHuaweiBoxToneHandler(),
+            OfbHuaweiHeadControlHandler(),
 
             # Not tested / unsupported on FreeClip 2:
             # - ANC (open-ear, no traditional ANC)
-            # - Head motion controls (nod/shake to answer) - needs SPP research
-            # - Adaptive volume in noisy environments - needs SPP research
             # - Drop reminder - needs SPP research
         ]

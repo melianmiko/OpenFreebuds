@@ -327,6 +327,51 @@
         <source>Due to technical restrictions, current language can't be readden from device and this field will be empty.</source>
         <translation type="unfinished" />
     </message>
+
+    <message>
+        <source>Converting audio…</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>Uploading…</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>Uploading to earbuds…</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>This firmware doesn't support lid notification sounds; custom tones can't be uploaded.</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>Audio file not found: {0}</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>The device refused the upload (code {0}). Make sure both earbuds are in the open charging case.</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>Upload failed: {0}</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>Conversion or upload failed: {0}</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>Custom tone uploaded.</source>
+        <translation type="unfinished" />
+    </message>
 </context><context>
     <name>OfbQtDeviceSelectModule</name>
     <message>
@@ -1299,4 +1344,108 @@
         <source>Enable low-latency mode</source>
         <translation type="unfinished" />
     </message>
-</context></TS>
+</context><context>
+    <name>PromptToneName</name>
+    <message>
+        <source>Unfold</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Whistle</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Bongo</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Chess</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Dewdrop</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Doorbell</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Drip</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Emerging</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Fountain</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Huawei_Cascade</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Leap</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Lit</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Little_Wish</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Meditation</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Pixies</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Play</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Pursue</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Rise</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Shine</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Chopin</source>
+        <translation type="unfinished" />
+    </message>
+</context>
+<context>
+    <name>OfbQtToneEditorDialog</name>
+    <message>
+        <source>File Name</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Display Name</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>Volume</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>Set to the best volume</source>
+        <translation type="unfinished" />
+    </message>
+</context>
+</TS>

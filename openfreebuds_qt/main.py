@@ -6,6 +6,7 @@ from contextlib import suppress
 from typing import Optional
 
 from PyQt6.QtCore import QLibraryInfo, QLocale, QTranslator, QT_VERSION_STR
+from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QMenu, QMenuBar, QMessageBox, QSystemTrayIcon
 from qasync import QEventLoop
 
@@ -67,6 +68,16 @@ class OfbQtApplication(IOfbQtApplication):
         # Qt base configs
         self.setApplicationName("OpenFreebuds")
         self.setDesktopFileName("pw.mmk.OpenFreebuds")
+
+        # 全局字体渲染：垂直方向轻微 hinting + 强制抗锯齿（字号/字族保持系统默认）。
+        # 走 FreeType 引擎时不套这层覆盖，保留 Qt 默认 hinting（用户实测更顺眼）；
+        # 想完全回退 DirectWrite 默认观感，设 OFB_FONT_DEFAULT=1。
+        using_freetype = "fontengine=freetype" in os.environ.get("QT_QPA_PLATFORM", "")
+        if not using_freetype and os.environ.get("OFB_FONT_DEFAULT", "") != "1":
+            base_font = self.font()
+            base_font.setHintingPreference(QFont.HintingPreference.PreferVerticalHinting)
+            base_font.setStyleStrategy(QFont.StyleStrategy.PreferAntialias)
+            self.setFont(base_font)
 
         # Qt i18n
         locale = self._detect_locale()

@@ -3,7 +3,7 @@ import webbrowser
 from PyQt6.QtCore import pyqtSlot
 from PyQt6.QtWidgets import QTreeWidgetItem
 
-from openfreebuds import DEVICE_TO_DRIVER_MAP
+from openfreebuds.driver.utils import get_display_device_names
 from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.constants import LINK_WEBSITE, LINK_GITHUB
 from openfreebuds_qt.designer.about_module import Ui_OfbQtAboutModule
@@ -22,7 +22,7 @@ class OfbQtAboutModule(Ui_OfbQtAboutModule, OfbQtCommonModule):
 
         # Supported devices tree
         devices = QTreeWidgetItem(None, [self.tr("Supported devices")])
-        for name in DEVICE_TO_DRIVER_MAP.keys():
+        for name in get_display_device_names():
             if name.startswith("Debug"):
                 continue
             devices.addChild(QTreeWidgetItem(devices, [name]))

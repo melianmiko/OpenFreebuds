@@ -106,7 +106,9 @@ class OfbManager(IOpenFreebuds):
     async def set_property(self, group: str, prop: str, value: str):
         if self._driver is None:
             raise OfbNoDeviceError("Attempt to write prop without device")
-        await self._driver.set_property(group, prop, value)
+        # 驱动的返回值（成功 True / 被拒 False）必须传出去，
+        # 否则调用方（比如提示音上传）无法判断写入到底有没有被设备接受
+        return await self._driver.set_property(group, prop, value)
 
     @rpc
     async def run_shortcut(self, *args, no_catch: bool = False):

@@ -1,9 +1,11 @@
 import asyncio
 import json
 
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QSlider, QMenu, QInputDialog, QMessageBox, QFileDialog
+from PyQt6.QtCore import Qt, QPoint, QRectF
+from PyQt6.QtGui import QIcon, QPainter, QFont
+from PyQt6.QtWidgets import (
+    QSlider, QMenu, QInputDialog, QMessageBox, QFileDialog, QLabel, QVBoxLayout, QWidget,
+)
 from qasync import asyncSlot
 
 from openfreebuds.exceptions import OfbTooManyItemsError
@@ -17,6 +19,52 @@ from openfreebuds_qt.utils.core_event import OfbCoreEvent
 from openfreebuds_qt.utils.qt_utils import fill_combo_box, blocked_signals, qt_error_handler
 
 log = create_logger("OfbQtSoundQualityModule")
+
+EQ_FREQUENCIES = ["60", "125", "250", "500", "1k", "2k", "4k", "8k", "12k", "16k"]
+
+
+def _format_eq_value(value: int) -> str:
+    """
+    Convert internal slider value (-60..60) to displayed value (-6.0..6.0).
+    """
+    return f"{value / 10:.1f}"
+
+
+class EqScaleWidget(QWidget):
+    """
+    Vertical scale shown left of the equalizer sliders, in 10-point steps.
+    """
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._slider: QSlider | None = None
+
+    def set_slider(self, slider: QSlider):
+        self._slider = slider
+        self.update()
+
+    def paintEvent(self, _event):
+        if self._slider is None:
+            return
+
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+
+        top = self.mapFromGlobal(self._slider.mapToGlobal(QPoint(0, 0))).y()
+        height = self._slider.height()
+        metrics = self.fontMetrics()
+
+        for internal in range(60, -61, -10):
+            y = top + (60 - internal) / 120.0 * height
+            font = QFont(self.font())
+            font.setBold(internal == 0)
+            painter.setFont(font)
+            painter.drawText(
+                QRectF(0, y - metrics.height() / 2, self.width() - 6, metrics.height()),
+                Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter,
+                _format_eq_value(internal),
+            )
+            painter.drawLine(self.width() - 4, int(y), self.width(), int(y))
 
 
 class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
@@ -48,6 +96,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
 
         self._eq_last_options: list[str] = []
         self._eq_rows: list[QSlider] = []
+        self._eq_value_labels: list[QLabel] = []
         self._last_preset_data: list[int] = []
         self._last_copy_options: list[str] = []
 
@@ -68,13 +117,22 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
 
         for i in range(10):
             self._add_slider(i)
+        self._add_scale()
         self.custom_eq.setVisible(False)
+
+    def _add_scale(self):
+        self._eq_scale = EqScaleWidget(self.custom_eq_rows)
+        self._eq_scale.setFixedWidth(34)
+        self.custom_eq_rows_layout.insertWidget(0, self._eq_scale)
+        self._eq_scale.set_slider(self._eq_rows[0])
 
     def _add_slider(self, i):
         lock = asyncio.Lock()
 
         @asyncSlot(int)
         async def _on_change(value: int):
+            self._eq_value_labels[i].setText(_format_eq_value(value))
+            self._eq_rows[i].setToolTip(_format_eq_value(value))
             if lock.locked():
                 return
             async with lock:
@@ -82,14 +140,37 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
                 await self.ofb.set_property("sound", "equalizer_rows",
                                             json.dumps(self._last_preset_data))
 
-        slider = QSlider(Qt.Orientation.Vertical, self.custom_eq_rows)
+        slider = QSlider(Qt.Orientation.Vertical)
         slider.setRange(-60, 60)
+        slider.setSingleStep(5)
+        slider.setPageStep(10)
         slider.setTickPosition(QSlider.TickPosition.TicksBothSides)
-        slider.setTickInterval(5)
-        slider.setToolTip("0")
+        slider.setTickInterval(10)
+        slider.setToolTip("0.0")
         # noinspection PyUnresolvedReferences
         slider.valueChanged.connect(_on_change)
-        self.custom_eq_rows_layout.addWidget(slider)
+
+        value_label = QLabel("0.0")
+        value_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        value_font = QFont(value_label.font())
+        value_font.setBold(True)
+        value_label.setFont(value_font)
+
+        freq_label = QLabel(EQ_FREQUENCIES[i])
+        freq_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+
+        column = QVBoxLayout()
+        column.setContentsMargins(0, 0, 0, 0)
+        column.setSpacing(2)
+        column.addWidget(value_label)
+        column.addWidget(slider, 1)
+        column.addWidget(freq_label)
+
+        wrapper = QWidget()
+        wrapper.setLayout(column)
+        self.custom_eq_rows_layout.addWidget(wrapper, 1)
+
+        self._eq_value_labels.append(value_label)
         self._eq_rows.append(slider)
 
     async def update_ui(self, event: OfbCoreEvent):
@@ -112,7 +193,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
                 self.sq_radio_sound.setChecked(False)
                 self.sq_radio_connection.setChecked(False)
 
-        if event.is_changed("sound", "equalizer_preset"):
+        if event.is_changed("sound", "equalizer_preset") or event.is_changed("sound", "equalizer_preset_options"):
             value = sound.get("equalizer_preset")
             options = sound.get("equalizer_preset_options")
             copy_options = sound.get("equalizer_preset_create_options")
@@ -122,6 +203,10 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
             if options is not None:
                 self._eq_last_options = list(options.split(","))
                 fill_combo_box(self.eq_preset_box, self._eq_last_options, self.eq_preset_option_names, value)
+            if value is not None:
+                self.custom_eq.setTitle(
+                    self.tr("Customize preset") + f": {self.eq_preset_option_names.get(value, value)}"
+                )
 
         if event.is_changed("sound", "equalizer_rows"):
             rows = json.loads(sound.get("equalizer_rows") or "null")
@@ -131,7 +216,8 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
                 for i, value in enumerate(rows):
                     with blocked_signals(self._eq_rows[i]):
                         self._eq_rows[i].setValue(value)
-                        self._eq_rows[i].setToolTip(str(value))
+                        self._eq_rows[i].setToolTip(_format_eq_value(value))
+                        self._eq_value_labels[i].setText(_format_eq_value(value))
 
     @asyncSlot()
     async def on_custom_save(self):

@@ -20,7 +20,7 @@ class OfbDriverHuaweiPro3(OfbDriverHuaweiGeneric):
                 1: "hardbass",
                 2: "treble",
                 9: "voice",
-            }),
+            }, w_custom=True),
             OfbHuaweiConfigAutoPauseHandler(),
             # Not tested, no research data
             OfbHuaweiDualConnectHandler(),
@@ -30,5 +30,4 @@ class OfbDriverHuaweiPro3(OfbDriverHuaweiGeneric):
             OfbHuaweiActionLongTapSplitHandler(w_right=True),
             OfbHuaweiActionSwipeGestureHandler(),
             OfbHuaweiLowLatencyPreferenceHandler(),
-            OfbHuaweiEqualizerPresetHandler(w_custom=True),
         ]

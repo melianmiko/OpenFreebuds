@@ -243,6 +243,16 @@
         <source>Connecting…</source>
         <translation>正在连接...</translation>
     </message>
+    <message>
+        <location filename="../../app/helper/device_control_view_helper.py" line="116" />
+        <source>In box</source>
+        <translation>在盒</translation>
+    </message>
+    <message>
+        <location filename="../../app/helper/device_control_view_helper.py" line="116" />
+        <source>Charging</source>
+        <translation>充电中</translation>
+    </message>
 </context><context>
     <name>OfbQtDeviceInfoModule</name>
     <message>
@@ -254,6 +264,16 @@
         <location filename="../../designer/device_info.ui" line="0" />
         <source>Firmware version:</source>
         <translation>固件版本：</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_info.ui" line="0" />
+        <source>Internal name:</source>
+        <translation>内部名称：</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_info.ui" line="0" />
+        <source>Product ID:</source>
+        <translation>产品 ID：</translation>
     </message>
     <message>
         <location filename="../../designer/device_info.ui" line="0" />
@@ -326,6 +346,161 @@
         <location filename="../../designer/device_other.ui" line="0" />
         <source>Due to technical restrictions, current language can't be readden from device and this field will be empty.</source>
         <translation>由于技术限制，无法从设备读取当前语言，此字段将为空。</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Spatial audio</source>
+        <translation>空间音频</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Enable spatial audio</source>
+        <translation>启用空间音频</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Mode:</source>
+        <translation>模式：</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Sound stage:</source>
+        <translation>声场：</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Head tracking fixes the sound stage in space. Availability depends on the earbuds firmware.</source>
+        <translation>头部追踪模式下声场固定在空间中，是否可用取决于耳机固件。</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Adaptive volume</source>
+        <translation>自适应音量</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Enable adaptive volume</source>
+        <translation>启用自适应音量</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Automatically adjusts playback volume to the ambient noise level.</source>
+        <translation>根据环境噪声自动调整播放音量。</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Head control</source>
+        <translation>头部控制</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Enable head controls</source>
+        <translation>启用头部控制</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Nod:</source>
+        <translation>点头：</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Shake:</source>
+        <translation>摇头：</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Answer or reject calls by nodding or shaking your head.</source>
+        <translation>通过点头或摇头接听或拒接电话。</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Charging case</source>
+        <translation>充电盒</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Case notification sounds</source>
+        <translation>充电盒提示音</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Play a sound when the charging case is opened or closed.</source>
+        <translation>开合充电盒时播放提示音。</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/device_other.py" line="34" />
+        <source>Head tracking</source>
+        <translation>头部追踪</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/device_other.py" line="35" />
+        <source>Fixed</source>
+        <translation>固定</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/device_other.py" line="38" />
+        <source>Default</source>
+        <translation>默认</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/device_other.py" line="39" />
+        <source>Theater</source>
+        <translation>有声剧场</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/device_other.py" line="40" />
+        <source>Cinema</source>
+        <translation>电影院</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/device_other.py" line="41" />
+        <source>Concert hall</source>
+        <translation>音乐厅</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/device_other.py" line="44" />
+        <source>No action</source>
+        <translation>无功能</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/device_other.py" line="45" />
+        <source>Answer call</source>
+        <translation>接听电话</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/device_other.py" line="46" />
+        <source>Reject call</source>
+        <translation>拒接电话</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/device_other.py" line="47" />
+        <source>Low</source>
+        <translation>低</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/device_other.py" line="49" />
+        <source>High</source>
+        <translation>高</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Sensitivity:</source>
+        <translation>灵敏度：</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Lid notification sound</source>
+        <translation>开盖提示音</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Volume:</source>
+        <translation>音量：</translation>
+    </message>
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Put both earbuds into the charging case to change these settings.</source>
+        <translation>请将两只耳机放入充电盒</translation>
     </message>
 </context><context>
     <name>OfbQtDeviceSelectModule</name>
@@ -530,6 +705,16 @@
         <translation>切换降噪模式</translation>
     </message>
     <message>
+        <location filename="../../app/module/gestures.py" line="78" />
+        <source>Press to speak (release to stop)</source>
+        <translation>按住说话（松开停止）</translation>
+    </message>
+    <message>
+        <location filename="../../app/module/gestures.py" line="79" />
+        <source>Press to activate (stay active)</source>
+        <translation>按住激活（松开保持）</translation>
+    </message>
+    <message>
         <location filename="../../app/module/gestures.py" line="71" />
         <source>Off and cancellation</source>
         <translation>关闭和降噪</translation>
@@ -563,6 +748,11 @@
         <location filename="../../designer/module_geatures.ui" line="0" />
         <source>Long-tap</source>
         <translation>长按</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Long-press wake mode</source>
+        <translation>长按唤醒模式</translation>
     </message>
     <message>
         <location filename="../../designer/module_geatures.ui" line="0" />
@@ -981,75 +1171,75 @@
     <message>
         <location filename="../../app/module/tray_battery.py" line="25" />
         <source>Show battery percentages in the system tray</source>
-        <translation type="unfinished" />
+        <translation>在系统托盘显示电量百分比</translation>
     </message>
     <message>
         <location filename="../../app/module/tray_battery.py" line="53" />
         <location filename="../../app/module/tray_battery.py" line="30" />
         <source>Left earbud</source>
-        <translation type="unfinished" />
+        <translation>左耳机</translation>
     </message>
     <message>
         <location filename="../../app/module/tray_battery.py" line="53" />
         <location filename="../../app/module/tray_battery.py" line="30" />
         <source>Right earbud</source>
-        <translation type="unfinished" />
+        <translation>右耳机</translation>
     </message>
     <message>
         <location filename="../../app/module/tray_battery.py" line="54" />
         <location filename="../../app/module/tray_battery.py" line="31" />
         <source>Charging case</source>
-        <translation type="unfinished" />
+        <translation>充电盒</translation>
     </message>
     <message>
         <location filename="../../app/module/tray_battery.py" line="33" />
         <source>Customize indicator</source>
-        <translation type="unfinished" />
+        <translation>自定义指示器</translation>
     </message>
     <message>
         <location filename="../../app/module/tray_battery.py" line="36" />
         <source>Text color</source>
-        <translation type="unfinished" />
+        <translation>文字颜色</translation>
     </message>
     <message>
         <location filename="../../app/module/tray_battery.py" line="37" />
         <source>Background color</source>
-        <translation type="unfinished" />
+        <translation>背景颜色</translation>
     </message>
     <message>
         <location filename="../../app/module/tray_battery.py" line="42" />
         <source>Text size (100% = largest that fits)</source>
-        <translation type="unfinished" />
+        <translation>文字大小（100% = 最大可容纳）</translation>
     </message>
     <message>
         <location filename="../../app/module/tray_battery.py" line="44" />
         <source>Normal</source>
-        <translation type="unfinished">标准</translation>
+        <translation>标准</translation>
     </message>
     <message>
         <location filename="../../app/module/tray_battery.py" line="45" />
         <source>Bold</source>
-        <translation type="unfinished" />
+        <translation>加粗</translation>
     </message>
     <message>
         <location filename="../../app/module/tray_battery.py" line="46" />
         <source>Font weight</source>
-        <translation type="unfinished" />
+        <translation>字体粗细</translation>
     </message>
     <message>
         <location filename="../../app/module/tray_battery.py" line="48" />
         <source>Transparent background</source>
-        <translation type="unfinished" />
+        <translation>透明背景</translation>
     </message>
     <message>
         <location filename="../../app/module/tray_battery.py" line="50" />
         <source>Preview</source>
-        <translation type="unfinished" />
+        <translation>预览</translation>
     </message>
     <message>
         <location filename="../../app/module/tray_battery.py" line="65" />
         <source>Changes apply immediately. Icons appear when battery levels are available. On Windows, check the hidden icons (^) menu and drag the icons onto the taskbar.</source>
-        <translation type="unfinished" />
+        <translation>修改立即生效。有电量数据时显示图标。Windows 上请查看隐藏图标（^）菜单并把图标拖到任务栏。</translation>
     </message>
 </context><context>
     <name>OfbQtTrayMenu</name>
@@ -1299,4 +1489,47 @@
         <source>Enable low-latency mode</source>
         <translation>启用低延迟模式</translation>
     </message>
+</context><context>
+    <name>DeviceColor</name>
+    <message><source>White</source><translation>白色</translation></message>
+    <message><source>Black</source><translation>黑色</translation></message>
+    <message><source>Blue</source><translation>蓝色</translation></message>
+    <message><source>Purple</source><translation>紫色</translation></message>
+    <message><source>Rose gold</source><translation>玫瑰金</translation></message>
+    <message><source>Red</source><translation>红色</translation></message>
+    <message><source>Yellow</source><translation>黄色</translation></message>
+    <message><source>Starry blue</source><translation>星河蓝</translation></message>
+    <message><source>Red-yellow</source><translation>红黄混色</translation></message>
+    <message><source>Red-blue</source><translation>红蓝混色</translation></message>
+    <message><source>Blue-yellow</source><translation>蓝黄混色</translation></message>
+    <message><source>Yellow-red</source><translation>黄红混色</translation></message>
+    <message><source>Blue-red</source><translation>蓝红混色</translation></message>
+    <message><source>Yellow-blue</source><translation>黄蓝混色</translation></message>
+    <message><source>Green</source><translation>绿色</translation></message>
+    <message><source>Grey</source><translation>灰色</translation></message>
+    <message><source>Pink</source><translation>粉色</translation></message>
+    <message><source>Orange</source><translation>橙色</translation></message>
+    <message><source>Gold</source><translation>金色</translation></message>
+    <message><source>Silver</source><translation>银色</translation></message>
+    <message><source>Beige</source><translation>米色</translation></message>
+    <message><source>Khaki</source><translation>卡其色</translation></message>
+    <message><source>Light purple</source><translation>浅紫色</translation></message>
+    <message><source>Blue-purple</source><translation>蓝紫色</translation></message>
+    <message><source>Off-white</source><translation>米白</translation></message>
+    <message><source>Silver white</source><translation>银白色</translation></message>
+    <message><source>Ceramic white</source><translation>陶瓷白</translation></message>
+    <message><source>Frost silver</source><translation>冰霜银</translation></message>
+    <message><source>Obsidian black</source><translation>曜石黑</translation></message>
+    <message><source>Cherry pink</source><translation>樱语粉</translation></message>
+    <message><source>Sky blue</source><translation>天空蓝</translation></message>
+    <message><source>Mint green</source><translation>薄荷绿</translation></message>
+    <message><source>Gilded black</source><translation>鎏金黑</translation></message>
+    <message><source>Gradient purple</source><translation>流光紫</translation></message>
+    <message><source>Island blue</source><translation>海岛蓝</translation></message>
+    <message><source>Dawn gold</source><translation>晨曦金</translation></message>
+    <message><source>Ice blue</source><translation>冰晶蓝</translation></message>
+    <message><source>Spruce green</source><translation>云杉绿</translation></message>
+    <message><source>Elegant black</source><translation>典雅黑</translation></message>
+    <message><source>Ceramic black</source><translation>陶瓷黑</translation></message>
+    <message><source>Gradient gold</source><translation>流光金</translation></message>
 </context></TS>

@@ -35,7 +35,11 @@ class OfbQtHotkeysModule(Ui_OfbQtHotkeysModule, OfbQtCommonModule):
         self.table.setRowCount(len(self.all_shortcuts))
         for index, shortcut in enumerate(self.all_shortcuts):
             self.table.setItem(index, 0, QTableWidgetItem(self.shortcut_names.get(shortcut, shortcut)))
-            self.table.setItem(index, 1, QTableWidgetItem(self.config.get("hotkeys", shortcut, "Disabled")))
+            self.table.setItem(index, 1, QTableWidgetItem(self._shortcut_text(shortcut)))
+
+    def _shortcut_text(self, shortcut: str) -> str:
+        value = self.config.get("hotkeys", shortcut, "Disabled")
+        return self.tr("Disabled") if value == "Disabled" else value
 
     @staticmethod
     def available():
@@ -74,4 +78,4 @@ class OfbQtHotkeysModule(Ui_OfbQtHotkeysModule, OfbQtCommonModule):
             self.config.save()
             self.service.start()
 
-            self.table.setItem(index, column, QTableWidgetItem(self.config.get("hotkeys", shortcut, "Disabled")))
+            self.table.setItem(index, column, QTableWidgetItem(self._shortcut_text(shortcut)))

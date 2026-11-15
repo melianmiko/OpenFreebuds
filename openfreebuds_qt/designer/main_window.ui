@@ -347,7 +347,7 @@
                  <item>
                   <widget class="QLabel" name="batt_l_text">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
@@ -355,7 +355,7 @@
                    <property name="minimumSize">
                     <size>
                      <width>32</width>
-                     <height>0</height>
+                     <height>34</height>
                     </size>
                    </property>
                    <property name="maximumSize">
@@ -471,7 +471,7 @@
                  <item>
                   <widget class="QLabel" name="batt_r_text">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
@@ -479,7 +479,7 @@
                    <property name="minimumSize">
                     <size>
                      <width>32</width>
-                     <height>0</height>
+                     <height>34</height>
                     </size>
                    </property>
                    <property name="maximumSize">
@@ -595,7 +595,7 @@
                  <item>
                   <widget class="QLabel" name="batt_c_text">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
@@ -603,7 +603,7 @@
                    <property name="minimumSize">
                     <size>
                      <width>32</width>
-                     <height>0</height>
+                     <height>34</height>
                     </size>
                    </property>
                    <property name="maximumSize">

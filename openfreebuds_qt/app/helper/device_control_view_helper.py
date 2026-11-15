@@ -111,6 +111,23 @@ class OfbQtDeviceControlViewHelper:
         is_tws = "case" in battery
         self.ui.batt_l_root.setVisible(is_tws)
         self.ui.batt_r_root.setVisible(is_tws)
-        self.ui.batt_l_text.setText(f'{battery.get("left", "--")}%')
-        self.ui.batt_r_text.setText(f'{battery.get("right", "--")}%')
-        self.ui.batt_c_text.setText(f'{battery.get("case" if is_tws else "global", "--")}%')
+
+        in_box_text = " · " + QApplication.translate("OfbQtDeviceControlViewHelper", "In box")
+        charging_text = " · " + QApplication.translate("OfbQtDeviceControlViewHelper", "Charging")
+
+        left_text = f'{battery.get("left", "--")}%'
+        if battery.get("left_in_box") == "true":
+            left_text += in_box_text
+        if battery.get("left_charging") == "true":
+            left_text += charging_text
+        self.ui.batt_l_text.setText(left_text)
+
+        right_text = f'{battery.get("right", "--")}%'
+        if battery.get("right_in_box") == "true":
+            right_text += in_box_text
+        if battery.get("right_charging") == "true":
+            right_text += charging_text
+        self.ui.batt_r_text.setText(right_text)
+
+        case_text = f'{battery.get("case" if is_tws else "global", "--")}%'
+        self.ui.batt_c_text.setText(case_text)

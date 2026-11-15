@@ -30,11 +30,13 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
         ("action", "noise_control_right"),
     ]
 
-    def __init__(self, w_left=True, w_right=False, w_in_call=False, w_anc=True, w_extra_options=False):
+    def __init__(self, w_left=True, w_right=False, w_in_call=False, w_anc=True, w_extra_options=False,
+                 w_agent_modes=False):
         self.w_left = w_left
         self.w_right = w_right
         self.w_in_call = w_in_call
         self.w_anc = w_anc
+        self.w_agent_modes = w_agent_modes
 
         self._options_lt = {
             -1: "tap_action_off",
@@ -51,15 +53,26 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
             4: "noise_control_off_aw"
         }
 
-        if w_extra_options:
+        if w_agent_modes:
+            # FreeClip 2 style: only assistant or disabled, no volume/ANC actions.
+            # Both earbuds always have an independent long-tap action.
+            self.w_left = True
+            self.w_right = True
+            self._options_lt = {
+                -1: "tap_action_off",
+                0: "tap_action_assistant"
+            }
+            self.properties = [*self.properties, ("action", "long_tap_mode")]
+        elif w_extra_options:
             self._options_lt[0] = "tap_action_assistant"
             self._options_lt[18] = "tap_action_vol_up"
             self._options_lt[19] = "tap_action_vol_down"
 
     async def on_init(self):
         # Base request
+        params = [1, 2, 9, 10] if self.w_agent_modes else [1, 2]
         resp = await self.driver.send_package(
-            HuaweiSppPackage.read_rq(CMD_LONG_TAP_SPLIT_READ_BASE, [1, 2])
+            HuaweiSppPackage.read_rq(CMD_LONG_TAP_SPLIT_READ_BASE, params)
         )
         await self.on_package(resp)
 
@@ -71,6 +84,20 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
             await self.on_package(resp)
 
     async def set_property(self, group: str, prop: str, value):
+        if prop == "long_tap_mode":
+            if not self.w_agent_modes:
+                return
+            flag = 1 if value == "ptt" else 0
+            pkg = HuaweiSppPackage.change_rq(CMD_LONG_TAP_SPLIT_WRITE_BASE, [
+                (1, b"\xff"),
+                (2, b"\xfe"),
+                (9, flag),
+                (10, flag),
+            ])
+            await self.driver.send_package(pkg)
+            await self.driver.put_property(group, prop, value)
+            return
+
         if "_left" in prop:
             p_type = 1
             p_options = self._options_lt
@@ -117,6 +144,14 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
                 await self.driver.put_property("action", "long_tap_in_call_options",
                                                ",".join(self._options_lt_call.values()))
             await self.driver.put_property("action", "long_tap_options", ",".join(self._options_lt.values()))
+
+            if self.w_agent_modes:
+                mode_ptt = package.find_param(9)
+                mode_hold = package.find_param(10)
+                if len(mode_ptt) == 1 and len(mode_hold) == 1:
+                    mode = "ptt" if mode_ptt[0] == 1 else "hold"
+                    await self.driver.put_property("action", "long_tap_mode", mode)
+                    await self.driver.put_property("action", "long_tap_mode_options", "ptt,hold")
         elif package.command_id == CMD_LONG_TAP_SPLIT_READ_ANC:
             if len(left) == 1:
                 value = int.from_bytes(left, byteorder="big", signed=True)

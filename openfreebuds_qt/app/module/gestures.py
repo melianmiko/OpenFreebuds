@@ -74,6 +74,11 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
             "noise_control_off_aw": self.tr("Off and awareness"),
         }
 
+        self.long_tap_mode_names = {
+            "ptt": self.tr("Press to speak (release to stop)"),
+            "hold": self.tr("Press to activate (stay active)"),
+        }
+
         self._ui_rows: list[_UiRow] = []
 
         self.setupUi(self)
@@ -107,6 +112,12 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
                                      label=self.long_label,
                                      left_combo=self.long_left,
                                      right_combo=self.long_right))
+        self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
+                                     settings_prefix="long_tap_mode",
+                                     ui_names_map=self.long_tap_mode_names,
+                                     label=self.long_mode_label,
+                                     left_combo=self.long_mode,
+                                     is_separate=False))
         self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
                                      settings_prefix="noise_control",
                                      ui_names_map=self.anc_pref_names,

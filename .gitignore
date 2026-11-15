@@ -19,3 +19,9 @@
 # Portable mode data
 /data
 /is_portable
+run_test.log
+gui_run.log
+
+# Local-only scratch files, logs and handoff documents (not for upstream)
+/_local/
+
