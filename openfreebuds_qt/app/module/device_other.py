@@ -14,7 +14,7 @@ from PyQt6.QtWidgets import QFileDialog, QMessageBox, QSizePolicy
 from qasync import asyncSlot
 
 from openfreebuds import OfbEventKind
-from openfreebuds.driver.huawei.prompt_tone import convert_to_tone_pcm
+from openfreebuds.driver.huawei.prompt_tone import decode_audio
 from openfreebuds.driver.huawei.tone_library import ToneLibrary, ToneLibraryError
 from openfreebuds_qt.app.dialog.tone_editor import OfbQtToneEditorDialog
 from openfreebuds_qt.qt_i18n import get_prompt_tone_name
@@ -676,29 +676,38 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
             if not path:
                 return
 
-            with tempfile.TemporaryDirectory() as tmp:
-                converted = Path(tmp) / "tone.pcm"
-                try:
-                    convert_to_tone_pcm(Path(path), converted)
-                    samples = np.frombuffer(converted.read_bytes(), dtype="<i2")
-                except (OSError, ValueError) as e:
-                    self._warn(str(e))
-                    return
+            try:
+                # Keep the whole source so the editor can select any later 5.73 s window;
+                # only the selected range is encoded and uploaded.
+                source = Path(path)
+                if source.suffix.lower() == ".pcm":
+                    data = source.read_bytes()
+                    if len(data) == 0 or len(data) % 2:
+                        raise ValueError("PCM 数据无效（长度必须为非零偶数）。")
+                    samples = np.frombuffer(data, dtype="<i2")
+                else:
+                    samples = await asyncio.to_thread(decode_audio, source)
+            except (OSError, ValueError, RuntimeError) as e:
+                self._warn(str(e))
+                return
+            if samples.size == 0:
+                self._warn(self.tr("The audio file contains no samples."))
+                return
 
-                file_name = _ascii_file_name(Path(path).stem)
-                dialog = OfbQtToneEditorDialog(self, samples, file_name, Path(path).stem)
-                if not await run_dialog_async(dialog):
-                    return
+            file_name = _ascii_file_name(Path(path).stem)
+            dialog = OfbQtToneEditorDialog(self, samples, file_name, Path(path).stem)
+            if not await run_dialog_async(dialog):
+                return
 
-                try:
-                    tone = self.tone_library.add(
-                        dialog.processed().astype("<i2").tobytes(),
-                        dialog.file_name,
-                        dialog.display_name,
-                    )
-                except (ToneLibraryError, ValueError) as e:
-                    self._warn(str(e))
-                    return
+            try:
+                tone = self.tone_library.add(
+                    dialog.processed().astype("<i2").tobytes(),
+                    dialog.file_name,
+                    dialog.display_name,
+                )
+            except (ToneLibraryError, ValueError) as e:
+                self._warn(str(e))
+                return
 
             self.box_tone_status.setText(
                 self.tr("Custom sound {0} added.").format(tone.id))

@@ -9,7 +9,7 @@ import pytest
 pytest.importorskip("PyQt6")
 from PyQt6.QtWidgets import QApplication
 
-from openfreebuds.driver.huawei.prompt_tone import TONE_AUTO_GAIN_TARGET
+from openfreebuds.driver.huawei.prompt_tone import TONE_AUTO_GAIN_TARGET, TONE_MAX_SAMPLES, TONE_SAMPLE_RATE
 from openfreebuds_qt.app.dialog.tone_editor import OfbQtToneEditorDialog
 
 
@@ -119,5 +119,23 @@ def test_file_name_and_display_name_fields(app):
         dlg.display_edit.setText("  新的铃声  ")
         assert dlg.file_name == "new chime"
         assert dlg.display_name == "新的铃声"
+    finally:
+        dlg.cleanup()
+
+
+def test_long_source_keeps_full_waveform_and_allows_late_selection(app):
+    """Importing a long file must not truncate it before the editor: later time ranges stay selectable."""
+    samples = np.zeros(TONE_MAX_SAMPLES * 3, dtype="<i2")
+    dlg = OfbQtToneEditorDialog(None, samples)
+    try:
+        assert dlg.samples.size == samples.size
+        assert dlg.waveform.total == samples.size
+        assert dlg.end_box.maximum() > TONE_MAX_SAMPLES / TONE_SAMPLE_RATE
+
+        # Select a window that starts two max-length segments into the source
+        start = TONE_MAX_SAMPLES * 2
+        dlg.waveform.set_range(start, samples.size)
+        assert dlg.waveform.start == start
+        assert dlg.selection.size == TONE_MAX_SAMPLES
     finally:
         dlg.cleanup()
