@@ -1,10 +1,23 @@
 import pytest
 
+from openfreebuds.driver.huawei.constants import (
+    CMD_LONG_TAP_SPLIT_READ_BASE,
+    CMD_LONG_TAP_SPLIT_WRITE_BASE,
+    CMD_SWIPE_WRITE,
+)
 from openfreebuds.driver.huawei.driver.debug import FbDriverHuaweiGenericFixture
 from openfreebuds.driver.huawei.handler import (OfbHuaweiActionDoubleTapHandler,
                                                 OfbHuaweiActionLongTapSplitHandler,
                                                 OfbHuaweiActionSwipeGestureHandler)
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
+from openfreebuds.driver.huawei.utils import crc16_xmodem
+
+
+def _response(cmd: bytes, params: list[tuple[int, bytes | int]]) -> bytes:
+    """Build a device response packet (recompute CRC)."""
+    data = bytearray(HuaweiSppPackage.change_rq(cmd, params).to_bytes())
+    data[-2:] = crc16_xmodem(data[:-2])
+    return bytes(data)
 
 
 @pytest.mark.asyncio
@@ -35,6 +48,109 @@ async def test_swipe_tap():
     rq0, rq1 = driver.package_log
     assert rq0 == ('send', set_swipe_off)
     assert rq1 == ('recv', resp_swipe_off)
+
+
+@pytest.mark.asyncio
+async def test_swipe_tap_split_by_side():
+    get_swipe = bytes.fromhex("5a0007002b1f01000200328a")
+    resp_swipe = bytes.fromhex("5a000a002b1f010100030200ff9e79")
+    ack = _response(CMD_SWIPE_WRITE, [])
+
+    set_left_off = HuaweiSppPackage.change_rq(CMD_SWIPE_WRITE, [(1, -1)]).to_bytes()
+    set_right_off = HuaweiSppPackage.change_rq(CMD_SWIPE_WRITE, [(2, -1)]).to_bytes()
+
+    driver = FbDriverHuaweiGenericFixture(
+        handlers=[OfbHuaweiActionSwipeGestureHandler()],
+        package_response_model={
+            get_swipe: [resp_swipe],
+            set_left_off: [ack],
+            set_right_off: [ack],
+        }
+    )
+
+    await driver.start()
+    assert await driver.get_property("action", "swipe_gesture_left") == "tap_action_change_volume"
+    assert await driver.get_property("action", "swipe_gesture_right") == "tap_action_change_volume"
+
+    driver.package_log = []
+    await driver.set_property("action", "swipe_gesture_left", "tap_action_off")
+    assert await driver.get_property("action", "swipe_gesture_left") == "tap_action_off"
+    assert await driver.get_property("action", "swipe_gesture_right") == "tap_action_change_volume"
+    assert driver.package_log[0] == ('send', set_left_off)
+
+    driver.package_log = []
+    await driver.set_property("action", "swipe_gesture_right", "tap_action_off")
+    assert await driver.get_property("action", "swipe_gesture_right") == "tap_action_off"
+    assert await driver.get_property("action", "swipe_gesture_left") == "tap_action_off"
+    assert driver.package_log[0] == ('send', set_right_off)
+
+
+@pytest.mark.asyncio
+async def test_long_tap_mode_keeps_ear_actions():
+    read_rq = HuaweiSppPackage.read_rq(CMD_LONG_TAP_SPLIT_READ_BASE, [1, 2, 9, 10]).to_bytes()
+    read_resp = _response(CMD_LONG_TAP_SPLIT_READ_BASE,
+                          [(1, b"\x00"), (2, b"\x00"), (9, b"\x00"), (10, b"\x00")])
+    mode_ptt = HuaweiSppPackage.change_rq(CMD_LONG_TAP_SPLIT_WRITE_BASE,
+                                          [(1, 0), (2, 0),
+                                           (9, 1), (10, 1)]).to_bytes()
+
+    driver = FbDriverHuaweiGenericFixture(
+        handlers=[OfbHuaweiActionLongTapSplitHandler(w_agent_modes=True, w_anc=False)],
+        package_response_model={
+            read_rq: [read_resp],
+            mode_ptt: [_response(CMD_LONG_TAP_SPLIT_WRITE_BASE, [])],
+        }
+    )
+
+    await driver.start()
+    assert await driver.get_property("action", "long_tap_left") == "tap_action_assistant"
+    assert await driver.get_property("action", "long_tap_right") == "tap_action_assistant"
+    assert await driver.get_property("action", "long_tap_mode") == "hold"
+
+    driver.package_log = []
+    await driver.set_property("action", "long_tap_mode", "ptt")
+    assert await driver.get_property("action", "long_tap_mode") == "ptt"
+    # Switching modes must preserve the current left/right actions and change only p9/p10 (official: both 1 or both 0)
+    assert await driver.get_property("action", "long_tap_left") == "tap_action_assistant"
+    assert await driver.get_property("action", "long_tap_right") == "tap_action_assistant"
+    assert driver.package_log[0] == ('send', mode_ptt)
+
+
+@pytest.mark.asyncio
+async def test_freeclip2_long_tap_function_payload():
+    """FreeClip 2 official long-press actions: per-ear P1/P2 values 00=assistant, FF=off."""
+    read_rq = HuaweiSppPackage.read_rq(CMD_LONG_TAP_SPLIT_READ_BASE, [1, 2, 9, 10]).to_bytes()
+    read_resp = _response(CMD_LONG_TAP_SPLIT_READ_BASE,
+                          [(1, b"\x00"), (2, b"\xfe"), (9, b"\x00"), (10, b"\x00")])
+    set_left_off = HuaweiSppPackage.change_rq(CMD_LONG_TAP_SPLIT_WRITE_BASE,
+                                              [(1, b"\xff")]).to_bytes()
+    set_right_on = HuaweiSppPackage.change_rq(CMD_LONG_TAP_SPLIT_WRITE_BASE,
+                                              [(2, b"\x00")]).to_bytes()
+
+    driver = FbDriverHuaweiGenericFixture(
+        handlers=[OfbHuaweiActionLongTapSplitHandler(w_agent_modes=True, w_anc=False)],
+        package_response_model={
+            read_rq: [read_resp],
+            set_left_off: [_response(CMD_LONG_TAP_SPLIT_WRITE_BASE, [])],
+            set_right_on: [_response(CMD_LONG_TAP_SPLIT_WRITE_BASE, [])],
+        }
+    )
+
+    await driver.start()
+    assert await driver.get_property("action", "long_tap_left") == "tap_action_assistant"
+    assert await driver.get_property("action", "long_tap_right") == "tap_action_off"
+    assert await driver.get_property("action", "long_tap_mode") == "hold"
+
+    await driver.set_property("action", "long_tap_left", "tap_action_off")
+    assert driver.package_log[0] == ('send', set_left_off)
+    assert await driver.get_property("action", "long_tap_left") == "tap_action_off"
+    assert await driver.get_property("action", "long_tap_right") == "tap_action_off"
+
+    driver.package_log = []
+    await driver.set_property("action", "long_tap_right", "tap_action_assistant")
+    assert driver.package_log[0] == ('send', set_right_on)
+    assert await driver.get_property("action", "long_tap_right") == "tap_action_assistant"
+    assert await driver.get_property("action", "long_tap_left") == "tap_action_off"
 
 
 @pytest.mark.asyncio

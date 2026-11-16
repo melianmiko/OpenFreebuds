@@ -7,6 +7,7 @@ from openfreebuds import IOpenFreebuds, OfbEventKind
 from openfreebuds_backend.exception import OfbBackendDependencyMissingError
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.generic import IOfbTrayIcon, IOfbQtApplication
+from openfreebuds_qt.tray.battery import battery_levels, battery_menu_text
 from openfreebuds_qt.tray.dialogs import OfbQtDependencyMissingDialog
 from openfreebuds_qt.tray.menu_anc_level import OfbDeviceAncLevelTrayMenu
 from openfreebuds_qt.tray.menu_dual_connect import OfbDeviceDualConnectTrayMenu
@@ -87,7 +88,12 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
         self.add_item(self.tr("Leave application"), callback=self.do_exit)
 
     async def on_core_event(self, event: OfbCoreEvent, state: int):
-        if event.kind_in([OfbEventKind.STATE_CHANGED, OfbEventKind.QT_SETTINGS_CHANGED]):
+        device_changed = event.kind_match(OfbEventKind.DEVICE_CHANGED)
+        if device_changed:
+            self._reset_device_state()
+            self.first_time_render = True
+
+        if device_changed or event.kind_in([OfbEventKind.STATE_CHANGED, OfbEventKind.QT_SETTINGS_CHANGED]):
             self.is_connected = state == IOpenFreebuds.STATE_CONNECTED
 
             device_name, device_addr = await self.ofb.get_device_tags()
@@ -122,6 +128,10 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
                 self.set_section_visible(self.anc_section, anc is not None)
                 if anc is not None:
                     await self._update_anc(anc)
+                else:
+                    self.anc_level_action.setVisible(False)
+                    for action in self.anc_mode_actions.values():
+                        action.setVisible(False)
 
             if event.is_changed("sound") or self.first_time_render:
                 await self.equalizer_submenu.update_ui()
@@ -131,6 +141,19 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
 
             self.first_time_render = False
 
+    def _reset_device_state(self):
+        """Hide cached device-specific actions before the next device is read."""
+        self.first_time_render = True
+        self.set_section_visible(self.battery_section, False)
+        self.set_section_visible(self.anc_section, False)
+        self.equalizer_action.setVisible(False)
+        self.dual_connect_action.setVisible(False)
+        self.anc_level_action.setVisible(False)
+        for action in self.anc_mode_actions.values():
+            action.setVisible(False)
+        self.equalizer_submenu.clear()
+        self.dual_connect_submenu.clear()
+
     async def _update_battery(self, battery: dict):
         battery_is_tws = "case" in battery
         self.battery_actions["left"].setVisible(battery_is_tws)
@@ -139,10 +162,12 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
         self.battery_actions["global"].setVisible(not battery_is_tws)
 
         # Update menu items
-        for code in battery:
+        levels = battery_levels(battery)
+        for code, level in levels.items():
             if code in self.battery_actions:
                 self.battery_actions[code].setText(
-                    f"{self.battery_option_names[code]} {battery[code]}%"
+                    f"{self.battery_option_names[code]} "
+                    f"{battery_menu_text(level, self.tr('Not connected'))}"
                 )
 
         # Update last charged config field

@@ -80,12 +80,15 @@ async def bt_list_devices():
     for a in devices:
         try:
             bt_device = await BluetoothDevice.from_id_async(a.id)
+            # Some virtual adapters/unpaired devices return None or an empty host_name; do not let one entry break the whole enumeration
+            if bt_device is None or bt_device.host_name is None or bt_device.name is None:
+                continue
             out.append({
                 "name": bt_device.name,
                 "address": bt_device.host_name.raw_name[1:-1],
                 "connected": bt_device.connection_status
             })
-        except OSError:
+        except (OSError, AttributeError):
             pass
 
     return out

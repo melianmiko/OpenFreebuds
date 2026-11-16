@@ -262,6 +262,8 @@
             <source>In box</source>
             <translation>Im Ladecase</translation>
         </message>
+    <message><source>Wearing</source><translation>Wird getragen</translation></message>
+    <message><source>Not connected</source><translation>Nicht verbunden</translation></message>
     </context>
     <context>
         <name>OfbQtDeviceInfoModule</name>
@@ -758,7 +760,48 @@
         <source>Custom tone uploaded.</source>
         <translation>Benutzerdefinierter Ton hochgeladen.</translation>
     </message>
-    </context>
+        <message><source>Prompt tone:</source><translation>Signaltone:</translation></message>
+    <message><source>Sync official catalog</source><translation>Offiziellen Katalog abgleichen</translation></message>
+    <message><source>Sync official audio</source><translation>Offizielle Audios abgleichen</translation></message>
+    <message><source>Find my earbuds</source><translation>Ohrhörer finden</translation></message>
+    <message><source>Earbuds will ring at maximum volume. Stop the ring as soon as you find them.</source><translation>Die Ohrhörer klingeln mit maximaler Lautstärke. Stoppen Sie das Klingeln, sobald Sie sie gefunden haben.</translation></message>
+    <message><source>Make sure the earbuds are not being worn before ringing. Loud sound at close range may damage your hearing.</source><translation>Prüfen Sie vor dem Klingeln, dass die Ohrhörer nicht getragen werden. Laute Geräusche aus kurzer Entfernung können Ihr Gehör schädigen.</translation></message>
+    <message><source>Left earbud is ringing</source><translation>Linker Ohrhörer klingelt</translation></message>
+    <message><source>Right earbud is ringing</source><translation>Rechter Ohrhörer klingelt</translation></message>
+    <message><source>Both earbuds are ringing</source><translation>Beide Ohrhörer klingeln</translation></message>
+    <message><source>Left earbud ring</source><translation>Linker Ohrhörer klingeln</translation></message>
+    <message><source>Right earbud ring</source><translation>Rechter Ohrhörer klingeln</translation></message>
+    <message><source>Both earbuds ring</source><translation>Beide Ohrhörer klingeln</translation></message>
+    <message><source>The earbuds you are about to ring are being worn. Loud sound at close range may damage your hearing. Ring anyway?</source><translation>Die Ohrhörer, die klingeln sollen, werden gerade getragen. Laute Geräusche aus kurzer Entfernung können Ihr Gehör schädigen. Trotzdem klingeln?</translation></message>
+    <message><source>Preparing the sound…</source><translation>Ton wird vorbereitet…</translation></message>
+    <message><source>Uploading… {0}%</source><translation>Wird übertragen… {0} %</translation></message>
+    <message><source>This device doesn't accept custom sounds.</source><translation>Dieses Gerät akzeptiert keine eigenen Töne.</translation></message>
+    <message><source>The audio file is missing.</source><translation>Die Audiodatei fehlt.</translation></message>
+    <message><source>The earbuds refused this sound, please retry.</source><translation>Die Ohrhörer haben diesen Ton abgelehnt, bitte erneut versuchen.</translation></message>
+    <message><source>Upload failed, please retry.</source><translation>Übertragung fehlgeschlagen, bitte erneut versuchen.</translation></message>
+    <message><source>Couldn't prepare the sound.</source><translation>Der Ton konnte nicht vorbereitet werden.</translation></message>
+    <message><source>Upload finished.</source><translation>Übertragung abgeschlossen.</translation></message>
+    <message><source>Select audio file</source><translation>Audiodatei auswählen</translation></message>
+    <message><source>Audio files (*.wav *.mp3 *.m4a *.ogg *.flac *.pcm)</source><translation>Audiodateien (*.wav *.mp3 *.m4a *.ogg *.flac *.pcm)</translation></message>
+    <message><source>Custom sound {0} added.</source><translation>Eigener Ton {0} hinzugefügt.</translation></message>
+    <message><source>Delete sound?</source><translation>Ton löschen?</translation></message>
+    <message><source>Will delete following sound:</source><translation>Folgender Ton wird gelöscht:</translation></message>
+    <message><source>Export sounds as ZIP</source><translation>Töne als ZIP exportieren</translation></message>
+    <message><source>ZIP exported to {0}</source><translation>ZIP exportiert nach {0}</translation></message>
+    <message><source>Official catalog: {0} total, {1} added, {2} updated.</source><translation>Offizieller Katalog: {0} gesamt, {1} neu, {2} aktualisiert.</translation></message>
+    <message><source>Official audio: {0} files written.</source><translation>Offizielle Audios: {0} Dateien geschrieben.</translation></message>
+    <message><source>This sound has no local audio file to send.</source><translation>Für diesen Ton gibt es keine lokale Audiodatei.</translation></message>
+    <message><source>Failed</source><translation>Fehlgeschlagen</translation></message>
+    <message><source>Open folder</source><translation>Ordner öffnen</translation></message>
+    <message><source>Take the earbuds out of the charging case before ringing.</source><translation>Nehmen Sie die Ohrhörer vor dem Klingeln aus dem Ladecase.</translation></message>
+    <message><source>Manage all charging-case sounds: charging, low battery, pairing and lid.</source><translation>Alle Ladecase-Töne verwalten: Laden, niedriger Akku, Kopplung und Deckel.</translation></message>
+    <message><source>Stop preview</source><translation>Vorschau stoppen</translation></message>
+    <message><source>Preview</source><translation>Vorschau</translation></message>
+    <message><source>Built-in sound selected.</source><translation>Integrierter Ton ausgewählt</translation></message>
+    <message><source>Drop reminder</source><translation>Sturz-Erinnerung</translation></message>
+    <message><source>Enable drop reminder</source><translation>Sturz-Erinnerung aktivieren</translation></message>
+    <message><source>Alerts you in the app if an earbud is dropped. Availability depends on the earbuds firmware.</source><translation>Erinnert dich in der App, wenn ein Ohrhörer herunterfällt. Die Verfügbarkeit hängt von der Ohrhörer-Firmware ab.</translation></message>
+</context>
     <context>
         <name>OfbQtDeviceSelectModule</name>
         <message>
@@ -1045,8 +1088,8 @@
             <translation>Aktivierungsmodus bei langem Drücken</translation>
         </message>
         <message>
-            <source>Press to activate (stay active)</source>
-            <translation>Drücken zum Aktivieren (bleibt aktiv)</translation>
+            <source>Continuous conversation (stay active after release)</source>
+            <translation>Dauergespräch (bleibt nach dem Loslassen aktiv)</translation>
         </message>
         <message>
             <source>Press to speak (release to stop)</source>
@@ -1510,6 +1553,7 @@
     </context>
     <context>
         <name>OfbQtTrayMenu</name>
+    <message><source>Not connected</source><translation>Nicht verbunden</translation></message>
         <message>
             <location filename="../../tray/menu.py" line="32" />
             <source>Left headphone:</source>

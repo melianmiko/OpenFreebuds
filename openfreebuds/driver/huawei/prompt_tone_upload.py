@@ -1,18 +1,5 @@
-"""充电盒自定义提示音上传（proto1 0x2BB6 / proto2 0x09xx）。
-
-协议来源：APK cp/r + ap/g 反编译标定。两套协议并存：
-    proto1：query(01 01 01) → ready(type1/100000) → start(02 04 <size4LE> 03 01 <equip>)
-            → negotiate(type2) → 8 包滑窗 04 02 <len> 数据 → bitmap(type3) → progress(type5)
-            → final(type6, result=1)。
-    proto2：0901 文件信息 → 0902 会话参数 → 0904 数据 → 0909 会话结束。
-
-FreeClip 2 真机标定（2026-11-13）：
-- proto1 query 无论 5 字节还是 6 字节都只返回 tag127=100003，设备从不发 type1 ready；
-  proto1 通道在该固件上整条不可用。
-- proto2 `09 01` 能拿到 tag127=100000（就绪），但回复与请求里的声明大小无关；
-  `09 02` 只接受裸帧（带任何尺寸 TLV 都不回）；`09 04` 四种内层布局全部无响应，
-  连发 8/16 包也不回位图；`09 09` 会触发 `09 03`（已接收 0 / 总 7680）。
-  结论：proto2 尚未真正建立"文件会话"，数据面不通。
+"""Charging-case custom prompt-tone upload (proto1 0x2BB6 / proto2 0x09xx).
+Protocol source: calibrated from APK cp/r and ap/g decompilation. proto1: query(01 01 01) -> ready(type1/100000) -> start(02 04 <size4LE> 03 01 <equip>) -> negotiate -> data -> finish. proto2: 09 01 file info -> 09 02 session params -> 09 09 start -> 09 04 data -> 09 09 finish, with 09 03/09 05 progress and 09 06 completion. See handoff doc section 10.
 """
 import asyncio
 import struct
@@ -31,7 +18,7 @@ STEP_TIMEOUT = 10
 WINDOW = 8
 DEFAULT_PACKET_SIZE = 240
 
-# proto2 命令字
+# proto2 command byte
 CMD_P2_FILE_INFO = bytes.fromhex("0901")
 CMD_P2_SESSION_START = bytes.fromhex("0902")
 CMD_P2_FILE_STATUS = bytes.fromhex("0903")
@@ -41,27 +28,27 @@ CMD_P2_COMPLETE = bytes.fromhex("0906")
 CMD_P2_SESSION_END = bytes.fromhex("09090101 01")
 CMD_P2_NOTIFY = bytes.fromhex("090a")
 
-# 真机实测：0901 之前必须先读一次 feature16（0x2BB4 tag 0x10），否则设备不应答。
+# Measured: read feature16 (0x2BB4 tag 0x10) once before 0901, otherwise the device does not answer.
 CMD_2BB4 = bytes.fromhex("2bb4")
 READ_FEATURE16 = b"\x2b\xb4\x01\x01\x10"
 
-# 真机抓包标定的分包参数（2026-11-14，见交接文档 §10）
+# Chunking parameters measured from a real capture (2026-11-14, handoff doc section 10)
 PROTO2_WINDOW_BYTES = 7680
 PROTO2_FRAME_BYTES = 960
 PROTO2_DEFAULT_CHUNK = 969
 PROTO2_CREDIT_OK = RESULT_READY
-# 真机实测：feature16 读完之后立刻发 0901 会被忽略，隔 1s 才应答。
+# Measured: 0901 sent immediately after a feature16 read is ignored; wait 1 s before sending it.
 PROTO2_PRE_DELAY = 1.0
-# 收完数据后等设备落盘（09 05 进度追平 + 09 06）的最长时间
+# Maximum wait for the device to flush after all data is sent (09 05 progress catches up + 09 06)
 PROTO2_FLUSH_TIMEOUT = 60.0
 
 
 class ToneUploadError(Exception):
-    """上传过程中的设备错误。"""
+    """Device error during upload."""
 
 
 class ToneUploadNotReady(ToneUploadError):
-    """设备未进入上传就绪态（query 未返回 type1/100000）。"""
+    """Device did not enter upload-ready state (query did not return type1/100000)."""
 
     def __init__(self, code: int):
         self.code = code
@@ -69,48 +56,48 @@ class ToneUploadNotReady(ToneUploadError):
 
 
 def frame_body(body: bytes) -> bytes:
-    """body（命令字+TLV）→ 含 0x5A 头与 CRC16-XMODEM 的完整帧。"""
+    """body (command + TLV) -> full frame with 0x5A header and CRC16-XMODEM."""
     framed = b"Z" + (len(body) + 1).to_bytes(2, "big") + b"\x00" + body
     return framed + crc16_xmodem(framed).to_bytes(2, "big")
 
 
 def build_query() -> bytes:
-    """proto1 就绪查询：2b b6 + TLV(1,1,1)。APK `Lap/g.z()` 数组声明 5 字节，
-    反编译 dump 末尾多出的 00 是填充字节，真机对照也证明尾部 00 无影响。"""
+    """proto1 ready query: 2b b6 + TLV(1,1,1).
+    The APK Lap/g.z() declares 5 bytes; the extra 00 at the end of the decompiled dump is padding, and hardware testing confirms the trailing 00 has no effect.
+    """
     return bytes.fromhex("2bb6010101")
 
 
 def build_start(size: int, equip: int = 0) -> bytes:
-    """proto1 开始传输：TLV(1,1,2) + TLV(2,4,size) + TLV(3,1,equip)。
-    APK `Lap/g.i(II)` 用 `util/g.g()`（4 字节小端）写 size。"""
+    """proto1 start transfer: TLV(1,1,2) + TLV(2,4,size) + TLV(3,1,equip).
+    APK Lap/g.i(II) writes size with util/g.g() (4-byte little-endian).
+    """
     return bytes.fromhex("2bb60101020204") + struct.pack("<I", size) + bytes([3, 1, equip])
 
 
 def build_proto2_file_info(size: int) -> bytes:
-    """proto2 文件信息（真机抓包 2026-11-14 校正）：
-
-    `09 01 01 01 01 02 02 00 00 03 01 00 06 01 04 09 04 <总长4BE> 0a 01 00`
-    size 为**整个 package 的字节数**（抓包那次 0x1EF9E = 126878），大端 4 字节。
+    """proto2 file info (corrected from the 2026-11-14 hardware capture):
+    09 01 01 01 01 02 02 00 00 03 01 00 06 01 04 09 04 <total length 4BE> 0a 01 00
+    size is the whole package length (0x1EF9E = 126878 in that capture), 4 bytes big-endian.
     """
     return (bytes.fromhex("0901010101020200000301000601040904")
             + struct.pack(">I", size) + bytes.fromhex("0a0100"))
 
 
 def build_proto2_session_start() -> bytes:
-    """proto2 会话参数查询：裸 `09 02`（带参数设备不回）。"""
+    """proto2 session parameter query: bare 09 02 (the device does not answer with parameters)."""
     return bytes.fromhex("0902")
 
 
 def build_proto2_push_start() -> bytes:
-    """proto2 开始推数据：`09 09 01 01 01`（设备随后回 09 03 状态帧）。"""
+    """proto2 start data transfer: 09 09 01 01 01 (the device then returns a 09 03 status frame)."""
     return bytes.fromhex("0909010101")
 
 
 def build_proto2_data(window: int, seq: int, chunk: bytes) -> bytes:
-    """proto2 数据帧（真机抓包校正，2026-11-14）：
-
-    `09 04 | ff | 00 | 窗口基址(3B 大端) | 帧序号(1B) | 数据`
-    每窗口 7680 字节 = 8 帧 × 960 字节，帧序号 0..7。
+    """proto2 data frame (corrected from the 2026-11-14 capture):
+    09 04 | ff | 00 | window base (3B BE) | frame index (1B) | data
+    Each window is 7680 bytes = 8 frames x 960 bytes; frame index 0..7.
     """
     win_b = int(window).to_bytes(3, "big")
     inner = b"\xff\x00" + win_b + bytes([seq & 0xFF]) + chunk
@@ -118,7 +105,7 @@ def build_proto2_data(window: int, seq: int, chunk: bytes) -> bytes:
 
 
 def build_proto2_session_end() -> bytes:
-    """proto2 会话结束：09 09 + TLV(1,1,1)。APK `Lap/g.y()`。"""
+    """proto2 end session: 09 09 + TLV(1,1,1). APK Lap/g.y()."""
     return bytes.fromhex("0909010101")
 
 
@@ -149,7 +136,7 @@ class ToneResponse:
 
 
 def parse_response(pkg: HuaweiSppPackage | None) -> ToneResponse:
-    """按 ap/g.k 分发规则解析 0x2BB6 响应：tag5=类型，tag4=类型相关数据。"""
+    """Parse the 0x2BB6 response with the ap/g.k rules: tag5 = type, tag4 = type-specific data."""
     r = ToneResponse()
     if pkg is None:
         return r
@@ -182,9 +169,8 @@ def parse_response(pkg: HuaweiSppPackage | None) -> ToneResponse:
 
 
 async def upload_tone(session, package: bytes, *, progress_cb=None) -> None:
-    """通过原始帧会话上传整包。session 需提供 send_framed(bytes) 与 recv(timeout)。
-
-    成功返回 None；设备未就绪抛 ToneUploadNotReady；其它设备错误抛 ToneUploadError。
+    """Upload the whole package through a raw-frame session. The session must provide send_framed(bytes) and recv(timeout).
+    Returns None on success; raises ToneUploadNotReady if the device is not ready and ToneUploadError for other device errors.
     """
     if not package:
         raise ToneUploadError("提示音数据为空")
@@ -248,21 +234,21 @@ async def upload_tone(session, package: bytes, *, progress_cb=None) -> None:
 
 
 # ---------------------------------------------------------------------------
-# proto2（真机抓包标定版，2026-11-14）
+# proto2 (capture-calibrated version, 2026-11-14)
 # ---------------------------------------------------------------------------
 
 STEP_TIMEOUT_PROTO2 = 10
 
 
 def p2_tlv(pkg) -> dict[int, bytes]:
-    """把 HuaweiSppPackage 的 TLV 列表整理成 {tag: bytes}。"""
+    """Convert the HuaweiSppPackage TLV list into {tag: bytes}."""
     if pkg is None:
         return {}
     return {int(k): bytes(v) for k, v in pkg.parameters.items()}
 
 
 def p2_received_offset(pkg) -> int | None:
-    """09 03 状态帧里的「设备已接收字节数」（tag 1，4 字节大端）。"""
+    """Bytes received by the device from a 09 03 status frame (tag 1, 4-byte big-endian)."""
     tlv = p2_tlv(pkg)
     raw = tlv.get(1, b"")
     if len(raw) == 4:
@@ -271,7 +257,7 @@ def p2_received_offset(pkg) -> int | None:
 
 
 def p2_chunk_size(pkg) -> int:
-    """09 02 应答里的分包大小（tag 3，2 字节大端，真机为 969）。"""
+    """Chunk size from the 09 02 response (tag 3, 2-byte big-endian; 969 on hardware)."""
     raw = p2_tlv(pkg).get(3, b"")
     if len(raw) == 2:
         return int.from_bytes(raw, "big")
@@ -279,24 +265,16 @@ def p2_chunk_size(pkg) -> int:
 
 
 async def upload_tone_proto2(session, package: bytes, *, progress_cb=None) -> None:
-    """按官方 App 真机行为做 proto2 上传。
-
-    session 需提供 send_framed(bytes) 与 recv(timeout)（recv 要能收到所有命令字，
-    因此驱动侧应使用 raw_session_all，而不是按命令字过滤的 raw_session）。
-
-    步骤（对照交接文档 §10.2）：
-        读一次 feature16（0x2BB4 tag 0x10）唤醒会话
-        → 09 01 声明总长 → 09 02 取分包参数 → 09 09 开始推流
-        → 09 04 按 7680 字节窗口推 8×960 字节 → 每窗口等 09 03 ACK
-        → 收尾等 09 06 完成帧。
+    """Run proto2 upload using the official App behavior measured on hardware.
+    The session must provide send_framed(bytes) and recv(timeout); recv must see all command bytes, so use raw_session_all instead of command-filtered raw_session. Steps (handoff doc section 10.2): read feature16 once; wait 1 s; send 09 01 file info; send 09 02; send 09 09; stream 09 04 frames; send 09 09 finish; wait for completion.
     """
     if not package:
         raise ToneUploadError("提示音数据为空")
 
     total = len(package)
 
-    # 真机实测：串口刚连上那会儿设备还在忙初始化，feature16 读会被吞掉，
-    # 所以重试到拿到应答为止；拿到之后再隔 1s 才发 0901。
+    # Measured: right after the serial port connects the device is still initializing and feature16 reads are dropped,
+    # so retry until a response arrives; then wait 1 s before sending 0901.
     for _ in range(3):
         await session.send_framed(frame_body(READ_FEATURE16))
         if await _recv_cmd(session, {CMD_2BB4}, 3.0) is not None:
@@ -311,7 +289,7 @@ async def upload_tone_proto2(session, package: bytes, *, progress_cb=None) -> No
     if resp is None:
         raise ToneUploadError("设备未应答 09 01（文件信息），会话未建立")
     tlv_all = p2_tlv(resp)
-    # 设备应答形如 09 01 7f 04 <credit> 04 01 14 ...，拒绝时给 7f 非 100000
+    # Device response looks like 09 01 7f 04 <credit> 04 01 14 ...; rejection returns 7f instead of 100000
     credit = tlv_all.get(0x7F, b"")
     if len(credit) == 4:
         code = int.from_bytes(credit, "big")
@@ -347,14 +325,14 @@ async def upload_tone_proto2(session, package: bytes, *, progress_cb=None) -> No
             raise ToneUploadError(f"窗口 {offset} 未被耳机确认")
         offset = expect
         if progress_cb:
-            # 前 50% 对应真实的数据推流（速度随音频长度变化，官方 App 也是这个观感）
+            # First 50% represents real data streaming; speed varies with audio length, matching the official App
             progress_cb(int(offset * 50 / total))
 
 
-    # 官方抓包里设备随后发 09 06（完成帧）= 落盘成功。真机标定（2026-11-14）：
-    # 数据 ACK 完设备还要按 4096 字节一档继续内部落盘，09 05 的 tag1 是「总进度上限」
-    # （= 包长 ×2），只有 tag2 追平 tag1 才会补发 09 06。以前只等 3 秒就关串口，
-    # 于是误判成「设备没提交」。
+    # In official captures the device then sends 09 06 (completion) after a successful flush. Measured 2026-11-14:
+    # after data ACKs the device still flushes internally in 4096-byte steps; 09 05 tag1 is the total progress ceiling
+    # (= packet length * 2); 09 06 is sent only after tag2 catches up with tag1. The old code closed the port after 3 s,
+    # so it reported 'device did not commit' incorrectly.
     state = await _wait_complete(session, progress_cb=progress_cb)
     if progress_cb:
         progress_cb(100)
@@ -363,21 +341,14 @@ async def upload_tone_proto2(session, package: bytes, *, progress_cb=None) -> No
     elif state == "flushed":
         log.info("proto2 上传完成（09 05 进度追平总进度，未见 09 06）")
     else:
-        # 没等到追平就结束，说明文件很可能只写了一半（真机上会表现为只响前半段），
-        # 不能报成功，交给上层如实提示重试
+        # If the wait ends before progress catches up, the file was probably only half written (only the first half plays on device),
+        # so do not report success; let the caller show a retry message
         raise ToneUploadError("等待设备落盘超时，文件可能未写完整，请重试")
 
 
 async def _wait_complete(session, timeout: float = PROTO2_FLUSH_TIMEOUT, *, progress_cb=None) -> str:
-    """收完数据后等设备落盘：返回 "done"(追平且收到 09 06) / "flushed"(仅追平) / "timeout"。
-
-    09 05 的 tag1 = 总进度上限（= 包长 ×2），tag2 = 当前进度。数据 ACK 完之后设备
-    还会以固定档位继续推进 tag2 —— 这一段正是官方 App 后半程那个"速度恒定"的阶段
-    （HCI 观感：前半程随音频长度变化，后半程匀速）。
-
-    真机实测（2026-11-14）：09 06 会在 tag2 只走到 tag1 一半时就发出来，此时**文件还没有
-    写完整**，开盖听到的只有前半段。所以 09 06 不能再当作完成信号，必须等 tag2 追平 tag1；
-    追平之后再等 09 06 收尾（最多 3 秒）。
+    """Wait for the device to flush after all data is sent: returns 'done' (progress caught up and 09 06 received), 'flushed' (progress caught up only) or 'timeout'.
+    09 05 tag1 is the total progress ceiling (= packet length * 2), tag2 is current progress. After data ACKs the device advances tag2 in fixed steps; this is the constant-speed second half of the official App.
     """
     loop = asyncio.get_running_loop()
     deadline = loop.time() + timeout
@@ -407,7 +378,7 @@ async def _wait_complete(session, timeout: float = PROTO2_FLUSH_TIMEOUT, *, prog
                 cur = int.from_bytes(cur_raw, "big")
                 log.debug(f"09 05 落盘进度 {cur}/{total}")
                 if total:
-                    # 后 50% 用来画落盘进度，和官方 App 的后半程对应
+                    # The last 50% drives the flush progress bar, matching the official App's second half
                     pct = 50 + int(min(1.0, cur / total) * 50)
                     if progress_cb and pct != last_pct:
                         last_pct = pct
@@ -421,7 +392,7 @@ async def _wait_complete(session, timeout: float = PROTO2_FLUSH_TIMEOUT, *, prog
 
 
 async def _wait_window_ack(session, expect: int) -> bool:
-    """等待设备把已接收偏移推进到 expect；09 05 进度帧只当心跳。"""
+    """Wait for the device's received offset to reach expect; 09 05 progress frames are only heartbeats."""
     loop = asyncio.get_running_loop()
     deadline = loop.time() + STEP_TIMEOUT_PROTO2
     while loop.time() < deadline:
@@ -437,7 +408,7 @@ async def _wait_window_ack(session, expect: int) -> bool:
 
 
 async def _recv_cmd(session, cmds: set[bytes], timeout: float):
-    """等指定命令字的帧，途中丢弃心跳(2BAC)等无关帧。"""
+    """Wait for a frame with the given command, discarding unrelated frames such as the 2BAC heartbeat."""
     loop = asyncio.get_running_loop()
     deadline = loop.time() + timeout
     while loop.time() < deadline:

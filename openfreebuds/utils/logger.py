@@ -16,7 +16,7 @@ screen_handler.setFormatter(logging.Formatter(log_format))
 
 
 def _make_file_handler():
-    """把完整日志同时写一份文件，方便排查 GUI 里「点了没反应」这类问题。"""
+    """Write the full log to a file as well, to diagnose GUI issues such as 'click does nothing'."""
     try:
         from openfreebuds.constants import STORAGE_PATH
         log_dir = STORAGE_PATH / "logs"

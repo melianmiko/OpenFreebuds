@@ -1,9 +1,5 @@
-"""自适应音量 handler 测试（0x2BB4 MBB featureId 2）
-
-协议依据 2026-11-13 FreeClip 2 真机标定：
-  读：01 01 02 02 00 03 00 → p2=开关 p3=灵敏度
-  写开关：01 01 02 02 01 <0/1>
-  写灵敏度：01 01 02 03 01 <0/1/2>
+"""Adaptive volume handler tests (0x2BB4 MBB featureId 2).
+Protocol based on 2026-11-13 FreeClip 2 calibration: read 01 01 02 02 00 03 00 -> p2=switch p3=sensitivity; write switch 01 01 02 02 01 <0/1>; write sensitivity 01 01 02 03 01 <0/1/2>.
 """
 
 import pytest
@@ -16,15 +12,15 @@ from openfreebuds.driver.huawei.package import HuaweiSppPackage
 READ_RQ = HuaweiSppPackage.change_rq(
     CMD_MBB_FEATURE, [(1, MBB_FEATURE_ADAPTIVE_VOLUME), (2, b""), (3, b"")]
 ).to_bytes()
-# feature=2, 开关=1, 灵敏度=1(default)
+# feature=2, switch=1, sensitivity=1 (default)
 READ_RESP = HuaweiSppPackage.change_rq(
     CMD_MBB_FEATURE, [(1, b"\x02"), (2, b"\x01"), (3, b"\x01")]
 ).to_bytes()
-# 开关=0
+# switch=0
 READ_RESP_OFF = HuaweiSppPackage.change_rq(
     CMD_MBB_FEATURE, [(1, b"\x02"), (2, b"\x00"), (3, b"\x01")]
 ).to_bytes()
-# 仅回显 feature，无开关字段 → 视为不支持
+# Feature echo only, no switch field -> unsupported
 READ_RESP_NO_STATE = HuaweiSppPackage.change_rq(
     CMD_MBB_FEATURE, [(1, b"\x02")]
 ).to_bytes()

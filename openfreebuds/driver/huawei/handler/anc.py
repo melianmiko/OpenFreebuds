@@ -32,7 +32,8 @@ class OfbHuaweiAncHandler(OfbDriverHandlerHuawei):
     commands = [b"\x2b\x2a"]
     ignore_commands = [b"\x2b\x04"]
 
-    def __init__(self, w_cancel_lvl=False, w_cancel_dynamic=False, w_voice_boost=False):
+    def __init__(self, w_cancel_lvl=False, w_cancel_dynamic=False, w_voice_boost=False,
+                 w_awareness=True):
         self.w_cancel_lvl = w_cancel_lvl
         self.w_voice_boost = w_voice_boost
         self.active_mode = 0
@@ -40,8 +41,9 @@ class OfbHuaweiAncHandler(OfbDriverHandlerHuawei):
         self.mode_options = {
             0: "normal",
             1: "cancellation",
-            2: "awareness",
         }
+        if w_awareness:
+            self.mode_options[2] = "awareness"
         self.cancel_level_options = {
             1: "comfort",
             0: "normal",

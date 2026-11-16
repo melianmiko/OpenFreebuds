@@ -138,8 +138,11 @@
      </property>
     </widget>
    </item>
-   <item row="10" column="1" colspan="2">
+   <item row="10" column="1">
     <widget class="QComboBox" name="swipe_left"/>
+   </item>
+   <item row="10" column="2">
+    <widget class="QComboBox" name="swipe_right"/>
    </item>
    <item row="5" column="2">
     <widget class="QComboBox" name="long_right"/>
@@ -199,6 +202,7 @@
   <tabstop>long_in_call</tabstop>
   <tabstop>power_left</tabstop>
   <tabstop>swipe_left</tabstop>
+   <tabstop>swipe_right</tabstop>
  </tabstops>
  <resources/>
  <connections/>

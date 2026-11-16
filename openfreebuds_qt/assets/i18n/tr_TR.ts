@@ -261,6 +261,8 @@
             <source>In box</source>
             <translation>Kutuda</translation>
         </message>
+    <message><source>Wearing</source><translation>Takılı</translation></message>
+    <message><source>Not connected</source><translation>Bağlı değil</translation></message>
     </context>
     <context>
         <name>OfbQtDeviceInfoModule</name>
@@ -757,7 +759,48 @@
         <source>Custom tone uploaded.</source>
         <translation>Özel ses yüklendi.</translation>
     </message>
-    </context>
+        <message><source>Prompt tone:</source><translation>Uyarı sesi:</translation></message>
+    <message><source>Sync official catalog</source><translation>Resmî kataloğu eşitle</translation></message>
+    <message><source>Sync official audio</source><translation>Resmî sesleri eşitle</translation></message>
+    <message><source>Find my earbuds</source><translation>Kulaklıklarımı bul</translation></message>
+    <message><source>Earbuds will ring at maximum volume. Stop the ring as soon as you find them.</source><translation>Kulaklıklar en yüksek sesle çalacak. Bulduğunuzda çalmayı hemen durdurun.</translation></message>
+    <message><source>Make sure the earbuds are not being worn before ringing. Loud sound at close range may damage your hearing.</source><translation>Çalmadan önce kulaklıkların takılı olmadığından emin olun. Yakın mesafedeki yüksek ses işitmenize zarar verebilir.</translation></message>
+    <message><source>Left earbud is ringing</source><translation>Sol kulaklık çalıyor</translation></message>
+    <message><source>Right earbud is ringing</source><translation>Sağ kulaklık çalıyor</translation></message>
+    <message><source>Both earbuds are ringing</source><translation>Her iki kulaklık çalıyor</translation></message>
+    <message><source>Left earbud ring</source><translation>Sol kulaklığı çaldır</translation></message>
+    <message><source>Right earbud ring</source><translation>Sağ kulaklığı çaldır</translation></message>
+    <message><source>Both earbuds ring</source><translation>İki kulaklığı çaldır</translation></message>
+    <message><source>The earbuds you are about to ring are being worn. Loud sound at close range may damage your hearing. Ring anyway?</source><translation>Çaldırmak istediğiniz kulaklıklar şu anda takılı. Yakın mesafedeki yüksek ses işitmenize zarar verebilir. Yine de çaldırılsın mı?</translation></message>
+    <message><source>Preparing the sound…</source><translation>Ses hazırlanıyor…</translation></message>
+    <message><source>Uploading… {0}%</source><translation>Yükleniyor… %{0}</translation></message>
+    <message><source>This device doesn't accept custom sounds.</source><translation>Bu cihaz özel sesleri kabul etmiyor.</translation></message>
+    <message><source>The audio file is missing.</source><translation>Ses dosyası bulunamadı.</translation></message>
+    <message><source>The earbuds refused this sound, please retry.</source><translation>Kulaklıklar bu sesi reddetti, lütfen tekrar deneyin.</translation></message>
+    <message><source>Upload failed, please retry.</source><translation>Yükleme başarısız, lütfen tekrar deneyin.</translation></message>
+    <message><source>Couldn't prepare the sound.</source><translation>Ses hazırlanamadı.</translation></message>
+    <message><source>Upload finished.</source><translation>Yükleme tamamlandı.</translation></message>
+    <message><source>Select audio file</source><translation>Ses dosyası seç</translation></message>
+    <message><source>Audio files (*.wav *.mp3 *.m4a *.ogg *.flac *.pcm)</source><translation>Ses dosyaları (*.wav *.mp3 *.m4a *.ogg *.flac *.pcm)</translation></message>
+    <message><source>Custom sound {0} added.</source><translation>Özel ses {0} eklendi.</translation></message>
+    <message><source>Delete sound?</source><translation>Ses silinsin mi?</translation></message>
+    <message><source>Will delete following sound:</source><translation>Şu ses silinecek:</translation></message>
+    <message><source>Export sounds as ZIP</source><translation>Sesleri ZIP olarak dışa aktar</translation></message>
+    <message><source>ZIP exported to {0}</source><translation>ZIP şuraya aktarıldı: {0}</translation></message>
+    <message><source>Official catalog: {0} total, {1} added, {2} updated.</source><translation>Resmî katalog: toplam {0}, eklenen {1}, güncellenen {2}.</translation></message>
+    <message><source>Official audio: {0} files written.</source><translation>Resmî sesler: {0} dosya yazıldı.</translation></message>
+    <message><source>This sound has no local audio file to send.</source><translation>Bu sesin gönderilecek yerel dosyası yok.</translation></message>
+    <message><source>Failed</source><translation>Başarısız</translation></message>
+    <message><source>Open folder</source><translation>Klasörü aç</translation></message>
+    <message><source>Take the earbuds out of the charging case before ringing.</source><translation>Çalmadan önce kulaklıkları şarj kutusundan çıkarın.</translation></message>
+    <message><source>Manage all charging-case sounds: charging, low battery, pairing and lid.</source><translation>Şarj kutusu seslerini yönetin: şarj, düşük pil, eşleştirme ve kapak.</translation></message>
+    <message><source>Stop preview</source><translation>Önizlemeyi durdur</translation></message>
+    <message><source>Preview</source><translation>Önizleme</translation></message>
+    <message><source>Built-in sound selected.</source><translation>Dahili ses seçildi</translation></message>
+    <message><source>Drop reminder</source><translation>Düşme hatırlatıcısı</translation></message>
+    <message><source>Enable drop reminder</source><translation>Düşme hatırlatıcısını etkinleştir</translation></message>
+    <message><source>Alerts you in the app if an earbud is dropped. Availability depends on the earbuds firmware.</source><translation>Bir kulaklık düşerse uygulamada sizi uyarır. Kullanılabilirlik kulaklık ürün yazılımına bağlıdır.</translation></message>
+</context>
     <context>
         <name>OfbQtDeviceSelectModule</name>
         <message>
@@ -1044,8 +1087,8 @@
             <translation>Uzun basma uyandırma modu</translation>
         </message>
         <message>
-            <source>Press to activate (stay active)</source>
-            <translation>Etkinleştirmek için bas (etkin kalır)</translation>
+            <source>Continuous conversation (stay active after release)</source>
+            <translation>Sürekli konuşma (bırakınca etkin kalır)</translation>
         </message>
         <message>
             <source>Press to speak (release to stop)</source>
@@ -1509,6 +1552,7 @@
     </context>
     <context>
         <name>OfbQtTrayMenu</name>
+    <message><source>Not connected</source><translation>Bağlı değil</translation></message>
         <message>
             <location filename="../../tray/menu.py" line="32" />
             <source>Left headphone:</source>

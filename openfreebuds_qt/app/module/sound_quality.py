@@ -1,10 +1,11 @@
 import asyncio
 import json
 
-from PyQt6.QtCore import Qt, QPoint, QRectF
+from PyQt6.QtCore import Qt, QPoint, QRectF, QTimer
 from PyQt6.QtGui import QIcon, QPainter, QFont
 from PyQt6.QtWidgets import (
-    QSlider, QMenu, QInputDialog, QMessageBox, QFileDialog, QLabel, QVBoxLayout, QWidget,
+    QSlider, QMenu, QInputDialog, QMessageBox, QFileDialog, QLabel, QVBoxLayout, QHBoxLayout,
+    QWidget, QStyle, QStyleOptionSlider,
 )
 from qasync import asyncSlot
 
@@ -31,8 +32,8 @@ def _format_eq_value(value: int) -> str:
 
 
 class EqScaleWidget(QWidget):
-    """
-    Vertical scale shown left of the equalizer sliders, in 10-point steps.
+    """Vertical scale shown left of the equalizer sliders, in 2.0 dB steps.
+    Tick positions are calculated with QSlider's own geometry (groove height + handle center) so labels/short lines align pixel-perfectly with Qt's ticks and handle center.
     """
 
     def __init__(self, parent=None):
@@ -43,19 +44,32 @@ class EqScaleWidget(QWidget):
         self._slider = slider
         self.update()
 
+    def _y_of(self, internal: int) -> float:
+        slider = self._slider
+        option = QStyleOptionSlider()
+        slider.initStyleOption(option)
+        style = slider.style()
+
+        groove = style.subControlRect(QStyle.ComplexControl.CC_Slider, option,
+                                      QStyle.SubControl.SC_SliderGroove, slider)
+        handle = style.subControlRect(QStyle.ComplexControl.CC_Slider, option,
+                                      QStyle.SubControl.SC_SliderHandle, slider)
+        span = max(groove.height() - handle.height(), 1)
+        pos = style.sliderPositionFromValue(slider.minimum(), slider.maximum(),
+                                            internal, span)
+        local_y = groove.top() + pos + handle.height() / 2
+        return self.mapFromGlobal(slider.mapToGlobal(QPoint(0, int(local_y)))).y()
+
     def paintEvent(self, _event):
         if self._slider is None:
             return
 
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-
-        top = self.mapFromGlobal(self._slider.mapToGlobal(QPoint(0, 0))).y()
-        height = self._slider.height()
         metrics = self.fontMetrics()
 
-        for internal in range(60, -61, -10):
-            y = top + (60 - internal) / 120.0 * height
+        for internal in range(60, -61, -20):
+            y = self._y_of(internal)
             font = QFont(self.font())
             font.setBold(internal == 0)
             painter.setFont(font)
@@ -119,6 +133,11 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
             self._add_slider(i)
         self._add_scale()
         self.custom_eq.setVisible(False)
+        self._eq_write_lock = asyncio.Lock()
+        self._eq_debounce = QTimer(self)
+        self._eq_debounce.setSingleShot(True)
+        self._eq_debounce.setInterval(250)
+        self._eq_debounce.timeout.connect(self._flush_eq)
 
     def _add_scale(self):
         self._eq_scale = EqScaleWidget(self.custom_eq_rows)
@@ -127,24 +146,28 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         self._eq_scale.set_slider(self._eq_rows[0])
 
     def _add_slider(self, i):
-        lock = asyncio.Lock()
+        def _on_change(value: int):
+            # Drag/click snaps to a 0.5 dB grid (internal unit 0.1 dB)
+            snapped = int(round(value / 5.0)) * 5
+            if snapped != value:
+                with blocked_signals(self._eq_rows[i]):
+                    self._eq_rows[i].setValue(snapped)
+                value = snapped
 
-        @asyncSlot(int)
-        async def _on_change(value: int):
             self._eq_value_labels[i].setText(_format_eq_value(value))
             self._eq_rows[i].setToolTip(_format_eq_value(value))
-            if lock.locked():
+            if not self._last_preset_data or len(self._last_preset_data) <= i:
                 return
-            async with lock:
-                self._last_preset_data[i] = value
-                await self.ofb.set_property("sound", "equalizer_rows",
-                                            json.dumps(self._last_preset_data))
+            self._last_preset_data[i] = value
+            # All sliders share one write lock; after debounce, send the latest full data once
+            self._eq_debounce.start()
 
         slider = QSlider(Qt.Orientation.Vertical)
         slider.setRange(-60, 60)
         slider.setSingleStep(5)
         slider.setPageStep(10)
         slider.setTickPosition(QSlider.TickPosition.TicksBothSides)
+        # Each step on the slider is 1.0 dB (internal unit 0.1 dB); numeric ticks on the left remain 2 dB apart
         slider.setTickInterval(10)
         slider.setToolTip("0.0")
         # noinspection PyUnresolvedReferences
@@ -159,11 +182,20 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
         freq_label = QLabel(EQ_FREQUENCIES[i])
         freq_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
+        # A vertical QSlider's sizeHint is only the handle width, so spacers on both sides are required to align
+        # the value above, the slider, and the band label below on one vertical axis
+        slider_row = QHBoxLayout()
+        slider_row.setContentsMargins(0, 0, 0, 0)
+        slider_row.setSpacing(0)
+        slider_row.addStretch(1)
+        slider_row.addWidget(slider)
+        slider_row.addStretch(1)
+
         column = QVBoxLayout()
         column.setContentsMargins(0, 0, 0, 0)
         column.setSpacing(2)
         column.addWidget(value_label)
-        column.addWidget(slider, 1)
+        column.addLayout(slider_row, 1)
         column.addWidget(freq_label)
 
         wrapper = QWidget()
@@ -220,13 +252,43 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
                         self._eq_value_labels[i].setText(_format_eq_value(value))
 
     @asyncSlot()
+    async def _flush_eq(self):
+        """Single write path after debounce: all sliders share one lock and send only the latest full 10-band values."""
+        if self._eq_write_lock.locked():
+            # If the previous write has not returned, resend later so the last change is not lost
+            self._eq_debounce.start()
+            return
+        async with self._eq_write_lock:
+            data = list(self._last_preset_data)
+            try:
+                await self.ofb.set_property("sound", "equalizer_rows", json.dumps(data))
+            except TimeoutError:
+                # FreeClip 2 sometimes answers 0x2B49 with only 0x2B4A; the device did apply it, so do not throw the stack into qasync
+                log.warning("EQ write timed out, local values kept")
+            except Exception:
+                log.exception("EQ write failed, local values kept")
+
+    async def _flush_now(self):
+        """Before saving/creating a preset, flush pending changes immediately."""
+        if self._eq_debounce.isActive():
+            self._eq_debounce.stop()
+        await self._flush_eq()
+
+    def _drop_pending(self):
+        """Before reset/switching/deleting a preset, discard pending changes."""
+        if self._eq_debounce.isActive():
+            self._eq_debounce.stop()
+
+    @asyncSlot()
     async def on_custom_save(self):
         async with qt_error_handler("OfbQtSoundQualityModule_EqCustomSave", self.ctx):
+            await self._flush_now()
             await self.ofb.set_property("sound", "equalizer_saved", "true")
 
     @asyncSlot()
     async def on_custom_reset(self):
         async with qt_error_handler("OfbQtSoundQualityModule_EqCustomReset", self.ctx):
+            self._drop_pending()
             await self.ofb.set_property("sound", "equalizer_saved", "false")
 
     @asyncSlot()
@@ -242,6 +304,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
     @asyncSlot(int)
     async def on_eq_preset_change(self, index: int):
         async with qt_error_handler("OfbQtSoundQualityModule_ChangePreset", self.ctx):
+            self._drop_pending()
             value = self._eq_last_options[index]
 
             if value in self._last_copy_options:
@@ -265,6 +328,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
                     return False
 
                 log.info(f"Create new mode with name {dialog.textValue()}")
+                await self._flush_now()
                 await self.ofb.set_property("sound", "equalizer_preset", dialog.textValue())
                 return True
             except OfbTooManyItemsError:
@@ -287,6 +351,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
                 return
 
             log.info(f"Delete mode with name {self.eq_preset_box.currentText()}")
+            self._drop_pending()
             await self.ofb.set_property("sound", "equalizer_rows", "null")
 
     @asyncSlot()
@@ -296,6 +361,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
 
         async with qt_error_handler("OfbQtSoundQualityModule_ExportFile", self.ctx):
             dialog = QFileDialog(self, self.tr("Save equalizer preset to file…"))
+            dialog.setOption(QFileDialog.Option.DontUseNativeDialog, False)
             dialog.setWindowModality(Qt.WindowModality.WindowModal)
             dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptSave)
             if not await run_dialog_async(dialog):
@@ -311,6 +377,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
     async def load_file(self):
         async with qt_error_handler("OfbQtSoundQualityModule_LoadFile", self.ctx):
             dialog = QFileDialog(self, self.tr("Load equalizer preset from file…"))
+            dialog.setOption(QFileDialog.Option.DontUseNativeDialog, False)
             dialog.setWindowModality(Qt.WindowModality.WindowModal)
             dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptOpen)
             if not await run_dialog_async(dialog):
@@ -325,6 +392,7 @@ class OfbQtSoundQualityModule(Ui_OfbQtSoundQualityModule, OfbQtCommonModule):
             if not await self.new_preset():
                 return
             await asyncio.sleep(0.5)
+            self._drop_pending()
             await self.ofb.set_property("sound", "equalizer_rows", data)
             await asyncio.sleep(0.25)
             await self.ofb.set_property("sound", "equalizer_saved", "true")

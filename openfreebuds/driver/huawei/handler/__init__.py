@@ -10,6 +10,7 @@ from .battery import OfbHuaweiBatteryHandler
 from .config_adaptive_volume import OfbHuaweiAdaptiveVolumeHandler
 from .config_auto_pause import OfbHuaweiConfigAutoPauseHandler
 from .config_box_tone import OfbHuaweiBoxToneHandler
+from .config_drop_reminder import OfbHuaweiDropReminderHandler
 from .config_equalizer import OfbHuaweiEqualizerPresetHandler
 from .config_head_control import OfbHuaweiHeadControlHandler
 from .config_spatial_audio import OfbHuaweiSpatialAudioHandler

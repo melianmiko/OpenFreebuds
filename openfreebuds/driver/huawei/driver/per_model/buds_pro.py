@@ -3,6 +3,9 @@ from openfreebuds.driver.huawei.handler import *
 
 
 class OfbDriverHuaweiPro(OfbDriverHuaweiGeneric):
+    # FreeBuds Pro (1st gen) is one of two models without find-earbud support in the official capability matrix
+    supports_find_earbud = False
+
     def __init__(self, address):
         super().__init__(address)
         self._spp_service_port = 1

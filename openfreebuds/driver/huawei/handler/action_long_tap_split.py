@@ -87,12 +87,27 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
         if prop == "long_tap_mode":
             if not self.w_agent_modes:
                 return
-            flag = 1 if value == "ptt" else 0
+            # Measured 2026-11-16 with the official App and 0x2B17 readback:
+            #   press-to-talk  p9=1, p10=1
+            #   continuous conversation  p9=0, p10=0
+            # Note: p1=ff,p2=fe in the official config_zaas.json are App-layer
+            # 'leave action unchanged' placeholders and must not be written to the device as-is;
+            # doing so writes ff/fe to the left/right actions (left off, right invalid) and disables long-press on both ears.
+            # So read the current p1/p2 action codes and write them back unchanged; only p9/p10 may change.
+            if value not in ("ptt", "hold"):
+                return False
+            lt_codes = reverse_dict(self._options_lt)
+            left_current = await self.driver.get_property("action", "long_tap_left")
+            right_current = await self.driver.get_property("action", "long_tap_right")
+            # Treat -2/unknown readback as 'off' so an invalid code is not written back
+            left_action = lt_codes.get(left_current, -1)
+            right_action = lt_codes.get(right_current, -1)
+            ptt = value == "ptt"
             pkg = HuaweiSppPackage.change_rq(CMD_LONG_TAP_SPLIT_WRITE_BASE, [
-                (1, b"\xff"),
-                (2, b"\xfe"),
-                (9, flag),
-                (10, flag),
+                (1, left_action),
+                (2, right_action),
+                (9, 1 if ptt else 0),
+                (10, 1 if ptt else 0),
             ])
             await self.driver.send_package(pkg)
             await self.driver.put_property(group, prop, value)
@@ -131,10 +146,14 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
         if package.command_id == CMD_LONG_TAP_SPLIT_READ_BASE:
             if len(left) == 1 and self.w_left:
                 value = int.from_bytes(left, byteorder="big", signed=True)
+                if value < 0:
+                    value = -1
                 await self.driver.put_property("action", "long_tap_left",
                                                self._options_lt.get(value, value))
             if len(right) == 1 and self.w_right:
                 value = int.from_bytes(right, byteorder="big", signed=True)
+                if value < 0:
+                    value = -1
                 await self.driver.put_property("action", "long_tap_right",
                                                self._options_lt.get(value, value))
             if len(in_call) == 1 and self.w_in_call:
@@ -149,7 +168,8 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
                 mode_ptt = package.find_param(9)
                 mode_hold = package.find_param(10)
                 if len(mode_ptt) == 1 and len(mode_hold) == 1:
-                    mode = "ptt" if mode_ptt[0] == 1 else "hold"
+                    # Official calibration: press-to-talk = 9/10 both 1; continuous conversation = 9/10 both 0.
+                    mode = "ptt" if mode_ptt[0] == 1 and mode_hold[0] == 1 else "hold"
                     await self.driver.put_property("action", "long_tap_mode", mode)
                     await self.driver.put_property("action", "long_tap_mode_options", "ptt,hold")
         elif package.command_id == CMD_LONG_TAP_SPLIT_READ_ANC:

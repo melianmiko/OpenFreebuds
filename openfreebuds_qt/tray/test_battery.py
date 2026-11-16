@@ -8,7 +8,7 @@ pytest.importorskip("PyQt6")
 from PyQt6.QtWidgets import QApplication, QSystemTrayIcon
 
 from openfreebuds import IOpenFreebuds
-from openfreebuds_qt.tray.battery import battery_levels, battery_style
+from openfreebuds_qt.tray.battery import battery_levels, battery_menu_text, battery_style
 from openfreebuds_qt.tray.main import OfbTrayIcon
 
 
@@ -27,6 +27,12 @@ def test_reported_levels(data, expected):
 def test_invalid_saved_style_falls_back():
     config = SimpleNamespace(get=lambda *args: {"malformed": True})
     assert battery_style(config, "left") == ("#ffffff", "#202020", False, 100, True)
+
+
+def test_menu_text_uses_not_connected_without_percent():
+    assert battery_menu_text(100, "未连接") == "100%"
+    assert battery_menu_text(0, "未连接") == "0%"
+    assert battery_menu_text("/", "未连接") == "未连接"
 
 
 @pytest.mark.asyncio
@@ -157,3 +163,16 @@ async def test_color_dialog_accept_and_cancel(monkeypatch, tmp_path):
     ofb.send_message.assert_awaited_once()
     page.deleteLater()
     app.processEvents()
+
+
+def test_off_in_case_battery_tray_shows_slash():
+    from openfreebuds_qt.tray.battery import battery_levels
+
+    levels = battery_levels({
+        "left": 0, "left_in_box": "true", "left_charging": "false",
+        "right": 0, "right_in_box": "true", "right_charging": "true",
+        "case": 0,
+    })
+    assert levels["left"] == "/"
+    assert levels["right"] == 0   # A charging 0% is still a real charge level
+    assert levels["case"] == 0

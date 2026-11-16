@@ -1,4 +1,4 @@
-"""响度增益控件的离屏测试：同步、置灰、不回滚、增益真的作用到样本上。"""
+"""Offscreen tests for the loudness-gain control: sync, disabling, no rollback, and gain actually applied to samples."""
 import os
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
@@ -34,7 +34,7 @@ def test_auto_gain_is_default_and_disables_manual_controls(dialog):
     peak = int(np.max(np.abs(dialog.selection.astype(np.int32))))
     expected = 20 * np.log10(TONE_AUTO_GAIN_TARGET / peak)
     assert abs(dialog.gain_db - expected) < 0.02
-    # 同一个值必须同时出现在滑块、数值框上，波形也按它重画
+    # The same value must appear in both the slider and the spin box, and the waveform redraws from it
     assert abs(dialog.gain_box.value() - expected) < 0.02
     assert abs(dialog.gain_slider.value() - expected) < 0.01
     assert abs(dialog.waveform.gain_db - expected) < 0.01
@@ -46,33 +46,33 @@ def test_unchecking_keeps_best_value_instead_of_restoring(dialog):
     dialog.gain_slider.setValue(6.0, emit=True)
     assert dialog.gain_db == 6.0
 
-    auto_value = dialog.gain_box.value() + 0  # 记录勾选前的值，仅用于对比
-    dialog.auto_gain_check.setChecked(True)     # 勾选：回填最佳增益 + 置灰
+    auto_value = dialog.gain_box.value() + 0  # Record the value before checking, for comparison only
+    dialog.auto_gain_check.setChecked(True)     # Checked: fill in the best gain and disable the controls
     best = dialog.gain_db
     assert best != 6.0
     assert dialog.gain_box.isEnabled() is False
-    # 勾选后展示值必须真的变了（之前的 bug 就是这里没刷新）
+    # After checking, the displayed value must really change (the previous bug was a missing refresh here)
     assert abs(dialog.gain_box.value() - 6.0) > 0.1
     assert abs(dialog.gain_slider.value() - 6.0) > 0.1
 
-    dialog.auto_gain_check.setChecked(False)    # 取消：保留最佳值，不回滚到 6.0
+    dialog.auto_gain_check.setChecked(False)    # Unchecked: keep the best value, do not roll back to 6.0
     assert dialog.gain_box.isEnabled() is True
-    assert abs(dialog.gain_box.value() - best) < 0.01   # 数值框只显示两位小数
+    assert abs(dialog.gain_box.value() - best) < 0.01   # The spin box shows only two decimals
     assert dialog.gain_box.value() != 6.0
     assert auto_value == 6.0
 
 
 def test_slider_and_box_stay_in_sync(dialog):
     dialog.auto_gain_check.setChecked(False)
-    dialog.gain_slider.setValue(-12.0, emit=True)         # 用户拖滑块（浮点、无量化）
+    dialog.gain_slider.setValue(-12.0, emit=True)         # User drags the slider (float, no quantization)
     assert dialog.gain_box.value() == -12.0
-    dialog.gain_box.setValue(3.25)             # 用户在数值框里改（失焦/箭头）
+    dialog.gain_box.setValue(3.25)             # User edits the spin box (focus loss/arrow keys)
     assert abs(dialog.gain_slider.value() - 3.25) < 1e-6
     assert dialog.gain_db == 3.25
 
 
 def test_slider_is_continuous(dialog):
-    """鼠标位置直接换算 dB，不再受 QSlider 整数步进限制。"""
+    """Mouse position maps directly to dB, no longer limited by QSlider integer steps."""
     dialog.auto_gain_check.setChecked(False)
     dialog.resize(760, 460)
     track = dialog.gain_slider._track_rect()
@@ -85,18 +85,18 @@ def test_waveform_follows_gain(dialog):
     dialog.auto_gain_check.setChecked(False)
     dialog.gain_slider.setValue(12.0, emit=True)
     assert abs(dialog.waveform.gain_db - 12.0) < 1e-6
-    # 波形按满响度基准（26213）画：抬高 12 dB 后包络显示值变大（可能顶到基准）
+    # Draw the waveform against the 26213 full-scale reference: +12 dB raises the envelope (and may hit the ceiling)
     peak = max(dialog.waveform._peaks)
     assert dialog.waveform._display_peak(peak) > peak
     assert dialog.waveform._display_peak(peak * 100) == 26213.0
 
 
 def test_processed_samples_carry_the_gain(dialog):
-    # 自动模式：峰值被抬到满响度基准（26213，APK 归一化峰值），且不越界
+    # Auto mode: peak is raised to the 26213 full-scale reference (APK normalized peak) without clipping
     auto = dialog.processed()
     assert abs(int(np.max(np.abs(auto.astype(np.int32)))) - TONE_AUTO_GAIN_TARGET) <= 1
 
-    # 手动 0 dB：电平保持原样，证明增益不是被归一化抵消
+    # Manual 0 dB: level stays unchanged, proving normalization did not cancel the gain
     dialog.auto_gain_check.setChecked(False)
     dialog.gain_box.setValue(0.0)
     flat = dialog.processed()
@@ -105,13 +105,13 @@ def test_processed_samples_carry_the_gain(dialog):
 
 
 def test_file_name_and_display_name_fields(app):
-    """名字拆成「文件名（.pcm 为固定后缀）」和「显示名」两栏。"""
+    """Split the name into file name (.pcm is a fixed suffix) and display name."""
     samples = (np.sin(np.arange(4000) / 30.0) * 3000).astype("<i2")
     dlg = OfbQtToneEditorDialog(None, samples, "demo", "系统-演示样机")
     try:
         assert dlg.file_name == "demo"
         assert dlg.display_name == "系统-演示样机"
-        # 后缀在框外，输入框里只有主体
+        # The suffix stays outside the input; only the body is inside
         assert dlg.file_suffix_label.text() == ".pcm"
         assert ".pcm" not in dlg.file_edit.text()
 

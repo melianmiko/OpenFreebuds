@@ -9,7 +9,7 @@ from openfreebuds.driver.huawei.device_catalog import (
 from openfreebuds.driver.huawei.driver.generic import OfbDriverHandlerHuawei
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 
-BINARY_FIELDS = {27, 32, 34, 33}
+BINARY_FIELDS = {27, 29, 30, 32, 33, 34}
 
 
 class OfbHuaweiInfoHandler(OfbDriverHandlerHuawei):

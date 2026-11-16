@@ -31,7 +31,9 @@ class OfbDriverSppGeneric(OfbDriverGeneric):
                 self._spp_service_port,
                 connect_delay=self._spp_connect_delay,
             )
-        except (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError, OSError, ValueError):
+        except (ConnectionResetError, ConnectionRefusedError, ConnectionAbortedError, OSError, ValueError) as e:
+            # Do not swallow errors like 10048; otherwise the UI only sees 'Driver startup failed' with no diagnostic
+            log.error(f"SPP connect to {self.device_address}:{self._spp_service_port} failed: {e!r}")
             raise FbStartupError("Driver startup failed")
 
         self.__task_recv = asyncio.create_task(self._loop_recv(reader))
@@ -52,6 +54,10 @@ class OfbDriverSppGeneric(OfbDriverGeneric):
 
         if self._writer is not None:
             self._writer.close()
+            with suppress(Exception):
+                # Wait until the underlying socket is really closed before the next connect/device switch;
+                # otherwise the old endpoint remains allocated and hits 10048.
+                await self._writer.wait_closed()
 
         self._writer = None
         self.started = False

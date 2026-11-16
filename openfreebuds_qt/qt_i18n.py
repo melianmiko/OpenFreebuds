@@ -47,10 +47,9 @@ def get_shortcut_names():
 
 
 def get_prompt_tone_name(entry, *, is_custom: bool) -> str:
-    """界面统一出口：显示名。
-
-    - 用户自定义条目：用户写什么就显示什么，任何语言下都不翻译；
-    - 官方条目：中文读官方 config 的 zhCn，其它语言走 PromptToneName 翻译词典。
+    """Single UI output for display names.
+    - User custom entries: show exactly what the user wrote, never translated.
+    - Official entries: Chinese reads zhCn from the official config; other languages use the PromptToneName dictionary.
     """
     if is_custom:
         return entry.display_name or entry.name

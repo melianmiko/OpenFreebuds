@@ -1,30 +1,5 @@
-"""本地提示音库（只存上位机 PC 侧，与耳机端传输解耦）。
-
-**三层布局**（2026-11-14 第二次重构：官方配置按官方走，本地增量单独放）::
-
-    <root>/builtin/promptToneConfig/tone_config.json    ← APK 内置目录（静态，随包，不联网）
-    <root>/official/promptToneConfig/tone_config.json   ← 云端配布目录（原样镜像官方 zip 内容）
-    <root>/official/promptTone/*.pcm                    ← 官方音频（内置音 + 云端音都放这）
-    <root>/custom/promptToneConfig/tone_config.json     ← 自定义层：预置自定义 + 用户新建
-    <root>/custom/promptTone/*.pcm
-    <root>/legacy_backup/                               ← 旧版单层布局的留档（只读）
-
-读取顺序：内置层原序 → 云端层（同 id 覆盖、新 id 追加）→ 自定义层原序。
-界面下拉直接照这个顺序排，不按 id 排序。
-
-**为什么官方层要「原样镜像」而不是合并进去**：官方 zip 的 data 与 officialData 是它自己的口径，
-直接存下来，下次刷新就能准确算出「新增/更新了哪几条」；和内置层混在一起会导致
-每次刷新都把 officialData 里那条（如 200 肖邦）算成「新增」。
-
-id 分段（用户指定）::
-
-    0–49      官方内置
-    50–99     预留（不再分配给提示音；历史落在该区间的条目启动时顺延出去）
-    100–199   自定义提示音（100–179 为配布包预置，180–199 起为新建/顺延占用）
-    200+      官方机型限定铃声（officialData）
-
-自定义条目以 ``"support": "custom"`` 标记。真机实测：feature16 的 toneId 就是设备存音频的
-槽位号，设备接受任意 id，所以本地 id 直接当槽位号用。
+"""Local prompt-tone library (PC side only; decoupled from earbud transfer).
+Three-layer layout (second refactor, 2026-11-14: official config follows upstream, local additions are separate): builtin/promptToneConfig/tone_config.json is the APK built-in catalog (static, bundled, offline); official mirrors the cloud package; custom holds user edits.
 """
 import io
 import json
@@ -45,8 +20,8 @@ from openfreebuds.driver.huawei.prompt_tone import (
     parse_tone_config,
 )
 
-# 自定义提示音统一占 100–199（100–179 为随包预置、180–199 为后续新增）；
-# 50–99 保留给其它用途，不再分配，历史落在该区间的条目由 _migrate_custom_ids 顺延出去。
+# Custom tones use 100-199 (100-179 bundled, 180-199 for future additions);
+# 50-99 is reserved for other uses and no longer allocated; legacy entries in that range are shifted by _migrate_custom_ids.
 CUSTOM_ID_RANGES = ((100, 199),)
 RESERVED_ID_RANGES = ((50, 99),)
 log = logging.getLogger("ToneLibrary")
@@ -57,17 +32,17 @@ OFFICIAL_CONFIG_URL = f"{CLOUD_BASE}/00000A/00000A_promptToneConfig.zip"
 OFFICIAL_TONES_URL = f"{CLOUD_BASE}/00000A/00000A_promptTone.zip"
 DOWNLOAD_TIMEOUT = 30
 
-# 英文名：字母/数字开头，只允许字母、数字、空格、下划线、连字符；不含任何非 ASCII 字符
+# English name: starts with a letter/digit; only letters, digits, spaces, underscores and hyphens; no non-ASCII characters
 NAME_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _-]{0,31}$")
 
 
 class ToneLibraryError(Exception):
-    """库操作失败（消息可直接展示给用户）。"""
+    """Library operation failed (message can be shown to the user)."""
 
 
 @dataclass
 class RefreshResult:
-    """官方层刷新结果（与「上一次的官方快照」比较，因此重复刷新应为 0/0）。"""
+    """Official-layer refresh result (compared with the previous official snapshot, so a repeated refresh should be 0/0)."""
     official_total: int = 0
     added: list[int] = field(default_factory=list)
     updated: list[int] = field(default_factory=list)
@@ -78,7 +53,7 @@ class RefreshResult:
 class ToneLibrary:
     root: Path = STORAGE_PATH / "prompt_tones"
 
-    # --- 布局 ---------------------------------------------------------
+    # --- Layout -------------------------------------------------------
     @property
     def builtin_root(self) -> Path:
         return self.root / "builtin"
@@ -105,14 +80,14 @@ class ToneLibrary:
 
     @property
     def official_tones_dir(self) -> Path:
-        """官方音频目录（内置音 + 云端音都在这里）。"""
+        """Official audio directory (built-in and cloud tones both live here)."""
         return self.official_root / "promptTone"
 
     @property
     def custom_tones_dir(self) -> Path:
         return self.custom_root / "promptTone"
 
-    # 旧名保留：指向自定义层（用户新建/修改/删除都落在这里）
+    # Legacy name kept: points to the custom layer (create/update/delete all land there)
     @property
     def config_dir(self) -> Path:
         return self.custom_root / "promptToneConfig"
@@ -125,7 +100,7 @@ class ToneLibrary:
     def tones_dir(self) -> Path:
         return self.custom_tones_dir
 
-    # --- 初始化 -------------------------------------------------------
+    # --- Initialization -----------------------------------------------
     def ensure(self) -> "ToneLibrary":
         self._migrate_legacy()
         for path in (self.official_tones_dir, self.custom_tones_dir,
@@ -133,8 +108,8 @@ class ToneLibrary:
                      self.custom_config_path.parent):
             path.mkdir(parents=True, exist_ok=True)
 
-        # 从「两层」升级到「三层」：旧的 official 目录其实是内置+云端合并结果，
-        # 直接当成内置层，云端层清空（下次刷新时原样镜像官方 zip）。
+        # Upgrade from two layers to three: the old official directory was actually built-in + cloud merged,
+        # treat it as the built-in layer and clear the cloud layer (the next refresh mirrors the official zip).
         if not self.builtin_config_path.exists():
             if self.official_config_path.is_file():
                 src = self.official_config_path
@@ -155,7 +130,7 @@ class ToneLibrary:
         return self
 
     def _migrate_custom_ids(self) -> None:
-        """50–99 不再分配给提示音：把历史落在该区间的条目按 id 顺序顺延到 100–199 末尾之后。"""
+        """50-99 is no longer assigned to tones: legacy entries in that range are shifted after 100-199 in id order."""
         raw = self._read_custom()
         items = raw.get("data", [])
         legacy = sorted(int(e["id"]) for e in items if 50 <= int(e["id"]) <= 99)
@@ -179,7 +154,7 @@ class ToneLibrary:
         log.info("Migrated custom tone ids out of reserved 50–99: %s", mapping)
 
     def _migrate_display_name(self) -> None:
-        """自定义条目统一用官方字段 zhCn 存显示名；旧版本写过的 displayName 收进 zhCn。"""
+        """Custom entries use official zhCn for the display name; legacy displayName values are moved into zhCn."""
         custom_raw = self._read_custom()
         changed = False
         for item in custom_raw.get("data", []):
@@ -197,7 +172,7 @@ class ToneLibrary:
             self._write_custom(custom_raw)
 
     def _migrate_preset_custom(self) -> None:
-        """把 100–179 预置自定义条目并入用户自定义层，不再保留内置自定义类别。"""
+        """Merge the 100-179 bundled custom entries into the user custom layer and drop the built-in custom category."""
         custom_raw = self._read_custom()
         custom_items = custom_raw.setdefault("data", [])
         known_ids = {int(e["id"]) for e in custom_items}
@@ -234,7 +209,7 @@ class ToneLibrary:
         return {"version": 3, "data": [], "officialData": []}
 
     def _migrate_legacy(self) -> None:
-        """旧版单层布局 → 分层。幂等，原数据整体移到 legacy_backup 留档。"""
+        """Old single-layer layout -> layered layout. Idempotent; all original data moves to legacy_backup for reference."""
         legacy_config = self.root / "promptToneConfig" / "tone_config.json"
         legacy_tones = self.root / "promptTone"
         backup = self.root / "legacy_backup"
@@ -256,7 +231,7 @@ class ToneLibrary:
             if src.is_file() and not dst.is_file():
                 shutil.copyfile(src, dst)
 
-        # 旧数据都是「内置 + 云端」混在一起的，整体归入内置层
+        # Old data mixed built-in + cloud; move it all into the built-in layer
         self._write_raw(self.builtin_config_path,
                         {"version": 3, "data": official, "officialData": official_data})
         self._write_raw(self.official_config_path, self._empty_raw())
@@ -269,7 +244,7 @@ class ToneLibrary:
         if legacy_tones.is_dir():
             shutil.move(str(legacy_tones), str(backup / "promptTone"))
 
-    # --- 读写 ---------------------------------------------------------
+    # --- Read/write ---------------------------------------------------
     @staticmethod
     def _read_raw(path: Path) -> dict:
         raw = json.loads(path.read_text(encoding="utf-8"))
@@ -295,7 +270,7 @@ class ToneLibrary:
     def _write_custom(self, raw: dict) -> None:
         self._write_raw(self.custom_config_path, raw)
 
-    # --- 合并视图 -----------------------------------------------------
+    # --- Merged view --------------------------------------------------
     @staticmethod
     def _merge_by_id(base: list[dict], overlay: list[dict]) -> list[dict]:
         items = {int(e["id"]): dict(e) for e in base}
@@ -310,12 +285,12 @@ class ToneLibrary:
         return [items[i] for i in order if i in items]
 
     def merged_official_raw(self) -> dict:
-        """内置层 + 云端层合并后的官方视图（data 与 officialData 各自按 id 合并）。"""
+        """Official view after merging built-in and cloud layers (data and officialData are merged by id separately)."""
         builtin = self._read_builtin()
         official = self._read_official()
         data = self._merge_by_id(builtin.get("data", []), official.get("data", []))
         od = self._merge_by_id(builtin.get("officialData", []), official.get("officialData", []))
-        # 同一 id 既在 data 又在 officialData（APK 把机型限定铃声放进了 data）时，只留 data 那条
+        # When an id exists in both data and officialData (the APK put model-specific tones in data), keep only the data entry
         data_ids = {int(e["id"]) for e in data}
         od = [e for e in od if int(e["id"]) not in data_ids]
         return {"data": data, "officialData": od}
@@ -327,7 +302,7 @@ class ToneLibrary:
         return parse_tone_config(self._read_custom())
 
     def entries(self) -> list[ToneEntry]:
-        """内置/官方层原序 + 自定义层原序。界面下拉直接照这个排，不按 id 重排。"""
+        """Built-in/official original order + custom original order. The UI combo follows this order and does not sort by id."""
         self.ensure()
         return self.official_entries() + self.custom_entries()
 
@@ -336,10 +311,29 @@ class ToneLibrary:
 
     @staticmethod
     def is_user_custom(entry: ToneEntry | None) -> bool:
-        """用户自定义口径：显式 custom 标记，或 100–179 预置自定义段。"""
+        """User custom rule: explicit custom marker, or the 100-179 bundled custom range."""
         return entry is not None and (
             entry.support == CUSTOM_SUPPORT or is_custom_tone_id(entry.id)
         )
+
+    def is_editable(self, entry: ToneEntry | None) -> bool:
+        """Editable/deletable rule: any entry not in the current official Config is custom.
+        Id 14 is such a case: it came from an old built-in package but the official Config removed it, so it is actually a user custom entry and must be editable/deletable; real official entries remain read-only.
+        """
+        if entry is None:
+            return False
+        if self.is_user_custom(entry):
+            return True
+        remote = self._read_official()
+        remote_ids = {
+            int(e["id"])
+            for key in ("data", "officialData")
+            for e in remote.get(key, [])
+        }
+        if not remote_ids:
+            # Fall back to the built-in layer before the official Config is downloaded, so built-in entries are not all exposed
+            remote_ids = {e.id for e in self.official_entries()}
+        return entry.id not in remote_ids
 
     def find(self, tone_id: int) -> ToneEntry | None:
         for entry in self.entries():
@@ -350,16 +344,16 @@ class ToneLibrary:
     def is_custom(self, entry: ToneEntry | None) -> bool:
         return self.is_user_custom(entry)
 
-    # --- 音频文件定位 ---------------------------------------------------
+    # --- Audio file lookup --------------------------------------------
     def pcm_file(self, entry: ToneEntry | int) -> Path:
-        """条目对应的 PCM 路径：自定义层 / 官方层由条目归属决定。"""
+        """PCM path for an entry: determined by whether it belongs to the custom or official layer."""
         entry = self.find(entry) if isinstance(entry, int) else entry
         if entry is None:
             raise ToneLibraryError("找不到该提示音。")
         layer = self.custom_tones_dir if self.is_user_custom(entry) else self.official_tones_dir
         return layer / f"{entry.name}.pcm"
 
-    # 旧名保留（GUI 里在用的 pcm_path）
+    # Legacy name kept (pcm_path used by the GUI)
     def pcm_path(self, entry: ToneEntry | int) -> Path:
         return self.pcm_file(entry)
 
@@ -369,9 +363,9 @@ class ToneLibrary:
         except ToneLibraryError:
             return False
 
-    # --- 校验 ---------------------------------------------------------
+    # --- Validation ---------------------------------------------------
     def validate_name(self, name: str, exclude_id: int | None = None) -> str:
-        """校验「文件名」（不含 .pcm）：它同时是落盘文件名，因此限制为 ASCII。"""
+        """Validate the file name (without .pcm): it is also the on-disk name, so restrict it to ASCII."""
         name = (name or "").strip()
         if not name:
             raise ToneLibraryError("文件名不能为空。")
@@ -388,7 +382,7 @@ class ToneLibrary:
 
     @staticmethod
     def validate_display_name(name: str) -> str:
-        """显示名：用户写什么就是什么，只做非空与长度限制。"""
+        """Display name: exactly what the user wrote, limited only by non-empty and length checks."""
         name = (name or "").strip()
         if not name:
             raise ToneLibraryError("显示名不能为空。")
@@ -396,7 +390,7 @@ class ToneLibrary:
             raise ToneLibraryError("显示名最长 64 个字符。")
         return name
 
-    # --- id 指派 -------------------------------------------------------
+    # --- Id assignment -----------------------------------------------
     def allocate_id(self) -> int:
         used = {e.id for e in self.entries()}
         for start, end in CUSTOM_ID_RANGES:
@@ -405,7 +399,7 @@ class ToneLibrary:
                     return tone_id
         raise ToneLibraryError("自定义提示音 id 已用满（100–199 均被占用）。")
 
-    # --- 增删改（只碰自定义层） -----------------------------------------
+    # --- Create/update/delete (custom layer only) --------------------
     def _check_pcm(self, pcm: bytes) -> None:
         if len(pcm) == 0 or len(pcm) % 2 != 0:
             raise ToneLibraryError("PCM 数据无效（长度必须为非零偶数）。")
@@ -413,7 +407,7 @@ class ToneLibrary:
             raise ToneLibraryError("提示音超过 6 秒上限。")
 
     def _ensure_custom_record(self, entry: ToneEntry) -> dict:
-        """预置自定义段在旧库里可能仍留在官方/内置层，改/删前先落到自定义层。"""
+        """Bundled custom entries may still be in the official/built-in layer in old libraries; move them to the custom layer before update/delete."""
         raw = self._read_custom()
         if any(int(item["id"]) == entry.id for item in raw.get("data", [])):
             return raw
@@ -434,7 +428,7 @@ class ToneLibrary:
 
     def add(self, pcm: bytes, file_name: str, display_name: str = "",
             tone_id: int | None = None) -> ToneEntry:
-        """新增自定义提示音：file_name 决定 <file>.pcm，display_name 决定界面显示。"""
+        """Create a custom tone: file_name determines <file>.pcm, display_name determines the UI label."""
         self._check_pcm(pcm)
         name = self.validate_name(file_name)
         display = self.validate_display_name(display_name or name)
@@ -443,7 +437,7 @@ class ToneLibrary:
             raise ToneLibraryError(f"id {tone_id} 已被占用，请换一个。")
 
         raw = self._read_custom()
-        # 只写官方字段：官方 App 读 zhCn 当名字，本程序也用 zhCn 当自定义条目的显示名
+        # Write official fields only: the official App reads zhCn as the name, and this app uses zhCn as the custom display name
         raw["data"].append({"id": tone_id, "name": name, "zhCn": display,
                             "support": CUSTOM_SUPPORT})
         (self.custom_tones_dir / f"{name}.pcm").write_bytes(pcm)
@@ -452,11 +446,11 @@ class ToneLibrary:
 
     def update(self, tone_id: int, file_name: str | None = None,
                display_name: str | None = None, pcm: bytes | None = None) -> ToneEntry:
-        """改自定义提示音：文件名与显示名同时同步到 config 与磁盘上的 .pcm。"""
+        """Update a custom tone: sync both file name and display name to config and the on-disk .pcm."""
         entry = self.find(tone_id)
         if entry is None:
             raise ToneLibraryError("找不到该提示音。")
-        if not self.is_user_custom(entry):
+        if not self.is_editable(entry):
             raise ToneLibraryError("只有自定义提示音可以修改。")
         if pcm is not None:
             self._check_pcm(pcm)
@@ -482,8 +476,8 @@ class ToneLibrary:
         for item in raw["data"]:
             if int(item["id"]) == tone_id:
                 item["name"] = new_name
-                item["zhCn"] = new_display   # 官方 App 与本程序共用这一字段
-                item.pop("displayName", None)   # 旧版本写过的内部字段，保持官方 schema 干净
+                item["zhCn"] = new_display   # Shared by the official App and this app
+                item.pop("displayName", None)   # Internal field written by older versions; keep the official schema clean
                 item["support"] = CUSTOM_SUPPORT
         self._write_custom(raw)
         return ToneEntry(tone_id, new_name, new_display, support=CUSTOM_SUPPORT)
@@ -492,7 +486,7 @@ class ToneLibrary:
         entry = self.find(tone_id)
         if entry is None:
             raise ToneLibraryError("找不到该提示音。")
-        if not self.is_user_custom(entry):
+        if not self.is_editable(entry):
             raise ToneLibraryError("内置/官方提示音不能删除。")
         raw = self._ensure_custom_record(entry)
         raw["data"] = [item for item in raw["data"] if int(item["id"]) != tone_id]
@@ -502,10 +496,10 @@ class ToneLibrary:
             if pcm.exists():
                 pcm.unlink()
 
-    # --- 官方层刷新 -------------------------------------------------------
+    # --- Official layer refresh ---------------------------------------
     @staticmethod
     def _diff_ids(prev: dict, cloud: dict) -> tuple[list[int], list[int]]:
-        """对比「上一次官方快照」与「云端最新」：返回 (新增 id, 内容变化的 id)。"""
+        """Compare the previous official snapshot with the latest cloud data: return (added ids, changed ids)."""
         prev_items: dict[int, dict] = {}
         for key in ("data", "officialData"):
             for e in prev.get(key, []):
@@ -523,10 +517,8 @@ class ToneLibrary:
 
     def refresh_official_config(self, *, config_bytes: bytes | None = None,
                                 timeout: int = DOWNLOAD_TIMEOUT) -> RefreshResult:
-        """只刷新「官方目录」：官方 zip 里的 data/officialData 原样存下来。
-
-        与上一次官方快照比较得到「新增/更新」，所以内容没变时再点一次应是 0/0。
-        自定义层、内置层都不参与，官方更新不会影响它们。
+        """Refresh only the official catalog: store data/officialData from the official zip as-is.
+        Compare with the previous official snapshot to get added/updated, so a second click with unchanged content returns 0/0. Custom and built-in layers are untouched, and official updates never affect them.
         """
         self.ensure()
         if config_bytes is None:
@@ -550,7 +542,7 @@ class ToneLibrary:
 
     def refresh_official_tones(self, *, tones_bytes: bytes | None = None,
                                timeout: int = DOWNLOAD_TIMEOUT) -> RefreshResult:
-        """只刷新「官方音频资源包」：zip 里所有 *.pcm 落到官方音频目录。"""
+        """Refresh only the official audio package: write every *.pcm from the zip into the official audio directory."""
         self.ensure()
         if tones_bytes is None:
             tones_bytes = urllib.request.urlopen(OFFICIAL_TONES_URL, timeout=timeout).read()
@@ -572,22 +564,22 @@ class ToneLibrary:
     def refresh_official(self, *, config_bytes: bytes | None = None,
                          tones_bytes: bytes | None = None,
                          timeout: int = DOWNLOAD_TIMEOUT) -> RefreshResult:
-        """一次拉齐目录 + 音频（命令行/脚本用；界面上是两个独立按钮）。"""
+        """Fetch catalog and audio in one call (CLI/scripting; the UI has two separate buttons)."""
         cfg = self.refresh_official_config(config_bytes=config_bytes, timeout=timeout)
         tones = self.refresh_official_tones(tones_bytes=tones_bytes, timeout=timeout)
         cfg.pcm_written = tones.pcm_written
         return cfg
 
-    # --- 导出 ---------------------------------------------------------
+    # --- Export -------------------------------------------------------
     def export_zip(self, dest: Path) -> Path:
-        """导出「合并后的 config + 全部 PCM」，结构与官方配布包一致，可直接给手机用。"""
+        """Export the merged config plus all PCM files, in the same structure as the official distribution package, ready for a phone."""
         self.ensure()
         dest = Path(dest)
         dest.parent.mkdir(parents=True, exist_ok=True)
         merged = self.merged_official_raw()
         custom = self._read_custom()
-        # 官方 App 只认 {id, name, zhCn, support}；displayName 是本程序内部字段，导出时去掉，
-        # 并把显示名落到 zhCn，保证手机端看到的名字与桌面端一致
+        # The official App only understands {id, name, zhCn, support}; displayName is internal and removed on export,
+        # and the display name is written to zhCn so phone and desktop show the same name
         custom_items = []
         for item in custom.get("data", []):
             entry = {"id": item.get("id"), "name": item.get("name", "")}

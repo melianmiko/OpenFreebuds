@@ -7,11 +7,11 @@ from openfreebuds.utils.logger import create_logger
 
 log = create_logger("OfbHuaweiHeadControlHandler")
 
-# 0x2BB4 载荷字段（真机 FreeClip 2 实测）：
-#   1 = featureId（回显 0x0b）
-#   2 = 开关状态（0 = 关，1 = 开）
-#   3 = 点头动作（0 无功能，1 接听，2 拒接）
-#   4 = 摇头动作（0 无功能，1 接听，2 拒接）
+# 0x2BB4 payload fields (measured on FreeClip 2):
+#   1 = featureId (echoes 0x0b)
+#   2 = switch state (0 = off, 1 = on)
+#   3 = nod action (0 none, 1 answer, 2 reject)
+#   4 = shake action (0 none, 1 answer, 2 reject)
 _PARAM_FEATURE = 1
 _PARAM_ENABLED = 2
 _PARAM_NOD_ACTION = 3
@@ -26,18 +26,14 @@ ACTION_VALUES = {name: value for value, name in ACTION_NAMES.items()}
 
 
 def _build_read_rq():
-    """
-    构造 0x2BB4 读请求：01 01 0b
-    """
+    """Build the 0x2BB4 read request: 01 01 0b"""
     return HuaweiSppPackage.change_rq(CMD_MBB_FEATURE, [
         (_PARAM_FEATURE, MBB_FEATURE_HEAD_CONTROL),
     ])
 
 
 def _build_write_rq(param: int, value: int):
-    """
-    构造 0x2BB4 写请求：01 01 0b <param> 01 <value>
-    """
+    """Build the 0x2BB4 write request: 01 01 0b <param> 01 <value>"""
     return HuaweiSppPackage.change_rq(CMD_MBB_FEATURE, [
         (_PARAM_FEATURE, MBB_FEATURE_HEAD_CONTROL),
         (param, value),
@@ -45,10 +41,8 @@ def _build_write_rq(param: int, value: int):
 
 
 class OfbHuaweiHeadControlHandler(OfbDriverHandlerHuawei):
-    """
-    头部控制（点头/摇头接打电话）handler（0x2BB4 MBB 通道）
-
-    头部动作的触发反馈走蓝牙通话通道，SPP 只承载开关与动作映射配置。
+    """Head-control handler for nod/shake call actions (0x2BB4 MBB).
+    Head gestures are reported over the Bluetooth call channel; SPP only carries the switch and action mapping.
     """
 
     handler_id = "config_head_control"

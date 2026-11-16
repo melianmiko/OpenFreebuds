@@ -1,10 +1,5 @@
-"""空间音频 handler 测试（0x2BB4 feature 24）
-
-协议依据 2026-11-13 FreeClip 2 真机九状态标定：
-  读：01 01 18 02 00 03 00 → p2=模式 p3=声场
-  模式 p2：0 关 / 1 头部追踪 / 2 固定
-  声场 p3：0 默认 / 1 有声剧场 / 2 电影院 / 3 音乐厅（关闭时保留）
-  写模式：01 01 18 02 01 <0/1/2>；写声场：01 01 18 03 01 <0..3>（单参数写均生效）
+"""Spatial audio handler tests (0x2BB4 feature 24).
+Protocol based on 2026-11-13 FreeClip 2 nine-state calibration: read 01 01 18 02 00 03 00 -> p2=mode p3=sound field. Mode p2: 0 off / 1 head tracking / 2 fixed. Sound field p3: 0 default / 1 theater / 2 cinema / 3 concert hall (kept when off).
 """
 
 import pytest

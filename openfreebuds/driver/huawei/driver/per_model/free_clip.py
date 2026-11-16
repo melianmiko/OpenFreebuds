@@ -1,5 +1,5 @@
 from openfreebuds.driver.huawei.driver.per_model.buds_pro_3 import OfbDriverHuaweiPro3
-from openfreebuds.driver.huawei.handler import OfbHuaweiHeadControlHandler
+from openfreebuds.driver.huawei.handler import OfbHuaweiDropReminderHandler, OfbHuaweiHeadControlHandler
 
 
 class OfbDriverHuaweiFreeClip(OfbDriverHuaweiPro3):
@@ -8,6 +8,7 @@ class OfbDriverHuaweiFreeClip(OfbDriverHuaweiPro3):
     """
     def __init__(self, address):
         super().__init__(address)
-        # 初代 FreeClip 只在 Pro 3 基础上增加头部控制（只读），
-        # 不支持耳机端独立空间音频与充电盒提示音自定义
+        # First-gen FreeClip only adds head control (read-only) on top of Pro 3;
+        # it does not support standalone spatial audio on the earbuds or custom charging-case tones
         self.handlers.append(OfbHuaweiHeadControlHandler())
+        self.handlers.append(OfbHuaweiDropReminderHandler())

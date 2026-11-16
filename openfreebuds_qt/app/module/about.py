@@ -11,6 +11,13 @@ from openfreebuds_qt.version_info import VERSION, LIBRARIES
 
 
 class OfbQtAboutModule(Ui_OfbQtAboutModule, OfbQtCommonModule):
+    # The official i18n name of the Collector's Edition is 'FreeClip 2 S'; only Chinese uses 'Collector's Edition'.
+    # Both names point to the same driver in the driver table, so the list must merge them into one entry.
+    _MODEL_NAME_ALIASES = {
+        "HUAWEI FreeClip 2 典藏版": "HUAWEI FreeClip 2 S",
+        "HUAWEI FreeClip 2 S": "HUAWEI FreeClip 2 S",
+    }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -22,10 +29,17 @@ class OfbQtAboutModule(Ui_OfbQtAboutModule, OfbQtCommonModule):
 
         # Supported devices tree
         devices = QTreeWidgetItem(None, [self.tr("Supported devices")])
+        seen_names = set()
         for name in get_display_device_names():
             if name.startswith("Debug"):
                 continue
-            devices.addChild(QTreeWidgetItem(devices, [name]))
+
+            canonical = self._MODEL_NAME_ALIASES.get(name, name)
+            localized = self.tr(canonical)
+            if localized in seen_names:
+                continue
+            seen_names.add(localized)
+            devices.addChild(QTreeWidgetItem(devices, [localized]))
 
         # Using libraries list
         dependencies = QTreeWidgetItem(None, [self.tr("Libraries")])

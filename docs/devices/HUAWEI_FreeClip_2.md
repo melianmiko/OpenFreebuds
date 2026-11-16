@@ -12,7 +12,8 @@ Driver: `OfbDriverHuaweiFreeClip2`
 - Set double-tap action: ✅
 - Set triple-tap action: ✅
 - Set long-tap action: ✅
-  - w/ extra options (volume control)
+  - Per-ear assistant / no function
+  - Long-tap mode: press-to-speak / continuous conversation
 - Set swipe gesture: ✅
 - Equalizer: ✅
   - 4 built-in presets (default, hardbass, treble, voice)
@@ -22,10 +23,10 @@ Driver: `OfbDriverHuaweiFreeClip2`
 - Auto pause: ✅
 - In-ear detection: ✅
 - Voice language: ✅
+- Head control (nod/shake to answer/reject): ✅
+- Adaptive volume: ✅
+- Drop reminder: ✅ (real-device verified)
 
 ## Not planned features
 
 - Firmware update
-- Head motion controls (nod/shake to answer) — needs SPP research
-- Adaptive volume in noisy environments — needs SPP research
-- Drop reminder — needs SPP research

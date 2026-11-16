@@ -23,21 +23,33 @@ CMD_MBB_FEATURE = b"\x2b\xb4"
 CMD_BOX_TONE = b"\x2b\xb1"
 CMD_BOX_TONE_INFO = b"\x2b\x25"
 
-# 0x2BB4 通用 MBB 通路的 featureId（对应 FeatureMbbState 枚举）
+# Find-earbud command (measured 2026-11-14 on FreeClip 2 / COM26):
+#   start/stop 2b 5d 01 02 <side> <state>; query 2b 5e 01 01 <side>
+#   side: 0=left 1=right 2=both; state: 0=ringing 1=idle
+CMD_FIND_EARBUD_SET = b"\x2b\x5d"
+CMD_FIND_EARBUD_STATE = b"\x2b\x5e"
+FIND_EARBUD_SIDE_LEFT = 0
+FIND_EARBUD_SIDE_RIGHT = 1
+FIND_EARBUD_SIDE_BOTH = 2
+FIND_EARBUD_STATE_RING = 0
+FIND_EARBUD_STATE_STOP = 1
+
+# 0x2BB4 generic MBB featureId (matches the FeatureMbbState enum)
 MBB_FEATURE_ADAPTIVE_VOLUME = 2
+MBB_FEATURE_DROP_REMINDER = 7
 MBB_FEATURE_HEAD_CONTROL = 11
 MBB_FEATURE_BOX_TONE = 16
 MBB_FEATURE_SPATIAL_AUDIO = 24
 MBB_FEATURE_BOX_TONE_OTA = 25
 
-# 提示音传输：传输时序未标定，暂不实现
+# Prompt-tone transfer: timing is not calibrated, so it is not implemented yet
 CMD_TONE_TRANSFER = b"\x2b\xb6"
 CMD_TONE_FILE_INFO = b"\x09\x01"
 CMD_TONE_SESSION_START = b"\x09\x02"
 CMD_TONE_DATA = b"\x09\x04"
 CMD_TONE_SESSION_END = b"\x09\x09"
 
-# 以下命令来自官方 touchsetting 配置，尚未实现 handler，勿在未验证前使用
+# Commands below come from the official touchsetting config and have no handler yet; do not use before verification
 CMD_LIGHT_HOLD_WRITE = b"\x2b\x92"
 CMD_LIGHT_HOLD_READ = b"\x2b\x93"
 CMD_UNKNOWN_2B53 = b"\x2b\x53"

@@ -8,8 +8,8 @@ from openfreebuds.utils.logger import create_logger
 
 log = create_logger("OfbDriverHuaweiGeneric")
 
-# FreeClip 2 的 EQ 写入（0x2B49）有时不回 ACK，而是回一条 0x2B4A 状态通知。
-# 收到 0x2B4A 时同时唤醒等待 0x2B49 的调用，避免 UI 白等 5 秒超时。
+# FreeClip 2 EQ writes (0x2B49) sometimes skip the ACK and return a 0x2B4A state notification instead.
+# Wake the pending 0x2B49 caller on 0x2B4A so the UI does not wait five seconds for a timeout.
 _RESPONSE_ALIASES = {
     b"\x2b\x4a": b"\x2b\x49",
 }
@@ -22,6 +22,10 @@ class OfbHuaweiResponseReceiver(asyncio.Event):
 
 
 class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
+    # Official App findHeadset capability matrix: only FreeBuds Pro (1st gen) and
+    # FreeBuds Studio do not support find-earbud; all other models do.
+    supports_find_earbud = True
+
     def __init__(self, address):
         super().__init__(address)
         self.__pending_responses: dict[bytes, OfbHuaweiResponseReceiver] = {}
@@ -34,8 +38,22 @@ class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
         self.handlers: list[OfbDriverHandlerHuawei] = []
 
     async def start(self):
+        self._ensure_find_earbud_handler()
         await super().start()
         await self._start_all_handlers()
+
+    def _ensure_find_earbud_handler(self):
+        """Attach the find-earbud handler according to the official capability matrix.
+        Subclasses replace self.handlers in __init__, so appending in the base __init__ would be lost; inject before start() binds handlers, which covers every model without breaking each model's own handler list.
+        """
+        if not self.supports_find_earbud:
+            return
+        if any(h.handler_id == "find_earbud" for h in self.handlers):
+            return
+        from openfreebuds.driver.huawei.handler.find_earbud import (
+            OfbHuaweiFindEarbudHandler,
+        )
+        self.handlers.append(OfbHuaweiFindEarbudHandler())
 
     async def get_health_report(self):
         return {
@@ -95,9 +113,8 @@ class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
         await self._writer.drain()
 
     async def send_raw_recv(self, cmd: bytes, framed: bytes, timeout: int = 5) -> HuaweiSppPackage | None:
-        """发送原始帧（已含 0x5A 头与 CRC）并等待同命令字的下一帧响应。
-
-        用于提示音上传等非标准 TLV 通路：先登记接收器再发送，避免响应竞态。
+        """Send a raw frame (including the 0x5A header and CRC) and wait for the next response with the same command.
+        Used by prompt-tone upload and other non-standard TLV paths: register the receiver before sending to avoid a response race.
         """
         async with self.raw_session(cmd) as session:
             await session.send_framed(framed)
@@ -105,7 +122,7 @@ class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
 
     @asynccontextmanager
     async def raw_session(self, cmd: bytes):
-        """为某命令字开启原始帧会话，期间该命令字的入站帧进入队列而非分发到 handler。"""
+        """Open a raw-frame session for one command; inbound frames for that command go to the queue instead of being dispatched to handlers."""
         queue: asyncio.Queue = asyncio.Queue()
         self.__raw_sessions[cmd] = queue
         try:
@@ -115,10 +132,8 @@ class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
 
     @asynccontextmanager
     async def raw_session_all(self):
-        """捕获**所有**入站帧（不分命令字）的原始会话。
-
-        提示音 proto2 上传要同时盯 09 01/09 0a/09 02/09 03/09 05 多个命令字，
-        按命令字过滤的 raw_session 收不全，用这个。
+        """Capture **all** inbound frames regardless of command.
+        Prompt-tone proto2 upload watches 09 01/09 0a/09 02/09 03/09 05 at the same time, so command-filtered raw_session would miss frames; use this instead.
         """
         queue: asyncio.Queue = asyncio.Queue()
         self._raw_all_queue = queue
@@ -143,7 +158,7 @@ class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
             self.__pending_responses[pkg.command_id].package = pkg
             self.__pending_responses[pkg.command_id].set()
         elif pkg.command_id in self.__on_package_handlers:
-            # 0x2B4A 等通知也可以作为等待中写命令的完成信号
+            # Notifications such as 0x2B4A can also complete a pending write command
             self._resolve_response_alias(pkg)
             for handler in self.__on_package_handlers[pkg.command_id]:
                 await handler.on_package(pkg)

@@ -262,6 +262,8 @@
             <source>In box</source>
             <translation>В кейсе</translation>
         </message>
+    <message><source>Wearing</source><translation>Надет</translation></message>
+    <message><source>Not connected</source><translation>Не подключено</translation></message>
     </context>
     <context>
         <name>OfbQtDeviceInfoModule</name>
@@ -758,7 +760,48 @@
         <source>Custom tone uploaded.</source>
         <translation>Пользовательский звук отправлен.</translation>
     </message>
-    </context>
+        <message><source>Prompt tone:</source><translation>Сигнал:</translation></message>
+    <message><source>Sync official catalog</source><translation>Синхронизировать каталог</translation></message>
+    <message><source>Sync official audio</source><translation>Синхронизировать аудио</translation></message>
+    <message><source>Find my earbuds</source><translation>Поиск наушников</translation></message>
+    <message><source>Earbuds will ring at maximum volume. Stop the ring as soon as you find them.</source><translation>Наушники будут звонить на максимальной громкости. Остановите звонок, как только найдёте их.</translation></message>
+    <message><source>Make sure the earbuds are not being worn before ringing. Loud sound at close range may damage your hearing.</source><translation>Перед звонком убедитесь, что наушники не на головах. Громкий звук вблизи может повредить слух.</translation></message>
+    <message><source>Left earbud is ringing</source><translation>Левый наушник звенит</translation></message>
+    <message><source>Right earbud is ringing</source><translation>Правый наушник звенит</translation></message>
+    <message><source>Both earbuds are ringing</source><translation>Оба наушника звенят</translation></message>
+    <message><source>Left earbud ring</source><translation>Звонок в левом</translation></message>
+    <message><source>Right earbud ring</source><translation>Звонок в правом</translation></message>
+    <message><source>Both earbuds ring</source><translation>Звонок в обоих</translation></message>
+    <message><source>The earbuds you are about to ring are being worn. Loud sound at close range may damage your hearing. Ring anyway?</source><translation>Наушники, которые вы собираетесь включить, сейчас на головах. Громкий звук вблизи может повредить слух. Всё равно включить?</translation></message>
+    <message><source>Preparing the sound…</source><translation>Подготовка звука…</translation></message>
+    <message><source>Uploading… {0}%</source><translation>Отправка… {0}%</translation></message>
+    <message><source>This device doesn't accept custom sounds.</source><translation>Это устройство не принимает свои звуки.</translation></message>
+    <message><source>The audio file is missing.</source><translation>Аудиофайл отсутствует.</translation></message>
+    <message><source>The earbuds refused this sound, please retry.</source><translation>Наушники отклонили этот звук, попробуйте снова.</translation></message>
+    <message><source>Upload failed, please retry.</source><translation>Отправка не удалась, попробуйте снова.</translation></message>
+    <message><source>Couldn't prepare the sound.</source><translation>Не удалось подготовить звук.</translation></message>
+    <message><source>Upload finished.</source><translation>Отправка завершена.</translation></message>
+    <message><source>Select audio file</source><translation>Выберите аудиофайл</translation></message>
+    <message><source>Audio files (*.wav *.mp3 *.m4a *.ogg *.flac *.pcm)</source><translation>Аудиофайлы (*.wav *.mp3 *.m4a *.ogg *.flac *.pcm)</translation></message>
+    <message><source>Custom sound {0} added.</source><translation>Свой звук {0} добавлен.</translation></message>
+    <message><source>Delete sound?</source><translation>Удалить звук?</translation></message>
+    <message><source>Will delete following sound:</source><translation>Будет удалён звук:</translation></message>
+    <message><source>Export sounds as ZIP</source><translation>Экспорт звуков в ZIP</translation></message>
+    <message><source>ZIP exported to {0}</source><translation>ZIP экспортирован в {0}</translation></message>
+    <message><source>Official catalog: {0} total, {1} added, {2} updated.</source><translation>Официальный каталог: всего {0}, добавлено {1}, обновлено {2}.</translation></message>
+    <message><source>Official audio: {0} files written.</source><translation>Официальное аудио: записано файлов — {0}.</translation></message>
+    <message><source>This sound has no local audio file to send.</source><translation>У этого звука нет локального аудиофайла для отправки.</translation></message>
+    <message><source>Failed</source><translation>Ошибка</translation></message>
+    <message><source>Open folder</source><translation>Открыть папку</translation></message>
+    <message><source>Take the earbuds out of the charging case before ringing.</source><translation>Достаньте наушники из зарядного футляра перед звонком.</translation></message>
+    <message><source>Manage all charging-case sounds: charging, low battery, pairing and lid.</source><translation>Управление всеми звуками футляра: зарядка, низкий заряд, сопряжение и крышка.</translation></message>
+    <message><source>Stop preview</source><translation>Остановить предпросмотр</translation></message>
+    <message><source>Preview</source><translation>Предпросмотр</translation></message>
+    <message><source>Built-in sound selected.</source><translation>Встроенный звук выбран</translation></message>
+    <message><source>Drop reminder</source><translation>Напоминание о падении</translation></message>
+    <message><source>Enable drop reminder</source><translation>Включить напоминание о падении</translation></message>
+    <message><source>Alerts you in the app if an earbud is dropped. Availability depends on the earbuds firmware.</source><translation>Приложение предупредит, если наушник упадёт. Доступность зависит от прошивки наушников.</translation></message>
+</context>
     <context>
         <name>OfbQtDeviceSelectModule</name>
         <message>
@@ -1045,8 +1088,8 @@
             <translation>Режим пробуждения долгим нажатием</translation>
         </message>
         <message>
-            <source>Press to activate (stay active)</source>
-            <translation>Нажать для активации (остаётся активным)</translation>
+            <source>Continuous conversation (stay active after release)</source>
+            <translation>Непрерывный диалог (остаётся активным после отпускания)</translation>
         </message>
         <message>
             <source>Press to speak (release to stop)</source>
@@ -1510,6 +1553,7 @@
     </context>
     <context>
         <name>OfbQtTrayMenu</name>
+    <message><source>Not connected</source><translation>Не подключено</translation></message>
         <message>
             <location filename="../../tray/menu.py" line="32" />
             <source>Left headphone:</source>

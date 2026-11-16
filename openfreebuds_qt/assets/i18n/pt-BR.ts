@@ -262,6 +262,8 @@
             <source>In box</source>
             <translation>No estojo</translation>
         </message>
+    <message><source>Wearing</source><translation>Em uso</translation></message>
+    <message><source>Not connected</source><translation>Não conectado</translation></message>
     </context>
     <context>
         <name>OfbQtDeviceInfoModule</name>
@@ -758,7 +760,48 @@
         <source>Custom tone uploaded.</source>
         <translation>Tom personalizado enviado.</translation>
     </message>
-    </context>
+        <message><source>Prompt tone:</source><translation>Som:</translation></message>
+    <message><source>Sync official catalog</source><translation>Sincronizar catálogo oficial</translation></message>
+    <message><source>Sync official audio</source><translation>Sincronizar áudio oficial</translation></message>
+    <message><source>Find my earbuds</source><translation>Localizar meus fones</translation></message>
+    <message><source>Earbuds will ring at maximum volume. Stop the ring as soon as you find them.</source><translation>Os fones tocarão no volume máximo. Pare o toque assim que encontrá-los.</translation></message>
+    <message><source>Make sure the earbuds are not being worn before ringing. Loud sound at close range may damage your hearing.</source><translation>Verifique se os fones não estão sendo usados antes de tocar. Som alto a curta distância pode prejudicar sua audição.</translation></message>
+    <message><source>Left earbud is ringing</source><translation>O fone esquerdo está tocando</translation></message>
+    <message><source>Right earbud is ringing</source><translation>O fone direito está tocando</translation></message>
+    <message><source>Both earbuds are ringing</source><translation>Os dois fones estão tocando</translation></message>
+    <message><source>Left earbud ring</source><translation>Tocar fone esquerdo</translation></message>
+    <message><source>Right earbud ring</source><translation>Tocar fone direito</translation></message>
+    <message><source>Both earbuds ring</source><translation>Tocar os dois fones</translation></message>
+    <message><source>The earbuds you are about to ring are being worn. Loud sound at close range may damage your hearing. Ring anyway?</source><translation>Os fones que você vai tocar estão sendo usados. Som alto a curta distância pode prejudicar sua audição. Tocar mesmo assim?</translation></message>
+    <message><source>Preparing the sound…</source><translation>Preparando o som…</translation></message>
+    <message><source>Uploading… {0}%</source><translation>Enviando… {0}%</translation></message>
+    <message><source>This device doesn't accept custom sounds.</source><translation>Este dispositivo não aceita sons personalizados.</translation></message>
+    <message><source>The audio file is missing.</source><translation>O arquivo de áudio está ausente.</translation></message>
+    <message><source>The earbuds refused this sound, please retry.</source><translation>Os fones recusaram este som, tente novamente.</translation></message>
+    <message><source>Upload failed, please retry.</source><translation>Falha no envio, tente novamente.</translation></message>
+    <message><source>Couldn't prepare the sound.</source><translation>Não foi possível preparar o som.</translation></message>
+    <message><source>Upload finished.</source><translation>Envio concluído.</translation></message>
+    <message><source>Select audio file</source><translation>Selecionar arquivo de áudio</translation></message>
+    <message><source>Audio files (*.wav *.mp3 *.m4a *.ogg *.flac *.pcm)</source><translation>Arquivos de áudio (*.wav *.mp3 *.m4a *.ogg *.flac *.pcm)</translation></message>
+    <message><source>Custom sound {0} added.</source><translation>Som personalizado {0} adicionado.</translation></message>
+    <message><source>Delete sound?</source><translation>Excluir som?</translation></message>
+    <message><source>Will delete following sound:</source><translation>O seguinte som será excluído:</translation></message>
+    <message><source>Export sounds as ZIP</source><translation>Exportar sons como ZIP</translation></message>
+    <message><source>ZIP exported to {0}</source><translation>ZIP exportado para {0}</translation></message>
+    <message><source>Official catalog: {0} total, {1} added, {2} updated.</source><translation>Catálogo oficial: {0} no total, {1} adicionados, {2} atualizados.</translation></message>
+    <message><source>Official audio: {0} files written.</source><translation>Áudio oficial: {0} arquivos gravados.</translation></message>
+    <message><source>This sound has no local audio file to send.</source><translation>Este som não tem arquivo de áudio local para enviar.</translation></message>
+    <message><source>Failed</source><translation>Falhou</translation></message>
+    <message><source>Open folder</source><translation>Abrir a pasta</translation></message>
+    <message><source>Take the earbuds out of the charging case before ringing.</source><translation>Retire os fones do estojo de carga antes de tocar.</translation></message>
+    <message><source>Manage all charging-case sounds: charging, low battery, pairing and lid.</source><translation>Gerencie todos os sons do estojo: carga, bateria fraca, emparelhamento e tampa.</translation></message>
+    <message><source>Stop preview</source><translation>Parar prévia</translation></message>
+    <message><source>Preview</source><translation>Prévia</translation></message>
+    <message><source>Built-in sound selected.</source><translation>Som integrado selecionado</translation></message>
+    <message><source>Drop reminder</source><translation>Lembrete de queda</translation></message>
+    <message><source>Enable drop reminder</source><translation>Ativar lembrete de queda</translation></message>
+    <message><source>Alerts you in the app if an earbud is dropped. Availability depends on the earbuds firmware.</source><translation>Avisa você no app se um fone cair. A disponibilidade depende do firmware dos fones.</translation></message>
+</context>
     <context>
         <name>OfbQtDeviceSelectModule</name>
         <message>
@@ -1045,8 +1088,8 @@
             <translation>Modo de ativação ao pressionar e segurar</translation>
         </message>
         <message>
-            <source>Press to activate (stay active)</source>
-            <translation>Pressione para ativar (permanece ativo)</translation>
+            <source>Continuous conversation (stay active after release)</source>
+            <translation>Conversa contínua (permanece ativa ao soltar)</translation>
         </message>
         <message>
             <source>Press to speak (release to stop)</source>
@@ -1510,6 +1553,7 @@
     </context>
     <context>
         <name>OfbQtTrayMenu</name>
+    <message><source>Not connected</source><translation>Não conectado</translation></message>
         <message>
             <location filename="../../tray/menu.py" line="32" />
             <source>Left headphone:</source>

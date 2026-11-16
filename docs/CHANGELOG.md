@@ -1,3 +1,30 @@
+# Unreleased (compared with 0.18.1 / upstream 0b4f14c)
+- [Device compatibility] Add a full HUAWEI FreeBuds 5 profile (modelId 000141 / productId ZAAB / internal name Honey), based on Huawei AI Life 2.0.7.321 assets. It covers dual-connect, L2HC, custom EQ, high-quality audio, game low latency, half-in-ear wearing detection, find-earbud, case battery and two simple ANC modes with ANC level/AI scene. HD spatial audio is available only with Huawei phones; there is no standalone spatial-audio control.
+- [Device compatibility] Add HUAWEI FreeBuds 6, FreeBuds 7, FreeBuds 7i, FreeBuds Neo, first-gen FreeClip, FreeBuds Pro 4 and FreeClip 2 S / Collector's Edition profiles. FreeClip 2 S shares the FreeClip 2 config and driver behavior; FreeBuds Pro 4 and first-gen FreeClip add read-only head control.
+- [Device compatibility] Add a device catalog with capability, feature, protocol and marketing-color metadata, including official Chinese color names and per-model overrides. Unknown or unverified models keep the generic color names.
+- [Device compatibility] Find-earbud support now follows the official capability matrix: all models except FreeBuds Pro (1st gen) and FreeBuds Studio.
+- [Feature] Implement find-earbud over 0x2B5D / 0x2B5E with per-ear ringing state, start/stop, status readback, a safety stop timeout and no ACK-induced timeout crash.
+- [Feature] Split long-press actions per ear and calibrate the official App values. The current P1/P2 action codes are preserved and only P9/P10 are changed, fixing the case where both ears lost long-press after switching modes.
+- [Feature] Split swipe gestures per ear while keeping the legacy combined property for compatibility.
+- [Feature] Add adaptive volume (0x2BB4 featureId 2), head-control mapping (featureId 0x0B), spatial audio (featureId 0x18) and drop-reminder (featureId 0x07) handlers and GUI modules.
+- [Feature] Rebuild charging-case tone settings on 0x2BB1 and 0x2BB4 feature 16: master switch, lid-open switch, lid-open volume and tone id. Single-byte writes are replaced with full 12-byte payload writes; devId is preserved from the device payload.
+- [Feature] Tone id 0 ("Unfold") is a real built-in tone: write feature16 with toneId=0 and select=0 only, never stream audio. Other ids use select=1 and the slot upload path.
+- [Feature] Add a three-layer local prompt-tone library: bundled built-in catalog, official cloud snapshot and user custom layer. Custom ids use 100-199, legacy 50-99 entries migrate forward, official refreshes are diffed against the previous snapshot, and export produces an official-compatible package.
+- [Feature] Treat entries removed from the current official Config as custom. Id 14, which came from an old bundled package but is absent from the current official Config, is editable/deletable; real official entries remain read-only.
+- [Feature] Add a prompt-tone editor with waveform display, two-handle trimming, playback preview, manual/automatic loudness gain and bilingual naming. Output is signed 16-bit / 16755 Hz / mono PCM, capped at the device limit.
+- [Feature] Charging-case tone changes require both earbuds in the case. The backend refreshes 0x2B25 before reading in-case state, and the GUI re-reads feature 16 when both earbuds enter the case so the displayed tone is current.
+- [Feature] Show wearing/in-ear state in the main-window battery header. A powered-off earbud in the case now shows "Not connected" instead of 0%, and the tray shows "/" instead of 0.
+- [Feature] Charging-case power state is derived from case_charging only, so a case that is not plugged in but is charging the earbuds is no longer reported as charging.
+- [Feature] The device-info page keeps the protocol field number but removes the automatic row number; model titles combine the localized model name and the localized color from field_25.
+- [Fix] Reset all cached device-specific tray menu state on DEVICE_CHANGED, including battery/ANC sections, equalizer/dual-connect submenus and ANC actions. Switching devices no longer leaves the previous model's feature mask visible.
+- [Fix] Treat 0x2B4A as an alternate completion signal for FreeClip 2 0x2B49 equalizer writes, avoiding a false five-second timeout.
+- [Fix] Close the SPP socket explicitly on connect timeout or failure and wait for the old endpoint to be released before reconnecting. This removes the Windows 10048 "address already in use" loop when switching devices.
+- [Fix] Capture all inbound frames for prompt-tone proto2 upload instead of filtering by command, and tolerate adapters/devices that return a null host name during Windows Bluetooth enumeration.
+- [i18n] Add and update strings for English, Simplified Chinese, German, Spanish, Brazilian Portuguese, Russian and Turkish, including the prompt-tone preview/apply actions and the FreeClip 2 S naming.
+- [Tests] Add protocol, library, editor and tray-menu regression tests. The full suite passes with 203 passed and 1 skipped.
+- [Maintenance] Normalize Python comments and docstrings to English throughout the changed code. Local-only Windows launchers, the broken translation backup and the generated prompt-tone archive are kept outside the upstream tree.
+- [Docs] Add the FreeBuds 5 device page and update the FreeClip / FreeClip 2 pages with tested behavior and capability notes.
+
 # 0.18.1
 - [Device compatibility] Initial Freebuds 3 support (thx @qiushixiang)
 - [Feature] Configurable per-earbud and case battery tray indicators (thx @sinanakyazici)

@@ -7,13 +7,13 @@ from openfreebuds.utils.logger import create_logger
 
 log = create_logger("OfbHuaweiSpatialAudioHandler")
 
-# 0x2BB4 是通用 MBB 通路，空间音频的 featureId 为 24 (0x18)
+# 0x2BB4 is the generic MBB path; spatial audio uses featureId 24 (0x18)
 SPATIAL_AUDIO_FEATURE_ID = MBB_FEATURE_SPATIAL_AUDIO
 
-# 0x2BB4 载荷字段（2026-11-13 真机 FreeClip 2 九状态标定）：
-#   1 = featureId（回显 0x18）
-#   2 = 空间模式（0 关，1 头部追踪，2 固定）
-#   3 = 空间声场（0 默认，1 有声剧场，2 电影院，3 音乐厅；关闭时保留）
+# 0x2BB4 payload fields (measured 2026-11-13 across nine FreeClip 2 states):
+#   1 = featureId (echoes 0x18)
+#   2 = spatial mode (0 off, 1 head tracking, 2 fixed)
+#   3 = spatial sound field (0 default, 1 theater, 2 cinema, 3 concert hall; kept when off)
 _PARAM_FEATURE = 1
 _PARAM_MODE = 2
 _PARAM_ROOM = 3
@@ -39,9 +39,7 @@ ROOM_VALUES = {name: value for value, name in ROOM_NAMES.items()}
 
 
 def _build_read_rq():
-    """
-    构造 0x2BB4 读请求：01 01 18 02 00 03 00
-    """
+    """Build the 0x2BB4 read request: 01 01 18 02 00 03 00"""
     return HuaweiSppPackage.change_rq(CMD_MBB_FEATURE, [
         (_PARAM_FEATURE, SPATIAL_AUDIO_FEATURE_ID),
         (_PARAM_MODE, b""),
@@ -50,9 +48,7 @@ def _build_read_rq():
 
 
 def _build_mode_rq(mode: int):
-    """
-    构造 0x2BB4 写模式请求：01 01 18 02 01 <0/1/2>
-    """
+    """Build the 0x2BB4 mode write: 01 01 18 02 01 <0/1/2>"""
     return HuaweiSppPackage.change_rq(CMD_MBB_FEATURE, [
         (_PARAM_FEATURE, SPATIAL_AUDIO_FEATURE_ID),
         (_PARAM_MODE, mode),
@@ -60,9 +56,7 @@ def _build_mode_rq(mode: int):
 
 
 def _build_room_rq(room: int):
-    """
-    构造 0x2BB4 写声场请求：01 01 18 03 01 <0..3>
-    """
+    """Build the 0x2BB4 sound-field write: 01 01 18 03 01 <0..3>"""
     return HuaweiSppPackage.change_rq(CMD_MBB_FEATURE, [
         (_PARAM_FEATURE, SPATIAL_AUDIO_FEATURE_ID),
         (_PARAM_ROOM, room),
@@ -70,11 +64,8 @@ def _build_room_rq(room: int):
 
 
 class OfbHuaweiSpatialAudioHandler(OfbDriverHandlerHuawei):
-    """
-    空间音频 handler（0x2BB4 MBB 通道）
-
-    仅耳机端具备独立空间音频算法的机型会返回有效响应，
-    其他机型开关查询无响应，属性保持 unknown。
+    """Spatial audio handler (0x2BB4 MBB).
+    Only models with a standalone spatial audio algorithm on the earbuds return a valid response; other models do not answer the switch query and the property stays unknown.
     """
 
     handler_id = "config_spatial_audio"
@@ -108,7 +99,7 @@ class OfbHuaweiSpatialAudioHandler(OfbDriverHandlerHuawei):
         if package is None or package.command_id != CMD_MBB_FEATURE:
             return
 
-        # 0x2BB4 为通用 MBB 通路，带 feature 段时只处理空间音频 feature
+        # 0x2BB4 is the generic MBB path; when a feature section is present, handle only the spatial audio feature
         feature = package.find_param(_PARAM_FEATURE)
         if len(feature) == 0 or feature[0] != SPATIAL_AUDIO_FEATURE_ID:
             return

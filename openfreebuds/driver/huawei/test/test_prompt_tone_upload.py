@@ -60,24 +60,24 @@ def test_build_query():
 
 
 def test_build_start():
-    # APK 用 4 字节小端写 size：16000 -> 80 3e 00 00
+    # APK writes size as 4-byte little-endian: 16000 -> 80 3e 00 00
     assert build_start(16000, 0) == bytes.fromhex("2bb60101020204803e0000030100")
 
 
 def test_build_proto2_file_info():
-    """2026-11-14 真机抓包：总长是大端 4 字节（那次 0x1EF9E）。"""
+    """2026-11-14 hardware capture: total length is 4-byte big-endian (0x1EF9E in that capture)."""
     body = build_proto2_file_info(0x1EF9E)
     assert body == bytes.fromhex("0901010101020200000301000601040904") + b"\x00\x01\xef\x9e" + bytes.fromhex("0a0100")
 
 
 def test_build_proto2_data():
-    """真机布局：09 04 | ff | 00 | 窗口基址(3B 大端) | 帧序号 | 数据。"""
+    """Hardware layout: 09 04 | ff | 00 | window base (3B BE) | frame index | data."""
     body = build_proto2_data(0x1E00, 3, b"\x01\x02")
     assert body == bytes.fromhex("0904ff00") + b"\x00\x1e\x00" + b"\x03" + b"\x01\x02"
 
 
 def test_proto2_frame_lengths():
-    """960 字节数据 + 8 字节头 = 968，正好等于真机 SPP 帧载荷长度。"""
+    """960 data bytes + 8-byte header = 968, exactly the SPP frame payload length on hardware."""
     chunk = b"\x00" * 960
     assert len(build_proto2_data(0, 0, chunk)) == 968
 
@@ -166,7 +166,7 @@ async def test_upload_empty_package():
 
 
 # ---------------------------------------------------------------------------
-# proto2 上传（按 2026-11-14 官方 App 真机抓包）
+# proto2 upload (based on the official App capture on 2026-11-14)
 # ---------------------------------------------------------------------------
 
 def _p2_feature16():
@@ -199,12 +199,12 @@ def _p2_progress(offset):
 
 @pytest.mark.asyncio
 async def test_proto2_upload_single_window():
-    """2000 字节 = 1 个不完整窗口（960+960+80），ACK 后收工。"""
+    """2000 bytes = one incomplete window (960+960+80); finish after the ACK."""
     session = FakeSession([_p2_feature16(), _p2_info(), _p2_notify(), _p2_params(), _p2_status(0), _p2_status(2000), _p2_flush(2000), _p2_complete()])
     progress = []
     await upload_tone_proto2(session, b"\x00" * 2000, progress_cb=progress.append)
     assert progress[-1] == 100
-    # 第一帧必须是 feature16 读（真机实测：不先读它，0901 不被应答）
+    # The first frame must be a feature16 read; measured: without it, 0901 is not answered
     assert session.sent[0] == frame_body(READ_FEATURE16)
     assert session.sent[1] == frame_body(build_proto2_file_info(2000))
     assert session.sent[2] == frame_body(build_proto2_session_start())
@@ -218,7 +218,7 @@ async def test_proto2_upload_single_window():
 
 @pytest.mark.asyncio
 async def test_proto2_upload_two_windows():
-    """7680 满窗 + 余量：第二窗口基址必须是 0x1E00。"""
+    """Full 7680-byte window + remainder: the second window base must be 0x1E00."""
     total = 7680 + 1000
     session = FakeSession([
         _p2_feature16(), _p2_info(), _p2_notify(), _p2_params(), _p2_status(0),
@@ -241,13 +241,13 @@ async def test_proto2_upload_refused():
 
 @pytest.mark.asyncio
 async def test_proto2_upload_no_ack():
-    """设备不 ACK 时要报错，不能假装成功。"""
+    """If the device does not ACK, report an error; do not pretend success."""
     session = FakeSession([_p2_feature16(), _p2_info(), _p2_notify(), _p2_params(), _p2_status(0)])
     with pytest.raises(ToneUploadError):
         await upload_tone_proto2(session, b"\x00" * 2000)
 
 def _p2_flush(total):
-    """落盘追平帧：tag1 = tag2 = 包长 ×2。"""
+    """Flush progress frame: tag1 = tag2 = packet length * 2."""
     full = total * 2
     return HuaweiSppPackage(b"\x09\x05", [(1, full.to_bytes(4, "big")),
                                          (2, full.to_bytes(4, "big")),
@@ -260,7 +260,7 @@ def _p2_complete():
 
 @pytest.mark.asyncio
 async def test_proto2_complete_before_flush_is_not_done():
-    """09 06 早到（只走到 tag1 一半）不能当完成：必须继续等 tag2 追平 tag1。"""
+    """An early 09 06 (only half of tag1) is not completion; keep waiting for tag2 to catch tag1."""
     total = 2000
     session = FakeSession([
         _p2_feature16(), _p2_info(), _p2_notify(), _p2_params(), _p2_status(0),

@@ -4,10 +4,13 @@ from openfreebuds.driver.huawei.constants import CMD_BATTERY_READ, CMD_BATTERY_N
 from openfreebuds.driver.huawei.driver.generic import OfbDriverHandlerHuawei
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
 
-# 0x2B25 响应字段（真机 FreeClip 2 实测）：
-#   1 = 左耳佩戴，2 = 右耳佩戴，3 = 充电中，4 = 在盒
-_PARAM_CHARGING = 3
-_PARAM_IN_BOX = 4
+# 0x2B25 response fields (measured 2026-11-13 on FreeClip 2; matches the official App semantics):
+#   1 = left earbud worn, 2 = right earbud worn, 3 = left in case, 4 = right in case
+# Charging state is not here; it comes from 0x0108 (CMD_BATTERY_READ) param_3: [left, right, case]
+_PARAM_LEFT_IN_EAR = 1
+_PARAM_RIGHT_IN_EAR = 2
+_PARAM_LEFT_IN_BOX = 3
+_PARAM_RIGHT_IN_BOX = 4
 
 
 class OfbHuaweiBatteryHandler(OfbDriverHandlerHuawei):
@@ -27,9 +30,7 @@ class OfbHuaweiBatteryHandler(OfbDriverHandlerHuawei):
         await self._read_in_box()
 
     async def _read_in_box(self):
-        """
-        0x2B25 为可选能力，旧机型无响应时短暂等待后静默跳过
-        """
+        """0x2B25 is optional; older models that do not respond are skipped after a short wait."""
         try:
             resp = await self.driver.send_package(
                 HuaweiSppPackage.read_rq(CMD_BOX_TONE_INFO, [1, 2, 3, 4]),
@@ -65,8 +66,8 @@ class OfbHuaweiBatteryHandler(OfbDriverHandlerHuawei):
                 out["case_charging"] = json.dumps(charging[2] == 1)
             out["is_charging"] = json.dumps(b"\x01" in charging)
 
-        # 整个 battery 组会被覆盖，保留由 0x2B25 读到的在盒状态
-        for key in ("in_box", "left_in_box", "right_in_box"):
+        # The whole battery group is replaced; preserve in-case/worn state read from 0x2B25
+        for key in ("in_box", "left_in_box", "right_in_box", "left_in_ear", "right_in_ear"):
             value = await self.driver.get_property("battery", key)
             if value is not None:
                 out[key] = value
@@ -74,25 +75,37 @@ class OfbHuaweiBatteryHandler(OfbDriverHandlerHuawei):
         await self.driver.put_property("battery", None, out)
 
     async def _on_in_box(self, package: HuaweiSppPackage):
-        left = package.find_param(1)
-        right = package.find_param(2)
-        charging = package.find_param(_PARAM_CHARGING)
-        in_box = package.find_param(_PARAM_IN_BOX)
-        if len(left) == 0 and len(right) == 0 and len(charging) == 0 and len(in_box) == 0:
+        left_ear = package.find_param(_PARAM_LEFT_IN_EAR)
+        right_ear = package.find_param(_PARAM_RIGHT_IN_EAR)
+        left_box = package.find_param(_PARAM_LEFT_IN_BOX)
+        right_box = package.find_param(_PARAM_RIGHT_IN_BOX)
+        if not any(len(p) for p in (left_ear, right_ear, left_box, right_box)):
             return
 
         new_props = {}
-        if len(left) == 1 and left[0] in (0, 1):
-            new_props["left_in_box"] = json.dumps(left[0] == 1)
-        if len(right) == 1 and right[0] in (0, 1):
-            new_props["right_in_box"] = json.dumps(right[0] == 1)
+        if len(left_ear) == 1 and left_ear[0] in (0, 1):
+            new_props["left_in_ear"] = json.dumps(left_ear[0] == 1)
+        if len(right_ear) == 1 and right_ear[0] in (0, 1):
+            new_props["right_in_ear"] = json.dumps(right_ear[0] == 1)
+        if len(left_box) == 1 and left_box[0] in (0, 1):
+            new_props["left_in_box"] = json.dumps(left_box[0] == 1)
+        if len(right_box) == 1 and right_box[0] in (0, 1):
+            new_props["right_in_box"] = json.dumps(right_box[0] == 1)
 
-        if len(in_box) == 1:
-            is_in_box = in_box[0] == 1
-        else:
-            is_in_box = new_props.get("left_in_box") == "true" and new_props.get("right_in_box") == "true"
+        # Both earbuds must be in the case to count as in-case; this matches the official App
+        is_in_box = new_props.get("left_in_box") == "true" and new_props.get("right_in_box") == "true"
         new_props["in_box"] = json.dumps(is_in_box)
 
         await self.driver.put_property("battery", None, new_props, extend_group=True)
         await self.driver.put_property("state", "headset_in_box", json.dumps(is_in_box))
+
+        # Find-earbud wear protection is per ear; mirror it into the state group here
+        for key in ("left_in_ear", "right_in_ear"):
+            if key in new_props:
+                await self.driver.put_property("state", key, new_props[key])
+        if "left_in_ear" in new_props or "right_in_ear" in new_props:
+            left = await self.driver.get_property("battery", "left_in_ear")
+            right = await self.driver.get_property("battery", "right_in_ear")
+            await self.driver.put_property(
+                "state", "in_ear", json.dumps(left == "true" or right == "true"))
 

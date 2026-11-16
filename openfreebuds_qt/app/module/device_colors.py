@@ -1,22 +1,16 @@
 from PyQt6.QtCore import QCoreApplication
 
-# Chinese color names from the official cloud config, mapped to an English
-# source string which is then translated by Qt using the "DeviceColor" context.
-COLOR_NAME_EN = {
+from openfreebuds.driver.huawei.device_catalog import color_name, describe_model
+
+# Chinese color names as they appear in legacy values (cloud config v1 strings),
+# mapped to the English marketing key used by the "DeviceColor" i18n context.
+LEGACY_COLOR_ALIASES = {
     "白色": "White",
     "黑色": "Black",
     "蓝色": "Blue",
     "紫色": "Purple",
-    "玫瑰金": "Rose gold",
     "红色": "Red",
     "黄色": "Yellow",
-    "星河蓝": "Starry blue",
-    "红黄混色": "Red-yellow",
-    "红蓝混色": "Red-blue",
-    "蓝黄混色": "Blue-yellow",
-    "黄红混色": "Yellow-red",
-    "蓝红混色": "Blue-red",
-    "黄蓝混色": "Yellow-blue",
     "绿色": "Green",
     "灰色": "Grey",
     "粉色": "Pink",
@@ -29,29 +23,56 @@ COLOR_NAME_EN = {
     "蓝紫色": "Blue-purple",
     "米白": "Off-white",
     "银白色": "Silver white",
-    "陶瓷白": "Ceramic white",
-    "冰霜银": "Frost silver",
-    "曜石黑": "Obsidian black",
-    "樱语粉": "Cherry pink",
-    "天空蓝": "Sky blue",
-    "薄荷绿": "Mint green",
-    "鎏金黑": "Gilded black",
-    "流光紫": "Gradient purple",
-    "海岛蓝": "Island blue",
-    "晨曦金": "Dawn gold",
-    "冰晶蓝": "Ice blue",
-    "云杉绿": "Spruce green",
-    "典雅黑": "Elegant black",
-    "陶瓷黑": "Ceramic black",
-    "流光金": "Gradient gold",
+    "星河蓝": "Starry blue",
+    "红黄混色": "Red-yellow",
+    "红蓝混色": "Red-blue",
+    "蓝黄混色": "Blue-yellow",
+    "黄红混色": "Yellow-red",
+    "蓝红混色": "Blue-red",
+    "黄蓝混色": "Yellow-blue",
 }
 
 
 def translate_color_name(name: str) -> str:
     """
-    Translate an official color name for the current UI language.
+    Translate a color name (either an English marketing key or a legacy
+    Chinese label) for the current UI language.
     """
-    source = COLOR_NAME_EN.get(name)
-    if not source:
-        return name
-    return QCoreApplication.translate("DeviceColor", source)
+    source = LEGACY_COLOR_ALIASES.get(name, name)
+    translated = QCoreApplication.translate("DeviceColor", source)
+    return translated or source
+
+
+def color_name_for(model_id: str, code: str) -> str:
+    """
+    Localized marketing color name for a model/color code pair.
+    Falls back to whatever the catalog returns when the code is unknown.
+    """
+    raw = color_name(model_id, code)
+    if not raw:
+        return ""
+    return translate_color_name(raw)
+
+
+def translate_model_name(name: str) -> str:
+    """
+    Translate a marketing model name for the current UI language.
+    """
+    if not name:
+        return ""
+    translated = QCoreApplication.translate("DeviceModel", name)
+    return translated or name
+
+
+def format_device_title(model_id: str, code: str, fallback: str) -> str:
+    """Build the 'HUAWEI FreeClip 2 (Denim Blue)' style title. Chinese uses full-width brackets, other languages use ASCII brackets."""
+    model = describe_model(model_id) if model_id else None
+    base = translate_model_name(model) if model else fallback
+    color = color_name_for(model_id, code) if code else ""
+
+    if not color:
+        return base
+
+    lang = QCoreApplication.translate("DeviceColor", "LangTag") or ""
+    full_width = lang.startswith("zh")
+    return f"{base}（{color}）" if full_width else f"{base} ({color})"

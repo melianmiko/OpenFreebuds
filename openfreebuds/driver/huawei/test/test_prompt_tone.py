@@ -33,7 +33,7 @@ def test_parse_tone_config_display_fallback():
 
 
 def test_parse_tone_config_display_name_wins():
-    """自定义层写 displayName：显示名优先，且不再看 zhCn。"""
+    """The custom layer writes displayName: the display name wins and zhCn is no longer used."""
     entries = pt.parse_tone_config({
         "data": [{"id": 50, "name": "MyChime", "displayName": "我的铃声",
                   "support": "custom"}],
@@ -63,7 +63,7 @@ def test_fetch_cloud_resources_from_cache(tmp_path):
 
 
 def test_tone_limits():
-    """容量口径以 APK 原始数据为准（16000 基准 6s = 192000），与 PCM 采样率 16755 解耦。"""
+    """Capacity follows the APK original data (16000 base, 6 s = 192000), independent of the 16755 PCM sample rate."""
     assert pt.TONE_PACKAGE_RATE == 16000
     assert pt.TONE_SAMPLE_RATE == 16755
     assert pt.TONE_MAX_BYTES == 192000
@@ -149,7 +149,7 @@ def test_crc16_xmodem():
 
 
 def test_build_tone_package():
-    """inner 按 2026-11-14 官方 App 真机抓包：CRC2 + core10 + rate4 + name32 = 48 字节。"""
+    """inner layout from the 2026-11-14 official App capture: CRC2 + core10 + rate4 + name32 = 48 bytes."""
     pcm = b"\x01\x02" * 1600
     pkg = pt.build_tone_package(pcm, "test", b"\x00\x00\x00\x00")
     assert len(pkg) == 36 + 48 + len(pcm) + 4
@@ -169,7 +169,7 @@ def test_build_tone_package():
         pt.build_tone_package(b"\x00" * (pt.TONE_MAX_BYTES + 2), "x")
 
 def test_convert_pcm_passthrough(tmp_path):
-    """本地库里的 .pcm 已经是目标格式，必须直接搬运，不能再去解码（无 ffmpeg 时那会直接失败）。"""
+    """Local-library .pcm files are already in the target format and must be copied directly, not decoded (decoding fails without ffmpeg)."""
     src = tmp_path / "lib.pcm"
     src.write_bytes(b"\x01\x02" * 100)
     dst = tmp_path / "out.pcm"
@@ -183,14 +183,14 @@ def test_convert_pcm_passthrough(tmp_path):
 
 
 def test_peak_gain_db_reaches_headroom():
-    """自动增益：把峰值刚好抬到满响度（26213 = APK 归一化峰值，0.8 满刻度）所需的 dB。"""
+    """Auto gain: dB needed to raise the peak exactly to full scale (26213 = APK normalized peak, 0.8 full scale)."""
     samples = np.array([0, 1000, -1000], dtype="<i2")
     expected = 20 * np.log10(pt.TONE_AUTO_GAIN_TARGET / 1000)
     assert abs(pt.peak_gain_db(samples) - expected) < 1e-6
     assert abs(pt.peak_gain_db(samples, target=32767)
                - 20 * np.log10(32767 / 1000)) < 1e-6
     assert pt.peak_gain_db(np.zeros(10, dtype="<i2")) == 0.0
-    # 已归一到 26213 的音频已在满响度，最佳增益就是 0；更低的才给正增益
+    # Audio already normalized to 26213 is at full scale, so the best gain is 0; only lower audio gets positive gain
     assert abs(pt.peak_gain_db(np.array([pt.TONE_PEAK], dtype="<i2"))) < 1e-9
     assert pt.peak_gain_db(np.array([6500], dtype="<i2")) > 10.0
 
@@ -199,20 +199,20 @@ def test_apply_gain_db_scales_and_clips():
     samples = np.array([100, -200, 300], dtype="<i2")
     doubled = pt.apply_gain_db(samples, 6.0206)   # +6 dB ≈ x2
     assert doubled.tolist() == [200, -400, 600]
-    # 超过满刻度时硬限幅，不回绕成反相噪声
+    # Hard-limit above full scale; do not wrap into inverted noise
     loud = pt.apply_gain_db(np.array([20000, -20000], dtype="<i2"), 12.0)
     assert loud.tolist() == [32767, -32768]
 
 
 def test_encode_without_normalize_keeps_gain(tmp_path):
-    """取消归一：手动增益后的电平必须原样落盘，不能被再拉回 0.8 满刻度。"""
+    """Normalization off: manual gain must be written as-is and must not be pulled back to 0.8 full scale."""
     samples = (np.ones(1000) * 5000).astype("<i2")
     dst = tmp_path / "quiet.pcm"
     pt.encode_tone_pcm(samples, dst, normalize=False)
     peak = int(np.max(np.abs(np.frombuffer(dst.read_bytes(), dtype="<i2").astype(np.int32))))
     assert peak == 5000
 
-    # 默认仍走归一（旧的导入路径行为不变）
+    # Default still normalizes; the old import path behavior is unchanged
     auto = tmp_path / "auto.pcm"
     pt.encode_tone_pcm(samples, auto, normalize=True)
     peak = int(np.max(np.abs(np.frombuffer(auto.read_bytes(), dtype="<i2").astype(np.int32))))

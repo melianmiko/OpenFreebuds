@@ -76,7 +76,7 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
 
         self.long_tap_mode_names = {
             "ptt": self.tr("Press to speak (release to stop)"),
-            "hold": self.tr("Press to activate (stay active)"),
+            "hold": self.tr("Continuous conversation (stay active after release)"),
         }
 
         self._ui_rows: list[_UiRow] = []
@@ -134,7 +134,7 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
                                      ui_names_map=self.gesture_names,
                                      label=self.swipe_label,
                                      left_combo=self.swipe_left,
-                                     is_separate=False))
+                                     right_combo=self.swipe_right))
 
     async def update_ui(self, event: OfbCoreEvent):
         if not event.is_changed("action") and not event.kind_match(OfbEventKind.DEVICE_CHANGED):

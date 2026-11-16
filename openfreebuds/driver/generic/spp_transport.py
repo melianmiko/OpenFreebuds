@@ -19,11 +19,17 @@ class _BluetoothSocketTransport:
 
     async def open(self, address, channel, *, connect_delay=0):
         sock = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
-        sock.settimeout(2)
-        if connect_delay:
-            await asyncio.sleep(connect_delay)
-        sock.connect((address, channel))
-        return await asyncio.open_connection(sock=sock)
+        try:
+            sock.settimeout(2)
+            if connect_delay:
+                await asyncio.sleep(connect_delay)
+            sock.connect((address, channel))
+            return await asyncio.open_connection(sock=sock)
+        except BaseException:
+            # On connect timeout/failure, close explicitly; otherwise Windows keeps the
+            # RFCOMM local endpoint and the next connect (even to another device) hits 10048.
+            sock.close()
+            raise
 
 
 def get_default_transport() -> SppTransport:

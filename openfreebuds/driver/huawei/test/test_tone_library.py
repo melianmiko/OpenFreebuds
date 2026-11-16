@@ -1,4 +1,4 @@
-﻿"""本地自定义提示音库测试（与耳机端传输解耦）。"""
+﻿"""Local custom tone library tests (decoupled from earbud transfer)."""
 import io
 import json
 import zipfile
@@ -29,7 +29,7 @@ def test_ensure_seeds_builtin_config(tmp_path):
 
 
 def test_first_custom_id_is_in_100_range(tmp_path):
-    """50–99 预留：新条目从 100–199 里取，预置占用之后顺延。"""
+    """50-99 is reserved: new entries come from 100-199, shifted after bundled entries are allocated."""
     lib = make_library(tmp_path)
     preset_ids = {e.id for e in lib.entries()}
     new_id = lib.allocate_id()
@@ -38,7 +38,7 @@ def test_first_custom_id_is_in_100_range(tmp_path):
 
 
 def test_legacy_display_name_folds_into_zh_cn(tmp_path):
-    """旧版本写过的内部字段 displayName：ensure 后收进官方字段 zhCn 并删掉。"""
+    """The internal displayName field written by older versions is moved into official zhCn and removed by ensure."""
     lib = make_library(tmp_path)
     raw = json.loads(lib.custom_config_path.read_text(encoding="utf-8"))
     raw["data"].append({"id": 160, "name": "Legacy", "displayName": "旧名字",
@@ -56,7 +56,7 @@ def test_legacy_display_name_folds_into_zh_cn(tmp_path):
 
 
 def test_reserved_ids_migrate_to_end_of_100_range(tmp_path):
-    """历史落在 50–99 的条目：ensure 后顺延到 100–199 末尾（保持旧 id 顺序）。"""
+    """Entries historically in 50-99 are shifted to the end of 100-199 by ensure, preserving old id order."""
     lib = make_library(tmp_path)
     raw = json.loads(lib.custom_config_path.read_text(encoding="utf-8"))
     max_id = max(int(e["id"]) for e in raw["data"])
@@ -69,13 +69,13 @@ def test_reserved_ids_migrate_to_end_of_100_range(tmp_path):
     lib = ToneLibrary(root=lib.root).ensure()
     ids = [e.id for e in lib.custom_entries()]
     assert 52 not in ids and 55 not in ids
-    # 52 先于 55，各顺延一位
+    # 52 comes before 55; each shifts by one
     assert lib.find(max_id + 1).name == "Old52"
     assert lib.find(max_id + 2).name == "Old55"
     assert lib.find(max_id + 1).display_name == "旧五二"
 
 
-    # 幂等：再 ensure 一次不再变化
+    # Idempotent: a second ensure does not change anything
     lib2 = ToneLibrary(root=lib.root).ensure()
     assert [e.id for e in lib2.custom_entries()] == ids
 
@@ -90,10 +90,10 @@ def test_add_tone(tmp_path):
 
     entries = lib.entries()
     custom = [e for e in entries if lib.is_user_custom(e)]
-    assert len(custom) == 47  # 46 条预置自定义 + 1 条用户新建
+    assert len(custom) == 47  # 46 bundled custom tones + 1 user-created tone
     assert [e.id for e in custom if e.id == entry.id] == [entry.id]
     assert custom[-1].display_name == "我的铃声"
-    # 自定义层只写官方字段，显示名落在 zhCn（官方 App 也读这个字段）
+    # The custom layer writes only official fields; the display name goes to zhCn (the official App reads it too)
     raw = json.loads(lib.custom_config_path.read_text(encoding="utf-8"))
     added = [e for e in raw["data"] if int(e["id"]) == entry.id][0]
     assert set(added) == {"id", "name", "zhCn", "support"}
@@ -127,7 +127,7 @@ def test_ids_continue_and_overflow_range(tmp_path):
     second = lib.add(PCM, "A2", "")
     assert second.id == first.id + 1
 
-    # 显式占掉一个号后，allocate 会跳过它继续往后
+    # After a number is explicitly reserved, allocate skips it and continues
     third = lib.add(PCM, "B190", "", tone_id=190)
     assert third.id == 190
     assert lib.allocate_id() == second.id + 1
@@ -160,7 +160,7 @@ def test_update_rename_and_replace(tmp_path):
 
 
 def test_update_keeps_display_when_only_pcm_changes(tmp_path):
-    """只换音频不动名字：文件名/显示名都保持。"""
+    """Replace audio without changing the name: file name and display name stay."""
     lib = make_library(tmp_path)
     tone = lib.add(PCM, "Keep", "原名")
     new_pcm = bytes([0x01, 0x00] * 100)
@@ -188,7 +188,7 @@ def test_export_zip_structure(tmp_path):
     assert "promptToneConfig/tone_config.json" in names
     assert "promptTone/Zip1.pcm" in names
 
-    # 导出的 json 必须是官方 App 认识的字段，不夹带 displayName
+    # Exported JSON must contain only fields the official App understands; do not include displayName
     mine = [e for e in cfg["data"] if e["name"] == "Zip1"][0]
     assert set(mine) == {"id", "name", "zhCn", "support"}
     assert mine["zhCn"] == "导出"
@@ -208,7 +208,7 @@ def test_preset_custom_ids_migrate_to_custom(tmp_path):
     assert lib.find(100) is None
 
 
-# --- 三层分离（官方 / 自定义）-------------------------------------------
+# --- Three-layer separation (official / custom) --------------------------
 
 def _config_zip(entries, official=None):
     raw = {"version": 3, "data": entries, "officialData": official or []}
@@ -231,8 +231,8 @@ def test_entries_merge_official_then_custom(tmp_path):
     lib = make_library(tmp_path)
     lib.add(PCM, "Mine", "我的")
     entries = lib.entries()
-    assert entries[0].id == 0                 # 官方层在前，保持原序
-    assert 100 <= entries[-1].id <= 199       # 自定义层在后
+    assert entries[0].id == 0                 # Official layer first, original order preserved
+    assert 100 <= entries[-1].id <= 199       # Custom layer after it
     assert len(entries) == 67
 
 
@@ -255,29 +255,29 @@ def test_refresh_keeps_custom_layer(tmp_path):
 
     assert 300 in result.added
     assert lib.find(300).zh_cn == "新音"
-    assert lib.find(mine.id).name == "Mine"   # 自定义没被动过
+    assert lib.find(mine.id).name == "Mine"   # Custom layer untouched
     assert (lib.custom_tones_dir / "Mine.pcm").is_file()
     assert (lib.official_tones_dir / "NewTone.pcm").is_file()
-    assert len(lib.entries()) == 68           # 66 内置 + 1 新官方 + 1 自定义
+    assert len(lib.entries()) == 68           # 66 built-in + 1 new official + 1 custom
 
 
 def test_refresh_updates_existing_name_in_place(tmp_path):
     lib = make_library(tmp_path)
-    # 第一次：建立官方快照（内置层已有 id 4，但官方层是空的 → 算新增）
+    # First pass: create the official snapshot (built-in layer already has id 4, but the official layer is empty -> counts as added)
     lib.refresh_official_config(
         config_bytes=_config_zip([{"id": 4, "name": "Bongo", "zhCn": "邦戈手鼓"}]))
-    # 第二次：同名 id 改内容 → 算更新
+    # Second pass: same id with changed content -> counts as updated
     result = lib.refresh_official_config(
         config_bytes=_config_zip([{"id": 4, "name": "Bongo2", "zhCn": "邦戈2"}]))
     assert 4 in result.updated
     entry = lib.find(4)
     assert entry.name == "Bongo2"
-    # 位置不变：仍排在第 3 位（内置层顺序决定的），不因为更新被挪到末尾
+    # Position unchanged: still third (determined by built-in order), not moved to the end by an update
     assert [e.id for e in lib.entries()][2] == 4
 
 
 def test_refresh_is_idempotent(tmp_path):
-    """同样的官方内容刷新两次，第二次必须是 0 新增 0 更新。"""
+    """Refresh the same official content twice; the second refresh must be 0 added, 0 updated."""
     lib = make_library(tmp_path)
     payload = _config_zip([{"id": 4, "name": "Bongo", "zhCn": "邦戈手鼓"}],
                           [{"id": 200, "name": "Chopin", "zhCn": "肖邦"}])
@@ -291,7 +291,7 @@ def test_refresh_is_idempotent(tmp_path):
 
 
 def test_official_layer_mirrors_cloud_verbatim(tmp_path):
-    """官方层必须是云端原样，不与内置层合并（否则每轮都会误报「新增」）。"""
+    """The official layer must mirror the cloud exactly and not merge with the built-in layer (otherwise every refresh reports adds)."""
     lib = make_library(tmp_path)
     lib.refresh_official_config(
         config_bytes=_config_zip([{"id": 4, "name": "Bongo", "zhCn": "邦戈手鼓"}],
@@ -299,7 +299,7 @@ def test_official_layer_mirrors_cloud_verbatim(tmp_path):
     raw = json.loads(lib.official_config_path.read_text(encoding="utf-8"))
     assert [e["id"] for e in raw["data"]] == [4]
     assert [e["id"] for e in raw["officialData"]] == [200]
-    # 但界面读到的合并视图里，内置 66 条仍在
+    # The merged view shown by the UI still contains the 66 built-in entries
     assert len([e for e in lib.entries() if not lib.is_user_custom(e)]) == 20
 
 
@@ -312,9 +312,9 @@ def test_refresh_tones_writes_pcm_files(tmp_path):
 
 
 def test_refresh_dedupes_official_data(tmp_path):
-    """同一 id 同时在 data 与 officialData 里时，只保留 data 那条。"""
+    """When the same id is in data and officialData, keep only the data entry."""
     lib = make_library(tmp_path)
-    assert lib.find(200) is not None            # 内置里已有 200
+    assert lib.find(200) is not None            # Built-in layer already contains 200
     lib.refresh_official(
         config_bytes=_config_zip([], [{"id": 200, "name": "Chopin", "zhCn": "肖邦"}]),
         tones_bytes=_tones_zip(["Chopin"]),
@@ -345,9 +345,9 @@ def test_migrate_legacy_layout(tmp_path):
     assert lib.find(4).support == ""
     mine = next(e for e in lib.entries() if e.name == "Mine")
     assert mine.support == CUSTOM_SUPPORT
-    assert 100 <= mine.id <= 199              # 旧布局里的 50 已顺延出预留段
+    assert 100 <= mine.id <= 199              # 50 from the old layout has been moved out of the reserved range
     assert (lib.official_tones_dir / "Bongo.pcm").is_file()
     assert (lib.custom_tones_dir / "Mine.pcm").is_file()
     assert (root / "legacy_backup" / "promptToneConfig" / "tone_config.json").is_file()
-    assert not legacy_cfg_dir.exists()        # 旧布局已整体挪走
+    assert not legacy_cfg_dir.exists()        # The old layout has moved as a whole
 

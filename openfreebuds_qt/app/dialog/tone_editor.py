@@ -1,7 +1,6 @@
-"""自定义提示音编辑器：波形 + 双指针裁剪 + 播放/暂停 + 响度增益 + 中英文命名。
-
-裁剪上限 6 秒（设备 PCM 上限），输出 Signed 16bit / 16755Hz / Mono PCM。
-响度增益：手动滑块（-36…+36 dB，0.1 dB 一档）或勾选「自动增益响度」自动抬到不爆电平。
+"""Custom prompt-tone editor: waveform + two-handle trim + play/pause + loudness gain + Chinese/English naming.
+Trim cap 6 s (device PCM limit); output signed 16-bit / 16755 Hz / mono PCM.
+Loudness gain: manual slider (-36...+36 dB in 0.1 dB steps) or 'auto gain' to raise the level without clipping.
 """
 import os
 import tempfile
@@ -36,11 +35,11 @@ from openfreebuds.driver.huawei.prompt_tone import (
 MIN_SECONDS = 0.2
 GAIN_MIN_DB = -36.0
 GAIN_MAX_DB = 36.0
-TONE_FULL_SCALE = 26213.0   # 满响度基准 = APK 的归一化峰值(0.8*32767)，波形上下限也按它画
+TONE_FULL_SCALE = 26213.0   # Full-scale reference: APK normalized peak (0.8 * 32767); waveform limits use the same scale
 
 
 class ToneWaveform(QWidget):
-    """波形图 + 起止双指针，拖动即调整裁剪范围；增益变化时按新电平重绘。"""
+    """Waveform plus start/end handles; dragging adjusts the trim range, and gain changes redraw at the new level."""
 
     range_changed = pyqtSignal(int, int)
     HANDLE_GRAB_PX = 12
@@ -50,7 +49,7 @@ class ToneWaveform(QWidget):
         super().__init__(parent)
         self.samples = samples
         self.total = max(1, samples.size)
-        # 包络在这里就算好并转成纯 Python 列表：paintEvent 里不碰 numpy，避免绘制期间出问题
+        # Precompute the envelope as plain Python data; paintEvent never touches numpy
         self._peaks = self._compute_peaks(samples).tolist()
         self._gain_db = 0.0
         self.start = 0
@@ -59,9 +58,9 @@ class ToneWaveform(QWidget):
         self.setMinimumHeight(110)
         self.setMouseTracking(True)
 
-    # --- 状态 ---------------------------------------------------------
+    # --- State -------------------------------------------------------
     def set_gain(self, gain_db: float):
-        """响度增益一变，波形就按新电平重画（超过满刻度的部分会被削平）。"""
+        """When loudness gain changes, redraw the waveform at the new level (the part above full scale is clipped)."""
         gain_db = float(gain_db)
         if gain_db != self._gain_db:
             self._gain_db = gain_db
@@ -72,13 +71,13 @@ class ToneWaveform(QWidget):
         return self._gain_db
 
     def _display_peak(self, peak: float) -> float:
-        """包络乘以增益，按满刻度截断——这就是最终进 PCM 的电平。"""
+        """Multiply the envelope by gain and clip at full scale; this is the final PCM level."""
         return min(TONE_FULL_SCALE, peak * (10.0 ** (self._gain_db / 20.0)))
 
 
     @classmethod
     def _compute_peaks(cls, samples: np.ndarray) -> np.ndarray:
-        """预先算好包络（512 个桶），paintEvent 里只做查表，避免在绘制中跑 numpy 分片。"""
+        """Precompute the envelope (512 buckets); paintEvent only looks it up, avoiding numpy slicing during painting."""
         bins = cls.ENVELOPE_BINS
         if samples.size == 0:
             return np.zeros(bins, dtype=np.float64)
@@ -86,7 +85,7 @@ class ToneWaveform(QWidget):
         usable = samples[:chunk * bins].astype(np.int32)
         return np.abs(usable.reshape(bins, chunk)).max(axis=1).astype(np.float64)
 
-    # --- 状态 ---------------------------------------------------------
+    # --- State -------------------------------------------------------
     def set_range(self, start: int, end: int):
         min_len = int(MIN_SECONDS * TONE_SAMPLE_RATE)
         max_len = TONE_MAX_SAMPLES
@@ -104,7 +103,7 @@ class ToneWaveform(QWidget):
         width = max(1, self.rect().width())
         return int(max(0, min(self.total, (x - self.rect().left()) / width * self.total)))
 
-    # --- 事件 ---------------------------------------------------------
+    # --- Events ------------------------------------------------------
     def mousePressEvent(self, event):
         if event.button() != Qt.MouseButton.LeftButton:
             return
@@ -141,24 +140,24 @@ class ToneWaveform(QWidget):
         self._drag = ""
         self.setCursor(Qt.CursorShape.ArrowCursor)
 
-    # --- 绘制 ---------------------------------------------------------
+    # --- Painting ----------------------------------------------------
     def paintEvent(self, event):
         try:
             self._paint(event)
-        except Exception:  # 绘制异常绝不能冒到 Qt 虚拟函数里，否则 PyQt6 会直接 abort 掉进程
+        except Exception:  # Never let paint errors escape into a Qt virtual; PyQt6 aborts the process
             import traceback
             traceback.print_exc()
 
     def _paint(self, event):
         painter = QPainter(self)
-        rect = QRect(self.rect())   # 不再留上下边距：波形直接铺满整个控件
+        rect = QRect(self.rect())   # No vertical padding; the waveform fills the widget
         painter.fillRect(self.rect(), QColor("#202028"))
 
         width = max(1, rect.width())
         peaks = self._peaks
         bins = len(peaks)
         top = rect.top() + rect.height() / 2
-        # 按满响度基准（26213）作参考：增益一调，波形就变高/被削平，能直观看出会不会超过满响度
+        # Draw against the 26213 full-scale reference so gain changes visibly raise or clip the waveform
         scale = (rect.height() / 2) / TONE_FULL_SCALE
 
         pen_bar = QPen(QColor("#7f86b0"), 1)
@@ -184,14 +183,12 @@ class ToneWaveform(QWidget):
 
 
 class GainSlider(QWidget):
-    """0 刻度居中的连续增益滑块。
-
-    QSlider 只能存整数、还要按像素取整，拖起来是「一格一格」的；这里直接用浮点
-    按鼠标位置换算 dB，做到真正的无级拖动，刻度只保留中间的 0 dB。
+    """Continuous gain slider with 0 centered.
+    QSlider stores integers and rounds per pixel, so dragging feels stepped; this maps mouse position to float dB for true continuous dragging, keeping only the center 0 dB tick.
     """
 
-    value_changed = pyqtSignal(float)   # 拖动过程中持续发出（用于同步数值框/波形）
-    released = pyqtSignal()             # 松手时发出一次（用于「立即生效」）
+    value_changed = pyqtSignal(float)   # Emitted while dragging to sync the spin box and waveform
+    released = pyqtSignal()             # Emitted once on release to apply the value
     HANDLE_RADIUS = 6
     SIDE_MARGIN = 10
 
@@ -207,7 +204,7 @@ class GainSlider(QWidget):
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
-    # --- 取值 ---------------------------------------------------------
+    # --- Value -------------------------------------------------------
     def value(self) -> float:
         return self._value
 
@@ -235,7 +232,7 @@ class GainSlider(QWidget):
         ratio = (value - self._min) / (self._max - self._min) if self._max > self._min else 0.5
         return track.left() + ratio * track.width()
 
-    # --- 事件 ---------------------------------------------------------
+    # --- Events ------------------------------------------------------
     def mousePressEvent(self, event):
         if event.button() != Qt.MouseButton.LeftButton:
             return
@@ -244,7 +241,7 @@ class GainSlider(QWidget):
 
     def mouseMoveEvent(self, event):
         if self._dragging:
-            # 不做任何量化：鼠标在哪，dB 就是哪，数值框显示两位小数
+            # No quantization: the mouse position maps directly to dB, shown with two decimals
             self.setValue(self._db_at(event.position().x()), emit=True)
 
     def mouseReleaseEvent(self, event):
@@ -268,13 +265,13 @@ class GainSlider(QWidget):
             return
         super().keyPressEvent(event)
 
-    # --- 绘制 ---------------------------------------------------------
+    # --- Painting ----------------------------------------------------
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         track = self._track_rect()
         mid_y = self.rect().center().y()
-        # 置灰时用调色板的 Disabled 组，避免自绘控件看不出被禁用
+        # Use the palette Disabled group so custom-painted controls look disabled
         group = (self.palette().ColorGroup.Active if self.isEnabled()
                  else self.palette().ColorGroup.Disabled)
         palette = self.palette()
@@ -284,7 +281,7 @@ class GainSlider(QWidget):
         painter.setBrush(groove)
         painter.drawRoundedRect(QRect(track.left(), mid_y - 2, track.width(), 4), 2, 2)
 
-        # 已经走过的那一段用强调色填出来，一眼能看出增益方向
+        # Fill the traversed range with the accent color to show gain direction
         zero_x = int(self._x_of(0.0))
         handle_x = int(self._x_of(self._value))
         accent = QColor(palette.color(group, palette.ColorRole.Highlight))
@@ -293,7 +290,7 @@ class GainSlider(QWidget):
             painter.setBrush(accent)
             painter.drawRoundedRect(span, 2, 2)
 
-        # 只保留中心的 0 dB 刻度
+        # Keep only the center 0 dB tick
         tick = QColor(palette.color(group, palette.ColorRole.Text))
         tick.setAlpha(170)
         painter.setPen(QPen(tick, 1))
@@ -308,7 +305,7 @@ class GainSlider(QWidget):
 
 
 class OfbQtToneEditorDialog(QDialog):
-    """裁剪 + 命名对话框；接受时提供 samples/start/end 与名称。"""
+    """Trim + naming dialog; on accept it provides samples/start/end and names."""
 
     def __init__(self, parent: QWidget | None, samples: np.ndarray,
                  file_name: str = "", display_name: str = "", pcm_duration: float | None = None):
@@ -333,7 +330,7 @@ class OfbQtToneEditorDialog(QDialog):
         self.duration_label = QLabel(self)
         self.play_button = QPushButton(self.tr("Play"), self)
 
-        # --- 响度增益 -------------------------------------------------
+        # --- Loudness gain -----------------------------------------------
         self.gain_slider = GainSlider(GAIN_MIN_DB, GAIN_MAX_DB, self)
         self.gain_slider.setMinimumWidth(200)
 
@@ -341,10 +338,10 @@ class OfbQtToneEditorDialog(QDialog):
         self.gain_box.setDecimals(2)
         self.gain_box.setSingleStep(0.1)
         self.gain_box.setRange(GAIN_MIN_DB, GAIN_MAX_DB)
-        self.gain_box.setKeyboardTracking(False)   # 打字时不抢着生效，失焦/回车/按上下箭头才生效
+        self.gain_box.setKeyboardTracking(False)   # Apply on focus loss, Enter or arrow keys, not on every keystroke
         self.gain_box.setFixedWidth(84)
 
-        # 单位放在框外，框内只有数字，和 x.xx dB 的观感一致
+        # Keep the unit outside the box so the value matches the x.xx dB layout
         self.gain_unit_label = QLabel("dB", self)
 
         self.auto_gain_check = QCheckBox(self.tr("Set to the best volume"), self)
@@ -358,7 +355,7 @@ class OfbQtToneEditorDialog(QDialog):
         gain_row.addSpacing(12)
         gain_row.addWidget(self.auto_gain_check)
 
-        # 文件名决定落盘的 <name>.pcm；后缀固定显示在框外，输入框里只填主体
+        # The file name becomes <name>.pcm; the suffix stays outside the input
         self.file_edit = QLineEdit(file_name, self)
         self.file_suffix_label = QLabel(".pcm", self)
         file_row = QHBoxLayout()
@@ -366,7 +363,7 @@ class OfbQtToneEditorDialog(QDialog):
         file_row.addWidget(self.file_edit)
         file_row.addWidget(self.file_suffix_label)
 
-        # 显示名：用户写什么就显示什么，不参与 i18n
+        # Display name is user text and is not localized
         self.display_edit = QLineEdit(display_name, self)
 
         playback = QHBoxLayout()
@@ -390,7 +387,7 @@ class OfbQtToneEditorDialog(QDialog):
 
         self.buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel, self)
-        # Qt 自带的 OK/Cancel 文案取决于 qtbase 翻译包；这里统一走本应用 i18n
+        # Use the application's i18n instead of Qt's qtbase button translations
         self.buttons.button(QDialogButtonBox.StandardButton.Ok).setText(self.tr("OK"))
         self.buttons.button(QDialogButtonBox.StandardButton.Cancel).setText(self.tr("Cancel"))
 
@@ -413,10 +410,10 @@ class OfbQtToneEditorDialog(QDialog):
         self.buttons.accepted.connect(self.accept)
         self.buttons.rejected.connect(self.reject)
 
-        self.auto_gain_check.setChecked(True)   # 默认等同旧行为：峰值归一到不爆电平
+        self.auto_gain_check.setChecked(True)   # Default matches the old behavior: normalize the peak without clipping
         self._on_range_changed(self.waveform.start, self.waveform.end)
 
-    # --- 同步 ---------------------------------------------------------
+    # --- Sync --------------------------------------------------------
     def _on_range_changed(self, start: int, end: int):
         for box, value in ((self.start_box, start), (self.end_box, end)):
             box.blockSignals(True)
@@ -432,14 +429,14 @@ class OfbQtToneEditorDialog(QDialog):
         end = int(self.end_box.value() * TONE_SAMPLE_RATE)
         self.waveform.set_range(start, end)
 
-    # --- 响度增益 -----------------------------------------------------
+    # --- Loudness gain -----------------------------------------------
     @property
     def auto_gain(self) -> bool:
         return self.auto_gain_check.isChecked()
 
     @property
     def gain_db(self) -> float:
-        """当前生效的增益：自动模式下按选区峰值现算，手动模式下取数值框。"""
+        """Current effective gain: computed from the selection peak in auto mode, or taken from the spin box in manual mode."""
         if self.auto_gain:
             return self._auto_gain_value()
         return float(self.gain_box.value())
@@ -449,7 +446,7 @@ class OfbQtToneEditorDialog(QDialog):
         return max(GAIN_MIN_DB, min(GAIN_MAX_DB, value))
 
     def _set_gain_controls(self, value: float, from_auto: bool = False):
-        """把同一个值写进滑块与数值框；from_auto 时保留 0.01 dB 的余量在框里。"""
+        """Write the same value into the slider and the spin box; in from_auto mode keep a 0.01 dB margin in the box."""
         self.gain_slider.setValue(value)
         self.gain_box.blockSignals(True)
         self.gain_box.setValue(round(value if from_auto else self.gain_slider.value(), 2))
@@ -457,7 +454,7 @@ class OfbQtToneEditorDialog(QDialog):
         self.waveform.set_gain(self.gain_slider.value())
 
     def _on_slider_moved(self, value: float):
-        """拖动过程中：数值框跟随、波形按新电平实时重画（拖动结束才改动预览文件）。"""
+        """While dragging: the spin box follows and the waveform redraws live; the preview file is rewritten only on release."""
         self.gain_box.blockSignals(True)
         self.gain_box.setValue(round(value, 2))
         self.gain_box.blockSignals(False)
@@ -466,23 +463,23 @@ class OfbQtToneEditorDialog(QDialog):
 
     def _on_box_gain_changed(self, value: float):
         self.gain_slider.setValue(value)
-        self._on_gain_applied()   # 上下箭头点一下就生效，不用等失焦
+        self._on_gain_applied()   # Arrow-key changes apply immediately without waiting for focus loss
 
     def _on_auto_toggled(self, checked: bool):
         if checked:
-            # 勾选：算最佳增益并回填（滑块、数值框、波形三者一起更新）
+            # Checked: compute and write back the best gain, updating slider, box and waveform
             self._set_gain_controls(self._auto_gain_value(), from_auto=True)
         self.gain_slider.setEnabled(not checked)
         self.gain_box.setEnabled(not checked)
-        self.gain_slider.update()   # 置灰后强制重绘，避免看起来「没变化」
+        self.gain_slider.update()   # Force a repaint after disabling so the state change is visible
         self.gain_box.update()
-        # 取消勾选时保留当前（最佳）值，不回滚到勾选前的值
+        # Unchecking keeps the current best value instead of restoring the old one
         self._update_gain_hint()
         self.waveform.set_gain(self.gain_db)
         self._restart_preview_if_playing()
 
     def _on_gain_applied(self):
-        """手势结束/失焦/箭头：立即生效——重写预览音频，正在播就按新电平重播。"""
+        """Gesture end/focus loss/arrow keys: apply immediately, rewrite the preview audio, and replay at the new level if playing."""
         if self.auto_gain:
             self._set_gain_controls(self._auto_gain_value(), from_auto=True)
         self.waveform.set_gain(self.gain_db)
@@ -494,14 +491,14 @@ class OfbQtToneEditorDialog(QDialog):
         chunk = self.selection.astype(np.int32)
         peak = int(np.max(np.abs(chunk))) if chunk.size else 0
         if self.auto_gain:
-            # 自动模式把「最佳增益」的依据摊开写：峰值多少、抬到了多少，避免看起来像没生效
+            # In auto mode, show the measured and target peaks so the result is clear
             applied = int(round(peak * (10.0 ** (gain / 20.0)))) if peak else 0
-            # 「更改为」不区分正负：正增益是抬、负增益是压，同一个说法都不会说反
+            # Use a neutral 'change to' wording for both positive and negative gain
             self.gain_hint.setText(self.tr("Best gain {0} dB — peak {1} changed to {2}.")
                                    .format(f"{gain:+.2f}", peak, applied))
             self.gain_hint.setStyleSheet("color: palette(mid);")
             return
-        # 手动增益把峰值推过满响度（严格大于 26213）才提示；正好等于不算超
+        # Warn only when manual gain pushes the peak strictly above 26213
         over = peak > 0 and round(peak * (10.0 ** (gain / 20.0))) > TONE_FULL_SCALE
         if over:
             self.gain_hint.setText(self.tr("Exceeds full loudness, the signal may clip."))
@@ -510,14 +507,17 @@ class OfbQtToneEditorDialog(QDialog):
             self.gain_hint.clear()
             self.gain_hint.setStyleSheet("")
 
-    # --- 播放 ---------------------------------------------------------
+    # --- Playback ----------------------------------------------------
     def processed(self, samples: np.ndarray | None = None) -> np.ndarray:
-        """按当前增益处理过、可直接保存/试听的样本（自动模式等于峰值归一）。"""
+        """Samples processed with the current gain, ready to save/preview (auto mode equals peak normalization)."""
         chunk = self.selection if samples is None else samples
         return apply_gain_db(chunk, self.gain_db)
 
     def _selection_wav(self) -> Path:
         chunk = self.processed()
+        # QMediaPlayer on Windows can cut off short WAV files early;
+        # append 120 ms of silence so no audio frame is lost.
+        tail = np.zeros(int(TONE_SAMPLE_RATE * 0.12), dtype=chunk.dtype)
         fd, tmp_name = tempfile.mkstemp(suffix=".wav", prefix="ofb_preview_")
         os.close(fd)
         fd_path = Path(tmp_name)
@@ -526,11 +526,11 @@ class OfbQtToneEditorDialog(QDialog):
             w.setnchannels(1)
             w.setsampwidth(2)
             w.setframerate(TONE_SAMPLE_RATE)
-            w.writeframes(chunk.tobytes())
+            w.writeframes(np.concatenate([chunk, tail]).tobytes())
         return fd_path
 
     def _restart_preview_if_playing(self):
-        """增益改了又正在播：按新电平重放一遍，保证听到的就是要保存的。"""
+        """Gain changed while playing: replay at the new level so what is heard matches what will be saved."""
         player = getattr(self, "_player", None)
         if player is None:
             return
@@ -557,7 +557,7 @@ class OfbQtToneEditorDialog(QDialog):
         if self._player.playbackState() == QMediaPlayer.PlaybackState.PlayingState:
             self._player.stop()
             return
-        # 先释放上一段预览文件（Windows 上媒体后端会锁住文件），再写新的一段
+        # Release the previous preview file first; the Windows media backend locks it
         self._player.stop()
         self._player.setSource(QUrl())
         self._discard_previews()
@@ -565,7 +565,7 @@ class OfbQtToneEditorDialog(QDialog):
         self._player.play()
 
     def _discard_previews(self):
-        """删掉已经不再被播放器引用的临时预览文件；删不掉就留给系统临时目录。"""
+        """Delete the temporary preview file no longer referenced by the player; if deletion fails, leave it to the system temp directory."""
         for path in self._tmp_files:
             try:
                 path.unlink(missing_ok=True)
@@ -577,11 +577,11 @@ class OfbQtToneEditorDialog(QDialog):
         self.play_button.setText(
             self.tr("Pause") if state == self._player.PlaybackState.PlayingState else self.tr("Play"))
 
-    # --- 结果 ---------------------------------------------------------
+    # --- Result ------------------------------------------------------
     def cleanup(self):
         if hasattr(self, "_player"):
             self._player.stop()
-            self._player.setSource(QUrl())   # 释放文件句柄，否则 unlink 会 WinError 32
+            self._player.setSource(QUrl())   # Release the file handle, otherwise unlink fails with WinError 32
         self._discard_previews()
 
     @property
@@ -590,7 +590,7 @@ class OfbQtToneEditorDialog(QDialog):
 
     @property
     def file_name(self) -> str:
-        """文件名主体（不含 .pcm）。"""
+        """File name body (without .pcm)."""
         return self.file_edit.text().strip()
 
     @property

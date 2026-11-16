@@ -1,7 +1,7 @@
 import asyncio
 from typing import Optional
 
-from PyQt6.QtCore import pyqtSlot
+from PyQt6.QtCore import Qt, pyqtSlot
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QApplication
 from qasync import asyncSlot
@@ -112,22 +112,52 @@ class OfbQtDeviceControlViewHelper:
         self.ui.batt_l_root.setVisible(is_tws)
         self.ui.batt_r_root.setVisible(is_tws)
 
-        in_box_text = " · " + QApplication.translate("OfbQtDeviceControlViewHelper", "In box")
-        charging_text = " · " + QApplication.translate("OfbQtDeviceControlViewHelper", "Charging")
+        in_box_text = QApplication.translate("OfbQtDeviceControlViewHelper", "In box")
+        charging_text = QApplication.translate("OfbQtDeviceControlViewHelper", "Charging")
+        wearing_text = QApplication.translate("OfbQtDeviceControlViewHelper", "Wearing")
+        not_connected_text = QApplication.translate("OfbQtDeviceControlViewHelper", "Not connected")
 
-        left_text = f'{battery.get("left", "--")}%'
-        if battery.get("left_in_box") == "true":
-            left_text += in_box_text
-        if battery.get("left_charging") == "true":
-            left_text += charging_text
-        self.ui.batt_l_text.setText(left_text)
+        def two_line(percent, flags: list[bool], names: list[str]) -> str:
+            # First line battery, second line 7pt status; show one line when there is no status
+            parts = [name for flag, name in zip(flags, names) if flag]
+            head = f'{percent}%'
+            if not parts:
+                return head
+            return f'{head}<br><span style="font-size:7pt">{"·".join(parts)}</span>'
 
-        right_text = f'{battery.get("right", "--")}%'
-        if battery.get("right_in_box") == "true":
-            right_text += in_box_text
-        if battery.get("right_charging") == "true":
-            right_text += charging_text
-        self.ui.batt_r_text.setText(right_text)
+        def disconnected(percent, in_box, charging) -> bool:
+            # A powered-off earbud in the case reports 0%, which is not a real 0% charge
+            return (in_box == "true" and charging != "true"
+                    and str(percent) in ("0", "0.0"))
 
-        case_text = f'{battery.get("case" if is_tws else "global", "--")}%'
-        self.ui.batt_c_text.setText(case_text)
+        for label, percent, flags, names, in_box, charging in (
+                (self.ui.batt_l_text,
+                 battery.get("left", "--"),
+                 [battery.get("left_in_ear") == "true",
+                  battery.get("left_in_box") == "true",
+                  battery.get("left_charging") == "true"],
+                 [wearing_text, in_box_text, charging_text],
+                 battery.get("left_in_box"), battery.get("left_charging")),
+                (self.ui.batt_r_text,
+                 battery.get("right", "--"),
+                 [battery.get("right_in_ear") == "true",
+                  battery.get("right_in_box") == "true",
+                  battery.get("right_charging") == "true"],
+                 [wearing_text, in_box_text, charging_text],
+                 battery.get("right_in_box"), battery.get("right_charging"))):
+            label.setTextFormat(Qt.TextFormat.RichText)
+            if disconnected(percent, in_box, charging):
+                label.setText(not_connected_text)
+            else:
+                label.setText(two_line(percent, flags, names))
+
+        case_percent = battery.get("case" if is_tws else "global", "--")
+        self.ui.batt_c_text.setTextFormat(Qt.TextFormat.RichText)
+        # The case uses only its own case_charging (0x0108 p3, third value),
+        # do not count earbud charging (left/right_charging) as case charging,
+        # otherwise a case without power that only charges the earbuds would show 'charging'.
+        self.ui.batt_c_text.setText(two_line(
+            case_percent,
+            [battery.get("case_charging") == "true"],
+            [charging_text],
+        ))

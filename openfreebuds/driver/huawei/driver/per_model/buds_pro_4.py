@@ -8,5 +8,5 @@ class OfbDriverHuaweiPro4(OfbDriverHuaweiPro3):
     """
     def __init__(self, address):
         super().__init__(address)
-        # FreeBuds Pro 4 在 Pro 3 基础上增加头部控制（只读）
+        # FreeBuds Pro 4 adds head control (read-only) on top of Pro 3
         self.handlers.append(OfbHuaweiHeadControlHandler())

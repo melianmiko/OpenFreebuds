@@ -17,6 +17,7 @@ Uses the same driver as [HUAWEI FreeBuds Pro 3](./HUAWEI_FreeBuds_Pro_3.md).
 - Auto pause: ✅
 - In-ear detection: ✅
 - Voice language: ✅
+- Drop reminder: ✅ (official config support; not device-tested)
 
 ## Not planned features
 

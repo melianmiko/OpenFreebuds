@@ -153,7 +153,9 @@ class OfbTrayIcon(IOfbTrayIcon):
             if self._battery_icon_values.get(key) != appearance:
                 icon.setIcon(percentage_icon(*appearance))
                 self._battery_icon_values[key] = appearance
-            icon.setToolTip(f"{device_name} — {labels[key]}: {level}%")
+            icon.setToolTip(f"{device_name} — {labels[key]}: "
+                            f"{level}%" if not isinstance(level, str) else
+                            f"{device_name} — {labels[key]}: {level}")
             icon.show()
 
     def _on_battery_click(self, reason):

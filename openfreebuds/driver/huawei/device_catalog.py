@@ -537,13 +537,13 @@ MODELS = {
 }
 
 
-# 官方中文营销配色名（按机型覆盖上面的通用色名）。
-# 语序: 型号 id -> {配色 code: 英文营销键}；中文名在 i18n 的 DeviceColor 上下文里。
-# 数据来源: 华为官网 / 华为商城产品页（2026-11 核对），未核对的机型保持通用色名。
+# Official Chinese marketing color names (override generic names per model).
+# Order: model id -> {color code: English marketing key}; Chinese names live in the DeviceColor i18n context.
+# Source: Huawei official site / Huawei Mall product pages (checked 2026-11); unverified models keep generic names.
 MARKETING_COLORS = {
-    # FreeClip 2：丹宁蓝 / 羽沙白 / 摩登黑 / 冰莓紫 / 玫瑰金 + 潮玩拼色
-    # 注意：config 的 '10' Starry blue 是「潮玩拼色（蓝）」的单只颜色来源，
-    # 与 '05' 蓝色（丹宁蓝）不是一回事；03/08 同理是拼色红/黄的来源色。
+    # FreeClip 2: Denim Blue / Feather White / Modern Black / Iceberry Purple / Rose Gold + color-block editions
+    # Note: config color '10' Starry blue is the single-ear source for the blue color-block edition,
+    # not the same as '05' blue (Denim Blue); 03/08 are likewise the source colors for red/yellow color-block.
     "000167": {
         '01': 'Feather white',
         '02': 'Modern black',
@@ -560,7 +560,7 @@ MARKETING_COLORS = {
         '1E': 'Flux colorway blue-red',
         '1F': 'Flux colorway yellow-blue',
     },
-    # FreeBuds Pro 3：雅川青 / 星河蓝 / 冰霜银 / 陶瓷白
+    # FreeBuds Pro 3: Yachuan Green / Galaxy Blue / Frost Silver / Ceramic White
     "000149": {
         '00': 'Frost silver',
         '01': 'Ceramic white',
@@ -568,7 +568,7 @@ MARKETING_COLORS = {
         '05': 'Starry blue',
         '14': 'Year of Dragon edition',
     },
-    # FreeBuds Pro 4：曜石黑 / 云杉绿 / 雪域白（另有蛇年限定）
+    # FreeBuds Pro 4: Obsidian Black / Spruce Green / Snow White (plus Snake Year edition)
     "000157": {
         '01': 'Snow field white',
         '04': 'Cloud spruce green',
@@ -576,7 +576,7 @@ MARKETING_COLORS = {
         '14': 'Year of Snake limited black',
         '18': 'Year of Snake limited green',
     },
-    # FreeBuds Pro 5：大地金 / 雪域白 / 冰霜银 / 穹宇蓝
+    # FreeBuds Pro 5: Earth Gold / Snow White / Frost Silver / Cosmos Blue
     "00016B": {
         '01': 'Snow field white',
         '07': 'Cosmic blue',
@@ -591,7 +591,7 @@ MARKETING_COLORS = {
         '17': 'Earth gold',
         '14': 'Year of Horse edition',
     },
-    # FreeBuds 6：星空黑 / 天际白 / 极光紫 / 玫瑰金
+    # FreeBuds 6: Starry Black / Skyline White / Aurora Purple / Rose Gold
     "000155": {
         '01': 'Skyline white',
         '02': 'Starry sky black',
@@ -601,7 +601,7 @@ MARKETING_COLORS = {
     "000161": {
         '01': 'Skyline white',
     },
-    # FreeBuds 5：陶瓷白 / 冰霜银 / 珊瑚橙 / 海岛蓝
+    # FreeBuds 5: Ceramic White / Frost Silver / Coral Orange / Island Blue
     "000141": {
         '00': 'Frost silver',
         '01': 'Ceramic white',
@@ -610,7 +610,7 @@ MARKETING_COLORS = {
         '09': 'Coral orange',
         '10': 'Island blue',
     },
-    # FreeArc：原野绿 / 星空黑 / 苍穹灰 / 暖云白
+    # FreeArc: Field Green / Starry Black / Sky Gray / Warm Cloud White
     "00015D": {
         '02': 'Starry sky black',
         '0C': 'Sky vault grey',
@@ -618,66 +618,66 @@ MARKETING_COLORS = {
         '13': 'Warm cloud white',
         '14': 'Football edition',
     },
-    # FreeClip（一代）：玫瑰金 / 流光紫 / 星空黑 / 暖星云
+    # FreeClip (1st gen): Rose Gold / Flowing Purple / Starry Black / Warm Nebula
     "00014B": {
         '0E': 'Gunmetal',
         '07': 'Gradient purple',
         '13': 'Warm nebula',
         '17': 'Rose gold',
     },
-    # FreeBuds SE 2：陶瓷白 / 海岛蓝 / 香芋紫 / 曜石黑
+    # FreeBuds SE 2: Ceramic White / Island Blue / Taro Purple / Obsidian Black
     "000147": {
         '00': 'Ceramic white',
         '05': 'Island blue',
         '01': 'Taro purple',
         '02': 'Obsidian black',
     },
-    # FreeBuds Pro 2：星河蓝 / 陶瓷白 / 冰霜银
+    # FreeBuds Pro 2: Galaxy Blue / Ceramic White / Frost Silver
     "000131": {
         '10': 'Starry blue',
         '01': 'Ceramic white',
         '0E': 'Frost silver',
     },
-    # FreeBuds 4i：碳晶黑 / 陶瓷白 / 蜜语红（config 的 03 Light purple 实为红色，01 Default 为白色）
+    # FreeBuds 4i: Carbon Black / Ceramic White / Honey Red (config 03 Light purple is actually red; 01 Default is white)
     "000124": {
         '01': 'Ceramic white',
         '05': 'Carbon crystal black',
         '02': 'Ceramic white',
         '03': 'Whisper red',
     },
-    # FreeBuds 7i：樱语粉 / 贝母白 / 深空灰
+    # FreeBuds 7i: Cherry Pink / Mother-of-Pearl White / Deep Space Gray
     "000163": {
         '06': 'Cherry pink',
         '01': 'Mother-of-pearl white',
         '00': 'Mother-of-pearl white',
         '02': 'Deep space grey',
     },
-    # FreeBuds SE 3：流光金 / 星际黑 / 陶瓷白
+    # FreeBuds SE 3: Flowing Gold / Interstellar Black / Ceramic White
     "00015B": {
         '0F': 'Gradient gold',
         '02': 'Interstellar black',
         '01': 'Ceramic white',
     },
-    # FreeBuds 7：日光橙 / 仲夏紫 / 星空黑 / 月光白
+    # FreeBuds 7: Sunlight Orange / Midsummer Purple / Starry Black / Moonlight White
     "000174": {
         '09': 'Sunlight orange',
         '07': 'Midsummer purple',
         '0E': 'Starry sky black',
         '00': 'Moonlight white',
     },
-    # FreeBuds Neo：星河银 / 星云粉 / 星空黑 / 零度白（限定的 14/18 保持通用名）
+    # FreeBuds Neo: Galaxy Silver / Nebula Pink / Starry Black / Zero White (limited 14/18 keep generic names)
     "000175": {
         '00': 'Stellar silver',
         '06': 'Nebula pink',
         '02': 'Starry sky black',
         '01': 'Ice white',
     },
-    # FreeClip 2 S（典藏版）：珠光银 / 星海蓝
+    # FreeClip 2 S (Collector's Edition): Pearl Silver / Star Sea Blue
     "000173": {
         '00': 'Pearlescent silver',
         '05': 'Star sea blue',
     },
-    # FreeBuds 5i：陶瓷白 / 海岛蓝 / 星际黑
+    # FreeBuds 5i: Ceramic White / Island Blue / Interstellar Black
     "00013D": {
         '01': 'Ceramic white',
         '07': 'Island blue',
@@ -688,19 +688,19 @@ MARKETING_COLORS = {
         '07': 'Island blue',
         '0C': 'Interstellar black',
     },
-    # FreeBuds 6i：天际白 / 流光紫 / 幻夜黑
+    # FreeBuds 6i: Skyline White / Flowing Purple / Phantom Night Black
     "000153": {
         '01': 'Skyline white',
         '07': 'Gradient purple',
         '02': 'Phantom night black',
     },
-    # FreeBuds SE 4 ANC：陶瓷白 / 曜石黑 / 海岛蓝
+    # FreeBuds SE 4 ANC: Ceramic White / Obsidian Black / Island Blue
     "000169": {
         '01': 'Ceramic white',
         '02': 'Obsidian black',
         '05': 'Island blue',
     },
-    # FreeBuds Lipstick 2：弦乐白 / 魅影黑
+    # FreeBuds Lipstick 2: String White / Phantom Black
     "000151": {
         '13': 'Chord white',
         '12': 'Phantom black',

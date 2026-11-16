@@ -13,8 +13,21 @@ def battery_levels(battery):
         if isinstance(value, str) and value.isascii() and value.isdigit():
             value = int(value)
         if type(value) is int and 0 <= value <= 100:
-            levels[key] = value
+            # A powered-off earbud in the case reports 0%; the tray should show '/' instead of 0
+            if (key in ("left", "right") and value == 0
+                    and str(battery.get(f"{key}_in_box", "")).lower() == "true"
+                    and str(battery.get(f"{key}_charging", "")).lower() != "true"):
+                levels[key] = "/"
+            else:
+                levels[key] = value
     return levels
+
+
+def battery_menu_text(level, not_connected_label: str) -> str:
+    """Battery text for the tray context menu; no percent sign when disconnected."""
+    if isinstance(level, str):
+        return not_connected_label
+    return f"{level}%"
 
 
 def battery_style(config, key):
@@ -37,7 +50,7 @@ def battery_style(config, key):
     return text, background, transparent, scale, bold
 
 
-def percentage_icon(level: int, theme: str, text_color=None, background_color=None, font_scale=100, bold=True) -> QIcon:
+def percentage_icon(level, theme: str, text_color=None, background_color=None, font_scale=100, bold=True) -> QIcon:
     """Render numeric battery levels at native tray sizes for each DPI."""
     icon = QIcon()
     for size in (16, 20, 24, 32, 48, 64):

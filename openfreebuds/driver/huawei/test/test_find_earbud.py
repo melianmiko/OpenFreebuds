@@ -1,8 +1,5 @@
-"""「查找耳机」handler 测试（0x2B5D 设置 / 0x2B5E 查询）
-
-协议依据 2026-11-14 FreeClip 2 真机标定：
-  发 2b 5d 01 02 <side> <state>   side 0=左 1=右 2=双，state 0=响 1=停
-  查 2b 5e 01 01 <side>           回 2b 5e 02 02 <side> <state>（1=空闲，0=响铃中）
+"""Find-earbud handler tests (0x2B5D set / 0x2B5E query).
+Protocol based on 2026-11-14 FreeClip 2 calibration: send 2b 5d 01 02 <side> <state> (side 0=left 1=right 2=both, state 0=ring 1=stop); query 2b 5e 01 01 <side>; response 2b 5e 02 02 <side> <state>.
 """
 
 import asyncio
@@ -65,7 +62,7 @@ async def create_driver(model):
 
 
 def test_build_find_rq_matches_verified_frame():
-    # 真机帧：2b 5d 01 02 00 00（左耳开响）
+    # Device frame: 2b 5d 01 02 00 00 (start ringing on the left)
     body = build_find_rq(FIND_EARBUD_SIDE_LEFT, FIND_EARBUD_STATE_RING).to_bytes()
     assert body[4:-2] == bytes.fromhex("2b5d01020000")
 
@@ -106,7 +103,7 @@ async def test_ring_both_sends_side_2():
 
 
 def test_parse_rejects_set_ack():
-    """0x5D 的 ACK（2b 5d 02 02 <side> 00）末位是 result，不能被当成状态帧。"""
+    """The last byte of a 0x5D ACK (2b 5d 02 02 <side> 00) is result, not a state frame."""
     ack = HuaweiSppPackage.from_bytes(find_resp(FIND_EARBUD_SIDE_LEFT))
     assert parse_find_state(ack) is None
 
@@ -117,7 +114,7 @@ def test_parse_rejects_set_ack():
 
 @pytest.mark.asyncio
 async def test_set_ack_does_not_clear_ringing_state():
-    """按停止后设备先回 0x5D ACK（末位 00），界面不能被它翻成"响铃中"。"""
+    """After stop, the device first returns a 0x5D ACK (last byte 00); the UI must not flip to 'ringing'."""
     model = base_model()
     model[find_rq(FIND_EARBUD_SIDE_LEFT, FIND_EARBUD_STATE_STOP)] = [find_resp(FIND_EARBUD_SIDE_LEFT)]
     model[find_rq(FIND_EARBUD_SIDE_RIGHT, FIND_EARBUD_STATE_STOP)] = [find_resp(FIND_EARBUD_SIDE_RIGHT)]
@@ -144,13 +141,13 @@ async def test_stop_left_only_sends_one_side():
     await handler._publish_ringing()
 
     assert await driver.set_property("config", "find_earbud", "stop:left") is True
-    # 只停左耳，右耳仍在响
+    # Stop the left ear only; the right ear is still ringing
     assert await driver.get_property("state", "find_earbud_ringing") == "right"
 
 
 @pytest.mark.asyncio
 async def test_ring_does_not_wait_for_ack():
-    """设备不回 SET 的 ACK 时也不能抛超时（真机上这条超时会把 Qt 端带崩）。"""
+    """Do not throw a timeout when the device does not ACK SET (this timeout crashes the Qt side on hardware)."""
     model = base_model()
     driver = await create_driver(model)
 

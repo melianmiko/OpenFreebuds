@@ -1,13 +1,6 @@
-"""充电盒提示音：本地/云端配置解析与音频转换。
+"""Charging-case prompt tones: local/cloud config parsing and audio conversion.
 
-配置 schema（version 3）：data 为内置/自定义提示音，officialData 为需下载的官方提示音，
-条目字段 id/name/zhCn/support。
-
-音频口径有两套，别混：
-- **播放/打包口径（APK 原始数据，不可改动）**：`TONE_PACKAGE_RATE=16000`（整包内层第 44–48
-  字节的固定字段）、`TONE_MAX_SECONDS=6`、`TONE_MAX_BYTES=16000*2*6=192000`。
-- **实际产出的 PCM 口径**：`TONE_SAMPLE_RATE=16755`（设备实测以此速率播放）。所以 192000
-  字节在 16755Hz 下只够 `TONE_MAX_DURATION ≈ 5.73s`，除以 16000 才是 6s。
+Config schema version 3: data contains built-in/custom tones, officialData contains downloadable official tones; entries use id/name/zhCn/support. Two audio rate conventions must not be mixed: the APK packaging/playback rate (16000) and the actual PCM sample rate (16755).
 """
 import hashlib
 import json
@@ -24,21 +17,21 @@ from pathlib import Path
 
 import numpy as np
 
-TONE_SAMPLE_RATE = 16755        # 产出 PCM 的采样率（设备实测播放速率）
-TONE_PACKAGE_RATE = 16000       # 整包内层头里的固定字段值（APK 原样，勿动）
-TONE_MAX_SECONDS = 6            # APK 给的时长上限，按 16000 基准算
-TONE_MAX_BYTES = TONE_PACKAGE_RATE * 2 * TONE_MAX_SECONDS   # = 192000，APK 原始封顶
-TONE_MAX_SAMPLES = TONE_MAX_BYTES // 2                       # = 96000 个样本
-TONE_MAX_DURATION = TONE_MAX_SAMPLES / TONE_SAMPLE_RATE      # ≈ 5.7298s（16755Hz 下的实际可用时长）
+TONE_SAMPLE_RATE = 16755        # PCM sample rate produced here (measured device playback rate)
+TONE_PACKAGE_RATE = 16000       # Fixed values inside the packet header (copied from the APK; do not change)
+TONE_MAX_SECONDS = 6            # Duration limit from the APK, based on 16000
+TONE_MAX_BYTES = TONE_PACKAGE_RATE * 2 * TONE_MAX_SECONDS   # = 192000, the APK's original cap
+TONE_MAX_SAMPLES = TONE_MAX_BYTES // 2                       # = 96000 samples
+TONE_MAX_DURATION = TONE_MAX_SAMPLES / TONE_SAMPLE_RATE      # about 5.7298 s at 16755 Hz, the actual usable duration
 TONE_PEAK = int(0.8 * 32767)
-# 自动增益的满响度基准：就是 APK 的归一化峰值（0.8 满刻度）。
-# 这个值是官方工程师调试后定的，超过它设备侧就可能爆电平，所以不做「顶到 32767」。
+# Full-scale reference for auto gain: the APK normalized peak (0.8 full scale).
+# Official engineers chose this value; exceeding it may clip on the device, so do not normalize to 32767.
 TONE_AUTO_GAIN_TARGET = TONE_PEAK
 
 CLOUD_BASE = "https://smarthome-drcn.dbankcdn.cn/device/guide/AAM001"
 
-# 100–179 是随包预置、但性质上属于用户可改/可删的自定义提示音；界面和库操作
-# 不再把它们单列为「内置自定义音效」。
+# 100-179 are bundled but behave as user-editable/deletable custom tones; the UI and library
+# no longer list them separately as built-in custom effects.
 PRESET_CUSTOM_ID_RANGES = ((100, 179),)
 
 
@@ -53,8 +46,8 @@ class ToneEntry:
     zh_cn: str
     official: bool = False
     support: str = ""
-    # 用户自定义的显示名（config 里的 displayName）；官方条目不写这个字段，
-    # 显示名由官方 zhCn / PromptToneName 翻译词典提供
+    # User-defined display name (displayName in config); official entries omit it,
+    # their names come from the official zhCn / PromptToneName dictionary
     display: str = ""
 
     @property
@@ -83,14 +76,14 @@ def load_local_config(config_dir: Path) -> list[ToneEntry]:
 
 
 def load_builtin_config() -> list[ToneEntry]:
-    """读取随包内置的提示音目录（openfreebuds/assets/tone_config.json）。"""
+    """Read the bundled tone catalog from openfreebuds/assets/tone_config.json."""
     path = Path(__file__).resolve().parents[2] / "assets" / "tone_config.json"
     return parse_tone_config(json.loads(path.read_text(encoding="utf-8")))
 
 
 def fetch_cloud_resources(cache_dir: Path, model: str = "00000A",
                           force: bool = False) -> tuple[list[ToneEntry], Path]:
-    """下载并解压云端 promptToneConfig / promptTone 包，返回 (配置条目, 官方PCM目录)。"""
+    """Download and unpack the cloud promptToneConfig / promptTone packages; return (config entries, official PCM directory)."""
     cache_dir.mkdir(parents=True, exist_ok=True)
     tones_dir = cache_dir / f"{model}_promptTone"
     for key in ("promptToneConfig", "promptTone"):
@@ -114,10 +107,8 @@ FFMPEG_CANDIDATES = (
 
 
 def _registry_path_dirs() -> list[Path]:
-    """用户/系统 PATH（注册表里的真值）。
-
-    进程可能被一个被裁剪过 PATH 的父进程拉起来（例如各种 GUI 启动器、沙箱），
-    这时 shutil.which 找不到已安装的 ffmpeg，但注册表里的 PATH 仍然是对的。
+    """User/system PATH (the real value from the registry).
+    The process may be started by a parent with a trimmed PATH (GUI launchers, sandboxes), so shutil.which may miss an installed ffmpeg while the registry PATH is still correct.
     """
     try:
         import winreg
@@ -142,7 +133,7 @@ def _registry_path_dirs() -> list[Path]:
 
 
 def find_ffmpeg() -> str | None:
-    """定位 ffmpeg：环境变量 OFB_FFMPEG → PATH → 注册表 PATH → 常见安装位置。"""
+    """Locate ffmpeg: OFB_FFMPEG -> PATH -> registry PATH -> common install locations."""
     env = os.environ.get("OFB_FFMPEG")
     if env and Path(env).is_file():
         return env
@@ -164,7 +155,7 @@ def find_ffmpeg() -> str | None:
 
 
 def _decode_wav_samples(src: Path, max_seconds: float | None = None) -> np.ndarray:
-    """没有 ffmpeg 时的兜底：用标准库 wave 读 WAV，重采样到 TONE_SAMPLE_RATE。"""
+    """Fallback without ffmpeg: read WAV with the standard library wave module and resample to TONE_SAMPLE_RATE."""
     with wave.open(str(src), "rb") as wav:
         channels = wav.getnchannels()
         width = wav.getsampwidth()
@@ -185,10 +176,8 @@ def _decode_wav_samples(src: Path, max_seconds: float | None = None) -> np.ndarr
 
 
 def decode_audio(src: Path, max_seconds: float | None = None) -> np.ndarray:
-    """任意音频 -> Signed 16bit 16755Hz Mono 小端样本数组（int16）。
-
-    max_seconds 只限制解码时长（默认不限制，调用方按需要截断），用于裁剪界面的波形数据。
-    优先用 ffmpeg（支持 wav/mp3/flac/ogg/m4a/aac）；ffmpeg 不在时，WAV 走标准库兜底。
+    """Any audio -> signed 16-bit 16755 Hz mono little-endian int16 samples.
+    max_seconds limits decode duration only (unlimited by default; callers truncate as needed) and is used for waveform data in the editor. Prefer ffmpeg (wav/mp3/flac/ogg/m4a/aac); fall back to the standard-library WAV path when ffmpeg is absent.
     """
     ffmpeg = find_ffmpeg()
     if ffmpeg is None:
@@ -213,9 +202,8 @@ def decode_audio(src: Path, max_seconds: float | None = None) -> np.ndarray:
 
 
 def peak_gain_db(samples: np.ndarray, target: int = TONE_AUTO_GAIN_TARGET) -> float:
-    """把这段音频的峰值刚好抬到满响度（默认 26213 = APK 归一化峰值）所需的增益（dB）。
-
-    空音频或全零返回 0.0；这是「不爆电平」的最佳增益：官方调试定的 0.8 满刻度上限。
+    """Gain in dB needed to raise this audio's peak exactly to full scale (default 26213 = APK normalized peak).
+    Empty or all-zero audio returns 0.0; this is the 'no clipping' best gain at the official 0.8 full-scale ceiling.
     """
     data = np.asarray(samples, dtype=np.int32)
     peak = int(np.max(np.abs(data))) if data.size else 0
@@ -225,16 +213,14 @@ def peak_gain_db(samples: np.ndarray, target: int = TONE_AUTO_GAIN_TARGET) -> fl
 
 
 def apply_gain_db(samples: np.ndarray, gain_db: float) -> np.ndarray:
-    """按 dB 增益缩放样本；超过 int16 范围的按满刻度硬限幅（避免回绕成反相噪声）。"""
+    """Scale samples by dB gain and hard-limit to the int16 range at full scale (avoid wrap-around into inverted noise)."""
     data = np.asarray(samples, dtype=np.float64) * (10.0 ** (float(gain_db) / 20.0))
     return np.clip(np.rint(data), -32768, 32767).astype("<i2")
 
 
 def encode_tone_pcm(samples: np.ndarray, dst: Path, normalize: bool = True) -> None:
-    """样本 -> 提示音 PCM，按 APK 的 192000 字节封顶截断后校验。
-
-    normalize=True（默认）：峰值归一到 0.8*32767，等同「自动增益」；
-    normalize=False：保留样本现有电平（调用方已按用户设定做过增益），只做截断与校验。
+    """Samples -> prompt-tone PCM, truncated and validated against the APK's 192000-byte cap.
+    normalize=True (default): normalize the peak to 0.8*32767, equivalent to auto gain; normalize=False: keep the current level (the caller already applied user gain) and only truncate/validate.
     """
     samples = np.asarray(samples, dtype="<i2")[:TONE_MAX_SAMPLES]
     if normalize:
@@ -246,10 +232,8 @@ def encode_tone_pcm(samples: np.ndarray, dst: Path, normalize: bool = True) -> N
 
 
 def convert_to_tone_pcm(src: Path, dst: Path) -> None:
-    """任意音频 -> Signed 16bit 16755Hz Mono 小端 PCM，按 192000 字节封顶后峰值归一。
-
-    源文件本身已经是提示音 PCM（本地库里就是这种）时直接搬运，不走解码——
-    否则会被当成未知格式，在没有 ffmpeg 的机器上直接失败。
+    """Any audio -> signed 16-bit 16755 Hz mono little-endian PCM, capped at 192000 bytes and peak-normalized.
+    If the source is already prompt-tone PCM (as in the local library), copy it directly instead of decoding; otherwise it would be treated as an unknown format and fail on machines without ffmpeg.
     """
     if src.suffix.lower() == ".pcm":
         data = src.read_bytes()[:TONE_MAX_BYTES]
@@ -278,11 +262,8 @@ def crc16_xmodem(data: bytes) -> int:
 
 
 def build_tone_package(pcm: bytes, name: str, mcu_type: bytes = b"\x00\x00\x00\x00") -> bytes:
-    """自定义提示音整包：outer36(总长4BE+SHA256) + inner48 + PCM + mcuType。
-
-    inner 布局按 2026-11-14 官方 App 真机抓包校正（交接文档 §10.4）：
-        CRC16(core)(2LE) + core(2+4+4) + rate(4LE, 固定 16000) + name(32B)
-    → 共 48 字节。core 里**不含** name（旧版重复了一次 name，导致 inner=80，是错的）。
+    """Custom prompt-tone package: outer36 (total length 4BE + SHA256) + inner48 + PCM + mcuType.
+    The inner layout follows the official App capture on 2026-11-14 (handoff doc section 10.4): CRC16(core)(2LE) + core(2+4+4) + rate(4LE, fixed 16000) + name(32B), 48 bytes total.
     """
     if len(pcm) == 0 or len(pcm) % 2 != 0 or len(pcm) > TONE_MAX_BYTES:
         raise ValueError(f"PCM 数据无效: {len(pcm)} bytes")
