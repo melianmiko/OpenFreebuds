@@ -168,8 +168,15 @@ class OfbQtApplication(IOfbQtApplication):
         await self.tray.close()
         self.main_window.hide()
 
-        if self.ofb.role == "standalone":
-            await self.ofb.destroy()
+        # Exit must stop the manager even when this Qt process connected to an
+        # existing daemon as a client; otherwise the background process survives.
+        if self.ofb is not None:
+            try:
+                await self.ofb.destroy()
+            except Exception:
+                # destroy() tears down the RPC server before it can answer the
+                # request, so a connection error here is expected.
+                log.exception("Failed to stop manager on exit")
 
         return self._exit(ret_code)
 
