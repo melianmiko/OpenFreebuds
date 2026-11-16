@@ -4,7 +4,9 @@ from PyQt6.QtGui import QAction
 from qasync import asyncSlot
 
 from openfreebuds import IOpenFreebuds, OfbEventKind
+from openfreebuds.utils.stupid_rpc import RemoteError
 from openfreebuds_backend.exception import OfbBackendDependencyMissingError
+from openfreebuds_qt.app.dialog.error_dialog import OfbQtErrorDialog
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.generic import IOfbTrayIcon, IOfbQtApplication
 from openfreebuds_qt.tray.battery import battery_levels, battery_menu_text
@@ -13,8 +15,11 @@ from openfreebuds_qt.tray.menu_anc_level import OfbDeviceAncLevelTrayMenu
 from openfreebuds_qt.tray.menu_dual_connect import OfbDeviceDualConnectTrayMenu
 from openfreebuds_qt.tray.menu_equalizer import OfbDeviceEqualizerTrayMenu
 from openfreebuds_qt.tray.menu_generic import OfbQtTrayMenuCommon
+from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.utils.core_event import OfbCoreEvent
 from openfreebuds_qt.utils.report_tool import OfbQtReportTool
+
+log = create_logger("OfbQtTrayMenu")
 
 
 class OfbQtTrayMenu(OfbQtTrayMenuCommon):
@@ -200,19 +205,36 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
                                                     visible=False,
                                                     checked=False)
 
+    async def _handle_shortcut_error(self, error: Exception):
+        """Report a tray action failure without tearing down the application.
+
+        RPC calls wrap server exceptions in RemoteError, so a dependency missing on
+        the manager side arrives as RemoteError(class_name=...). Match that too.
+        """
+        dependency = isinstance(error, OfbBackendDependencyMissingError) or (
+            isinstance(error, RemoteError)
+            and error.class_name == "OfbBackendDependencyMissingError"
+        )
+        if dependency and len(error.args) >= 2:
+            await OfbQtDependencyMissingDialog(self, list(error.args)).get_user_response()
+            return
+
+        log.exception("Tray shortcut failed", exc_info=error)
+        await OfbQtErrorDialog(self.ctx.main_window).get_user_response(str(error))
+
     @asyncSlot()
     async def do_disconnect(self):
         try:
             await self.ofb.run_shortcut("disconnect", no_catch=True)
-        except OfbBackendDependencyMissingError as e:
-            await OfbQtDependencyMissingDialog(self, list(e.args)).get_user_response()
+        except Exception as e:
+            await self._handle_shortcut_error(e)
 
     @asyncSlot()
     async def do_connect(self):
         try:
             await self.ofb.run_shortcut("connect", no_catch=True)
-        except OfbBackendDependencyMissingError as e:
-            await OfbQtDependencyMissingDialog(self, list(e.args)).get_user_response()
+        except Exception as e:
+            await self._handle_shortcut_error(e)
 
     def do_settings(self):
         if self.ctx.main_window.isVisible():
