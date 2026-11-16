@@ -141,6 +141,23 @@ def test_long_source_keeps_full_waveform_and_allows_late_selection(app):
         dlg.cleanup()
 
 
+def test_clamped_box_values_snap_back_to_waveform(app):
+    """A typed value outside the allowed window must not stay ahead of the actual handles."""
+    # 100000 samples is 5.97 s: the start handle stops at total - 0.2 s and the end at 5.73 s.
+    dlg = OfbQtToneEditorDialog(None, np.zeros(100000, dtype="<i2"))
+    try:
+        dlg.start_box.setValue(5.77)
+        dlg.start_box.setValue(5.80)   # Clamped to the same sample as 5.77, so no range_changed signal
+        assert abs(dlg.start_box.value() - dlg.waveform.start / TONE_SAMPLE_RATE) < 0.006
+
+        dlg.start_box.setValue(0.0)
+        dlg.end_box.setValue(5.73)
+        dlg.end_box.setValue(5.90)     # Clamped to the same 96000-sample end
+        assert abs(dlg.end_box.value() - dlg.waveform.end / TONE_SAMPLE_RATE) < 0.006
+    finally:
+        dlg.cleanup()
+
+
 def test_done_stops_preview_audio(app):
     """OK, Cancel, Esc and the title-bar close all must stop the editor preview."""
     calls = []

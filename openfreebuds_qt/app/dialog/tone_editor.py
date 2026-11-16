@@ -427,7 +427,13 @@ class OfbQtToneEditorDialog(QDialog):
     def _on_boxes_changed(self):
         start = int(self.start_box.value() * TONE_SAMPLE_RATE)
         end = int(self.end_box.value() * TONE_SAMPLE_RATE)
+        old_range = (self.waveform.start, self.waveform.end)
         self.waveform.set_range(start, end)
+        # set_range clamps values (min length, max length, total duration). If the
+        # clamped range is identical to the old one it emits nothing, so the edited
+        # box would keep an out-of-range text; resync explicitly in that case.
+        if (self.waveform.start, self.waveform.end) == old_range:
+            self._on_range_changed(self.waveform.start, self.waveform.end)
 
     # --- Loudness gain -----------------------------------------------
     @property
