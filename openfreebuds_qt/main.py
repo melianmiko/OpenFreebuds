@@ -26,6 +26,7 @@ from openfreebuds_qt.utils.mpris.service import OfbQtMPRISHelperService
 from openfreebuds_qt.utils.updater.service import OfbQtUpdaterService
 
 log = create_logger("OfbQtApplication")
+EXIT_SHUTDOWN_TIMEOUT = 6.0
 
 
 class OfbQtApplication(IOfbQtApplication):
@@ -171,12 +172,18 @@ class OfbQtApplication(IOfbQtApplication):
         # Exit must stop the manager even when this Qt process connected to an
         # existing daemon as a client; otherwise the background process survives.
         if self.ofb is not None:
-            try:
-                await self.ofb.destroy()
-            except Exception:
-                # destroy() tears down the RPC server before it can answer the
-                # request, so a connection error here is expected.
-                log.exception("Failed to stop manager on exit")
+            destroy_task = asyncio.create_task(self.ofb.destroy())
+            done, pending = await asyncio.wait({destroy_task}, timeout=EXIT_SHUTDOWN_TIMEOUT)
+            if pending:
+                destroy_task.cancel()
+                log.warning("Manager did not stop in time, exiting anyway")
+            else:
+                try:
+                    destroy_task.result()
+                except Exception:
+                    # destroy() tears down the RPC server before it can answer the
+                    # request; a connection error here is expected.
+                    log.exception("Failed to stop manager on exit")
 
         return self._exit(ret_code)
 

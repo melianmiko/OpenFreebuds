@@ -16,6 +16,7 @@ from openfreebuds.utils.logger import create_logger, get_full_log
 from openfreebuds.utils.stupid_rpc import rpc
 
 log = create_logger("OfbManager")
+SHUTDOWN_TIMEOUT = 3.0
 
 
 class OfbManager(IOpenFreebuds):
@@ -70,7 +71,9 @@ class OfbManager(IOpenFreebuds):
         await self.stop(IOpenFreebuds.STATE_DESTROYED)
         if self.server_task is not None:
             self.server_task.cancel("stop() requested")
-            await self.server_task
+            done, pending = await asyncio.wait({self.server_task}, timeout=SHUTDOWN_TIMEOUT)
+            if pending:
+                log.warning("RPC server did not stop in time")
         log.info("Bye-bye")
 
     @rpc
@@ -81,11 +84,23 @@ class OfbManager(IOpenFreebuds):
 
         log.debug("Stopping core...")
         self._task.cancel("stop() requested")
-        await self._task
+        done, pending = await asyncio.wait({self._task}, timeout=SHUTDOWN_TIMEOUT)
+        if pending:
+            # A driver init/recv call may ignore cancellation; do not block exit forever.
+            log.warning("Main loop did not stop in time")
 
         if self._driver is not None:
             log.debug("Stopping driver...")
-            await self._driver.stop()
+            stop_task = asyncio.create_task(self._driver.stop())
+            done, pending = await asyncio.wait({stop_task}, timeout=SHUTDOWN_TIMEOUT)
+            if pending:
+                log.warning("Driver did not stop in time")
+                stop_task.cancel()
+            else:
+                try:
+                    stop_task.result()
+                except Exception:
+                    log.exception("Driver stop failed")
 
         self._driver = None
         self._task = None

@@ -14,7 +14,7 @@
 - [Change] Trim the bundled `tone_config.json` to the official catalog and remove the personal custom presets 100-145. Id 14 is now explicitly classified as a bundled custom preset; a legacy id 14 already present in built-in storage migrates to the custom layer and remains editable/deletable.
 - [Feature] Treat entries removed from the current official Config as custom. Id 14, which came from an old bundled package but is absent from the current official Config, is editable/deletable; real official entries remain read-only.
 - [Feature] Add a prompt-tone editor with waveform display, two-handle trimming, playback preview, manual/automatic loudness gain and bilingual naming. Output is signed 16-bit / 16755 Hz / mono PCM, capped at the device limit.
-- [Fix] Tray "Leave application" now stops the manager in client mode as well as standalone mode, and the daemon exits when its RPC server task ends, so no background process is left behind.
+- [Fix] Tray "Leave application" now stops the manager in client mode as well as standalone mode, and the daemon exits when its RPC server task ends, so no background process is left behind. Shutdown waits are bounded so a stuck driver cannot keep the Qt process alive after its window closes.
 - [Fix] Tone editor start/end fields stay in sync with the waveform handles after clamping. Typing a value that maps to the same clamped range no longer leaves a stale number in the box.
 - [Fix] Closing the tone editor or the main window stops any active preview playback and releases the temporary WAV file. Editor close is handled in `done()`, covering OK, Cancel, Esc and the title-bar close button.
 - [Fix] Tray Connect/Disconnect failures no longer terminate the application. RPC dependency errors are recognized across the manager boundary and open the dependency dialog; other failures open the error dialog and leave the tray running.
@@ -28,7 +28,7 @@
 - [Fix] Close the SPP socket explicitly on connect timeout or failure and wait for the old endpoint to be released before reconnecting. This removes the Windows 10048 "address already in use" loop when switching devices.
 - [Fix] Capture all inbound frames for prompt-tone proto2 upload instead of filtering by command, and tolerate adapters/devices that return a null host name during Windows Bluetooth enumeration.
 - [i18n] Add and update strings for English, Simplified Chinese, German, Spanish, Brazilian Portuguese, Russian and Turkish, including the prompt-tone preview/apply actions and the FreeClip 2 S naming.
-- [Tests] Add protocol, library, editor, cloud-sync and tray-menu regression tests. The full suite passes with 218 passed and 1 skipped.
+- [Tests] Add protocol, library, editor, cloud-sync and tray-menu regression tests. The full suite passes with 219 passed and 1 skipped.
 - [Maintenance] Normalize Python comments and docstrings to English throughout the changed code. Local-only Windows launchers, the broken translation backup and the generated prompt-tone archive are kept outside the upstream tree.
 - [Docs] Add the FreeBuds 5 device page and update the FreeClip / FreeClip 2 pages with tested behavior and capability notes.
 
