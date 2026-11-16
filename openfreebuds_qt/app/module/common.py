@@ -16,3 +16,7 @@ class OfbQtCommonModule(QWidget):
 
     async def update_ui(self, event: OfbCoreEvent):
         pass
+
+    def stop_preview_audio(self):
+        """Stop module-owned preview playback; called when the main window hides."""
+        pass

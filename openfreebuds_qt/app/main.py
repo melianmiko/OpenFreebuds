@@ -239,5 +239,11 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
 
     def hideEvent(self, e):
         e.accept()
+        for mod in self._ui_modules:
+            mod.stop_preview_audio()
+        # The tone editor is a modal child; stop its preview too when the main window hides.
+        from openfreebuds_qt.app.dialog.tone_editor import OfbQtToneEditorDialog
+        for dialog in self.findChildren(OfbQtToneEditorDialog):
+            dialog.cleanup()
         if self._ui_update_task is not None:
             self._ui_update_task.cancel()

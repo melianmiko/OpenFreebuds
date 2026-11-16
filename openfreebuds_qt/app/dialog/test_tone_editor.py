@@ -139,3 +139,21 @@ def test_long_source_keeps_full_waveform_and_allows_late_selection(app):
         assert dlg.selection.size == TONE_MAX_SAMPLES
     finally:
         dlg.cleanup()
+
+
+def test_done_stops_preview_audio(app):
+    """OK, Cancel, Esc and the title-bar close all must stop the editor preview."""
+    calls = []
+
+    class _FakePlayer:
+        def stop(self):
+            calls.append("stop")
+
+        def setSource(self, _source):
+            calls.append("clear")
+
+    dlg = OfbQtToneEditorDialog(None, np.zeros(8000, dtype="<i2"))
+    dlg._player = _FakePlayer()
+    dlg.done(0)
+
+    assert calls[:2] == ["stop", "clear"]

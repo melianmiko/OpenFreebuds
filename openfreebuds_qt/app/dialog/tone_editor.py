@@ -578,6 +578,12 @@ class OfbQtToneEditorDialog(QDialog):
             self.tr("Pause") if state == self._player.PlaybackState.PlayingState else self.tr("Play"))
 
     # --- Result ------------------------------------------------------
+    def done(self, result: int):
+        # Every close path (OK, Cancel, Esc, title-bar close) goes through done();
+        # stop the preview before the dialog disappears so audio never outlives it.
+        self.cleanup()
+        super().done(result)
+
     def cleanup(self):
         if hasattr(self, "_player"):
             self._player.stop()

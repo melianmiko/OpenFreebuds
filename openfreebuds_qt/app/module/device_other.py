@@ -572,6 +572,19 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
             return None
         return self.tone_library.find(int(tone_id))
 
+    def stop_preview_audio(self):
+        """Stop the selected-tone preview and release its temporary WAV when the window hides."""
+        player = getattr(self, "_preview_player", None)
+        if player is not None:
+            player.stop()
+            player.setSource(QUrl())
+        if self._preview_tmp is not None:
+            try:
+                self._preview_tmp.unlink(missing_ok=True)
+            except OSError:
+                pass
+            self._preview_tmp = None
+
     def on_box_tone_preview(self):
         """Preview the selected tone locally without going through the earbuds; clicking again while playing stops it."""
         try:
