@@ -28,7 +28,7 @@
 - [Fix] Close the SPP socket explicitly on connect timeout or failure and wait for the old endpoint to be released before reconnecting. This removes the Windows 10048 "address already in use" loop when switching devices.
 - [Fix] Capture all inbound frames for prompt-tone proto2 upload instead of filtering by command, and tolerate adapters/devices that return a null host name during Windows Bluetooth enumeration.
 - [i18n] Add and update strings for English, Simplified Chinese, German, Spanish, Brazilian Portuguese, Russian and Turkish, including the prompt-tone preview/apply actions and the FreeClip 2 S naming.
-- [Tests] Add protocol, library, editor, cloud-sync and tray-menu regression tests. The full suite passes with 219 passed and 1 skipped.
+- [Tests] Add protocol, library, editor, cloud-sync and tray-menu regression tests. The full suite passes with 220 passed and 1 skipped.
 - [Maintenance] Normalize Python comments and docstrings to English throughout the changed code. Local-only Windows launchers, the broken translation backup and the generated prompt-tone archive are kept outside the upstream tree.
 - [Docs] Add the FreeBuds 5 device page and update the FreeClip / FreeClip 2 pages with tested behavior and capability notes.
 
