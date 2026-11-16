@@ -32,7 +32,9 @@ CLOUD_BASE = "https://smarthome-drcn.dbankcdn.cn/device/guide/AAM001"
 
 # 100-179 are bundled but behave as user-editable/deletable custom tones; the UI and library
 # no longer list them separately as built-in custom effects.
-PRESET_CUSTOM_ID_RANGES = ((100, 179),)
+# Id 14 is kept as a legacy bundled preset: the current official Config no longer contains
+# it, so it must follow the custom-layer rules instead of being exposed as read-only official.
+PRESET_CUSTOM_ID_RANGES = ((14, 14), (100, 179))
 
 
 def is_custom_tone_id(tone_id: int) -> bool:

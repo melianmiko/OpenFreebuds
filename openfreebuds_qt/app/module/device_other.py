@@ -1,4 +1,6 @@
+import asyncio
 import json
+import logging
 import os
 import tempfile
 import wave
@@ -33,6 +35,7 @@ HEAD_ACTIONS = ["none", "answer", "reject"]
 ADAPTIVE_VOLUME_LEVELS = ["low", "default", "high"]
 
 BOX_TONE_VOLUME_DEBOUNCE_MS = 300
+log = logging.getLogger("OfbQtDeviceOtherSettingsModule")
 
 # Upload status uses stable state codes; only English source strings live here, display goes through self.tr()
 UPLOAD_STATUS_TEXT = {
@@ -165,6 +168,8 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
 
         # Local tone library: the UI only displays/triggers; all reads/writes go through ToneLibrary
         self.tone_library = ToneLibrary().ensure()
+        self._tone_bootstrap_started = False
+        self._tone_bootstrap_task = None
         self.tone_entries = []
         self.box_tone_select.currentIndexChanged.connect(self.on_tone_selection_changed)
         self.box_tone_preview.clicked.connect(self.on_box_tone_preview)
@@ -220,6 +225,13 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                     or spatial_audio_visible or adaptive_volume_visible
                     or head_control_visible or drop_reminder_visible or box_tone_visible
                 )
+
+                if box_tone_visible and not self._tone_bootstrap_started:
+                    # First time this device exposes charging-case tones: fetch missing cloud
+                    # catalog/audio resources on a worker thread, then rebuild the combo.
+                    self._tone_bootstrap_started = True
+                    self._tone_bootstrap_task = asyncio.create_task(
+                        self._bootstrap_tone_library())
 
             if event.is_changed("config", "auto_pause"):
                 with blocked_signals(self.auto_pause_toggle):
@@ -439,6 +451,19 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
             await self.ofb.set_property("config", "box_tone_lid_volume", str(volume))
 
     # ---- Tone library ------------------------------------------------
+
+    async def _bootstrap_tone_library(self):
+        """Fill missing official catalog/audio resources without blocking the Qt event loop."""
+        try:
+            result = await asyncio.to_thread(self.tone_library.sync_official_if_needed)
+        except Exception:
+            log.exception("Tone library bootstrap failed")
+            return
+
+        if result.offline:
+            log.warning("Tone library bootstrap is offline; keeping local resources")
+        if result.added or result.updated or result.pcm_written:
+            await self.refresh_tone_list()
 
     async def refresh_tone_list(self):
         """Rebuild the combo: `id: *display name`; * marks the device's current box_tone_id."""
@@ -774,7 +799,7 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
     async def on_tone_sync_config(self):
         async with qt_error_handler("OfbQtDeviceOtherSettingsModule_SyncToneCatalog", self.ctx):
             try:
-                result = self.tone_library.refresh_official_config()
+                result = await asyncio.to_thread(self.tone_library.refresh_official_config)
             except (ToneLibraryError, OSError, ValueError) as e:
                 self._warn(str(e))
                 return
@@ -787,7 +812,7 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
     async def on_tone_sync_audio(self):
         async with qt_error_handler("OfbQtDeviceOtherSettingsModule_SyncToneAudio", self.ctx):
             try:
-                result = self.tone_library.refresh_official_tones()
+                result = await asyncio.to_thread(self.tone_library.refresh_official_tones)
             except (ToneLibraryError, OSError, ValueError) as e:
                 self._warn(str(e))
                 return

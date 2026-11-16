@@ -2,9 +2,11 @@
 import io
 import json
 import zipfile
+from pathlib import Path
 
 import pytest
 
+import openfreebuds.driver.huawei.tone_library as tone_library_module
 from openfreebuds.driver.huawei.prompt_tone import TONE_MAX_BYTES, is_custom_tone_id
 from openfreebuds.driver.huawei.tone_library import (
     CUSTOM_SUPPORT,
@@ -25,7 +27,7 @@ def test_ensure_seeds_builtin_config(tmp_path):
     assert lib.tones_dir.is_dir()
     raw = json.loads(lib.config_path.read_text(encoding="utf-8"))
     assert raw["version"] == 3
-    assert len(lib.entries()) == 66
+    assert len(lib.entries()) == 20
 
 
 def test_first_custom_id_is_in_100_range(tmp_path):
@@ -59,7 +61,7 @@ def test_reserved_ids_migrate_to_end_of_100_range(tmp_path):
     """Entries historically in 50-99 are shifted to the end of 100-199 by ensure, preserving old id order."""
     lib = make_library(tmp_path)
     raw = json.loads(lib.custom_config_path.read_text(encoding="utf-8"))
-    max_id = max(int(e["id"]) for e in raw["data"])
+    max_id = max([int(e["id"]) for e in raw["data"] if int(e["id"]) >= 100] or [99])
     raw["data"].append({"id": 55, "name": "Old55", "zhCn": "旧五五", "support": "custom"})
     raw["data"].append({"id": 52, "name": "Old52", "zhCn": "旧五二", "support": "custom"})
     lib.custom_config_path.write_text(json.dumps(raw, ensure_ascii=False), encoding="utf-8")
@@ -90,7 +92,7 @@ def test_add_tone(tmp_path):
 
     entries = lib.entries()
     custom = [e for e in entries if lib.is_user_custom(e)]
-    assert len(custom) == 47  # 46 bundled custom tones + 1 user-created tone
+    assert len(custom) == 2  # Bundled id 14 + 1 user-created tone
     assert [e.id for e in custom if e.id == entry.id] == [entry.id]
     assert custom[-1].display_name == "我的铃声"
     # The custom layer writes only official fields; the display name goes to zhCn (the official App reads it too)
@@ -202,10 +204,11 @@ def test_preset_custom_ids_migrate_to_custom(tmp_path):
 
     assert all(not is_custom_tone_id(e["id"]) for e in builtin["data"])
     assert any(is_custom_tone_id(e["id"]) for e in custom["data"])
-    assert len(lib.entries()) == 66
+    assert len(lib.entries()) == 20
 
-    lib.delete(100)
-    assert lib.find(100) is None
+    assert lib.is_user_custom(lib.find(14))
+    lib.delete(14)
+    assert lib.find(14) is None
 
 
 # --- Three-layer separation (official / custom) --------------------------
@@ -233,7 +236,7 @@ def test_entries_merge_official_then_custom(tmp_path):
     entries = lib.entries()
     assert entries[0].id == 0                 # Official layer first, original order preserved
     assert 100 <= entries[-1].id <= 199       # Custom layer after it
-    assert len(entries) == 67
+    assert len(entries) == 21
 
 
 def test_pcm_file_layers(tmp_path):
@@ -258,7 +261,7 @@ def test_refresh_keeps_custom_layer(tmp_path):
     assert lib.find(mine.id).name == "Mine"   # Custom layer untouched
     assert (lib.custom_tones_dir / "Mine.pcm").is_file()
     assert (lib.official_tones_dir / "NewTone.pcm").is_file()
-    assert len(lib.entries()) == 68           # 66 built-in + 1 new official + 1 custom
+    assert len(lib.entries()) == 22           # 19 built-in + 1 legacy custom + 1 new official + 1 custom
 
 
 def test_refresh_updates_existing_name_in_place(tmp_path):
@@ -299,8 +302,8 @@ def test_official_layer_mirrors_cloud_verbatim(tmp_path):
     raw = json.loads(lib.official_config_path.read_text(encoding="utf-8"))
     assert [e["id"] for e in raw["data"]] == [4]
     assert [e["id"] for e in raw["officialData"]] == [200]
-    # The merged view shown by the UI still contains the 66 built-in entries
-    assert len([e for e in lib.entries() if not lib.is_user_custom(e)]) == 20
+    # The merged view shown by the UI still contains the 19 built-in official entries
+    assert len([e for e in lib.entries() if not lib.is_user_custom(e)]) == 19
 
 
 def test_refresh_tones_writes_pcm_files(tmp_path):
@@ -350,4 +353,88 @@ def test_migrate_legacy_layout(tmp_path):
     assert (lib.custom_tones_dir / "Mine.pcm").is_file()
     assert (root / "legacy_backup" / "promptToneConfig" / "tone_config.json").is_file()
     assert not legacy_cfg_dir.exists()        # The old layout has moved as a whole
+
+
+# --- Cloud bootstrap / bundled catalog ---------------------------------
+
+def test_bundled_config_has_no_personal_custom_tones():
+    asset = Path(__file__).resolve().parents[3] / "assets" / "tone_config.json"
+    raw = json.loads(asset.read_text(encoding="utf-8"))
+    ids = [int(e["id"]) for e in raw.get("data", [])]
+    assert not any(100 <= tone_id <= 145 for tone_id in ids)
+    legacy = [e for e in raw["data"] if int(e["id"]) == 14][0]
+    assert legacy["support"] == CUSTOM_SUPPORT
+
+
+def test_local_status_reports_missing_official_resources(tmp_path):
+    lib = make_library(tmp_path)
+    missing_config, missing_pcm_ids = lib.local_status()
+    assert missing_config is True
+    assert 4 in missing_pcm_ids
+    assert 0 not in missing_pcm_ids          # Id 0 is the non-transferable built-in tone
+    assert lib.needs_official_sync() is True
+
+
+def test_sync_fills_missing_catalog_and_pcm(tmp_path):
+    lib = make_library(tmp_path)
+    names = [entry.name for entry in lib.official_entries()]
+    config = _config_zip([{"id": 4, "name": "Bongo", "zhCn": "邦戈手鼓"}])
+    tones = _tones_zip(names)
+    result = lib.sync_official_if_needed(
+        config_bytes=config, tones_bytes=tones,
+    )
+
+    assert result.offline is False
+    assert result.skipped is False
+    assert result.missing_config is True
+    assert result.added == [4]
+    assert result.pcm_written
+    assert lib.needs_official_sync() is False
+
+    again = lib.sync_official_if_needed(config_bytes=config, tones_bytes=tones)
+    assert again.skipped is True
+
+
+def test_sync_tones_only_when_catalog_exists(tmp_path):
+    lib = make_library(tmp_path)
+    lib.refresh_official_config(
+        config_bytes=_config_zip([{"id": 4, "name": "Bongo", "zhCn": "邦戈手鼓"}]))
+    names = [entry.name for entry in lib.official_entries()]
+
+    result = lib.sync_official_if_needed(tones_bytes=_tones_zip(names))
+    assert result.missing_config is False
+    assert result.skipped is False
+    assert result.pcm_written
+    assert lib.needs_official_sync() is False
+
+
+def test_sync_offline_is_tolerant_and_throttled(tmp_path, monkeypatch):
+    lib = make_library(tmp_path)
+
+    def fail(**kwargs):
+        raise OSError("offline")
+
+    monkeypatch.setattr(lib, "refresh_official_config", fail)
+
+    first = lib.sync_official_if_needed()
+    assert first.offline is True
+    assert first.skipped is False
+
+    second = lib.sync_official_if_needed()
+    assert second.skipped is True
+
+    forced = lib.sync_official_if_needed(force=True)
+    assert forced.offline is True
+
+
+def test_ensure_without_bundled_asset_is_usable(tmp_path, monkeypatch):
+    monkeypatch.setattr(tone_library_module, "BUILTIN_CONFIG_PATH",
+                        tmp_path / "missing_tone_config.json")
+    lib = ToneLibrary(root=tmp_path / "lib").ensure()
+
+    assert lib.builtin_config_path.is_file()
+    assert json.loads(lib.builtin_config_path.read_text(encoding="utf-8"))["data"] == []
+    assert lib.entries() == []
+    assert lib.needs_official_sync() is True
+
 

@@ -1,11 +1,13 @@
 """Local prompt-tone library (PC side only; decoupled from earbud transfer).
 Three-layer layout (second refactor, 2026-11-14: official config follows upstream, local additions are separate): builtin/promptToneConfig/tone_config.json is the APK built-in catalog (static, bundled, offline); official mirrors the cloud package; custom holds user edits.
+`ensure()` never performs network I/O. Call `sync_official_if_needed()` or `bootstrap()` to fill a missing official catalog or PCM set from the cloud; those calls are throttled and offline-tolerant.
 """
 import io
 import json
 import logging
 import re
 import shutil
+import time
 import urllib.request
 import zipfile
 from dataclasses import dataclass, field
@@ -31,6 +33,8 @@ BUILTIN_CONFIG_PATH = Path(__file__).resolve().parents[2] / "assets" / "tone_con
 OFFICIAL_CONFIG_URL = f"{CLOUD_BASE}/00000A/00000A_promptToneConfig.zip"
 OFFICIAL_TONES_URL = f"{CLOUD_BASE}/00000A/00000A_promptTone.zip"
 DOWNLOAD_TIMEOUT = 30
+SYNC_MARKER_NAME = ".official_sync"
+SYNC_RETRY_SECONDS = 6 * 60 * 60
 
 # English name: starts with a letter/digit; only letters, digits, spaces, underscores and hyphens; no non-ASCII characters
 NAME_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _-]{0,31}$")
@@ -47,6 +51,15 @@ class RefreshResult:
     added: list[int] = field(default_factory=list)
     updated: list[int] = field(default_factory=list)
     pcm_written: list[str] = field(default_factory=list)
+
+
+@dataclass
+class SyncResult(RefreshResult):
+    """Automatic bootstrap result: skipped means the cooldown or complete local data prevented a download."""
+    offline: bool = False
+    skipped: bool = False
+    missing_config: bool = False
+    missing_pcm_ids: list[int] = field(default_factory=list)
 
 
 @dataclass
@@ -87,6 +100,11 @@ class ToneLibrary:
     def custom_tones_dir(self) -> Path:
         return self.custom_root / "promptTone"
 
+    @property
+    def sync_marker_path(self) -> Path:
+        """Timestamp of the last automatic cloud sync attempt."""
+        return self.root / SYNC_MARKER_NAME
+
     # Legacy name kept: points to the custom layer (create/update/delete all land there)
     @property
     def config_dir(self) -> Path:
@@ -116,8 +134,13 @@ class ToneLibrary:
                 raw = self._read_raw(src)
                 self._write_raw(self.builtin_config_path, raw)
                 self._write_raw(self.official_config_path, self._empty_raw())
-            else:
+            elif BUILTIN_CONFIG_PATH.is_file():
                 shutil.copyfile(BUILTIN_CONFIG_PATH, self.builtin_config_path)
+                self._write_raw(self.official_config_path, self._empty_raw())
+            else:
+                # The packaged asset is missing: keep the library usable offline and let the
+                # explicit cloud bootstrap fill the official layer later.
+                self._write_raw(self.builtin_config_path, self._empty_raw())
                 self._write_raw(self.official_config_path, self._empty_raw())
 
         if not self.official_config_path.exists():
@@ -182,7 +205,7 @@ class ToneLibrary:
             kept = []
             for item in raw.get("data", []):
                 tone_id = int(item["id"])
-                if not is_custom_tone_id(tone_id):
+                if not (is_custom_tone_id(tone_id) or item.get("support") == CUSTOM_SUPPORT):
                     kept.append(item)
                     continue
                 item["support"] = CUSTOM_SUPPORT
@@ -569,6 +592,106 @@ class ToneLibrary:
         tones = self.refresh_official_tones(tones_bytes=tones_bytes, timeout=timeout)
         cfg.pcm_written = tones.pcm_written
         return cfg
+
+    # --- Automatic cloud bootstrap ------------------------------------
+    def _official_total(self) -> int:
+        merged = self.merged_official_raw()
+        return len(merged["data"]) + len(merged["officialData"])
+
+    def _last_sync_time(self) -> float:
+        try:
+            return float(self.sync_marker_path.read_text(encoding="utf-8").strip())
+        except (OSError, ValueError):
+            return 0.0
+
+    def _write_sync_marker(self) -> None:
+        try:
+            self.sync_marker_path.write_text(
+                f"{int(time.time())}\n", encoding="utf-8")
+        except OSError as exc:
+            log.warning("Unable to write tone sync marker: %s", exc)
+
+    def local_status(self) -> tuple[bool, list[int]]:
+        """Return (official catalog missing, official entries whose PCM is missing)."""
+        self.ensure()
+        official = self._read_official()
+        missing_config = not official.get("data") and not official.get("officialData")
+        missing_pcm_ids = []
+        for entry in self.official_entries():
+            if self.is_user_custom(entry):
+                continue
+            if entry.id == 0:
+                # Id 0 is the earbuds' real built-in tone (select=0). It has no transferable PCM.
+                continue
+            if not (self.official_tones_dir / f"{entry.name}.pcm").is_file():
+                missing_pcm_ids.append(entry.id)
+        return missing_config, sorted(set(missing_pcm_ids))
+
+    def needs_official_sync(self) -> bool:
+        missing_config, missing_pcm_ids = self.local_status()
+        return missing_config or bool(missing_pcm_ids)
+
+    def sync_official_if_needed(self, *, force: bool = False,
+                                timeout: int = DOWNLOAD_TIMEOUT,
+                                config_bytes: bytes | None = None,
+                                tones_bytes: bytes | None = None) -> SyncResult:
+        """Fetch the official catalog and/or audio package only when local data is missing.
+
+        The call is offline-tolerant: network and archive errors are logged and returned as
+        ``offline=True`` instead of escaping. A marker file throttles automatic attempts for
+        ``SYNC_RETRY_SECONDS``; use ``force=True`` to bypass it. ``config_bytes`` and
+        ``tones_bytes`` are optional dependency-injection hooks for bundled resources and tests.
+        """
+        self.ensure()
+        missing_config, missing_pcm_ids = self.local_status()
+        if not missing_config and not missing_pcm_ids:
+            return SyncResult(skipped=True, official_total=self._official_total())
+
+        last_sync = self._last_sync_time()
+        if not force and last_sync and time.time() - last_sync < SYNC_RETRY_SECONDS:
+            return SyncResult(skipped=True,
+                              official_total=self._official_total(),
+                              missing_config=missing_config,
+                              missing_pcm_ids=missing_pcm_ids)
+
+        result = SyncResult(official_total=self._official_total(),
+                            missing_config=missing_config,
+                            missing_pcm_ids=missing_pcm_ids)
+        try:
+            if missing_config:
+                cfg = self.refresh_official_config(
+                    config_bytes=config_bytes, timeout=timeout)
+                result.official_total = cfg.official_total
+                result.added = cfg.added
+                result.updated = cfg.updated
+                _, missing_pcm_ids = self.local_status()
+                result.missing_pcm_ids = missing_pcm_ids
+
+            if missing_pcm_ids:
+                tones = self.refresh_official_tones(
+                    tones_bytes=tones_bytes, timeout=timeout)
+                result.official_total = tones.official_total
+                result.pcm_written = tones.pcm_written
+        except (ToneLibraryError, OSError, ValueError) as exc:
+            result.offline = True
+            log.warning("Official tone sync skipped: %s", exc)
+        finally:
+            self._write_sync_marker()
+        return result
+
+    @classmethod
+    def bootstrap(cls, root: Path | None = None,
+                  timeout: int = DOWNLOAD_TIMEOUT,
+                  force: bool = False) -> "ToneLibrary":
+        """Open the library and fill missing official resources from the cloud.
+
+        Call this from a worker thread or coroutine when the caller cannot tolerate a
+        blocking network request; ``ensure()`` itself never performs network I/O.
+        """
+        library = cls(root=root) if root is not None else cls()
+        library.ensure()
+        library.sync_official_if_needed(timeout=timeout, force=force)
+        return library
 
     # --- Export -------------------------------------------------------
     def export_zip(self, dest: Path) -> Path:

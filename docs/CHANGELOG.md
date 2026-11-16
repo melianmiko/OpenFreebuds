@@ -10,6 +10,8 @@
 - [Feature] Rebuild charging-case tone settings on 0x2BB1 and 0x2BB4 feature 16: master switch, lid-open switch, lid-open volume and tone id. Single-byte writes are replaced with full 12-byte payload writes; devId is preserved from the device payload.
 - [Feature] Tone id 0 ("Unfold") is a real built-in tone: write feature16 with toneId=0 and select=0 only, never stream audio. Other ids use select=1 and the slot upload path.
 - [Feature] Add a three-layer local prompt-tone library: bundled built-in catalog, official cloud snapshot and user custom layer. Custom ids use 100-199, legacy 50-99 entries migrate forward, official refreshes are diffed against the previous snapshot, and export produces an official-compatible package.
+- [Feature] Add a cloud bootstrap fallback to `ToneLibrary`: when the official catalog or its PCM files are missing, `sync_official_if_needed()` downloads the missing resources, tolerates offline/network errors, and throttles retries with a six-hour marker. The settings UI starts this sync in a worker thread when charging-case tone controls become visible. `ensure()` itself stays offline-only.
+- [Change] Trim the bundled `tone_config.json` to the official catalog and remove the personal custom presets 100-145. Id 14 is now explicitly classified as a bundled custom preset; a legacy id 14 already present in built-in storage migrates to the custom layer and remains editable/deletable.
 - [Feature] Treat entries removed from the current official Config as custom. Id 14, which came from an old bundled package but is absent from the current official Config, is editable/deletable; real official entries remain read-only.
 - [Feature] Add a prompt-tone editor with waveform display, two-handle trimming, playback preview, manual/automatic loudness gain and bilingual naming. Output is signed 16-bit / 16755 Hz / mono PCM, capped at the device limit.
 - [Feature] Charging-case tone changes require both earbuds in the case. The backend refreshes 0x2B25 before reading in-case state, and the GUI re-reads feature 16 when both earbuds enter the case so the displayed tone is current.
@@ -21,7 +23,7 @@
 - [Fix] Close the SPP socket explicitly on connect timeout or failure and wait for the old endpoint to be released before reconnecting. This removes the Windows 10048 "address already in use" loop when switching devices.
 - [Fix] Capture all inbound frames for prompt-tone proto2 upload instead of filtering by command, and tolerate adapters/devices that return a null host name during Windows Bluetooth enumeration.
 - [i18n] Add and update strings for English, Simplified Chinese, German, Spanish, Brazilian Portuguese, Russian and Turkish, including the prompt-tone preview/apply actions and the FreeClip 2 S naming.
-- [Tests] Add protocol, library, editor and tray-menu regression tests. The full suite passes with 203 passed and 1 skipped.
+- [Tests] Add protocol, library, editor, cloud-sync and tray-menu regression tests. The full suite passes with 209 passed and 1 skipped.
 - [Maintenance] Normalize Python comments and docstrings to English throughout the changed code. Local-only Windows launchers, the broken translation backup and the generated prompt-tone archive are kept outside the upstream tree.
 - [Docs] Add the FreeBuds 5 device page and update the FreeClip / FreeClip 2 pages with tested behavior and capability notes.
 
