@@ -657,7 +657,7 @@ class OfbQtToneEditorDialog(QDialog):
         self.zoom_slider.setToolTip(self.tr("Zoom"))
         self.zoom_label = QLabel("100%", self)
         self.zoom_label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
-        self.zoom_label.setFixedWidth(64)
+        self.zoom_label.setFixedWidth(78)
         self.zoom_label.setToolTip(self.tr("Zoom"))
 
         self.start_box = QDoubleSpinBox(self)
@@ -825,7 +825,12 @@ class OfbQtToneEditorDialog(QDialog):
     def _on_view_changed(self, start: int, span: int):
         self.overview.update()
         zoom = self.waveform.zoom
-        self.zoom_label.setText(f"{zoom * 100:.0f}%")
+        percent = int(round(zoom * 100))
+        if percent >= 10000:
+            # Huge magnifications read better as a multiplier than as six-digit percentages
+            self.zoom_label.setText(f"{zoom:.2f}x")
+        else:
+            self.zoom_label.setText(f"{percent}%")
         low, high = 1.0, self.waveform.max_zoom
         self._syncing_zoom = True
         if high > low:

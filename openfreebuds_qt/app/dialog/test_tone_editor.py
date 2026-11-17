@@ -418,6 +418,19 @@ def test_plain_wheel_pans_and_ctrl_wheel_zooms(app):
     assert waveform.zoom > zoom_before
 
 
+def test_zoom_label_switches_to_multiplier_at_100x(app):
+    """Below 10000% the readout stays a percentage; 100x and above use a multiplier."""
+    dlg = OfbQtToneEditorDialog(None, np.zeros(100000, dtype="<i2"))
+    try:
+        dlg.waveform.resize(800, 200)
+        dlg.waveform.set_zoom(99.0)
+        assert dlg.zoom_label.text().endswith("%")
+        dlg.waveform.set_zoom(100.0)
+        assert dlg.zoom_label.text() == "100.00x"
+    finally:
+        dlg.cleanup()
+
+
 def test_layout_only_waveform_absorbs_extra_height(app):
     """Window height goes to the waveform; hint labels keep their natural height."""
     dlg = OfbQtToneEditorDialog(None, np.zeros(40000, dtype="<i2"))
