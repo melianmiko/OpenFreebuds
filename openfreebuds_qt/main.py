@@ -20,6 +20,7 @@ from openfreebuds_qt.constants import IGNORED_LOG_TAGS, I18N_PATH
 from openfreebuds_qt.generic import IOfbQtApplication
 from openfreebuds_qt.tray.main import OfbTrayIcon
 from openfreebuds_qt.utils import OfbQtDeviceAutoSelect, OfbQtHotkeyService, list_available_locales
+from openfreebuds_qt.utils.i18n import resolve_locale
 from openfreebuds_qt.utils.async_dialog import run_dialog_async
 from openfreebuds_qt.utils.automation import OfbQtAutomationService
 from openfreebuds_qt.utils.mpris.service import OfbQtMPRISHelperService
@@ -208,11 +209,8 @@ class OfbQtApplication(IOfbQtApplication):
 
         if locale == "auto":
             locale = QLocale.system().name()
-        if locale not in available_locales:
-            locale = locale.split("_")[0]
-            if locale not in available_locales:
-                locale = "en"
 
+        locale = resolve_locale(locale, available_locales)
         log.info(f"Going to use {locale} from {available_locales}")
         return locale
 

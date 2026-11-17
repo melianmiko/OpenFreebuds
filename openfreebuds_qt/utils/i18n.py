@@ -13,3 +13,34 @@ def list_available_locales():
         if file.name.endswith(".qm"):
             locales.append(file.name.split(".")[0])
     return locales
+
+
+def _normalize_locale(tag: str) -> str:
+    """Normalize Qt/system locale tags so zh_CN, zh-CN and zh-Hans-CN can be compared."""
+    return tag.replace("_", "-").lower()
+
+
+def resolve_locale(requested: str, available: list[str]) -> str:
+    """Pick the best available translation for a Qt locale tag.
+
+    Qt returns underscore tags such as ``zh_CN`` while the shipped .qm files use
+    ``zh-CN``; exact string matching therefore falls back to English even on a
+    Chinese system. Match case/separator-insensitively, then by language prefix.
+    """
+    wanted = _normalize_locale(requested)
+    for locale in available:
+        if _normalize_locale(locale) == wanted:
+            return locale
+
+    language = wanted.split("-")[0]
+    for locale in available:
+        if _normalize_locale(locale) == language:
+            return locale
+    for locale in available:
+        if _normalize_locale(locale).startswith(language + "-"):
+            return locale
+
+    for locale in available:
+        if _normalize_locale(locale) == "en":
+            return locale
+    return available[0] if available else "en"
