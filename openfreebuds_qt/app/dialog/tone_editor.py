@@ -797,9 +797,8 @@ class OfbQtToneEditorDialog(QDialog):
             return   # Not edited; committing would shift the range by the two-decimal rounding
         start = int(round(self.start_box.value() * TONE_SAMPLE_RATE))
         end = self.waveform.end
-        pad = int(round(0.5 * TONE_SAMPLE_RATE))
         if abs(end - start) > TONE_MAX_SAMPLES:
-            end = min(self.waveform.total, start + pad)
+            end = min(self.waveform.total, start + TONE_MAX_SAMPLES)
         elif end < start:
             start, end = end, start
         self.waveform.set_range(max(0, min(start, self.waveform.total)),
@@ -812,9 +811,8 @@ class OfbQtToneEditorDialog(QDialog):
             return
         end = int(round(self.end_box.value() * TONE_SAMPLE_RATE))
         start = self.waveform.start
-        pad = int(round(0.5 * TONE_SAMPLE_RATE))
         if abs(end - start) > TONE_MAX_SAMPLES:
-            start = max(0, end - pad)
+            start = max(0, end - TONE_MAX_SAMPLES)
         elif start > end:
             start, end = end, start
         self.waveform.set_range(max(0, min(start, self.waveform.total)),

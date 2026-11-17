@@ -298,7 +298,7 @@ def test_time_box_commits_on_finish_only(app):
 
 
 def test_start_box_pulls_end_handle_when_too_far(app):
-    """The typed start wins; a distant end handle is pulled to start + 0.5 s."""
+    """The typed start wins; a distant end handle is clamped to start + the 5.73 s limit."""
     rate = TONE_SAMPLE_RATE
     dlg = OfbQtToneEditorDialog(None, np.zeros(int(110 * rate), dtype="<i2"))
     try:
@@ -306,18 +306,18 @@ def test_start_box_pulls_end_handle_when_too_far(app):
         dlg.start_box.setValue(100.0)
         dlg.start_box.editingFinished.emit()
         assert abs(dlg.waveform.start / rate - 100.0) < 0.006
-        assert abs(dlg.waveform.end / rate - 100.5) < 0.012
+        assert abs(dlg.waveform.end / rate - 105.73) < 0.012
 
         dlg.waveform.set_range(int(108 * rate), int(108 * rate))
         dlg.start_box.setValue(100.0)
         dlg.start_box.editingFinished.emit()
-        assert abs(dlg.waveform.end / rate - 100.5) < 0.012
+        assert abs(dlg.waveform.end / rate - 105.73) < 0.012
     finally:
         dlg.cleanup()
 
 
 def test_end_box_pulls_start_handle_when_too_far(app):
-    """The typed end wins; a distant start handle is pulled to end - 0.5 s."""
+    """The typed end wins; a distant start handle is clamped to end - the 5.73 s limit."""
     rate = TONE_SAMPLE_RATE
     dlg = OfbQtToneEditorDialog(None, np.zeros(int(110 * rate), dtype="<i2"))
     try:
@@ -325,7 +325,7 @@ def test_end_box_pulls_start_handle_when_too_far(app):
         dlg.end_box.setValue(100.0)
         dlg.end_box.editingFinished.emit()
         assert abs(dlg.waveform.end / rate - 100.0) < 0.006
-        assert abs(dlg.waveform.start / rate - 99.5) < 0.012
+        assert abs(dlg.waveform.start / rate - 94.27) < 0.012
     finally:
         dlg.cleanup()
 
