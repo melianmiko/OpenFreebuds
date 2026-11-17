@@ -657,7 +657,7 @@ class OfbQtToneEditorDialog(QDialog):
         self.zoom_slider.setToolTip(self.tr("Zoom"))
         self.zoom_label = QLabel("100%", self)
         self.zoom_label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
-        self.zoom_label.setFixedWidth(78)
+        self.zoom_label.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.zoom_label.setToolTip(self.tr("Zoom"))
 
         self.start_box = QDoubleSpinBox(self)

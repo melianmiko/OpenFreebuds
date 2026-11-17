@@ -422,11 +422,17 @@ def test_zoom_label_switches_to_multiplier_at_100x(app):
     """Below 10000% the readout stays a percentage; 100x and above use a multiplier."""
     dlg = OfbQtToneEditorDialog(None, np.zeros(100000, dtype="<i2"))
     try:
-        dlg.waveform.resize(800, 200)
+        dlg.show()
+        dlg.resize(900, 600)
         dlg.waveform.set_zoom(99.0)
+        app.processEvents()
         assert dlg.zoom_label.text().endswith("%")
+        assert dlg.zoom_label.sizePolicy().horizontalPolicy() == QSizePolicy.Policy.Fixed
+        percent_width = dlg.zoom_label.width()
         dlg.waveform.set_zoom(100.0)
+        app.processEvents()
         assert dlg.zoom_label.text() == "100.00x"
+        assert dlg.zoom_label.width() > percent_width
     finally:
         dlg.cleanup()
 
