@@ -1,11 +1,62 @@
 from types import SimpleNamespace
 
 import pytest
+from PyQt6.QtWidgets import QApplication, QWidget
 
 from openfreebuds import IOpenFreebuds
 from openfreebuds.utils.stupid_rpc import RemoteError
 from openfreebuds_qt.tray.menu import OfbQtTrayMenu
 from openfreebuds_qt.utils.device_errors import spp_port_busy_message
+
+
+class _FakeConfig:
+    def get(self, section, key=None, default=None):
+        if section == "ui" and key in ("tray_show_equalizer", "tray_show_dual_connect"):
+            return True
+        return default
+
+    def set(self, *args):
+        pass
+
+    def save(self):
+        pass
+
+
+class _FakeOfb:
+    def __init__(self):
+        self.name = "A"
+        self.props = {}
+
+    async def get_state(self):
+        return IOpenFreebuds.STATE_CONNECTED
+
+    async def get_device_tags(self):
+        return self.name, f"addr-{self.name}"
+
+    async def get_property(self, group=None, prop=None, fallback=None):
+        if group is None:
+            return self.props
+        if group not in self.props:
+            return fallback
+        data = self.props[group]
+        if prop is None:
+            return data
+        return data.get(prop, fallback)
+
+    async def get_last_start_error(self):
+        return ""
+
+    async def set_property(self, *args):
+        return True
+
+
+def _qapp():
+    global _APP
+    _APP = QApplication.instance() or QApplication([])
+    return _APP
+
+
+_APP = None
 
 
 class _FakeAction:
@@ -158,3 +209,45 @@ async def test_failed_state_reports_port_busy_once(monkeypatch):
     await OfbQtTrayMenu._report_start_failure(fake, IOpenFreebuds.STATE_FAILED)
 
     assert calls == ["main"]
+
+
+@pytest.mark.asyncio
+async def test_refresh_masks_features_after_silent_device_switch(monkeypatch):
+    """The menu must never keep features that the current device lacks.
+
+    A device switch can happen without the tray processing a DEVICE_CHANGED event
+    (for example while the event loop is busy). Refreshing right before the menu is
+    shown must still rebuild the mask from the manager's current device.
+    """
+    _qapp()
+    monkeypatch.setattr(
+        "openfreebuds_qt.tray.menu.OfbQtConfigParser.get_instance",
+        classmethod(lambda cls: _FakeConfig()),
+    )
+
+    ofb = _FakeOfb()
+    menu = OfbQtTrayMenu(None, SimpleNamespace(main_window=QWidget(), ofb=ofb), ofb)
+
+    ofb.props = {
+        "anc": {"mode": "normal", "mode_options": "normal,cancellation,awareness",
+                "level": "0", "level_options": "0,1,2"},
+        "battery": {"global": 50},
+        "sound": {"equalizer_preset": "equalizer_preset_default",
+                  "equalizer_preset_options": "equalizer_preset_default"},
+        "dual_connect": {"preferred_device": "", "devices": "{}"},
+    }
+    await menu.refresh()
+
+    assert menu.equalizer_action.isVisible()
+    assert menu.dual_connect_action.isVisible()
+    assert all(action.isVisible() for action in menu.anc_mode_actions.values())
+
+    # Another device is now active, but no event reached the tray.
+    ofb.name = "B"
+    ofb.props = {}
+    await menu.refresh()
+
+    assert not menu.equalizer_action.isVisible()
+    assert not menu.dual_connect_action.isVisible()
+    assert not menu.anc_level_action.isVisible()
+    assert all(not action.isVisible() for action in menu.anc_mode_actions.values())

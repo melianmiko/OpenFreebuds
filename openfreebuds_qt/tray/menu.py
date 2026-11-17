@@ -98,7 +98,19 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
         self.add_item(self.tr("Bugreport…"), callback=self.do_bugreport)
         self.add_item(self.tr("Leave application"), callback=self.do_exit)
 
-    async def on_core_event(self, event: OfbCoreEvent, state: int):
+    async def refresh(self):
+        """Re-evaluate device-specific items from the current manager state.
+
+        Called right before the context menu is displayed, so a device switch cannot
+        leave the cached menu contents behind even if an event was missed. Opening the
+        menu must not repeat the start-failure notice that was already shown.
+        """
+        state = await self.ofb.get_state()
+        reported = self._start_failure_reported
+        await self.on_core_event(OfbCoreEvent(None), state, report_start_failure=False)
+        self._start_failure_reported = reported
+
+    async def on_core_event(self, event: OfbCoreEvent, state: int, report_start_failure: bool = True):
         device_changed = event.kind_match(OfbEventKind.DEVICE_CHANGED)
         if device_changed:
             self._reset_device_state()
@@ -156,7 +168,8 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
 
             self.first_time_render = False
 
-        await self._report_start_failure(state)
+        if report_start_failure:
+            await self._report_start_failure(state)
 
     async def _report_start_failure(self, state: int):
         """Explain a known driver start failure once per failure episode."""
