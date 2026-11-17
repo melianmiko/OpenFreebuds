@@ -29,6 +29,7 @@
 - [Fix] Connect/disconnect failures stay in dialogs and no longer terminate the tray app.
 - [Fix] "Leave application" stops the manager in both roles and exits the daemon cleanly.
 - [Fix] Show a dedicated warning when another Bluetooth app holds the port, once per outage.
+- [Fix] Follow the system language on systems that report locale names such as `zh_CN`, so Chinese UI and the first-run welcome screen no longer start in English.
 - [i18n] Update English, Simplified Chinese, German, Spanish, Brazilian Portuguese, Russian and Turkish strings.
 
 # 0.18.1
