@@ -17,7 +17,11 @@ from openfreebuds_qt.tray.menu_equalizer import OfbDeviceEqualizerTrayMenu
 from openfreebuds_qt.tray.menu_generic import OfbQtTrayMenuCommon
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.utils.core_event import OfbCoreEvent
-from openfreebuds_qt.utils.device_errors import SPP_PORT_BUSY, spp_port_busy_message, startup_error_code
+from openfreebuds_qt.utils.device_errors import (
+    SPP_PORT_BUSY,
+    show_spp_port_busy_dialog,
+    startup_error_code,
+)
 from openfreebuds_qt.utils.report_tool import OfbQtReportTool
 
 log = create_logger("OfbQtTrayMenu")
@@ -166,7 +170,7 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
         if reason != SPP_PORT_BUSY:
             return
         self._start_failure_reported = True
-        await OfbQtErrorDialog(self.ctx.main_window).get_user_response(spp_port_busy_message())
+        await show_spp_port_busy_dialog(self.ctx.main_window)
 
     def _reset_device_state(self):
         """Hide cached device-specific actions before the next device is read."""
@@ -234,7 +238,7 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
         the manager side arrives as RemoteError(class_name=...). Match that too.
         """
         if startup_error_code(error) == SPP_PORT_BUSY:
-            await OfbQtErrorDialog(self.ctx.main_window).get_user_response(spp_port_busy_message())
+            await show_spp_port_busy_dialog(self.ctx.main_window)
             return
 
         dependency = isinstance(error, OfbBackendDependencyMissingError) or (

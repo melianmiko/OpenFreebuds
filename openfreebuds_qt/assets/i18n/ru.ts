@@ -2153,5 +2153,13 @@
         <source>Connection failed. Check whether another app is occupying the Bluetooth port (such as Huawei PC Manager, Huawei Control Center or MagicPods).</source>
         <translation>Не удалось подключиться. Проверьте, не занят ли порт Bluetooth другим приложением (например, Huawei PC Manager, Huawei Control Center или MagicPods).</translation>
     </message>
+    <message>
+        <source>Connection failed</source>
+        <translation>Не удалось подключиться</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Закрыть</translation>
+    </message>
 </context>
 </TS>
