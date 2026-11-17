@@ -16,6 +16,7 @@
 - [Feature] Add a prompt-tone editor with waveform display, two-handle trimming, playback preview, manual/automatic loudness gain and bilingual naming. Output is signed 16-bit / 16755 Hz / mono PCM, capped at the device limit.
 - [Fix] Tray "Leave application" now stops the manager in client mode as well as standalone mode, and the daemon exits when its RPC server task ends, so no background process is left behind. Shutdown waits are bounded so a stuck driver cannot keep the Qt process alive after its window closes.
 - [Fix] Tone editor start/end fields stay in sync with the waveform handles after clamping. Typing a value that maps to the same clamped range no longer leaves a stale number in the box.
+- [Fix] Tone editor no longer enforces a 0.2 s minimum selection. Dragging one handle across the other swaps their roles and keeps the same handle under the pointer; overlapping handles choose the role from the drag direction. The 192000-sample PCM cap still applies.
 - [Fix] Closing the tone editor or the main window stops any active preview playback and releases the temporary WAV file. Editor close is handled in `done()`, covering OK, Cancel, Esc and the title-bar close button.
 - [Fix] Tray Connect/Disconnect failures no longer terminate the application. RPC dependency errors are recognized across the manager boundary and open the dependency dialog; other failures open the error dialog and leave the tray running.
 - [Fix] Long tone imports keep the full decoded source instead of truncating at 5.73 s. The editor defaults to the first maximum-length window but both handles and the start/end fields can select any later range; only the final selected range is capped at 192000 samples for preview, save and upload.
@@ -28,7 +29,7 @@
 - [Fix] Close the SPP socket explicitly on connect timeout or failure and wait for the old endpoint to be released before reconnecting. This removes the Windows 10048 "address already in use" loop when switching devices.
 - [Fix] Capture all inbound frames for prompt-tone proto2 upload instead of filtering by command, and tolerate adapters/devices that return a null host name during Windows Bluetooth enumeration.
 - [i18n] Add and update strings for English, Simplified Chinese, German, Spanish, Brazilian Portuguese, Russian and Turkish, including the prompt-tone preview/apply actions and the FreeClip 2 S naming.
-- [Tests] Add protocol, library, editor, cloud-sync and tray-menu regression tests. The full suite passes with 220 passed and 1 skipped.
+- [Tests] Add protocol, library, editor, cloud-sync and tray-menu regression tests. The full suite passes with 225 passed and 1 skipped.
 - [Maintenance] Normalize Python comments and docstrings to English throughout the changed code. Local-only Windows launchers, the broken translation backup and the generated prompt-tone archive are kept outside the upstream tree.
 - [Docs] Add the FreeBuds 5 device page and update the FreeClip / FreeClip 2 pages with tested behavior and capability notes.
 

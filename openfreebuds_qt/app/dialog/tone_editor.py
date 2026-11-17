@@ -1,5 +1,5 @@
 """Custom prompt-tone editor: waveform + two-handle trim + play/pause + loudness gain + Chinese/English naming.
-Trim cap 6 s (device PCM limit); output signed 16-bit / 16755 Hz / mono PCM.
+Selection has no minimum length; the saved PCM still caps at 6 s (device limit). Output signed 16-bit / 16755 Hz / mono PCM.
 Loudness gain: manual slider (-36...+36 dB in 0.1 dB steps) or 'auto gain' to raise the level without clipping.
 """
 import os
@@ -32,7 +32,6 @@ from openfreebuds.driver.huawei.prompt_tone import (
     peak_gain_db,
 )
 
-MIN_SECONDS = 0.2
 GAIN_MIN_DB = -36.0
 GAIN_MAX_DB = 36.0
 TONE_FULL_SCALE = 26213.0   # Full-scale reference: APK normalized peak (0.8 * 32767); waveform limits use the same scale
@@ -86,11 +85,22 @@ class ToneWaveform(QWidget):
         return np.abs(usable.reshape(bins, chunk)).max(axis=1).astype(np.float64)
 
     # --- State -------------------------------------------------------
-    def set_range(self, start: int, end: int):
-        min_len = int(MIN_SECONDS * TONE_SAMPLE_RATE)
-        max_len = TONE_MAX_SAMPLES
-        start = max(0, min(start, self.total - min_len))
-        end = max(start + min_len, min(end, self.total, start + max_len))
+    def set_range(self, start: int, end: int, active: str | None = None):
+        """Clamp a range to the source and the PCM cap without enforcing a minimum length.
+
+        active tells which handle the user is dragging, so when the cap is reached the
+        handle under the pointer stops instead of the other one moving unexpectedly.
+        """
+        start = max(0, min(start, self.total))
+        end = max(0, min(end, self.total))
+        if start > end:
+            # A text-box edit cannot invert the range; collapse it at the other handle.
+            start = end
+        if end - start > TONE_MAX_SAMPLES:
+            if active == "start":
+                start = end - TONE_MAX_SAMPLES
+            else:
+                end = start + TONE_MAX_SAMPLES
         if (start, end) != (self.start, self.end):
             self.start, self.end = start, end
             self.update()
@@ -108,9 +118,17 @@ class ToneWaveform(QWidget):
         if event.button() != Qt.MouseButton.LeftButton:
             return
         x = event.position().x()
-        if abs(x - self._x_of(self.start)) <= self.HANDLE_GRAB_PX:
+        start_dist = abs(x - self._x_of(self.start))
+        end_dist = abs(x - self._x_of(self.end))
+        start_hit = start_dist <= self.HANDLE_GRAB_PX
+        end_hit = end_dist <= self.HANDLE_GRAB_PX
+        if start_hit and end_hit:
+            # Overlapping handles: whichever is nearer keeps the press; on an exact
+            # overlap start wins, then the first move decides the direction (see _move_handle).
+            self._drag = "start" if start_dist <= end_dist else "end"
+        elif start_hit:
             self._drag = "start"
-        elif abs(x - self._x_of(self.end)) <= self.HANDLE_GRAB_PX:
+        elif end_hit:
             self._drag = "end"
         elif self._x_of(self.start) < x < self._x_of(self.end):
             self._drag = "mid"
@@ -125,12 +143,29 @@ class ToneWaveform(QWidget):
             return
         self.mouseMoveEvent(event)
 
+    def _move_handle(self, index: int):
+        """Move the active handle, swapping roles when it crosses the other one.
+
+        Crossing does not end the drag: the next mouse move keeps moving the same
+        handle under the pointer, now with the opposite role.
+        """
+        if self._drag == "start":
+            if index > self.end:
+                self._drag = "end"
+                self.set_range(self.end, index, active="end")
+            else:
+                self.set_range(index, self.end, active="start")
+        elif self._drag == "end":
+            if index < self.start:
+                self._drag = "start"
+                self.set_range(index, self.start, active="start")
+            else:
+                self.set_range(self.start, index, active="end")
+
     def mouseMoveEvent(self, event):
         x = event.position().x()
-        if self._drag == "start":
-            self.set_range(self._index_of(x), self.end)
-        elif self._drag == "end":
-            self.set_range(self.start, self._index_of(x))
+        if self._drag in ("start", "end"):
+            self._move_handle(self._index_of(x))
         elif self._drag == "mid":
             span = self.end - self.start
             start = self._index_of(x) - getattr(self, "_drag_offset", span // 2)
@@ -429,7 +464,7 @@ class OfbQtToneEditorDialog(QDialog):
         end = int(self.end_box.value() * TONE_SAMPLE_RATE)
         old_range = (self.waveform.start, self.waveform.end)
         self.waveform.set_range(start, end)
-        # set_range clamps values (min length, max length, total duration). If the
+        # set_range clamps values to the source length and the PCM cap. If the
         # clamped range is identical to the old one it emits nothing, so the edited
         # box would keep an out-of-range text; resync explicitly in that case.
         if (self.waveform.start, self.waveform.end) == old_range:

@@ -10,7 +10,7 @@ pytest.importorskip("PyQt6")
 from PyQt6.QtWidgets import QApplication
 
 from openfreebuds.driver.huawei.prompt_tone import TONE_AUTO_GAIN_TARGET, TONE_MAX_SAMPLES, TONE_SAMPLE_RATE
-from openfreebuds_qt.app.dialog.tone_editor import OfbQtToneEditorDialog
+from openfreebuds_qt.app.dialog.tone_editor import OfbQtToneEditorDialog, ToneWaveform
 
 
 @pytest.fixture(scope="module")
@@ -141,18 +141,90 @@ def test_long_source_keeps_full_waveform_and_allows_late_selection(app):
         dlg.cleanup()
 
 
+def test_selection_has_no_minimum_length(dialog):
+    """The waveform allows zero and one-sample selections; only the PCM cap remains."""
+    dialog.waveform.set_range(1000, 1000)
+    assert dialog.waveform.start == 1000
+    assert dialog.waveform.end == 1000
+    assert dialog.selection.size == 0
+
+    dialog.waveform.set_range(1000, 1001)
+    assert dialog.waveform.end - dialog.waveform.start == 1
+    assert dialog.selection.size == 1
+
+
+def test_end_handle_crosses_start_and_keeps_dragging(app):
+    """Dragging the back handle before the front swaps roles without ending the drag."""
+    waveform = ToneWaveform(np.zeros(10000, dtype="<i2"))
+    waveform.set_range(2000, 5000)
+    waveform._drag = "end"
+
+    waveform._move_handle(1000)
+    assert (waveform.start, waveform.end) == (1000, 2000)
+    assert waveform._drag == "start"
+
+    waveform._move_handle(500)
+    assert (waveform.start, waveform.end) == (500, 2000)
+    assert waveform._drag == "start"
+
+
+def test_start_handle_crosses_end_and_keeps_dragging(app):
+    """The symmetric case: dragging the front handle past the back swaps to end."""
+    waveform = ToneWaveform(np.zeros(10000, dtype="<i2"))
+    waveform.set_range(2000, 5000)
+    waveform._drag = "start"
+
+    waveform._move_handle(6000)
+    assert (waveform.start, waveform.end) == (5000, 6000)
+    assert waveform._drag == "end"
+
+    waveform._move_handle(7000)
+    assert (waveform.start, waveform.end) == (5000, 7000)
+    assert waveform._drag == "end"
+
+
+def test_overlapping_handles_choose_role_from_drag_direction(app):
+    """At an exact overlap, leftward drag moves the front handle and rightward moves the back handle."""
+    waveform = ToneWaveform(np.zeros(10000, dtype="<i2"))
+    waveform.set_range(2000, 2000)
+
+    waveform._drag = "start"
+    waveform._move_handle(1500)
+    assert (waveform.start, waveform.end) == (1500, 2000)
+    assert waveform._drag == "start"
+
+    waveform.set_range(2000, 2000)
+    waveform._drag = "start"
+    waveform._move_handle(2500)
+    assert (waveform.start, waveform.end) == (2000, 2500)
+    assert waveform._drag == "end"
+
+
+def test_range_cap_keeps_the_dragged_handle_under_the_pointer(app):
+    """When the selection reaches the PCM cap, the active handle is the one that stops."""
+    total = TONE_MAX_SAMPLES * 3
+    waveform = ToneWaveform(np.zeros(total, dtype="<i2"))
+    waveform.set_range(TONE_MAX_SAMPLES, total, active="end")
+    assert waveform.end - waveform.start == TONE_MAX_SAMPLES
+    assert waveform.start == TONE_MAX_SAMPLES
+
+    waveform.set_range(TONE_MAX_SAMPLES, total, active="start")
+    assert waveform.end - waveform.start == TONE_MAX_SAMPLES
+    assert waveform.end == total
+
+
 def test_clamped_box_values_snap_back_to_waveform(app):
     """A typed value outside the allowed window must not stay ahead of the actual handles."""
-    # 100000 samples is 5.97 s: the start handle stops at total - 0.2 s and the end at 5.73 s.
     dlg = OfbQtToneEditorDialog(None, np.zeros(100000, dtype="<i2"))
     try:
+        # No minimum: a 0.03 s selection is accepted instead of being forced to 0.2 s.
         dlg.start_box.setValue(5.77)
-        dlg.start_box.setValue(5.80)   # Clamped to the same sample as 5.77, so no range_changed signal
-        assert abs(dlg.start_box.value() - dlg.waveform.start / TONE_SAMPLE_RATE) < 0.006
+        dlg.end_box.setValue(5.80)
+        assert abs(dlg.waveform.end / TONE_SAMPLE_RATE - 5.80) < 0.006
+        assert dlg.waveform.end - dlg.waveform.start < 0.1 * TONE_SAMPLE_RATE
 
-        dlg.start_box.setValue(0.0)
-        dlg.end_box.setValue(5.73)
-        dlg.end_box.setValue(5.90)     # Clamped to the same 96000-sample end
+        # The end handle can still use the remaining source, and the box follows it.
+        dlg.end_box.setValue(5.90)
         assert abs(dlg.end_box.value() - dlg.waveform.end / TONE_SAMPLE_RATE) < 0.006
     finally:
         dlg.cleanup()
