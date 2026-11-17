@@ -446,6 +446,8 @@ def test_layout_only_waveform_absorbs_extra_height(app):
         assert dlg.gain_hint.sizePolicy().verticalPolicy() == QSizePolicy.Policy.Minimum
         assert dlg.start_box.sizePolicy().horizontalPolicy() == QSizePolicy.Policy.Expanding
         assert dlg.end_box.sizePolicy().horizontalPolicy() == QSizePolicy.Policy.Expanding
+        for button in (dlg.reset_view_button, dlg.zoom_out_button, dlg.zoom_in_button):
+            assert button.width() == button.height()
     finally:
         dlg.cleanup()
 

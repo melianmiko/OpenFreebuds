@@ -858,7 +858,7 @@ class OfbQtToneEditorDialog(QDialog):
         button.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
         button.setIcon(self._tool_icon(kind))
         button.setIconSize(QSize(14, 14))
-        button.setFixedSize(self._control_height + 6, self._control_height)
+        button.setFixedSize(self._control_height, self._control_height)
         button.setToolTip(tooltip)
         button.setAccessibleName(text or tooltip)
         button.setStyleSheet(
