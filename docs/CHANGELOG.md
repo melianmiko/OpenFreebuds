@@ -1,42 +1,37 @@
 # 0.19.0
-- [Device compatibility] Add a full HUAWEI FreeBuds 5 profile (modelId 000141 / productId ZAAB / internal name Honey), based on Huawei AI Life 2.0.7.321 assets. It covers dual-connect, L2HC, custom EQ, high-quality audio, game low latency, half-in-ear wearing detection, find-earbud, case battery and two simple ANC modes with ANC level/AI scene. HD spatial audio is available only with Huawei phones; there is no standalone spatial-audio control.
-- [Device compatibility] Add HUAWEI FreeBuds 6, FreeBuds 7, FreeBuds 7i, FreeBuds Neo, first-gen FreeClip, FreeBuds Pro 4 and FreeClip 2 S / Collector's Edition profiles. FreeClip 2 S shares the FreeClip 2 config and driver behavior; FreeBuds Pro 4 and first-gen FreeClip add read-only head control.
-- [Device compatibility] Add a device catalog with capability, feature, protocol and marketing-color metadata, including official Chinese color names and per-model overrides. Unknown or unverified models keep the generic color names.
-- [Device compatibility] Find-earbud support now follows the official capability matrix: all models except FreeBuds Pro (1st gen) and FreeBuds Studio.
-- [Feature] Implement find-earbud over 0x2B5D / 0x2B5E with per-ear ringing state, start/stop, status readback, a safety stop timeout and no ACK-induced timeout crash.
-- [Feature] Split long-press actions per ear and calibrate the official App values. The current P1/P2 action codes are preserved and only P9/P10 are changed, fixing the case where both ears lost long-press after switching modes.
-- [Feature] Split swipe gestures per ear while keeping the legacy combined property for compatibility.
-- [Feature] Add adaptive volume (0x2BB4 featureId 2), head-control mapping (featureId 0x0B), spatial audio (featureId 0x18) and drop-reminder (featureId 0x07) handlers and GUI modules.
-- [Feature] Rebuild charging-case tone settings on 0x2BB1 and 0x2BB4 feature 16: master switch, lid-open switch, lid-open volume and tone id. Single-byte writes are replaced with full 12-byte payload writes; devId is preserved from the device payload.
-- [Feature] Tone id 0 ("Unfold") is a real built-in tone: write feature16 with toneId=0 and select=0 only, never stream audio. Other ids use select=1 and the slot upload path.
-- [Feature] Add a three-layer local prompt-tone library: bundled built-in catalog, official cloud snapshot and user custom layer. Custom ids use 100-199, legacy 50-99 entries migrate forward, official refreshes are diffed against the previous snapshot, and export produces an official-compatible package.
-- [Feature] Add a cloud bootstrap fallback to `ToneLibrary`: when the official catalog or its PCM files are missing, `sync_official_if_needed()` downloads the missing resources, tolerates offline/network errors, and throttles retries with a six-hour marker. The settings UI starts this sync in a worker thread when charging-case tone controls become visible. `ensure()` itself stays offline-only.
-- [Change] Trim the bundled `tone_config.json` to the official catalog and remove the personal custom presets 100-145. Id 14 is now explicitly classified as a bundled custom preset; a legacy id 14 already present in built-in storage migrates to the custom layer and remains editable/deletable.
-- [Feature] Treat entries removed from the current official Config as custom. Id 14, which came from an old bundled package but is absent from the current official Config, is editable/deletable; real official entries remain read-only.
-- [Feature] Add a prompt-tone editor with waveform display, two-handle trimming, playback preview, manual/automatic loudness gain and bilingual naming. Output is signed 16-bit / 16755 Hz / mono PCM, capped at the device limit.
-- [Feature] The tone editor waveform is zoomable: Ctrl+wheel zooms around the cursor (100% shows the whole track, up to four pixels per sample), the plain wheel pans horizontally, and a compact icon toolbar below the waveform provides reset, zoom out, a logarithmic slider, zoom in and the current zoom readout. The readout stays a percentage up to 9999% and switches to a multiplier from 100x (for example `100.00x`). A full-track overview above the waveform shows the selection, the visible viewport and both handles; clicking or dragging it pans the view.
-- [Change] Tone editor start/end fields apply only on focus loss or Enter. The typed value is authoritative: if the opposite handle is farther than the 192000-sample limit it is clamped to exactly 5.73 s from the typed handle (or to the audio edge), and an inverted but legal range is swapped. Clicking OK commits a still-focused field first.
-- [Fix] Tone editor handles snap to the 192000-sample cap; continuing to drag the same handle in the lengthening direction slides the opposite handle so the maximum-length window follows the pointer.
-- [Fix] Tone editor layout: only the main waveform absorbs extra window height (hint labels keep their line spacing), and the start/end row expands with the window width.
-- [Fix] Tray "Leave application" now stops the manager in client mode as well as standalone mode, and the daemon exits when its RPC server task ends, so no background process is left behind. Shutdown waits are bounded so a stuck driver cannot keep the Qt process alive after its window closes.
-- [Fix] Tone editor start/end fields stay in sync with the waveform handles after clamping. Typing a value that maps to the same clamped range no longer leaves a stale number in the box.
-- [Fix] Tone editor no longer enforces a 0.2 s minimum selection. Dragging one handle across the other swaps their roles and keeps the same handle under the pointer; overlapping handles choose the role from the drag direction. The 192000-sample PCM cap still applies.
-- [Fix] Closing the tone editor or the main window stops any active preview playback and releases the temporary WAV file. Editor close is handled in `done()`, covering OK, Cancel, Esc and the title-bar close button.
-- [Fix] Tray Connect/Disconnect failures no longer terminate the application. RPC dependency errors are recognized across the manager boundary and open the dependency dialog; other failures open the error dialog. The app is tray-resident, so closing the last visible window (for example that dialog while the main window is hidden) no longer quits the process.
-- [Fix] When the SPP endpoint is occupied (Windows 10048 / EADDRINUSE), the UI shows a dedicated warning dialog with a localized hint to close other Bluetooth software (Huawei PC Manager, Huawei Control Center, MagicPods, etc.) instead of the generic crash/bug-report dialog. The manager records the last driver start error and reports it once per outage.
-- [Fix] Reset device-specific tray menu state on DEVICE_CHANGED and re-check the active device every time the menu opens, so switching devices or switching back never leaves battery, ANC, equalizer or dual-connect entries that the current model does not support.
-- [Fix] Long tone imports keep the full decoded source instead of truncating at 5.73 s. The editor defaults to the first maximum-length window but both handles and the start/end fields can select any later range; only the final selected range is capped at 192000 samples for preview, save and upload.
-- [Feature] Charging-case tone changes require both earbuds in the case. The backend refreshes 0x2B25 before reading in-case state, and the GUI re-reads feature 16 when both earbuds enter the case so the displayed tone is current.
-- [Feature] Show wearing/in-ear state in the main-window battery header. A powered-off earbud in the case now shows "Not connected" instead of 0%, and the tray shows "/" instead of 0.
-- [Feature] Charging-case power state is derived from case_charging only, so a case that is not plugged in but is charging the earbuds is no longer reported as charging.
-- [Feature] The device-info page keeps the protocol field number but removes the automatic row number; model titles combine the localized model name and the localized color from field_25.
+- [Device compatibility] Add a full HUAWEI FreeBuds 5 profile (modelId 000141 / productId ZAAB / internal name Honey): dual-connect, L2HC, custom EQ, low-latency mode, half-in-ear wearing detection, find-earbud, case battery and two ANC modes with level. HD spatial audio is available only with Huawei phones.
+- [Device compatibility] Add HUAWEI FreeBuds 6, FreeBuds 7, FreeBuds 7i, FreeBuds Neo, first-gen FreeClip, FreeBuds Pro 4 and FreeClip 2 S / Collector's Edition profiles. FreeClip 2 S shares the FreeClip 2 behavior; FreeBuds Pro 4 and first-gen FreeClip add read-only head control.
+- [Device compatibility] Add a device catalog with capability, feature, protocol and marketing-color metadata, including official Chinese color names and per-model overrides. Unknown models keep the generic color names.
+- [Device compatibility] Follow the official find-earbud matrix: all models except FreeBuds Pro (1st gen) and FreeBuds Studio.
+- [Feature] Implement find-earbud over 0x2B5D / 0x2B5E with per-ear ringing state, status readback and a safety stop timeout.
+- [Feature] Split long-press and swipe actions per ear, keep the legacy combined swipe property and calibrate P9/P10 to the official App values.
+- [Feature] Add adaptive volume, head-control mapping, spatial audio and drop-reminder handlers and GUI modules.
+- [Feature] Rebuild charging-case tone settings on 0x2BB1 / 0x2BB4 feature 16 with full 12-byte writes and the original devId; tone id 0 writes the built-in tone, other ids use slot upload.
+- [Feature] Add a three-layer prompt-tone library: bundled catalog, official cloud snapshot and custom ids 100-199 with legacy migration and diffed refreshes. The bundled `tone_config.json` keeps only the official catalog, and legacy id 14 becomes a custom preset.
+- [Feature] Add a cloud bootstrap for missing official tone resources, throttled to one retry per six hours.
+- [Feature] Add a prompt-tone editor with waveform, two-handle trimming, preview, loudness gain and bilingual naming; output is 16-bit / 16755 Hz / mono PCM.
+- [Feature] Make the editor waveform zoomable: Ctrl+wheel zooms at the cursor up to four pixels per sample, plain wheel pans, and a full-track overview shows the selection and viewport.
+- [Feature] Add a compact editor toolbar (reset, zoom out, logarithmic slider, zoom in, readout); the readout uses percent up to 9999% and a multiplier such as `100.00x` above that.
+- [Feature] Charging-case tone changes require both earbuds in the case; the GUI re-reads feature 16 when both enter the case.
+- [Feature] Show wearing state in the battery header; a powered-off earbud shows "Not connected" and the tray shows "/".
+- [Feature] Derive case power state from case_charging only.
+- [Feature] Keep the protocol field number but remove automatic row numbers on the device-info page, and combine the model name with the localized field_25 color.
+- [Change] Editor start/end fields commit on focus loss or Enter; the typed value wins and an out-of-range opposite handle is clamped to 5.73 s or the audio edge.
+- [Change] Tone editor handles snap at the 192000-sample cap and slide the opposite handle so a full-length window follows the drag; there is no minimum selection.
+- [Fix] Reset device-specific tray menu state on DEVICE_CHANGED and re-check the active device every time the menu opens, so switching devices or switching back never leaves unsupported battery, ANC, EQ or dual-connect entries visible.
+- [Fix] Tone editor fields resync after clamping, and only the waveform absorbs extra height while the start/end row fills the width.
+- [Fix] Closing the editor or main window stops preview playback and releases the temporary WAV file.
+- [Fix] Long tone imports keep the full decoded source; only the final selected range is capped at 192000 samples.
 - [Fix] Treat 0x2B4A as an alternate completion signal for FreeClip 2 0x2B49 equalizer writes, avoiding a false five-second timeout.
-- [Fix] Close the SPP socket explicitly on connect timeout or failure and wait for the old endpoint to be released before reconnecting. This removes the Windows 10048 "address already in use" loop when switching devices.
-- [Fix] Capture all inbound frames for prompt-tone proto2 upload instead of filtering by command, and tolerate adapters/devices that return a null host name during Windows Bluetooth enumeration.
-- [i18n] Add and update strings for English, Simplified Chinese, German, Spanish, Brazilian Portuguese, Russian and Turkish, including the prompt-tone preview/apply actions and the FreeClip 2 S naming.
-- [Tests] Add protocol, library, editor, cloud-sync and tray-menu regression tests. The full suite passes with 246 passed and 1 skipped.
-- [Maintenance] Normalize Python comments and docstrings to English throughout the changed code. Local-only Windows launchers, the broken translation backup and the generated prompt-tone archive are kept outside the upstream tree.
-- [Docs] Add the FreeBuds 5 device page and update the FreeClip / FreeClip 2 pages with tested behavior and capability notes.
+- [Fix] Close the SPP socket on timeout or failure and wait for the old endpoint before reconnecting, removing the Windows 10048 loop.
+- [Fix] Capture all frames for prompt-tone upload and tolerate a null host name during Windows Bluetooth enumeration.
+- [Fix] Connect/disconnect failures stay in a dialog and never terminate the tray app; dependency errors use the dependency dialog, and closing the last window no longer quits the process.
+- [Fix] Tray "Leave application" stops the manager in both roles, the daemon exits when RPC ends, and shutdown waits are bounded.
+- [Fix] Show a dedicated warning for SPP 10048 / EADDRINUSE, once per outage, instead of the generic crash dialog.
+- [i18n] Add and update English, Simplified Chinese, German, Spanish, Brazilian Portuguese, Russian and Turkish strings, including tone preview/apply and FreeClip 2 S naming.
+- [Tests] Add protocol, library, editor, cloud-sync and tray-menu regression tests; the suite passes with 246 passed and 1 skipped.
+- [Maintenance] Normalize comments and docstrings to English and keep local-only launchers and generated archives outside the upstream tree.
+- [Docs] Add the FreeBuds 5 device page and update the FreeClip / FreeClip 2 pages.
 
 # 0.18.1
 - [Device compatibility] Initial Freebuds 3 support (thx @qiushixiang)
