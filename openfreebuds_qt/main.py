@@ -29,6 +29,17 @@ log = create_logger("OfbQtApplication")
 EXIT_SHUTDOWN_TIMEOUT = 6.0
 
 
+def configure_application(app):
+    """Keep a tray-resident app alive when its last window closes.
+
+    OpenFreebuds runs in background with only a tray icon and a hidden main
+    window. Dialogs opened from the tray (error or missing dependency prompts)
+    are then the only visible windows; with Qt's default policy closing them
+    would quit the whole process.
+    """
+    app.setQuitOnLastWindowClosed(False)
+
+
 class OfbQtApplication(IOfbQtApplication):
     def __init__(self, args):
         super().__init__(sys.argv)
@@ -69,6 +80,10 @@ class OfbQtApplication(IOfbQtApplication):
         # Qt base configs
         self.setApplicationName("OpenFreebuds")
         self.setDesktopFileName("pw.mmk.OpenFreebuds")
+
+        # This app lives in the system tray, so closing the last visible window
+        # (for example a standalone tray dialog) must not terminate it.
+        configure_application(self)
 
         # Global font rendering: light vertical hinting + forced antialiasing (size/family keep system defaults).
         # Do not apply this override on the FreeType engine; keep Qt's default hinting (looks better in user testing);

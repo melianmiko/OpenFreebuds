@@ -10,7 +10,29 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 import importlib
 
 main_module = importlib.import_module("openfreebuds_qt.main")
-from openfreebuds_qt.main import OfbQtApplication
+from openfreebuds_qt.main import OfbQtApplication, configure_application
+
+
+@pytest.fixture(scope="module")
+def qt_app():
+    from PyQt6.QtWidgets import QApplication
+
+    return QApplication.instance() or QApplication([])
+
+
+def test_tray_app_does_not_quit_on_last_window(qt_app):
+    """A tray dialog closing must not terminate the app while it runs in background.
+
+    Reproduced on Windows: with a hidden main window the missing-dependency
+    prompt was the last visible window, so Qt emitted lastWindowClosed and
+    the whole process exited right after the user dismissed the prompt.
+    """
+    qt_app.setQuitOnLastWindowClosed(True)
+    try:
+        configure_application(qt_app)
+        assert qt_app.quitOnLastWindowClosed() is False
+    finally:
+        qt_app.setQuitOnLastWindowClosed(True)
 
 
 @pytest.mark.asyncio
