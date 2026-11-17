@@ -2,14 +2,15 @@
 Selection has no minimum length; the saved PCM still caps at 6 s (device limit). Output signed 16-bit / 16755 Hz / mono PCM.
 Loudness gain: manual slider (-36...+36 dB in 0.1 dB steps) or 'auto gain' to raise the level without clipping.
 """
+import math
 import os
 import tempfile
 import wave
 from pathlib import Path
 
 import numpy as np
-from PyQt6.QtCore import QRect, QUrl, Qt, pyqtSignal
-from PyQt6.QtGui import QColor, QPainter, QPen
+from PyQt6.QtCore import QRect, QSize, QUrl, Qt, pyqtSignal
+from PyQt6.QtGui import QColor, QIcon, QPainter, QPainterPath, QPalette, QPen, QPixmap
 from PyQt6.QtWidgets import (
     QCheckBox,
     QDialog,
@@ -20,6 +21,9 @@ from PyQt6.QtWidgets import (
     QLabel,
     QLineEdit,
     QPushButton,
+    QSizePolicy,
+    QSlider,
+    QToolButton,
     QVBoxLayout,
     QWidget,
 )
@@ -38,11 +42,24 @@ TONE_FULL_SCALE = 26213.0   # Full-scale reference: APK normalized peak (0.8 * 3
 
 
 class ToneWaveform(QWidget):
-    """Waveform plus start/end handles; dragging adjusts the trim range, and gain changes redraw at the new level."""
+    """Zoomable waveform with two trim handles.
+
+    The visible window is (view_start, view_span). Ctrl+wheel zooms at the
+    cursor, the plain wheel pans horizontally, and reaching the PCM cap first
+    snaps and then slides the whole selection so the dragged handle keeps
+    following the pointer.
+    """
 
     range_changed = pyqtSignal(int, int)
+    view_changed = pyqtSignal(int, int)   # Visible start and span, in samples
+
     HANDLE_GRAB_PX = 12
     ENVELOPE_BINS = 512
+    BLOCK_SIZE = 32
+    SNAP_PX = 4
+    ZOOM_STEP = 1.25
+    MIN_SAMPLES_PER_PX = 0.25   # At max zoom one sample is at least 4 px wide
+    EDGE_PAN_PX = 8
 
     def __init__(self, samples: np.ndarray, parent: QWidget | None = None):
         super().__init__(parent)
@@ -50,12 +67,19 @@ class ToneWaveform(QWidget):
         self.total = max(1, samples.size)
         # Precompute the envelope as plain Python data; paintEvent never touches numpy
         self._peaks = self._compute_peaks(samples).tolist()
+        self._block_peaks = self._compute_block_peaks(samples)
         self._gain_db = 0.0
         self.start = 0
         self.end = min(self.total, TONE_MAX_SAMPLES)
         self._drag = ""
+        self._drag_offset = 0
+        self._view_start = 0
+        self._view_span = self.total
+        self._cache_key = None
+        self._cache_peaks = None
         self.setMinimumHeight(110)
         self.setMouseTracking(True)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
     # --- State -------------------------------------------------------
     def set_gain(self, gain_db: float):
@@ -76,13 +100,108 @@ class ToneWaveform(QWidget):
 
     @classmethod
     def _compute_peaks(cls, samples: np.ndarray) -> np.ndarray:
-        """Precompute the envelope (512 buckets); paintEvent only looks it up, avoiding numpy slicing during painting."""
+        """Precompute the coarse envelope (512 buckets); used by the zoomed-out overview."""
         bins = cls.ENVELOPE_BINS
         if samples.size == 0:
             return np.zeros(bins, dtype=np.float64)
         chunk = max(1, samples.size // bins)
         usable = samples[:chunk * bins].astype(np.int32)
         return np.abs(usable.reshape(bins, chunk)).max(axis=1).astype(np.float64)
+
+    @classmethod
+    def _compute_block_peaks(cls, samples: np.ndarray) -> np.ndarray:
+        """Max-abs value per fixed block, used to build the per-pixel envelope quickly."""
+        block = cls.BLOCK_SIZE
+        if samples.size == 0:
+            return np.zeros(1, dtype=np.float64)
+        count = (samples.size + block - 1) // block
+        buffer = np.zeros(count * block, dtype=np.int32)
+        buffer[:samples.size] = np.abs(samples.astype(np.int32))
+        return buffer.reshape(count, block).max(axis=1).astype(np.float64)
+
+    # --- View --------------------------------------------------------
+    @property
+    def view_start(self) -> int:
+        return self._view_start
+
+    @property
+    def view_span(self) -> int:
+        return self._view_span
+
+    @property
+    def zoom(self) -> float:
+        """1.0 shows the whole track; larger values magnify it."""
+        return self.total / max(1, self._view_span)
+
+    def min_view_span(self) -> int:
+        """Smallest visible span: at that zoom one sample still covers four pixels."""
+        return max(1, int(round(self.width() * self.MIN_SAMPLES_PER_PX)))
+
+    @property
+    def max_zoom(self) -> float:
+        return max(1.0, self.total / self.min_view_span())
+
+    def set_view(self, start: int, span: int, emit: bool = True) -> bool:
+        """Clamp and apply the visible window; returns True when it actually changed."""
+        span = int(max(self.min_view_span(), min(self.total, span)))
+        start = int(max(0, min(start, self.total - span)))
+        if (start, span) == (self._view_start, self._view_span):
+            return False
+        self._view_start, self._view_span = start, span
+        self._cache_key = None
+        self.update()
+        if emit:
+            self.view_changed.emit(start, span)
+        return True
+
+    def set_zoom(self, zoom: float, anchor_x: float | None = None) -> bool:
+        """Zoom around a widget x coordinate (default: center) and keep that point fixed."""
+        zoom = max(1.0, min(self.max_zoom, float(zoom)))
+        span = int(max(self.min_view_span(), min(self.total, round(self.total / zoom))))
+        if anchor_x is None:
+            anchor_x = self.width() / 2.0
+        width = max(1, self.rect().width())
+        ratio = max(0.0, min(1.0, (anchor_x - self.rect().left()) / width))
+        anchor_index = self._view_start + ratio * self._view_span
+        start = int(round(anchor_index - ratio * span))
+        return self.set_view(start, span)
+
+    def reset_view(self):
+        self.set_view(0, self.total)
+
+    def pan_by(self, samples_delta: int) -> bool:
+        return self.set_view(self._view_start + samples_delta, self._view_span)
+
+    def center_on(self, index: int):
+        """Center the view on a sample index, keeping the current zoom."""
+        self.set_view(int(index) - self._view_span // 2, self._view_span)
+
+    def _snap_samples(self) -> int:
+        """Width of the magnetic zone around the PCM cap, in samples."""
+        return max(1, int(self.SNAP_PX * self._view_span / max(1, self.width())))
+
+    def _view_peaks(self, width: int) -> np.ndarray:
+        """Per-pixel max-abs values for the visible window, cached per view and width."""
+        key = (self._view_start, self._view_span, width)
+        if key == self._cache_key and self._cache_peaks is not None:
+            return self._cache_peaks
+        span = max(1, self._view_span)
+        start = max(0, min(self._view_start, max(0, self.total - span)))
+        offsets = (np.arange(width + 1, dtype=np.int64) * span) // width
+        if span <= width * self.BLOCK_SIZE:
+            segment = np.abs(self.samples[start:start + span].astype(np.int32))
+            if segment.size == 0:
+                peaks = np.zeros(width, dtype=np.float64)
+            else:
+                starts = np.clip(offsets[:-1], 0, segment.size - 1)
+                peaks = np.maximum.reduceat(segment, starts).astype(np.float64)
+        else:
+            blocks = self._block_peaks
+            starts = np.clip((start + offsets[:-1]) // self.BLOCK_SIZE, 0, blocks.size - 1)
+            peaks = np.maximum.reduceat(blocks, starts)
+        self._cache_key = key
+        self._cache_peaks = peaks
+        return peaks
 
     # --- State -------------------------------------------------------
     def set_range(self, start: int, end: int, active: str | None = None):
@@ -107,11 +226,39 @@ class ToneWaveform(QWidget):
             self.range_changed.emit(start, end)
 
     def _x_of(self, index: int) -> float:
-        return self.rect().left() + index / self.total * self.rect().width()
+        left = self.rect().left()
+        return left + (index - self._view_start) / max(1, self._view_span) * self.rect().width()
 
     def _index_of(self, x: float) -> int:
         width = max(1, self.rect().width())
-        return int(max(0, min(self.total, (x - self.rect().left()) / width * self.total)))
+        index = self._view_start + (x - self.rect().left()) / width * self._view_span
+        return int(max(0, min(self.total, round(index))))
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        span = max(self.min_view_span(), min(self.total, self._view_span))
+        start = int(max(0, min(self._view_start, self.total - span)))
+        if not self.set_view(start, span, emit=False):
+            self._cache_key = None   # The widget width changed; per-pixel peaks must be rebuilt
+            self.view_changed.emit(self._view_start, self._view_span)
+
+    def wheelEvent(self, event):
+        if event.modifiers() & Qt.KeyboardModifier.ControlModifier:
+            delta = event.angleDelta().y()
+            if delta:
+                self.set_zoom(self.zoom * (self.ZOOM_STEP ** (delta / 120.0)),
+                              anchor_x=event.position().x())
+                event.accept()
+                return
+        # Plain wheel: horizontal panning (trackpads report horizontal deltas too)
+        delta = event.angleDelta().y() + event.angleDelta().x()
+        if delta:
+            step = max(1, int(self._view_span * 0.1))
+            self.pan_by(step if delta < 0 else -step)
+            event.accept()
+            return
+        super().wheelEvent(event)
+
 
     # --- Events ------------------------------------------------------
     def mousePressEvent(self, event):
@@ -144,31 +291,54 @@ class ToneWaveform(QWidget):
         self.mouseMoveEvent(event)
 
     def _move_handle(self, index: int):
-        """Move the active handle, swapping roles when it crosses the other one.
+        """Move the active handle; at the PCM cap the window slides, and crossing swaps roles.
 
-        Crossing does not end the drag: the next mouse move keeps moving the same
-        handle under the pointer, now with the opposite role.
+        Reaching the cap first sticks to the exact limit (magnetic zone around it),
+        then continuing in the same direction moves the other handle so the
+        dragged one can keep following the pointer.
         """
+        snap = self._snap_samples()
         if self._drag == "start":
             if index > self.end:
                 self._drag = "end"
                 self.set_range(self.end, index, active="end")
+                return
+            cap = self.end - TONE_MAX_SAMPLES
+            if index < cap - snap:
+                new_start = max(0, index)
+                self.set_range(new_start, min(self.total, new_start + TONE_MAX_SAMPLES), active="start")
+            elif index <= cap + snap:
+                self.set_range(max(0, cap), self.end, active="start")
             else:
                 self.set_range(index, self.end, active="start")
         elif self._drag == "end":
             if index < self.start:
                 self._drag = "start"
                 self.set_range(index, self.start, active="start")
+                return
+            cap = self.start + TONE_MAX_SAMPLES
+            if index > cap + snap:
+                new_end = min(self.total, index)
+                self.set_range(max(0, new_end - TONE_MAX_SAMPLES), new_end, active="end")
+            elif index >= cap - snap:
+                self.set_range(self.start, min(self.total, cap), active="end")
             else:
                 self.set_range(self.start, index, active="end")
 
     def mouseMoveEvent(self, event):
         x = event.position().x()
         if self._drag in ("start", "end"):
+            # At a zoomed view the pointer would leave the visible range; pan so the
+            # drag can continue instead of stopping at the widget edge.
+            step = max(1, int(self._view_span * 0.05))
+            if x < self.EDGE_PAN_PX and self._view_start > 0:
+                self.pan_by(-step)
+            elif x > self.width() - self.EDGE_PAN_PX and self._view_start + self._view_span < self.total:
+                self.pan_by(step)
             self._move_handle(self._index_of(x))
         elif self._drag == "mid":
             span = self.end - self.start
-            start = self._index_of(x) - getattr(self, "_drag_offset", span // 2)
+            start = self._index_of(x) - self._drag_offset
             self.set_range(start, start + span)
 
     def mouseReleaseEvent(self, event):
@@ -189,8 +359,7 @@ class ToneWaveform(QWidget):
         painter.fillRect(self.rect(), QColor("#202028"))
 
         width = max(1, rect.width())
-        peaks = self._peaks
-        bins = len(peaks)
+        peaks = self._view_peaks(width)
         top = rect.top() + rect.height() / 2
         # Draw against the 26213 full-scale reference so gain changes visibly raise or clip the waveform
         scale = (rect.height() / 2) / TONE_FULL_SCALE
@@ -198,23 +367,140 @@ class ToneWaveform(QWidget):
         pen_bar = QPen(QColor("#7f86b0"), 1)
         painter.setPen(pen_bar)
         for x in range(width):
-            peak = peaks[min(bins - 1, x * bins // width)] if bins else 0.0
+            peak = float(peaks[x]) if x < len(peaks) else 0.0
             shown = self._display_peak(peak)
             height = min(rect.height() / 2, shown * scale)
             x_pos = rect.left() + x
             painter.drawLine(x_pos, int(top - height), x_pos, int(top + height))
 
-        sel_left = int(self._x_of(self.start))
-        sel_right = int(self._x_of(self.end))
-        painter.fillRect(QRect(sel_left, rect.top(), max(1, sel_right - sel_left), rect.height()),
-                         QColor(255, 204, 102, 40))
+        # Once a pixel covers less than one sample, draw the real sample polyline
+        if self._view_span <= width:
+            gain = 10.0 ** (self._gain_db / 20.0)
+            first = max(0, self._view_start)
+            last = min(self.total, self._view_start + self._view_span)
+            if last - first <= width * 4:
+                painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+                painter.setPen(QPen(QColor("#aab1e0"), 1))
+                path = QPainterPath()
+                for index in range(first, last):
+                    value = max(-TONE_FULL_SCALE, min(TONE_FULL_SCALE, float(self.samples[index]) * gain))
+                    x_pos = self._x_of(index)
+                    y_pos = top - value * scale
+                    if index == first:
+                        path.moveTo(x_pos, y_pos)
+                    else:
+                        path.lineTo(x_pos, y_pos)
+                painter.drawPath(path)
+
+        sel_left = max(rect.left(), min(rect.right(), int(self._x_of(self.start))))
+        sel_right = max(rect.left(), min(rect.right(), int(self._x_of(self.end))))
+        if sel_right > rect.left() and sel_left < rect.right():
+            painter.fillRect(QRect(sel_left, rect.top(), max(1, sel_right - sel_left), rect.height()),
+                             QColor(255, 204, 102, 40))
 
         pen_handle = QPen(QColor("#ffcc66"), 2)
         painter.setPen(pen_handle)
         for index in (self.start, self.end):
             x = int(self._x_of(index))
+            if rect.left() - 2 <= x <= rect.right() + 2:
+                painter.drawLine(x, rect.top(), x, rect.bottom())
+                painter.drawRect(x - 3, int(top) - 4, 6, 8)
+
+
+class ToneOverview(QWidget):
+    """Whole-track miniature showing the selection, the visible viewport and both handles.
+
+    Click or drag to move the viewport; the zoom level is kept.
+    """
+
+    def __init__(self, samples: np.ndarray, parent: QWidget | None = None):
+        super().__init__(parent)
+        self.total = max(1, samples.size)
+        self._peaks = ToneWaveform._compute_peaks(samples).tolist()
+        self.waveform: ToneWaveform | None = None
+        self._dragging = False
+        self.setFixedHeight(44)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+
+    def bind(self, waveform: ToneWaveform):
+        self.waveform = waveform
+        waveform.view_changed.connect(self._on_view_changed)
+        waveform.range_changed.connect(self._on_view_changed)
+
+    def _on_view_changed(self, *_args):
+        self.update()
+
+    def _x_of(self, index: int) -> float:
+        left = self.rect().left()
+        return left + index / self.total * self.rect().width()
+
+    def _index_at(self, x: float) -> int:
+        width = max(1, self.rect().width())
+        return int(max(0, min(self.total, (x - self.rect().left()) / width * self.total)))
+
+    def _center_view(self, x: float):
+        if self.waveform is not None:
+            self.waveform.center_on(self._index_at(x))
+
+    def mousePressEvent(self, event):
+        if event.button() != Qt.MouseButton.LeftButton or self.waveform is None:
+            return
+        self._dragging = True
+        self._center_view(event.position().x())
+
+    def mouseMoveEvent(self, event):
+        if self._dragging:
+            self._center_view(event.position().x())
+
+    def mouseReleaseEvent(self, event):
+        self._dragging = False
+
+    def paintEvent(self, event):
+        try:
+            self._paint()
+        except Exception:  # Never let paint errors escape into a Qt virtual; PyQt6 aborts the process
+            import traceback
+            traceback.print_exc()
+
+    def _paint(self):
+        painter = QPainter(self)
+        rect = self.rect()
+        painter.fillRect(rect, QColor("#26262f"))
+
+        width = max(1, rect.width())
+        peaks = self._peaks
+        bins = len(peaks)
+        top = rect.top() + rect.height() / 2
+        scale = (rect.height() / 2) / TONE_FULL_SCALE
+
+        painter.setPen(QPen(QColor("#6f769e"), 1))
+        for x in range(width):
+            peak = peaks[min(bins - 1, x * bins // width)] if bins else 0.0
+            height = min(rect.height() / 2, min(TONE_FULL_SCALE, peak) * scale)
+            painter.drawLine(rect.left() + x, int(top - height), rect.left() + x, int(top + height))
+
+        if self.waveform is None:
+            return
+        # Selection
+        sel_left = int(self._x_of(self.waveform.start))
+        sel_right = int(self._x_of(self.waveform.end))
+        painter.fillRect(QRect(sel_left, rect.top(), max(1, sel_right - sel_left), rect.height()),
+                         QColor(255, 204, 102, 46))
+
+        # Visible viewport
+        view_left = int(self._x_of(self.waveform.view_start))
+        view_right = int(self._x_of(self.waveform.view_start + self.waveform.view_span))
+        view = QRect(view_left, rect.top(), max(2, view_right - view_left), rect.height() - 1)
+        painter.fillRect(view, QColor(255, 255, 255, 18))
+        painter.setPen(QPen(QColor("#b8c0ff"), 1))
+        painter.drawRect(view)
+
+        # Handles
+        painter.setPen(QPen(QColor("#ffcc66"), 2))
+        for index in (self.waveform.start, self.waveform.end):
+            x = int(self._x_of(index))
             painter.drawLine(x, rect.top(), x, rect.bottom())
-            painter.drawRect(x - 3, int(top) - 4, 6, 8)
 
 
 class GainSlider(QWidget):
@@ -351,6 +637,28 @@ class OfbQtToneEditorDialog(QDialog):
         self._tmp_files: list[Path] = []
 
         self.waveform = ToneWaveform(self.samples, self)
+        self.overview = ToneOverview(self.samples, self)
+        self.overview.bind(self.waveform)
+        self.overview.setToolTip(self.tr("Full track overview. Click or drag to move the view."))
+
+        # --- Zoom controls -----------------------------------------------
+        self._control_height = max(18, self.fontMetrics().height())
+        self._syncing_zoom = False
+        self.reset_view_button = self._make_tool_button(
+            "reset", self.tr("Reset view"), self.tr("Reset view"))
+        self.zoom_out_button = self._make_tool_button(
+            "zoom_out", self.tr("Zoom out"), self.tr("Zoom out"))
+        self.zoom_in_button = self._make_tool_button(
+            "zoom_in", self.tr("Zoom in"), self.tr("Zoom in"))
+        self.zoom_slider = QSlider(Qt.Orientation.Horizontal, self)
+        self.zoom_slider.setRange(0, 1000)
+        self.zoom_slider.setFixedWidth(140)
+        self.zoom_slider.setFixedHeight(self._control_height)
+        self.zoom_slider.setToolTip(self.tr("Zoom"))
+        self.zoom_label = QLabel("100%", self)
+        self.zoom_label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+        self.zoom_label.setFixedWidth(64)
+        self.zoom_label.setToolTip(self.tr("Zoom"))
 
         self.start_box = QDoubleSpinBox(self)
         self.end_box = QDoubleSpinBox(self)
@@ -359,6 +667,9 @@ class OfbQtToneEditorDialog(QDialog):
             box.setSingleStep(0.05)
             box.setSuffix(" s")
             box.setMaximum(round(self.samples.size / TONE_SAMPLE_RATE, 2))
+            box.setKeyboardTracking(False)   # Apply on focus loss or Enter only
+            box.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+            box.setMinimumWidth(90)
         self.start_box.setValue(0.0)
         self.end_box.setValue(min(TONE_MAX_DURATION, round(pcm_duration or self.samples.size / TONE_SAMPLE_RATE, 2)))
 
@@ -402,12 +713,11 @@ class OfbQtToneEditorDialog(QDialog):
         self.display_edit = QLineEdit(display_name, self)
 
         playback = QHBoxLayout()
-        playback.addWidget(self.start_box)
+        playback.addWidget(self.start_box, 1)
         playback.addWidget(QLabel("→", self))
-        playback.addWidget(self.end_box)
+        playback.addWidget(self.end_box, 1)
         playback.addWidget(self.play_button)
         playback.addWidget(self.duration_label)
-        playback.addStretch(1)
 
         form = QFormLayout()
         form.addRow(self.tr("Start / end"), playback)
@@ -419,6 +729,17 @@ class OfbQtToneEditorDialog(QDialog):
                               "is about 5.7 s at 16755 Hz."), self)
         hint.setWordWrap(True)
         self.gain_hint.setWordWrap(True)
+        # Hint labels must keep their natural height; only the waveform absorbs extra window height
+        for label in (hint, self.gain_hint):
+            label.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+
+        zoom_row = QHBoxLayout()
+        zoom_row.addStretch(1)
+        zoom_row.addWidget(self.reset_view_button)
+        zoom_row.addWidget(self.zoom_out_button)
+        zoom_row.addWidget(self.zoom_slider)
+        zoom_row.addWidget(self.zoom_in_button)
+        zoom_row.addWidget(self.zoom_label)
 
         self.buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel, self)
@@ -427,48 +748,145 @@ class OfbQtToneEditorDialog(QDialog):
         self.buttons.button(QDialogButtonBox.StandardButton.Cancel).setText(self.tr("Cancel"))
 
         layout = QVBoxLayout(self)
-        layout.addWidget(self.waveform)
+        layout.addWidget(self.overview)
+        layout.addWidget(self.waveform, 1)
+        layout.addLayout(zoom_row)
         layout.addLayout(form)
         layout.addWidget(self.gain_hint)
         layout.addWidget(hint)
         layout.addWidget(self.buttons)
 
         self.waveform.range_changed.connect(self._on_range_changed)
-        self.start_box.valueChanged.connect(self._on_boxes_changed)
-        self.end_box.valueChanged.connect(self._on_boxes_changed)
+        self.waveform.view_changed.connect(self._on_view_changed)
+        self.start_box.editingFinished.connect(self._commit_start_box)
+        self.end_box.editingFinished.connect(self._commit_end_box)
         self.play_button.clicked.connect(self._on_play)
         self.gain_slider.value_changed.connect(self._on_slider_moved)
         self.gain_slider.released.connect(self._on_gain_applied)
         self.gain_box.valueChanged.connect(self._on_box_gain_changed)
         self.gain_box.editingFinished.connect(self._on_gain_applied)
         self.auto_gain_check.toggled.connect(self._on_auto_toggled)
+        self.reset_view_button.clicked.connect(self.waveform.reset_view)
+        self.zoom_out_button.clicked.connect(lambda: self._zoom_step(1.0 / self.waveform.ZOOM_STEP))
+        self.zoom_in_button.clicked.connect(lambda: self._zoom_step(self.waveform.ZOOM_STEP))
+        self.zoom_slider.valueChanged.connect(self._on_zoom_slider)
         self.buttons.accepted.connect(self.accept)
         self.buttons.rejected.connect(self.reject)
 
         self.auto_gain_check.setChecked(True)   # Default matches the old behavior: normalize the peak without clipping
         self._on_range_changed(self.waveform.start, self.waveform.end)
+        self._on_view_changed(self.waveform.view_start, self.waveform.view_span)
 
     # --- Sync --------------------------------------------------------
     def _on_range_changed(self, start: int, end: int):
-        for box, value in ((self.start_box, start), (self.end_box, end)):
+        shown_start = round(start / TONE_SAMPLE_RATE, 2)
+        shown_end = round(end / TONE_SAMPLE_RATE, 2)
+        for box, value in ((self.start_box, shown_start), (self.end_box, shown_end)):
             box.blockSignals(True)
-            box.setValue(round(value / TONE_SAMPLE_RATE, 2))
+            box.setValue(value)
             box.blockSignals(False)
+        self._box_values = (shown_start, shown_end)
         self.duration_label.setText(f"{(end - start) / TONE_SAMPLE_RATE:.2f} s")
         if self.auto_gain_check.isChecked():
             self._set_gain_controls(self._auto_gain_value(), from_auto=True)
         self._update_gain_hint()
 
-    def _on_boxes_changed(self):
-        start = int(self.start_box.value() * TONE_SAMPLE_RATE)
-        end = int(self.end_box.value() * TONE_SAMPLE_RATE)
-        old_range = (self.waveform.start, self.waveform.end)
-        self.waveform.set_range(start, end)
-        # set_range clamps values to the source length and the PCM cap. If the
-        # clamped range is identical to the old one it emits nothing, so the edited
-        # box would keep an out-of-range text; resync explicitly in that case.
-        if (self.waveform.start, self.waveform.end) == old_range:
-            self._on_range_changed(self.waveform.start, self.waveform.end)
+    def _commit_start_box(self):
+        """Keep the typed start time and move the end handle only when it cannot follow."""
+        if self.start_box.value() == getattr(self, "_box_values", (None, None))[0]:
+            return   # Not edited; committing would shift the range by the two-decimal rounding
+        start = int(round(self.start_box.value() * TONE_SAMPLE_RATE))
+        end = self.waveform.end
+        pad = int(round(0.5 * TONE_SAMPLE_RATE))
+        if abs(end - start) > TONE_MAX_SAMPLES:
+            end = min(self.waveform.total, start + pad)
+        elif end < start:
+            start, end = end, start
+        self.waveform.set_range(max(0, min(start, self.waveform.total)),
+                                max(0, min(end, self.waveform.total)))
+        self._on_range_changed(self.waveform.start, self.waveform.end)
+
+    def _commit_end_box(self):
+        """Keep the typed end time and move the start handle only when it cannot follow."""
+        if self.end_box.value() == getattr(self, "_box_values", (None, None))[1]:
+            return
+        end = int(round(self.end_box.value() * TONE_SAMPLE_RATE))
+        start = self.waveform.start
+        pad = int(round(0.5 * TONE_SAMPLE_RATE))
+        if abs(end - start) > TONE_MAX_SAMPLES:
+            start = max(0, end - pad)
+        elif start > end:
+            start, end = end, start
+        self.waveform.set_range(max(0, min(start, self.waveform.total)),
+                                max(0, min(end, self.waveform.total)))
+        self._on_range_changed(self.waveform.start, self.waveform.end)
+
+    # --- View --------------------------------------------------------
+    def _on_view_changed(self, start: int, span: int):
+        self.overview.update()
+        zoom = self.waveform.zoom
+        self.zoom_label.setText(f"{zoom * 100:.0f}%")
+        low, high = 1.0, self.waveform.max_zoom
+        self._syncing_zoom = True
+        if high > low:
+            ratio = max(0.0, min(1.0, math.log(zoom / low) / math.log(high / low)))
+            self.zoom_slider.setValue(int(round(ratio * 1000)))
+        else:
+            self.zoom_slider.setValue(0)
+        self._syncing_zoom = False
+
+    def _zoom_step(self, factor: float):
+        self.waveform.set_zoom(self.waveform.zoom * factor)
+
+    def _on_zoom_slider(self, value: int):
+        if self._syncing_zoom:
+            return
+        low, high = 1.0, self.waveform.max_zoom
+        if high <= low:
+            return
+        self.waveform.set_zoom(low * (high / low) ** (value / 1000.0))
+
+    def _make_tool_button(self, kind: str, tooltip: str, text: str = "") -> QToolButton:
+        """Small borderless icon button sized to the text line; hover/pressed states come from the stylesheet."""
+        button = QToolButton(self)
+        button.setAutoRaise(True)
+        button.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
+        button.setIcon(self._tool_icon(kind))
+        button.setIconSize(QSize(14, 14))
+        button.setFixedSize(self._control_height + 6, self._control_height)
+        button.setToolTip(tooltip)
+        button.setAccessibleName(text or tooltip)
+        button.setStyleSheet(
+            "QToolButton { border: none; background: transparent; padding: 0; border-radius: 3px; }"
+            "QToolButton:hover { background: palette(midlight); }"
+            "QToolButton:pressed { background: palette(mid); }"
+        )
+        return button
+
+    def _tool_icon(self, kind: str) -> QIcon:
+        """Paint the zoom icons in the text color so they follow the current theme."""
+        color = self.palette().color(QPalette.ColorRole.WindowText)
+        pixmap = QPixmap(14, 14)
+        pixmap.fill(Qt.GlobalColor.transparent)
+        painter = QPainter(pixmap)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
+        painter.setPen(QPen(color, 1.4))
+        if kind == "reset":
+            # Double-headed arrow: fit the whole track into the view
+            painter.drawLine(2, 7, 12, 7)
+            painter.drawLine(2, 7, 4, 5)
+            painter.drawLine(2, 7, 4, 9)
+            painter.drawLine(12, 7, 10, 5)
+            painter.drawLine(12, 7, 10, 9)
+        else:
+            painter.drawEllipse(1, 1, 8, 8)
+            painter.drawLine(9, 9, 12, 12)
+            painter.drawLine(3, 5, 7, 5)
+            if kind == "zoom_in":
+                painter.drawLine(5, 3, 5, 7)
+        painter.end()
+        return QIcon(pixmap)
+
 
     # --- Loudness gain -----------------------------------------------
     @property
@@ -619,6 +1037,15 @@ class OfbQtToneEditorDialog(QDialog):
             self.tr("Pause") if state == self._player.PlaybackState.PlayingState else self.tr("Play"))
 
     # --- Result ------------------------------------------------------
+    def accept(self):
+        # A time box may still hold uncommitted text when OK is clicked; commit it
+        # before the dialog closes so the saved range matches what the user sees.
+        self.start_box.interpretText()
+        self.end_box.interpretText()
+        self._commit_start_box()
+        self._commit_end_box()
+        super().accept()
+
     def done(self, result: int):
         # Every close path (OK, Cancel, Esc, title-bar close) goes through done();
         # stop the preview before the dialog disappears so audio never outlives it.

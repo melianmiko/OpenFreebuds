@@ -7,7 +7,9 @@ import numpy as np
 import pytest
 
 pytest.importorskip("PyQt6")
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtCore import QPoint, QPointF, Qt
+from PyQt6.QtGui import QWheelEvent
+from PyQt6.QtWidgets import QApplication, QSizePolicy
 
 from openfreebuds.driver.huawei.prompt_tone import TONE_AUTO_GAIN_TARGET, TONE_MAX_SAMPLES, TONE_SAMPLE_RATE
 from openfreebuds_qt.app.dialog.tone_editor import OfbQtToneEditorDialog, ToneWaveform
@@ -219,12 +221,15 @@ def test_clamped_box_values_snap_back_to_waveform(app):
     try:
         # No minimum: a 0.03 s selection is accepted instead of being forced to 0.2 s.
         dlg.start_box.setValue(5.77)
+        dlg.start_box.editingFinished.emit()
         dlg.end_box.setValue(5.80)
+        dlg.end_box.editingFinished.emit()
         assert abs(dlg.waveform.end / TONE_SAMPLE_RATE - 5.80) < 0.006
         assert dlg.waveform.end - dlg.waveform.start < 0.1 * TONE_SAMPLE_RATE
 
         # The end handle can still use the remaining source, and the box follows it.
         dlg.end_box.setValue(5.90)
+        dlg.end_box.editingFinished.emit()
         assert abs(dlg.end_box.value() - dlg.waveform.end / TONE_SAMPLE_RATE) < 0.006
     finally:
         dlg.cleanup()
@@ -246,3 +251,197 @@ def test_done_stops_preview_audio(app):
     dlg.done(0)
 
     assert calls[:2] == ["stop", "clear"]
+
+
+def test_end_handle_snaps_at_cap_then_slides_window(app):
+    """Reaching the PCM cap sticks to it; continuing right drags the start handle along."""
+    waveform = ToneWaveform(np.zeros(TONE_MAX_SAMPLES * 3, dtype="<i2"))
+    waveform.resize(800, 200)
+    waveform.set_range(0, TONE_MAX_SAMPLES)
+    waveform._drag = "end"
+
+    waveform._move_handle(TONE_MAX_SAMPLES + 100)      # Inside the magnetic zone
+    assert (waveform.start, waveform.end) == (0, TONE_MAX_SAMPLES)
+
+    waveform._move_handle(TONE_MAX_SAMPLES + 5000)     # Beyond it: the window slides
+    assert waveform.end - waveform.start == TONE_MAX_SAMPLES
+    assert waveform.start == 5000
+
+
+def test_start_handle_snaps_at_cap_then_slides_window(app):
+    """Mirror case: dragging the start handle left at the cap drags the end handle along."""
+    total = TONE_MAX_SAMPLES * 3
+    waveform = ToneWaveform(np.zeros(total, dtype="<i2"))
+    waveform.resize(800, 200)
+    waveform.set_range(total - TONE_MAX_SAMPLES, total)
+    waveform._drag = "start"
+
+    waveform._move_handle(total - TONE_MAX_SAMPLES - 100)
+    assert (waveform.start, waveform.end) == (total - TONE_MAX_SAMPLES, total)
+
+    waveform._move_handle(total - TONE_MAX_SAMPLES - 5000)
+    assert waveform.end - waveform.start == TONE_MAX_SAMPLES
+    assert waveform.end == total - 5000
+
+
+def test_time_box_commits_on_finish_only(app):
+    """Typing a time must not touch the waveform until focus loss or Enter."""
+    dlg = OfbQtToneEditorDialog(None, np.zeros(100000, dtype="<i2"))
+    try:
+        start_before = dlg.waveform.start
+        dlg.start_box.setValue(1.0)
+        assert dlg.waveform.start == start_before
+        dlg.start_box.editingFinished.emit()
+        assert abs(dlg.waveform.start / TONE_SAMPLE_RATE - 1.0) < 0.006
+    finally:
+        dlg.cleanup()
+
+
+def test_start_box_pulls_end_handle_when_too_far(app):
+    """The typed start wins; a distant end handle is pulled to start + 0.5 s."""
+    rate = TONE_SAMPLE_RATE
+    dlg = OfbQtToneEditorDialog(None, np.zeros(int(110 * rate), dtype="<i2"))
+    try:
+        dlg.waveform.set_range(int(25 * rate), int(25 * rate))
+        dlg.start_box.setValue(100.0)
+        dlg.start_box.editingFinished.emit()
+        assert abs(dlg.waveform.start / rate - 100.0) < 0.006
+        assert abs(dlg.waveform.end / rate - 100.5) < 0.012
+
+        dlg.waveform.set_range(int(108 * rate), int(108 * rate))
+        dlg.start_box.setValue(100.0)
+        dlg.start_box.editingFinished.emit()
+        assert abs(dlg.waveform.end / rate - 100.5) < 0.012
+    finally:
+        dlg.cleanup()
+
+
+def test_end_box_pulls_start_handle_when_too_far(app):
+    """The typed end wins; a distant start handle is pulled to end - 0.5 s."""
+    rate = TONE_SAMPLE_RATE
+    dlg = OfbQtToneEditorDialog(None, np.zeros(int(110 * rate), dtype="<i2"))
+    try:
+        dlg.waveform.set_range(0, 0)
+        dlg.end_box.setValue(100.0)
+        dlg.end_box.editingFinished.emit()
+        assert abs(dlg.waveform.end / rate - 100.0) < 0.006
+        assert abs(dlg.waveform.start / rate - 99.5) < 0.012
+    finally:
+        dlg.cleanup()
+
+
+def test_time_boxes_swap_when_order_is_inverted(app):
+    """A legal distance in the wrong order is corrected by swapping the handles."""
+    rate = TONE_SAMPLE_RATE
+    dlg = OfbQtToneEditorDialog(None, np.zeros(int(110 * rate), dtype="<i2"))
+    try:
+        dlg.waveform.set_range(int(98 * rate), int(99 * rate))
+        dlg.start_box.setValue(100.0)
+        dlg.start_box.editingFinished.emit()
+        assert abs(dlg.waveform.start / rate - 99.0) < 0.012
+        assert abs(dlg.waveform.end / rate - 100.0) < 0.012
+    finally:
+        dlg.cleanup()
+
+
+def test_time_box_keeps_input_when_other_handle_hits_the_audio_end(app):
+    """Near the source end the typed value is kept and the other handle clamps to the end."""
+    rate = TONE_SAMPLE_RATE
+    total = int(110 * rate)
+    dlg = OfbQtToneEditorDialog(None, np.zeros(total, dtype="<i2"))
+    try:
+        dlg.waveform.set_range(0, 0)
+        dlg.start_box.setValue(109.8)
+        dlg.start_box.editingFinished.emit()
+        assert abs(dlg.waveform.start / rate - 109.8) < 0.012
+        assert dlg.waveform.end == total
+    finally:
+        dlg.cleanup()
+
+
+def test_zoom_never_below_full_track(app):
+    """100% is the floor: the whole track stays visible and cannot be zoomed out."""
+    waveform = ToneWaveform(np.zeros(100000, dtype="<i2"))
+    waveform.resize(800, 200)
+    waveform.set_zoom(0.5)
+    assert waveform.zoom == 1.0
+    assert (waveform.view_start, waveform.view_span) == (0, 100000)
+
+
+def test_zoom_keeps_the_sample_under_the_cursor(app):
+    """Zooming is anchored: the sample below the cursor stays at the same x."""
+    waveform = ToneWaveform(np.zeros(100000, dtype="<i2"))
+    waveform.resize(800, 200)
+    anchor_index = waveform._index_of(200)
+    waveform.set_zoom(10.0, anchor_x=200)
+    assert abs(waveform._index_of(200) - anchor_index) <= 2
+
+
+def test_max_zoom_is_sample_level(app):
+    """At the maximum zoom one sample still occupies at least four pixels."""
+    waveform = ToneWaveform(np.zeros(100000, dtype="<i2"))
+    waveform.resize(800, 200)
+    waveform.set_zoom(waveform.max_zoom)
+    assert waveform.view_span * 4 >= waveform.width()
+    assert waveform.view_span * 4 <= waveform.width() + 4
+
+
+def test_resize_reclamps_zoom(app):
+    """A wider window lowers the maximum zoom, so the current zoom is released."""
+    waveform = ToneWaveform(np.zeros(100000, dtype="<i2"))
+    waveform.show()
+    waveform.resize(400, 200)
+    waveform.set_zoom(waveform.max_zoom)
+    assert waveform.view_span == 100
+    waveform.resize(800, 200)
+    app.processEvents()   # Hidden widgets do not receive resize events; a shown one does
+    assert waveform.view_span == 200
+
+
+def test_plain_wheel_pans_and_ctrl_wheel_zooms(app):
+    """Plain wheel moves the view horizontally; Ctrl+wheel zooms."""
+    waveform = ToneWaveform(np.zeros(100000, dtype="<i2"))
+    waveform.resize(800, 200)
+    waveform.set_zoom(4.0)
+    start_before = waveform.view_start
+    event = QWheelEvent(QPointF(400, 50), QPointF(400, 50), QPoint(0, 0), QPoint(0, -120),
+                        Qt.MouseButton.NoButton, Qt.KeyboardModifier.NoModifier,
+                        Qt.ScrollPhase.NoScrollPhase, False)
+    waveform.wheelEvent(event)
+    assert waveform.view_start == start_before + max(1, int(waveform.view_span * 0.1))
+
+    zoom_before = waveform.zoom
+    ctrl_event = QWheelEvent(QPointF(400, 50), QPointF(400, 50), QPoint(0, 0), QPoint(0, 120),
+                             Qt.MouseButton.NoButton, Qt.KeyboardModifier.ControlModifier,
+                             Qt.ScrollPhase.NoScrollPhase, False)
+    waveform.wheelEvent(ctrl_event)
+    assert waveform.zoom > zoom_before
+
+
+def test_layout_only_waveform_absorbs_extra_height(app):
+    """Window height goes to the waveform; hint labels keep their natural height."""
+    dlg = OfbQtToneEditorDialog(None, np.zeros(40000, dtype="<i2"))
+    try:
+        assert dlg.layout().stretch(1) == 1
+        assert dlg.waveform.sizePolicy().verticalPolicy() == QSizePolicy.Policy.Expanding
+        assert dlg.gain_hint.sizePolicy().verticalPolicy() == QSizePolicy.Policy.Minimum
+        assert dlg.start_box.sizePolicy().horizontalPolicy() == QSizePolicy.Policy.Expanding
+        assert dlg.end_box.sizePolicy().horizontalPolicy() == QSizePolicy.Policy.Expanding
+    finally:
+        dlg.cleanup()
+
+
+def test_overview_drag_moves_the_view_without_touching_the_selection(app):
+    """Clicking/dragging the overview pans; the trim range stays unchanged."""
+    dlg = OfbQtToneEditorDialog(None, np.zeros(100000, dtype="<i2"))
+    try:
+        dlg.waveform.resize(800, 200)
+        dlg.overview.resize(800, 44)
+        dlg.waveform.set_zoom(4.0)
+        selection = (dlg.waveform.start, dlg.waveform.end)
+        before = dlg.waveform.view_start
+        dlg.overview._center_view(600)
+        assert dlg.waveform.view_start != before
+        assert (dlg.waveform.start, dlg.waveform.end) == selection
+    finally:
+        dlg.cleanup()

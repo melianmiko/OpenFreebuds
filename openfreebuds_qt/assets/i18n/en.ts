@@ -1447,5 +1447,25 @@
         <source>Set to the best volume</source>
         <translation type="unfinished" />
     </message>
+    <message>
+        <source>Reset view</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Zoom out</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Zoom in</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Zoom</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Full track overview. Click or drag to move the view.</source>
+        <translation type="unfinished" />
+    </message>
 </context>
 </TS>

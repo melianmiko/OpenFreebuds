@@ -14,6 +14,10 @@
 - [Change] Trim the bundled `tone_config.json` to the official catalog and remove the personal custom presets 100-145. Id 14 is now explicitly classified as a bundled custom preset; a legacy id 14 already present in built-in storage migrates to the custom layer and remains editable/deletable.
 - [Feature] Treat entries removed from the current official Config as custom. Id 14, which came from an old bundled package but is absent from the current official Config, is editable/deletable; real official entries remain read-only.
 - [Feature] Add a prompt-tone editor with waveform display, two-handle trimming, playback preview, manual/automatic loudness gain and bilingual naming. Output is signed 16-bit / 16755 Hz / mono PCM, capped at the device limit.
+- [Feature] The tone editor waveform is zoomable: Ctrl+wheel zooms around the cursor (100% shows the whole track, up to four pixels per sample), the plain wheel pans horizontally, and a compact icon toolbar below the waveform provides reset, zoom out, a logarithmic slider, zoom in and the current zoom percentage. A full-track overview above the waveform shows the selection, the visible viewport and both handles; clicking or dragging it pans the view.
+- [Change] Tone editor start/end fields apply only on focus loss or Enter. The typed value is authoritative: if the opposite handle is farther than the 192000-sample limit it is moved to 0.5 s from the typed handle (or clamped to the audio edge), and an inverted but legal range is swapped. Clicking OK commits a still-focused field first.
+- [Fix] Tone editor handles snap to the 192000-sample cap; continuing to drag the same handle in the lengthening direction slides the opposite handle so the maximum-length window follows the pointer.
+- [Fix] Tone editor layout: only the main waveform absorbs extra window height (hint labels keep their line spacing), and the start/end row expands with the window width.
 - [Fix] Tray "Leave application" now stops the manager in client mode as well as standalone mode, and the daemon exits when its RPC server task ends, so no background process is left behind. Shutdown waits are bounded so a stuck driver cannot keep the Qt process alive after its window closes.
 - [Fix] Tone editor start/end fields stay in sync with the waveform handles after clamping. Typing a value that maps to the same clamped range no longer leaves a stale number in the box.
 - [Fix] Tone editor no longer enforces a 0.2 s minimum selection. Dragging one handle across the other swaps their roles and keeps the same handle under the pointer; overlapping handles choose the role from the drag direction. The 192000-sample PCM cap still applies.
@@ -29,7 +33,7 @@
 - [Fix] Close the SPP socket explicitly on connect timeout or failure and wait for the old endpoint to be released before reconnecting. This removes the Windows 10048 "address already in use" loop when switching devices.
 - [Fix] Capture all inbound frames for prompt-tone proto2 upload instead of filtering by command, and tolerate adapters/devices that return a null host name during Windows Bluetooth enumeration.
 - [i18n] Add and update strings for English, Simplified Chinese, German, Spanish, Brazilian Portuguese, Russian and Turkish, including the prompt-tone preview/apply actions and the FreeClip 2 S naming.
-- [Tests] Add protocol, library, editor, cloud-sync and tray-menu regression tests. The full suite passes with 226 passed and 1 skipped.
+- [Tests] Add protocol, library, editor, cloud-sync and tray-menu regression tests. The full suite passes with 240 passed and 1 skipped.
 - [Maintenance] Normalize Python comments and docstrings to English throughout the changed code. Local-only Windows launchers, the broken translation backup and the generated prompt-tone archive are kept outside the upstream tree.
 - [Docs] Add the FreeBuds 5 device page and update the FreeClip / FreeClip 2 pages with tested behavior and capability notes.
 

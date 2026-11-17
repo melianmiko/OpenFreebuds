@@ -2042,6 +2042,26 @@
         <source>Set to the best volume</source>
         <translation>Ajustar al mejor volumen</translation>
     </message>
+        <message>
+            <source>Reset view</source>
+            <translation>Restablecer vista</translation>
+        </message>
+        <message>
+            <source>Zoom out</source>
+            <translation>Alejar</translation>
+        </message>
+        <message>
+            <source>Zoom in</source>
+            <translation>Acercar</translation>
+        </message>
+        <message>
+            <source>Zoom</source>
+            <translation>Zoom</translation>
+        </message>
+        <message>
+            <source>Full track overview. Click or drag to move the view.</source>
+            <translation>Vista general de toda la pista. Haz clic o arrastra para mover la vista.</translation>
+        </message>
 </context>
 <context>
     <name>PromptToneName</name>

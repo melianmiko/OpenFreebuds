@@ -2043,6 +2043,26 @@
         <source>Set to the best volume</source>
         <translation>Ajustar para o melhor volume</translation>
     </message>
+        <message>
+            <source>Reset view</source>
+            <translation>Redefinir visualização</translation>
+        </message>
+        <message>
+            <source>Zoom out</source>
+            <translation>Diminuir zoom</translation>
+        </message>
+        <message>
+            <source>Zoom in</source>
+            <translation>Aumentar zoom</translation>
+        </message>
+        <message>
+            <source>Zoom</source>
+            <translation>Zoom</translation>
+        </message>
+        <message>
+            <source>Full track overview. Click or drag to move the view.</source>
+            <translation>Visão geral da faixa completa. Clique ou arraste para mover a visualização.</translation>
+        </message>
 </context>
 <context>
     <name>PromptToneName</name>

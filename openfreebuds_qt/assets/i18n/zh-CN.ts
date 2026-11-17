@@ -539,6 +539,11 @@
     <message><source>Display Name</source><translation>显示名称</translation></message>
     <message><source>Volume</source><translation>音量调节</translation></message>
     <message><source>Set to the best volume</source><translation>调节到最佳音量</translation></message>
+    <message><source>Reset view</source><translation>重置视图</translation></message>
+    <message><source>Zoom out</source><translation>缩小</translation></message>
+    <message><source>Zoom in</source><translation>放大</translation></message>
+    <message><source>Zoom</source><translation>缩放</translation></message>
+    <message><source>Full track overview. Click or drag to move the view.</source><translation>整曲概览，点击或拖动可移动当前视图。</translation></message>
 </context>
 <context>
     <name>OfbQtTrayBatteryModule</name>

@@ -2043,6 +2043,26 @@
         <source>Set to the best volume</source>
         <translation>Установить оптимальную громкость</translation>
     </message>
+        <message>
+            <source>Reset view</source>
+            <translation>Сбросить вид</translation>
+        </message>
+        <message>
+            <source>Zoom out</source>
+            <translation>Уменьшить</translation>
+        </message>
+        <message>
+            <source>Zoom in</source>
+            <translation>Увеличить</translation>
+        </message>
+        <message>
+            <source>Zoom</source>
+            <translation>Масштаб</translation>
+        </message>
+        <message>
+            <source>Full track overview. Click or drag to move the view.</source>
+            <translation>Обзор всей дорожки. Нажмите или перетащите, чтобы переместить вид.</translation>
+        </message>
 </context>
 <context>
     <name>PromptToneName</name>

@@ -2045,6 +2045,26 @@
         <source>Set to the best volume</source>
         <translation>Auf beste Lautstärke setzen</translation>
     </message>
+        <message>
+            <source>Reset view</source>
+            <translation>Ansicht zurücksetzen</translation>
+        </message>
+        <message>
+            <source>Zoom out</source>
+            <translation>Verkleinern</translation>
+        </message>
+        <message>
+            <source>Zoom in</source>
+            <translation>Vergrößern</translation>
+        </message>
+        <message>
+            <source>Zoom</source>
+            <translation>Zoom</translation>
+        </message>
+        <message>
+            <source>Full track overview. Click or drag to move the view.</source>
+            <translation>Übersicht der gesamten Tonspur. Klicken oder ziehen, um die Ansicht zu verschieben.</translation>
+        </message>
 </context>
 <context>
     <name>PromptToneName</name>

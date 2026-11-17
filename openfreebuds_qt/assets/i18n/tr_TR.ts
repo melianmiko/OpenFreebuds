@@ -2042,6 +2042,26 @@
         <source>Set to the best volume</source>
         <translation>En iyi ses düzeyine ayarla</translation>
     </message>
+        <message>
+            <source>Reset view</source>
+            <translation>Görünümü sıfırla</translation>
+        </message>
+        <message>
+            <source>Zoom out</source>
+            <translation>Uzaklaştır</translation>
+        </message>
+        <message>
+            <source>Zoom in</source>
+            <translation>Yakınlaştır</translation>
+        </message>
+        <message>
+            <source>Zoom</source>
+            <translation>Yakınlaştırma</translation>
+        </message>
+        <message>
+            <source>Full track overview. Click or drag to move the view.</source>
+            <translation>Tüm parçanın genel görünümü. Görünümü taşımak için tıklayın veya sürükleyin.</translation>
+        </message>
 </context>
 <context>
     <name>PromptToneName</name>
