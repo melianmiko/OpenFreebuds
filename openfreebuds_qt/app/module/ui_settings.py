@@ -1,4 +1,4 @@
-from PyQt6.QtCore import QLocale
+from PyQt6.QtCore import QLocale, pyqtSlot
 from PyQt6.QtWidgets import QSystemTrayIcon
 from qasync import asyncSlot
 
@@ -6,6 +6,7 @@ from openfreebuds import OfbEventKind
 from openfreebuds.shortcuts import OfbShortcuts
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_backend import is_run_at_boot, set_run_at_boot, AUTOSTART_AVAILABLE, AUTOUPDATE_AVAILABLE
+from openfreebuds_qt.app.dialog.first_run import OfbQtFirstRunDialog
 from openfreebuds_qt.app.module import OfbQtCommonModule
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.designer.ui_settings import Ui_OfbQtUiSettingsModule
@@ -25,6 +26,7 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
         self.available_updater_policies = ["show", "check", "off"]
         self.available_locales = ["auto", *list_available_locales()]
         self.config = OfbQtConfigParser.get_instance()
+        self._welcome_dialog = None
 
         self.setupUi(self)
 
@@ -128,6 +130,21 @@ class OfbQtUiSettingsModule(Ui_OfbQtUiSettingsModule, OfbQtCommonModule):
     @asyncSlot()
     async def on_low_battery_overlay_test(self):
         await self.ctx.tray.show_low_battery_overlay_preview()
+
+    @pyqtSlot()
+    def on_show_welcome(self):
+        if self._welcome_dialog is not None and self._welcome_dialog.isVisible():
+            self._welcome_dialog.raise_()
+            self._welcome_dialog.activateWindow()
+            return
+
+        if self._welcome_dialog is not None:
+            self._welcome_dialog.deleteLater()
+
+        self._welcome_dialog = OfbQtFirstRunDialog(self.ctx)
+        self._welcome_dialog.show()
+        self._welcome_dialog.raise_()
+        self._welcome_dialog.activateWindow()
 
     @asyncSlot(int)
     async def on_language_choose(self, index: int):

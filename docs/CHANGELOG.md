@@ -15,6 +15,7 @@
 - [Feature] Add a compact editor toolbar with reset, zoom out, logarithmic slider, zoom in and a zoom readout.
 - [Feature] Charging-case tone changes require both earbuds in the case, and the panel refreshes when both enter.
 - [Feature] Show wearing state in the battery header; disconnected earbuds no longer show 0%.
+- [Feature] Add a "Show welcome screen" button to UI settings; reopening it preloads the saved tray and autostart choices.
 - [Feature] Derive case power state from case charging only.
 - [Feature] Device info shows the localized model color without automatic row numbers.
 - [Change] Editor start/end fields apply on focus loss or Enter; the typed value wins and the other handle is clamped to the device limit.

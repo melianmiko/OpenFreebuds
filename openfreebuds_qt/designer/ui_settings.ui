@@ -90,6 +90,13 @@
         </property>
        </widget>
       </item>
+      <item row="5" column="0" colspan="2">
+       <widget class="QPushButton" name="show_welcome_button">
+        <property name="text">
+         <string>Show welcome screen</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -375,6 +382,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>show_welcome_button</sender>
+   <signal>clicked()</signal>
+   <receiver>OfbQtUiSettingsModule</receiver>
+   <slot>on_show_welcome()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>247</x>
+     <y>382</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>on_tray_eq_toggle(bool)</slot>
@@ -388,5 +411,6 @@
   <slot>on_low_battery_overlay_toggle(bool)</slot>
   <slot>on_battery_overlay_on_connect_toggle(bool)</slot>
   <slot>on_low_battery_overlay_test()</slot>
+  <slot>on_show_welcome()</slot>
  </slots>
 </ui>

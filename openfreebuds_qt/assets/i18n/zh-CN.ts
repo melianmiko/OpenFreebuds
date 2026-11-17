@@ -603,6 +603,7 @@
     <message><source>Show low battery popup</source><translation>显示低电量弹窗</translation></message>
     <message><source>Show battery popup when device connects</source><translation>设备连接时显示电量弹窗</translation></message>
     <message><source>Preview low battery popup</source><translation>预览低电量弹窗</translation></message>
+    <message><source>Show welcome screen</source><translation>显示欢迎界面</translation></message>
 </context>
 <context>
     <name>OfbTrayIcon</name>

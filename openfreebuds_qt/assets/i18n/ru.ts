@@ -1732,6 +1732,11 @@
             <source>Preview low battery popup</source>
             <translation>Предпросмотр всплывающего окна о низком заряде</translation>
         </message>
+        <message>
+            <location filename="../../designer/ui_settings.ui" line="0" />
+            <source>Show welcome screen</source>
+            <translation>Показать экран приветствия</translation>
+        </message>
     </context>
     <context>
         <name>OfbTrayIcon</name>

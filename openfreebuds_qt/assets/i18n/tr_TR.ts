@@ -1731,6 +1731,11 @@
             <source>Preview low battery popup</source>
             <translation>Düşük pil açılır penceresini önizle</translation>
         </message>
+        <message>
+            <location filename="../../designer/ui_settings.ui" line="0" />
+            <source>Show welcome screen</source>
+            <translation>Karşılama ekranını göster</translation>
+        </message>
     </context>
     <context>
         <name>OfbTrayIcon</name>

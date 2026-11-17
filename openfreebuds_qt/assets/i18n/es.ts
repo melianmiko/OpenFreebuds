@@ -1731,6 +1731,11 @@
             <source>Preview low battery popup</source>
             <translation>Vista previa de la ventana emergente de batería baja</translation>
         </message>
+        <message>
+            <location filename="../../designer/ui_settings.ui" line="0" />
+            <source>Show welcome screen</source>
+            <translation>Mostrar pantalla de bienvenida</translation>
+        </message>
     </context>
     <context>
         <name>OfbTrayIcon</name>
