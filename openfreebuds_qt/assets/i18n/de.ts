@@ -2149,4 +2149,11 @@
         <translation>Chopin</translation>
     </message>
 </context>
+<context>
+    <name>OfbQtDeviceErrors</name>
+    <message>
+        <source>Connection failed. Check whether another app is occupying the Bluetooth port (such as Huawei PC Manager, Huawei Control Center or MagicPods).</source>
+        <translation>Verbindung fehlgeschlagen. Prüfen Sie, ob eine andere App den Bluetooth-Port belegt (z. B. Huawei PC Manager, Huawei Control Center oder MagicPods).</translation>
+    </message>
+</context>
 </TS>

@@ -2,6 +2,7 @@ from types import SimpleNamespace
 
 import pytest
 
+from openfreebuds import IOpenFreebuds
 from openfreebuds.utils.stupid_rpc import RemoteError
 from openfreebuds_qt.tray.menu import OfbQtTrayMenu
 
@@ -107,3 +108,61 @@ async def test_other_remote_error_opens_error_dialog(monkeypatch):
     await OfbQtTrayMenu._handle_shortcut_error(fake, error)
 
     assert calls and "server trace" in calls[0]
+
+
+@pytest.mark.asyncio
+async def test_port_busy_shortcut_error_shows_bluetooth_hint(monkeypatch):
+    """A taken RFCOMM endpoint must explain the likely cause instead of dumping a traceback."""
+    calls = []
+
+    class _Dialog:
+        def __init__(self, parent):
+            self.parent = parent
+
+        async def get_user_response(self, info=""):
+            calls.append(info)
+
+    monkeypatch.setattr("openfreebuds_qt.tray.menu.OfbQtErrorDialog", _Dialog)
+
+    error = RemoteError({
+        "class": "FbStartupError",
+        "trace": "server trace",
+        "args": ["spp_port_busy"],
+    })
+    fake = SimpleNamespace(ctx=SimpleNamespace(main_window="main"))
+
+    await OfbQtTrayMenu._handle_shortcut_error(fake, error)
+
+    assert calls and "Bluetooth port" in calls[0]
+    assert "server trace" not in calls[0]
+
+
+@pytest.mark.asyncio
+async def test_failed_state_reports_port_busy_once(monkeypatch):
+    """The driver retries every few seconds; the hint must appear once per outage."""
+    calls = []
+
+    class _Dialog:
+        def __init__(self, parent):
+            self.parent = parent
+
+        async def get_user_response(self, info=""):
+            calls.append(info)
+
+    class _Ofb:
+        async def get_last_start_error(self):
+            return "spp_port_busy"
+
+    monkeypatch.setattr("openfreebuds_qt.tray.menu.OfbQtErrorDialog", _Dialog)
+
+    fake = SimpleNamespace(
+        _start_failure_reported=False,
+        ofb=_Ofb(),
+        ctx=SimpleNamespace(main_window="main"),
+    )
+
+    await OfbQtTrayMenu._report_start_failure(fake, IOpenFreebuds.STATE_FAILED)
+    await OfbQtTrayMenu._report_start_failure(fake, IOpenFreebuds.STATE_FAILED)
+
+    assert len(calls) == 1
+    assert "Bluetooth port" in calls[0]

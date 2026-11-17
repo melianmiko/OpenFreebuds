@@ -646,4 +646,8 @@
     <message><source>Enable awareness mode</source><translation>启用透传模式</translation></message>
     <message><source>Enable low-latency mode</source><translation>启用低延迟模式</translation></message>
 </context>
+<context>
+    <name>OfbQtDeviceErrors</name>
+    <message><source>Connection failed. Check whether another app is occupying the Bluetooth port (such as Huawei PC Manager, Huawei Control Center or MagicPods).</source><translation>连接失败，请检查当前系统是否有其他软件占用蓝牙端口（如华为电脑管家、华为控制中心、MagicPods 等）</translation></message>
+</context>
 </TS>

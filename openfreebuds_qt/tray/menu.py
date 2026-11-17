@@ -17,6 +17,7 @@ from openfreebuds_qt.tray.menu_equalizer import OfbDeviceEqualizerTrayMenu
 from openfreebuds_qt.tray.menu_generic import OfbQtTrayMenuCommon
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.utils.core_event import OfbCoreEvent
+from openfreebuds_qt.utils.device_errors import SPP_PORT_BUSY, spp_port_busy_message, startup_error_code
 from openfreebuds_qt.utils.report_tool import OfbQtReportTool
 
 log = create_logger("OfbQtTrayMenu")
@@ -32,6 +33,7 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
         self.is_connected: bool = False
         self.first_time_render: bool = True
         self.device_mac_address: str = ""
+        self._start_failure_reported: bool = False
 
         # Translation data
         self.battery_option_names = {
@@ -97,6 +99,10 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
         if device_changed:
             self._reset_device_state()
             self.first_time_render = True
+            self._start_failure_reported = False
+
+        if state == IOpenFreebuds.STATE_CONNECTED:
+            self._start_failure_reported = False
 
         if device_changed or event.kind_in([OfbEventKind.STATE_CHANGED, OfbEventKind.QT_SETTINGS_CHANGED]):
             self.is_connected = state == IOpenFreebuds.STATE_CONNECTED
@@ -145,6 +151,22 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
                 await self.dual_connect_submenu.update_ui()
 
             self.first_time_render = False
+
+        await self._report_start_failure(state)
+
+    async def _report_start_failure(self, state: int):
+        """Explain a known driver start failure once per failure episode."""
+        if state != IOpenFreebuds.STATE_FAILED or self._start_failure_reported:
+            return
+        try:
+            reason = await self.ofb.get_last_start_error()
+        except Exception:
+            log.exception("Failed to read driver start error")
+            return
+        if reason != SPP_PORT_BUSY:
+            return
+        self._start_failure_reported = True
+        await OfbQtErrorDialog(self.ctx.main_window).get_user_response(spp_port_busy_message())
 
     def _reset_device_state(self):
         """Hide cached device-specific actions before the next device is read."""
@@ -211,6 +233,10 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
         RPC calls wrap server exceptions in RemoteError, so a dependency missing on
         the manager side arrives as RemoteError(class_name=...). Match that too.
         """
+        if startup_error_code(error) == SPP_PORT_BUSY:
+            await OfbQtErrorDialog(self.ctx.main_window).get_user_response(spp_port_busy_message())
+            return
+
         dependency = isinstance(error, OfbBackendDependencyMissingError) or (
             isinstance(error, RemoteError)
             and error.class_name == "OfbBackendDependencyMissingError"

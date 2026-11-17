@@ -15,6 +15,9 @@ class IOpenFreebuds(Subscription):
     async def get_state(self) -> int:
         raise NotImplementedError("Not implemented")
 
+    async def get_last_start_error(self) -> str:
+        raise NotImplementedError("Not implemented")
+
     async def get_logs(self) -> str:
         raise NotImplementedError("Not implemented")
 

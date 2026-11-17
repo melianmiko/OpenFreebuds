@@ -23,6 +23,7 @@
 - [Fix] Tone editor no longer enforces a 0.2 s minimum selection. Dragging one handle across the other swaps their roles and keeps the same handle under the pointer; overlapping handles choose the role from the drag direction. The 192000-sample PCM cap still applies.
 - [Fix] Closing the tone editor or the main window stops any active preview playback and releases the temporary WAV file. Editor close is handled in `done()`, covering OK, Cancel, Esc and the title-bar close button.
 - [Fix] Tray Connect/Disconnect failures no longer terminate the application. RPC dependency errors are recognized across the manager boundary and open the dependency dialog; other failures open the error dialog. The app is tray-resident, so closing the last visible window (for example that dialog while the main window is hidden) no longer quits the process.
+- [Fix] When the SPP endpoint is occupied (Windows 10048 / EADDRINUSE), the UI now shows a localized hint to close other Bluetooth software (Huawei PC Manager, Huawei Control Center, MagicPods, etc.) instead of a raw driver startup error. The manager records the last driver start error and reports it once per outage.
 - [Fix] Long tone imports keep the full decoded source instead of truncating at 5.73 s. The editor defaults to the first maximum-length window but both handles and the start/end fields can select any later range; only the final selected range is capped at 192000 samples for preview, save and upload.
 - [Feature] Charging-case tone changes require both earbuds in the case. The backend refreshes 0x2B25 before reading in-case state, and the GUI re-reads feature 16 when both earbuds enter the case so the displayed tone is current.
 - [Feature] Show wearing/in-ear state in the main-window battery header. A powered-off earbud in the case now shows "Not connected" instead of 0%, and the tray shows "/" instead of 0.
@@ -33,7 +34,7 @@
 - [Fix] Close the SPP socket explicitly on connect timeout or failure and wait for the old endpoint to be released before reconnecting. This removes the Windows 10048 "address already in use" loop when switching devices.
 - [Fix] Capture all inbound frames for prompt-tone proto2 upload instead of filtering by command, and tolerate adapters/devices that return a null host name during Windows Bluetooth enumeration.
 - [i18n] Add and update strings for English, Simplified Chinese, German, Spanish, Brazilian Portuguese, Russian and Turkish, including the prompt-tone preview/apply actions and the FreeClip 2 S naming.
-- [Tests] Add protocol, library, editor, cloud-sync and tray-menu regression tests. The full suite passes with 241 passed and 1 skipped.
+- [Tests] Add protocol, library, editor, cloud-sync and tray-menu regression tests. The full suite passes with 245 passed and 1 skipped.
 - [Maintenance] Normalize Python comments and docstrings to English throughout the changed code. Local-only Windows launchers, the broken translation backup and the generated prompt-tone archive are kept outside the upstream tree.
 - [Docs] Add the FreeBuds 5 device page and update the FreeClip / FreeClip 2 pages with tested behavior and capability notes.
 

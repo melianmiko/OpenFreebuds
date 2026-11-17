@@ -1468,4 +1468,8 @@
         <translation type="unfinished" />
     </message>
 </context>
+<context>
+    <name>OfbQtDeviceErrors</name>
+    <message><source>Connection failed. Check whether another app is occupying the Bluetooth port (such as Huawei PC Manager, Huawei Control Center or MagicPods).</source><translation type="unfinished" /></message>
+</context>
 </TS>

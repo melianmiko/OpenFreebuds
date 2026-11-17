@@ -2147,4 +2147,11 @@
         <translation>Шопен</translation>
     </message>
 </context>
+<context>
+    <name>OfbQtDeviceErrors</name>
+    <message>
+        <source>Connection failed. Check whether another app is occupying the Bluetooth port (such as Huawei PC Manager, Huawei Control Center or MagicPods).</source>
+        <translation>Не удалось подключиться. Проверьте, не занят ли порт Bluetooth другим приложением (например, Huawei PC Manager, Huawei Control Center или MagicPods).</translation>
+    </message>
+</context>
 </TS>
