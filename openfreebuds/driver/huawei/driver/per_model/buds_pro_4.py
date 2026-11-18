@@ -1,5 +1,8 @@
 from openfreebuds.driver.huawei.driver.per_model.buds_pro_3 import OfbDriverHuaweiPro3
-from openfreebuds.driver.huawei.handler import OfbHuaweiHeadControlHandler
+from openfreebuds.driver.huawei.handler import (OfbHuaweiActionDoubleTapHandler,
+                                                OfbHuaweiActionTripleTapHandler,
+                                                OfbHuaweiAdaptiveVolumeHandler,
+                                                OfbHuaweiHeadControlHandler)
 
 
 class OfbDriverHuaweiPro4(OfbDriverHuaweiPro3):
@@ -8,5 +11,9 @@ class OfbDriverHuaweiPro4(OfbDriverHuaweiPro3):
     """
     def __init__(self, address):
         super().__init__(address)
-        # FreeBuds Pro 4 adds head control (read-only) on top of Pro 3
-        self.handlers.append(OfbHuaweiHeadControlHandler())
+        self.handlers.extend([
+            OfbHuaweiActionDoubleTapHandler(w_in_call=True, w_read_in_call=True),
+            OfbHuaweiActionTripleTapHandler(),
+            OfbHuaweiAdaptiveVolumeHandler(),
+            OfbHuaweiHeadControlHandler(),
+        ])

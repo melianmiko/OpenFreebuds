@@ -1,11 +1,22 @@
 # 0.19.0
 - [Device compatibility] Add full HUAWEI FreeBuds 5 support: dual-connect, L2HC, custom EQ, low-latency mode, half-in-ear detection, find-earbud, case battery, two ANC modes and level control. HD spatial audio remains Huawei-phone only.
+- [Device compatibility] Register FreeBuds Lipstick 2 as a FreeBuds 5 alias; the official command pages match and only shell/color assets differ.
+- [Device compatibility] Align gesture registration with the 2.0.7.321 touchsetting config: Pro 2 gains light-hold and custom EQ, Pro 3 gains light-hold, spatial audio and charging-box tone, Pro 4 gains double/triple tap and adaptive volume, FreeBuds 7 gains light-hold and in-call double-tap, and FreeClip 1st gen is limited to its official double/triple set.
+- [Device compatibility] Limit charging-case tone controls by model: FreeBuds Pro 3, Pro 4 and FreeClip 1 expose only the master switch; FreeClip 2/2 S, FreeBuds 6/7 and FreeBuds Pro 5 keep the full lid/tone controls.
+- [Device compatibility] Expose drop reminder only on FreeBuds 7, FreeBuds 6, FreeClip 2, FreeClip 2 S and FreeClip; FreeBuds Neo no longer mounts it.
+- [Docs] Correct FreeClip 1 gesture documentation: it has no swipe; its lab click-and-hold / five-tap volume modes are not modeled yet. The APK lab page lists `00014B`, and its MBB `0x2BB2` backend exists, so this is a handler gap rather than a missing protocol.
+- [Feature] Enable in-call long-press for FreeBuds 5, 5i, 6, 6i, 7i, Neo and SE 4 where the official page provides it.
+- [Fix] Read the long-press in-call value from parameter 4 instead of the right-ear value.
+- [Fix] Do not expose an in-call long-press option for FreeClip 2 / 2 S; its AI-key page has no such field.
+- [Docs] Add the HUAWEI model capability matrix and long-term driver TODO.
 - [Device compatibility] Add FreeBuds 6, FreeBuds 7, FreeBuds 7i, FreeBuds Neo, first-gen FreeClip, FreeBuds Pro 4 and FreeClip 2 S / Collector's Edition.
 - [Device compatibility] FreeClip 2 S shares FreeClip 2 behavior; FreeBuds Pro 4 and first-gen FreeClip gain read-only head control.
 - [Device compatibility] Add a device catalog with capability, feature and official Chinese color data.
 - [Device compatibility] Follow the official find-earbud matrix: all models except FreeBuds Pro (1st gen) and FreeBuds Studio.
 - [Feature] Add find-earbud with per-ear ringing state, status readback and a safety stop timeout.
 - [Feature] Split long-press and swipe actions per ear and align the official action values.
+- [Feature] FreeBuds Pro 5 gains the official pinch, tap, long-press, pinch-and-hold and swipe gesture set from the 2.0.7.321 touchsetting config.
+- [Feature] FreeClip 2 and FreeClip 2 S gain the official in-call double-tap setting: answer/end the call or disable it.
 - [Feature] Add adaptive volume, head control, spatial audio and drop alert.
 - [Feature] Rebuild charging-case tone settings so every option saves correctly; the built-in tone no longer streams audio.
 - [Feature] Add a three-layer prompt-tone library: bundled catalog, official cloud snapshot and custom tones with migration.
@@ -23,6 +34,7 @@
 - [Change] Drop alert now says the other earbud plays a ringtone instead of implying an in-app notification.
 - [Change] Tone editor handles snap at the maximum length and carry the other handle; there is no minimum selection.
 - [Fix] Hide unsupported battery, ANC, EQ and dual-connect entries when switching devices, and refresh the tray menu every time it opens.
+- [Fix] FreeBuds Pro 5 gesture pages no longer show unsupported actions; in-call double-tap and triple-tap now use their official value sets.
 - [Fix] Ignore the placeholder tone id reported while the earbuds are outside the charging case and keep the last valid selection.
 - [Fix] Load Qt's own translations with Qt's underscore locale names, so standard context-menu actions such as "Copy Link Location" are localized.
 - [Fix] Tone editor fields stay in sync after clamping; only the waveform grows with the window while the start/end row fills the width.

@@ -26,8 +26,10 @@ class OfbDriverHuaweiPro3(OfbDriverHuaweiGeneric):
             OfbHuaweiDualConnectHandler(),
             OfbHuaweiStateInEarHandler(),
             OfbHuaweiVoiceLanguageHandler(),
-            OfbHuaweiActionDoubleTapHandler(),
+            OfbHuaweiActionLightHoldHandler(w_light_hold=True, w_pinch_hold=False),
             OfbHuaweiActionLongTapSplitHandler(w_right=True),
             OfbHuaweiActionSwipeGestureHandler(),
             OfbHuaweiLowLatencyPreferenceHandler(),
+            OfbHuaweiSpatialAudioHandler(),
+            OfbHuaweiBoxToneHandler(w_lid_tone=False),
         ]

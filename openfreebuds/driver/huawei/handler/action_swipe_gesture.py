@@ -18,9 +18,9 @@ class OfbHuaweiActionSwipeGestureHandler(OfbDriverHandlerHuawei):
         ("action", "swipe_gesture_right"),
     ]
 
-    def __init__(self):
+    def __init__(self, options_map: dict[int, str] | None = None):
         super().__init__()
-        self._options = {
+        self._options = dict(options_map) if options_map is not None else {
             -1: "tap_action_off",
             0: "tap_action_change_volume",
         }

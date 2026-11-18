@@ -1099,7 +1099,52 @@
             <source>Press to speak (release to stop)</source>
             <translation>Нажать, чтобы говорить (отпустить, чтобы остановить)</translation>
         </message>
-    </context>
+        <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch once</source>
+        <translation>Сжатие один раз</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch once in call</source>
+        <translation>Сжатие один раз во время вызова</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch twice</source>
+        <translation>Сжатие два раза</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch twice in call</source>
+        <translation>Сжатие два раза во время вызова</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch three times</source>
+        <translation>Сжатие три раза</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch &amp; hold</source>
+        <translation>Сжатие и удержание</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Answer/end call</source>
+        <translation>Ответ на вызов/завершение вызова</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Reject call</source>
+        <translation>Отклонение вызова</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Noise control</source>
+        <translation>Контроль уровня шума</translation>
+    </message>
+</context>
     <context>
         <name>OfbQtHotkeysModule</name>
         <message>

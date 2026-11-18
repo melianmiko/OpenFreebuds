@@ -4,6 +4,11 @@ from openfreebuds.driver.huawei.handler import *
 
 class OfbDriverHuawei5(OfbDriverHuaweiGeneric):
     """HUAWEI FreeBuds 5 (modelId 000141 / productId ZAAB / internal name Honey)
+
+    HUAWEI FreeBuds Lipstick 2 (modelId 000151 / productId ZAAJ / internal name
+    Diva) is registered as an alias of this driver: its official command pages
+    match FreeBuds 5 and differ only in shell/color assets and the custom-EQ
+    display flag.
     
     Capability sources:
     - Huawei AI Life 2.0.7.321 assets/config/device_whitelist.json -> modelId 000141, deviceName HUAWEI FreeBuds 5, btDevNameReg contains Honey/HONEY
@@ -27,7 +32,7 @@ class OfbDriverHuawei5(OfbDriverHuaweiGeneric):
             ),
             OfbHuaweiActionDoubleTapHandler(w_in_call=True),
             OfbHuaweiActionTripleTapHandler(),
-            OfbHuaweiActionLongTapSplitHandler(w_right=True),
+            OfbHuaweiActionLongTapSplitHandler(w_right=True, w_in_call=True),
             OfbHuaweiActionSwipeGestureHandler(),
             OfbHuaweiConfigAutoPauseHandler(),
             OfnHuaweiSoundQualityPreferenceHandler(),

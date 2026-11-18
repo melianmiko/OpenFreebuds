@@ -15,7 +15,7 @@ class OfbDriverHuawei5I(OfbDriverHuaweiGeneric):
             OfbHuaweiAncHandler(w_cancel_lvl=True, w_cancel_dynamic=True),
             OfbHuaweiActionDoubleTapHandler(w_in_call=True),
             OfbHuaweiActionTripleTapHandler(),
-            OfbHuaweiActionLongTapSplitHandler(w_right=True),
+            OfbHuaweiActionLongTapSplitHandler(w_right=True, w_in_call=True),
             OfbHuaweiActionSwipeGestureHandler(),
             OfbHuaweiConfigAutoPauseHandler(),
             OfnHuaweiSoundQualityPreferenceHandler(),
@@ -25,7 +25,7 @@ class OfbDriverHuawei5I(OfbDriverHuaweiGeneric):
                 2: "hardbass",
                 3: "treble",
                 9: "voices",
-            }),
+            }, w_custom=True, w_custom_rows=10, w_custom_max_count=3),
             OfbHuaweiVoiceLanguageHandler(),
             OfbHuaweiDualConnectHandler(),
         ]

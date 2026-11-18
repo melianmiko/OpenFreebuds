@@ -20,7 +20,13 @@ class OfbDriverHuaweiFreeClip2(OfbDriverHuaweiGeneric):
             OfbHuaweiConfigAutoPauseHandler(),
 
             # Gesture handlers
-            OfbHuaweiActionDoubleTapHandler(),
+            OfbHuaweiActionDoubleTapHandler(
+                w_in_call=True, w_read_in_call=True,
+                options_call_map={
+                    0: "tap_action_answer_end",
+                    -1: "tap_action_off",
+                },
+            ),
             OfbHuaweiActionTripleTapHandler(),
             OfbHuaweiActionLongTapSplitHandler(w_agent_modes=True, w_anc=False),
             OfbHuaweiActionSwipeGestureHandler(),

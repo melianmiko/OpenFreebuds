@@ -1099,7 +1099,52 @@
             <source>Press to speak (release to stop)</source>
             <translation>Drücken zum Sprechen (Loslassen zum Stoppen)</translation>
         </message>
-    </context>
+        <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch once</source>
+        <translation>Einmal zusammendrücken</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch once in call</source>
+        <translation>Einmal zusammendrücken im Anruf</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch twice</source>
+        <translation>Zweimal zusammendrücken</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch twice in call</source>
+        <translation>Zweimal zusammendrücken im Anruf</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch three times</source>
+        <translation>Dreimal zusammendrücken</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch &amp; hold</source>
+        <translation>Zusammengedrückt halten</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Answer/end call</source>
+        <translation>Anruf annehmen/beenden</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Reject call</source>
+        <translation>Anruf ablehnen</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Noise control</source>
+        <translation>Geräuschkontrolle</translation>
+    </message>
+</context>
     <context>
         <name>OfbQtHotkeysModule</name>
         <message>

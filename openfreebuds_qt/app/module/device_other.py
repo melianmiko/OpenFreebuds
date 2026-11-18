@@ -152,6 +152,7 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
         self.box_tone_preview.setIconSize(QSize(14, 14))
         self.box_tone_preview.setFixedSize(30, 30)
         self._uploading = False
+        self._box_tone_lid_supported = False
         self._headset_in_box = False
         self._master_enabled = False
         self._status_timer = QTimer(self)
@@ -211,9 +212,11 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                     "config", "head_control_supported") == "true"
                 drop_reminder_visible = await self.ofb.get_property(
                     "config", "drop_reminder_supported") == "true"
+                box_tone_lid_supported = await self.ofb.get_property(
+                    "config", "box_tone_lid_supported") == "true"
                 box_tone_visible = (
                     await self.ofb.get_property("config", "box_tone_supported") == "true"
-                    or await self.ofb.get_property("config", "box_tone_lid_supported") == "true"
+                    or box_tone_lid_supported
                 )
 
                 self.auto_pause_root.setVisible(auto_pause_visible)
@@ -231,7 +234,7 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                     or head_control_visible or drop_reminder_visible or box_tone_visible
                 )
 
-                if box_tone_visible and not self._tone_bootstrap_started:
+                if box_tone_visible and box_tone_lid_supported and not self._tone_bootstrap_started:
                     # First time this device exposes charging-case tones: fetch missing cloud
                     # catalog/audio resources on a worker thread, then rebuild the combo.
                     self._tone_bootstrap_started = True
@@ -334,6 +337,15 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                     self.box_tone_lid_volume_value.setText(str(self.box_tone_lid_volume_slider.value()))
 
                 self.box_tone_lid_options.setVisible(lid_supported)
+                self.box_tone_pick_row.setVisible(lid_supported)
+                self.box_tone_buttons_row.setVisible(lid_supported)
+                self._box_tone_lid_supported = lid_supported
+                if not lid_supported:
+                    # Master-only models (Pro 3/4, FreeClip 1) expose just the
+                    # 0x2BB1 switch; hide the lid tone and upload controls.
+                    self.box_tone_status.setVisible(False)
+                    self.box_tone_progress.setVisible(False)
+                    self.box_tone_export_row.setVisible(False)
                 was_in_box = self._headset_in_box
                 self._headset_in_box = headset_in_box
                 self._master_enabled = master_enabled
@@ -346,7 +358,7 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                 self._refresh_tone_enabled()
 
                 # When both earbuds change from 'not in case' to 'both in case', re-read the current tone from the device and rebuild the combo
-                if headset_in_box and not was_in_box:
+                if headset_in_box and not was_in_box and self._box_tone_lid_supported:
                     await self.ofb.set_property("config", "box_tone_refresh", "1")
                     await self.refresh_tone_list()
 
@@ -498,6 +510,9 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
 
     async def refresh_upload_status(self):
         status = await self.ofb.get_property("config", "box_tone_upload_status") or ""
+        if not self._box_tone_lid_supported:
+            # Master-only models have no upload/tone-selection UI.
+            status = ""
         progress = await self.ofb.get_property("config", "box_tone_upload_progress") or ""
         status_changed = status != self._last_status
         self._last_status = status

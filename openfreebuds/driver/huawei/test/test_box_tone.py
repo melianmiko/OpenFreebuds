@@ -74,9 +74,9 @@ def base_model():
     }
 
 
-async def create_driver(model):
+async def create_driver(model, handler=None):
     driver = FbDriverHuaweiGenericFixture(
-        handlers=[OfbHuaweiBoxToneHandler()],
+        handlers=[handler or OfbHuaweiBoxToneHandler()],
         package_response_model=model,
     )
     await driver.start()
@@ -142,6 +142,24 @@ async def test_init_supported():
     assert config["box_tone_lid_enabled"] == "true"
     assert config["box_tone_lid_volume"] == "7"
     assert state["headset_in_box"] == "true"
+
+
+@pytest.mark.asyncio
+async def test_master_only_model_hides_lid_tone_controls():
+    """Pro 3/4 and FreeClip 1 have other case tones but no lid-open tone page."""
+    model = {
+        TONE_STATE_RQ: [TONE_STATE_RESP],
+        TONE_INFO_RQ: [TONE_INFO_RESP_IN_BOX],
+    }
+    driver = await create_driver(model, OfbHuaweiBoxToneHandler(w_lid_tone=False))
+
+    assert await driver.get_property("config", "box_tone_supported") == "true"
+    assert await driver.get_property("config", "box_tone_enabled") == "true"
+    assert await driver.get_property("config", "box_tone_lid_supported") == "false"
+    assert await driver.get_property("config", "box_tone_lid_volume") is None
+    assert await driver.set_property("config", "box_tone_lid_enabled", "true") is False
+    assert await driver.set_property("config", "box_tone_id", "1") is False
+    assert await driver.set_property("config", "box_tone_upload", "{}") is False
 
 
 @pytest.mark.asyncio

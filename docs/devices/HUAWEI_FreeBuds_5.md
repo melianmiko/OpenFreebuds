@@ -4,6 +4,11 @@ Protocol: Huawei SPP, port 1
 
 Model: `000141` / product `ZAAB` / internal name `Honey`.
 
+FreeBuds Lipstick 2 is the same driver: `000151` / product `ZAAJ` / internal
+name `Diva`. Its official command pages match FreeBuds 5, and Huawei's
+[official setup guide](https://consumer.huawei.com/cn/support/content/zh-cn00759656/)
+places it in the same gesture categories as FreeBuds 5.
+
 Driver capabilities are derived from the official Smart Audio APK
 (`config_ZAAB.json`, `assets/000141.json`). Not verified on real hardware yet.
 

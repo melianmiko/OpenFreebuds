@@ -107,6 +107,49 @@ def test_tone_import_and_drop_alert_strings_are_translated(locale):
         app.removeTranslator(translator)
 
 
+@pytest.mark.parametrize("locale", SUPPORTED)
+def test_pro_5_gesture_strings_are_translated(locale):
+    expected = {
+        "de": ("Einmal zusammendrücken", "Zusammengedrückt halten",
+               "Anruf annehmen/beenden", "Anruf ablehnen", "Geräuschkontrolle"),
+        "en": ("Pinch once", "Pinch & hold", "Answer/end call", "Reject call", "Noise control"),
+        "es": ("Pellizcar una vez", "Pellizcar y mantener",
+               "Responder/finalizar llamada", "Rechazar llamada", "Control de ruido"),
+        "pt-BR": ("Apertar uma vez", "Apertar e manter",
+                  "Atender/encerrar chamada", "Rejeitar chamada", "Controle de ruído"),
+        "ru": ("Сжатие один раз", "Сжатие и удержание",
+               "Ответ на вызов/завершение вызова", "Отклонение вызова", "Контроль уровня шума"),
+        "tr_TR": ("Bir kez sıkıştır", "Sıkıştır ve basılı tut",
+                  "Arama yanıtla/sonlandır", "Arama reddet", "Gürültü kontrolü"),
+        "zh-CN": ("按捏一下", "捏住", "接听/挂断电话", "拒接来电", "噪声控制"),
+    }
+
+    app = QCoreApplication.instance() or QCoreApplication([])
+    translator = QTranslator()
+    assert translator.load(str(I18N_PATH / f"{locale}.qm"))
+    app.installTranslator(translator)
+    try:
+        sources = ("Pinch once", "Pinch & hold", "Answer/end call", "Reject call", "Noise control")
+        for source, translation in zip(sources, expected[locale]):
+            assert translator.translate("OfbQtGesturesModule", source) == translation
+
+        labels = (
+            "Pinch once",
+            "Pinch once in call",
+            "Pinch twice",
+            "Pinch twice in call",
+            "Pinch three times",
+            "Pinch & hold",
+        )
+        for source in labels:
+            translation = translator.translate("OfbQtGesturesModule", source)
+            assert translation
+            if locale != "en":
+                assert translation != source
+    finally:
+        app.removeTranslator(translator)
+
+
 def test_first_run_dialog_strings_are_translated():
     app = QCoreApplication.instance() or QCoreApplication([])
     translator = QTranslator()

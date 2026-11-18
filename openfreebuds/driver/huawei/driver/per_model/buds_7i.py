@@ -34,7 +34,7 @@ class OfbDriverHuawei7I(OfbDriverHuaweiGeneric):
             # Gestures
             OfbHuaweiActionDoubleTapHandler(w_in_call=True),
             OfbHuaweiActionTripleTapHandler(),
-            OfbHuaweiActionLongTapSplitHandler(w_right=True),
+            OfbHuaweiActionLongTapSplitHandler(w_right=True, w_in_call=True),
             OfbHuaweiActionSwipeGestureHandler(),
             OfbHuaweiLowLatencyPreferenceHandler(),
 

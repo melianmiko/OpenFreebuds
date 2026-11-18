@@ -1,0 +1,149 @@
+# HUAWEI model capability matrix
+
+Source: `华为智慧音频 2.0.7.321` (`assets/config/config_<productId>.json`,
+`assets/touchsetting/config_<productid>.json`) and the current OpenFreebuds driver
+registrations. Huawei's
+[official setup guide](https://consumer.huawei.com/cn/support/content/zh-cn00759656/)
+also places FreeBuds Lipstick 2 in the same gesture categories as FreeBuds 5 /
+Lipstick.
+
+This matrix is a working document for the 0.19.0 Huawei driver expansion. It
+records what the official config declares and what the current driver exposes. It
+is not a claim that every listed feature has been tested on hardware.
+
+## Reading the tables
+
+- `Y` — the official config has the page/action and the current driver exposes it.
+- `O` — the official config has the page/action, but the current driver does not
+  expose it (missing handler or not adapted yet).
+- `-` — not present in the official config for that model family.
+- `?` — the official page exists, but its writable action data is absent or not
+  clear enough to map safely.
+
+Two cautions apply to the whole document:
+
+1. `spatialAudio.isSupportSpatialAudio` and `charging_tip` can describe a
+   Huawei-phone-side feature rather than an independently switchable earbud
+   feature. First-gen FreeClip is such a case and keeps its spatial-audio and
+   charging-tip handlers filtered out.
+2. `soundQuality.isSupportEqCustom` is not a reliable switch for the new custom
+   EQ interface. Several current models work with custom EQ even when the field
+   is absent or `false`. The driver keeps `w_custom=True` for those models.
+
+## Feature coverage
+
+| Family | Product IDs | Driver | Selected official feature tags | Current driver handlers | Gaps / notes |
+|---|---|---|---|---|---|
+| FreeBuds 3 | `004O` | `Huawei3` | `touchsettings`, `active_noise_cancel` | info, in-ear, battery, double tap, voice language, drop logs | ANC tag has no ANC handler; single official touch page needs verification |
+| FreeBuds 4i / HONOR Earbuds 2 | `ZA08` | `Huawei4I` | `noisecontrol`, `wear_detection`, `touchsettings` | ANC, in-ear, battery, double tap, long press, auto-pause, voice language | No EQ/spatial pages in config; no in-call gesture page |
+| FreeBuds 5 | `ZAAB` | `Huawei5` | `EqAdjustWidget`, `SpatialAudioWidget`, `noisecontrol`, `earpuds_search`, `wear_detection` | ANC, double/triple/long/swipe, auto-pause, sound quality, low latency, custom EQ, dual connect | Spatial audio is Huawei-phone-side; no charging-box tone page |
+| FreeBuds Lipstick 2 | `ZAAJ` | `Huawei5` (alias) | Same command pages as FreeBuds 5 | Same as FreeBuds 5 | Shell/color variant only; official config differs in box icon, default color and `isSupportEqCustom`; custom EQ kept |
+| FreeBuds 5i | `ZAA9`, `ZAAD` | `Huawei5I` | `EqAdjustWidget`, `noisecontrol`, `earplugdetection`, `earpuds_search`, `wear_detection` | ANC, double/triple/long/swipe, auto-pause, sound quality, low latency, custom EQ, dual connect | `ZAAD` omits `isSupportEqCustom`; custom EQ kept because the new interface works |
+| FreeBuds 6 | `ZAAL`, `ZAAQ` | `Huawei6` | `EqAdjustWidget`, `SpatialAudioWidget`, `adaptiveaudio`, `charging_tip`, `headcontrol`, `drop_detection`, `smart_charge`, `voice_assistant` | double/triple/long/swipe, auto-pause, EQ, adaptive volume, box tone (full), head control, drop reminder | Voice assistant and smart charge not implemented; spatial audio phone-side |
+| FreeBuds 6i | `ZAAK` | `Huawei6I` | `EqAdjustWidget`, `noisecontrol`, `earplugdetection`, `spatialAudio`, `voice_assistant` | ANC, double/triple/long/swipe, auto-pause, EQ, low latency, dual connect | Official spatial entry is a sound-effect widget, no standalone handler; voice assistant missing |
+| FreeBuds 7 | `ZAB1` | `Huawei7` | `EqAdjustWidget`, `SpatialAudioWidget`, `adaptiveaudio`, `charging_tip`, `headcontrol`, `drop_detection`, `agent`, `smart_record`, `voice_control` | light/pinch hold, double/triple/long/swipe, EQ, spatial audio, adaptive volume, box tone (full), head control, drop reminder | Agent, smart record and voice control not implemented; AI-key page has no in-call field |
+| FreeBuds 7i | `ZAAU` | `Huawei7I` | `EqAdjustWidget`, `SpatialAudioWidget`, `headcontrol`, `smart_charge` | double/triple/long/swipe, EQ, spatial audio, head control | Smart charge and voice features missing; no box tone page |
+| FreeBuds Neo | `ZAB4` | `HuaweiNeo` | `EqAdjustWidget`, `SpatialAudioWidget`, `adaptiveaudio`, `headcontrol`, `drop_detection`, `agent`, `voice_wakeup` | double/triple/long/swipe, EQ, spatial audio, adaptive volume, head control | `drop_detection` is declared but Neo is not in Huawei's supported drop-reminder list, so no handler; voice wakeup/smart scenario/agent missing |
+| FreeBuds Pro | `ZA07` | `HuaweiPro` | `noisecontrol`, `earpuds_search`, `wear_detection` | ANC, long press, swipe, in-ear, dual connect | No double/triple page; light-hold and swipe pages have no writable data |
+| FreeBuds Pro 2 / 2+ | `ZAA7`, `ZAA6` | `HuaweiPro2` | `EqAdjustWidget`, `SpatialAudioWidget`, `noisecontrol`, `wear_detection` | light hold, long press, swipe, auto-pause, EQ/custom EQ, dual connect | Official spatial tag has no handler; whether it is phone-side or independent needs confirmation |
+| FreeBuds Pro 3 | `ZAAG` | `HuaweiPro3` | `EqAdjustWidget`, `SpatialAudioWidget`, `charging_tip`, `noisecontrol` | light hold, long press, swipe, auto-pause, EQ, low latency, spatial audio, box tone (master only) | Official `isSupportEqCustom=false`; custom EQ kept; no double/triple page; no lid-open tone page |
+| FreeBuds Pro 4 | `ZAAM` | `HuaweiPro4` | `EqAdjustWidget`, `SpatialAudioWidget`, `adaptiveaudio`, `charging_tip`, `headcontrol`, `voice_assistant` | light hold, double/triple/long/swipe, adaptive volume, head control, spatial audio, box tone (master only) | Voice assistant missing; long-press page has no in-call field; inherits Pro 3 master-only box tone |
+| FreeBuds Pro 5 | `ZAAV`, `ZAAW` | `HuaweiPro5` | `EqAdjustWidget`, `SpatialAudioWidget`, `adaptiveaudio`, `charging_tip`, `headcontrol`, `hearing_test`, `hearing_aid`, `voice_wakeup`, `smart_record` | light/pinch hold, double/triple/long/swipe, EQ, spatial audio, adaptive volume, box tone (full), head control | Hearing aid/test, voice wakeup and smart record missing; AI-key page has no in-call field |
+| FreeClip (1st gen) | `ZAAI` | `HuaweiFreeClip` | `EqAdjustWidget`, `SpatialAudioWidget`, `charging_tip`, `headcontrol`, `drop_detection` | double/triple tap, head control, drop reminder, box tone (master only) | Long/light/swipe filtered; no lid-open tone page; `spatialAudio` / `charging_tip` entries are phone-side; box tone master is mounted separately |
+| FreeClip 2 / 2 S | `ZAAS`, `ZAB2` | `HuaweiFreeClip2` / `FreeClip2S` | `EqAdjustWidget`, `SpatialAudioWidget`, `adaptiveaudio`, `charging_tip`, `headcontrol`, `drop_detection`, `agent`, `voice_wakeup`, `smart_charge` | double/triple/long/swipe, EQ, spatial audio, adaptive volume, box tone (full), head control, drop reminder | AI-key long-press page has no `isInCall`; voice wakeup and smart charge missing |
+| FreeBuds SE | `ZAA1` | `HuaweiSe` | `touchsettings`, `wear_detection` | double tap, battery, drop logs | No EQ/ANC page; single touch page needs verification |
+| FreeBuds SE 2 | `ZAAF` | `HuaweiSe2` | `EqAdjustWidget`, `earpuds_search`, `touchsettings` | double/triple/long tap, custom-preset EQ, low latency | No custom EQ rows; official page has `EqAdjustWidget` but no custom-EQ field |
+| FreeBuds SE 4 ANC | `ZAAT` | `HuaweiSe4` | `EqAdjustWidget`, `noisecontrol`, `sync_volume`, `voice_assistant` | ANC, double/triple/long tap, EQ, low latency | No custom EQ rows; voice assistant and volume sync missing |
+| FreeBuds Studio | `ZA06` | `HuaweiStudio` | `EqAdjustWidget`, `noisecontrol`, `touchsettings` | ANC, auto-pause, EQ | No gesture handler at all; official touch pages have little writable data |
+| FreeLace Pro | `ZA04` | `HuaweiLacePro` | `noisecontrol`, `touchsettings` | power button, long press, ANC | Only the two official gesture pages are mapped |
+| FreeLace Pro 2 | `ZAAH` | `HuaweiLacePro2` | `EqAdjustWidget`, `noisecontrol`, `sync_volume` | long press, EQ, sound quality, low latency, dual connect | Single long-press page; no tap/swipe pages |
+
+`box tone (full)` exposes master, lid-open, volume and tone selection. `box tone (master only)` exposes only the `0x2BB1` master switch; Pro 3/4 and FreeClip 1 have other case tones but no writable lid-open page.
+
+Drop reminder is exposed on FreeBuds 7, FreeBuds 6, FreeClip 2, FreeClip 2 S and FreeClip only. FreeBuds Neo declares `drop_detection` but is not in Huawei's supported list, so no handler is mounted.
+
+## Gesture coverage
+
+`In-call double` and `In-call long` mean a separate action page with `isInCall`
+data, not merely the normal action working during a call.
+
+| Family | Double | Triple | Long | Swipe | Light / pinch hold | In-call double | In-call long |
+|---|---|---|---|---|---|---|---|
+| FreeBuds 3 | `Y?` | `-` | `-` | `-` | `-` | `-` | `-` |
+| FreeBuds 4i | `Y` | `-` | `Y` | `-` | `-` | `-` | `-` |
+| FreeBuds 5 | `Y` | `Y` | `Y` | `Y` | `-` | `Y` | `Y` |
+| FreeBuds Lipstick 2 | `Y` | `Y` | `Y` | `Y` | `-` | `Y` | `Y` |
+| FreeBuds 5i | `Y` | `Y` | `Y` | `Y` | `-` | `Y` | `Y` |
+| FreeBuds 6 | `Y` | `Y` | `Y` | `Y` | `-` | `Y` | `Y` |
+| FreeBuds 6i | `Y` | `Y` | `Y` | `Y` | `-` | `Y` | `Y` |
+| FreeBuds 7 | `Y` | `Y` | `Y` | `Y` | `Y` | `Y` | `-` |
+| FreeBuds 7i | `Y` | `Y` | `Y` | `Y` | `-` | `Y` | `Y` |
+| FreeBuds Neo | `Y` | `Y` | `Y` | `Y` | `-` | `Y` | `Y` |
+| FreeBuds Pro | `-` | `-` | `Y` | `Y` | `-` | `-` | `-` |
+| FreeBuds Pro 2 | `-` | `-` | `Y` | `Y` | `Y` | `-` | `-` |
+| FreeBuds Pro 3 | `-` | `-` | `Y` | `Y` | `Y` | `-` | `-` |
+| FreeBuds Pro 4 | `Y` | `Y` | `Y` | `Y` | `Y` | `Y` | `-` |
+| FreeBuds Pro 5 | `Y` | `Y` | `Y` | `Y` | `Y` | `Y` | `-` |
+| FreeClip | `Y` | `Y` | `-` | `-` | `-` | `Y` | `-` |
+| FreeClip 2 / 2 S | `Y` | `Y` | `Y` | `Y` | `-` | `Y` | `-` |
+| FreeBuds SE | `Y?` | `-` | `-` | `-` | `-` | `-` | `-` |
+| FreeBuds SE 2 | `Y` | `Y` | `-` | `-` | `-` | `Y` | `Y` |
+| FreeBuds SE 4 ANC | `Y` | `Y` | `Y` | `-` | `-` | `Y` | `Y` |
+| FreeBuds Studio | `O?` | `-` | `O?` | `O?` | `-` | `-` | `-` |
+| FreeLace Pro | `Y` | `-` | `Y` | `-` | `-` | `-` | `-` |
+| FreeLace Pro 2 | `-` | `-` | `Y` | `-` | `-` | `-` | `-` |
+
+FreeClip 1 has no swipe. Its volume controls are lab gestures: quick click-and-hold and five-tap mode. The touchsetting config has no such page, but the official lab UI (`VolumeAdjustView`) explicitly supports model `00014B` (Clip 1) and its `0x2BB2` backend is present; OpenFreebuds does not model either lab gesture yet, so the table only shows the standard double/triple taps.
+
+### Official support guide check
+
+Reference: [Huawei setup guide, tables 1-3](https://consumer.huawei.com/cn/support/content/zh-cn00759656/).
+
+- FreeBuds Pro (1st gen): the official guide uses a stem pinch for
+  ANC/play/call, but `config_ZA07` has no writable light-hold page. The driver
+  maps the stem press to `LongTapSplit` and keeps no `light_hold` property.
+- FreeClip (1st gen): there is no swipe gesture. Volume uses the lab gestures:
+  quick click-and-hold (increase on the listening ball, decrease on the comfort
+  bean) and five-tap mode with left/right touch zones configured separately.
+  `config_ZAAI` only has double/triple pages; the lab page is a separate module.
+  `VolumeAdjustView` includes `00014B`, and `VolumeAdjustHelper` exposes
+  `0x2BB2`; OpenFreebuds has no handler yet, so `gesture_swipe` stays filtered.
+- FreeBuds SE 4 ANC: the official guide adds a five-tap volume mode. The driver
+  exposes double/triple/long and long-press volume options, but not that mode.
+- FreeBuds SE 2 / SE: the official guide confirms no volume gesture; keeping
+  `gesture_swipe` absent is correct. SE 2 also has only an in-call long page, not
+  a normal left/right long-split page.
+- FreeBuds 7 / Pro 5: the official long-press/AI-key page has no in-call
+  action; `w_in_call=False` is correct.
+- FreeBuds 3: the official guide lists double tap only; the current double-tap
+  handler matches.
+- FreeBuds 5 / Lipstick 2: the guide puts them in the same gesture category;
+  Lipstick 2 is a FreeBuds 5 alias, so no separate handler is needed.
+- The guide also covers FreeBuds 4, 4E, 3i, Lipstick, SE 3 and FreeArc; these
+  have no driver mapping and remain in TODO's unsupported list.
+
+## Changes made in this pass
+
+- FreeBuds Pro 2: added light-hold mapping and custom EQ.
+- FreeBuds Pro 3: replaced the inherited double-tap page with the official
+  light-hold/long/swipe set; added spatial audio and the master-only charging-box
+  tone switch.
+- FreeBuds Pro 4: added double/triple tap and adaptive volume on top of the Pro 3
+  set; head control was already present and is kept.
+- FreeBuds 7: added light/pinch hold and in-call double tap.
+- FreeBuds 5i: enabled custom EQ with the same row layout as FreeBuds 5.
+- FreeBuds Lipstick 2: registered as a FreeBuds 5 alias; official command pages
+  match, only shell/color assets and the custom-EQ display flag differ.
+- FreeBuds 5, 5i, 6, 6i, 7i, Neo and SE 4: enabled the official in-call
+  long-press page.
+- FreeClip 1st gen: limited to double/triple tap plus head control, drop
+  reminder and the master-only charging-box tone switch.
+- FreeClip 2 / 2 S: kept double-tap in-call support; the AI-key long-press page
+  does not define an in-call option and therefore does not expose one.
+- Long-press in-call values are now read from parameter 4 instead of being
+  mistaken for the right-ear action.
+
+## Long-term work
+
+See [TODO.md](TODO.md) for unsupported product IDs, missing feature handlers and
+hardware validation items.

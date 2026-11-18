@@ -16,7 +16,7 @@ class OfbDriverHuawei6I(OfbDriverHuaweiGeneric):
             OfbHuaweiAncHandler(w_cancel_lvl=True, w_cancel_dynamic=True),
             OfbHuaweiActionDoubleTapHandler(w_in_call=True),
             OfbHuaweiActionTripleTapHandler(),
-            OfbHuaweiActionLongTapSplitHandler(w_right=True),
+            OfbHuaweiActionLongTapSplitHandler(w_right=True, w_in_call=True),
             OfbHuaweiActionSwipeGestureHandler(),
             OfbHuaweiConfigAutoPauseHandler(),
             OfnHuaweiSoundQualityPreferenceHandler(),

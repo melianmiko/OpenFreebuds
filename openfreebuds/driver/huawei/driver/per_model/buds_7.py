@@ -32,8 +32,9 @@ class OfbDriverHuawei7(OfbDriverHuaweiGeneric):
             OfbHuaweiVoiceLanguageHandler(),
 
             # Gestures
-            OfbHuaweiActionDoubleTapHandler(),
+            OfbHuaweiActionDoubleTapHandler(w_in_call=True, w_read_in_call=True),
             OfbHuaweiActionTripleTapHandler(),
+            OfbHuaweiActionLightHoldHandler(w_light_hold=True, w_pinch_hold=True),
             OfbHuaweiActionLongTapSplitHandler(w_right=True),
             OfbHuaweiActionSwipeGestureHandler(),
             OfbHuaweiLowLatencyPreferenceHandler(),

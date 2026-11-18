@@ -432,6 +432,15 @@
     <message><source>Long-press wake mode</source><translation>长按唤醒模式</translation></message>
     <message><source>Continuous conversation (stay active after release)</source><translation>连续对话（松开后保持）</translation></message>
     <message><source>Press to speak (release to stop)</source><translation>按住说话（松开停止）</translation></message>
+    <message><source>Pinch once</source><translation>按捏一下</translation></message>
+    <message><source>Pinch once in call</source><translation>通话时按捏一下</translation></message>
+    <message><source>Pinch twice</source><translation>按捏两下</translation></message>
+    <message><source>Pinch twice in call</source><translation>通话时按捏两下</translation></message>
+    <message><source>Pinch three times</source><translation>按捏三下</translation></message>
+    <message><source>Pinch &amp; hold</source><translation>捏住</translation></message>
+    <message><source>Answer/end call</source><translation>接听/挂断电话</translation></message>
+    <message><source>Reject call</source><translation>拒接来电</translation></message>
+    <message><source>Noise control</source><translation>噪声控制</translation></message>
 </context>
 <context>
     <name>OfbQtHotkeysModule</name>

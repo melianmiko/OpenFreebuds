@@ -32,9 +32,9 @@ class OfbDriverHuaweiNeo(OfbDriverHuaweiGeneric):
             OfbHuaweiVoiceLanguageHandler(),
 
             # Gestures
-            OfbHuaweiActionDoubleTapHandler(),
+            OfbHuaweiActionDoubleTapHandler(w_in_call=True, w_read_in_call=True),
             OfbHuaweiActionTripleTapHandler(),
-            OfbHuaweiActionLongTapSplitHandler(w_right=True),
+            OfbHuaweiActionLongTapSplitHandler(w_right=True, w_in_call=True),
             OfbHuaweiActionSwipeGestureHandler(),
             OfbHuaweiLowLatencyPreferenceHandler(),
 
@@ -42,5 +42,4 @@ class OfbDriverHuaweiNeo(OfbDriverHuaweiGeneric):
             OfbHuaweiSpatialAudioHandler(),
             OfbHuaweiAdaptiveVolumeHandler(),
             OfbHuaweiHeadControlHandler(),
-            OfbHuaweiDropReminderHandler(),
         ]

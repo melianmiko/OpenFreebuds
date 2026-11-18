@@ -3,6 +3,7 @@ from .action_triple_tap import OfbHuaweiActionTripleTapHandler
 from .action_long_tap import OfbHuaweiActionLongTapHandler
 from .action_long_tap import OfbHuaweiActionLongTapHandler
 from .action_long_tap_split import OfbHuaweiActionLongTapSplitHandler
+from .action_light_hold import OfbHuaweiActionLightHoldHandler
 from .action_power_button import OfbHuaweiActionsPowerButtonHandler
 from .action_swipe_gesture import OfbHuaweiActionSwipeGestureHandler
 from .anc import OfbHuaweiAncHandler, OfbHuaweiAncLegacyChangeHandler

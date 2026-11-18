@@ -49,7 +49,9 @@ CMD_TONE_SESSION_START = b"\x09\x02"
 CMD_TONE_DATA = b"\x09\x04"
 CMD_TONE_SESSION_END = b"\x09\x09"
 
-# Commands below come from the official touchsetting config and have no handler yet; do not use before verification
+# Commands below come from the official touchsetting config. Light-hold/pinch
+# (0x2B92/0x2B93) is implemented in handler/action_light_hold.py; the remaining
+# 0x2Bxx IDs are kept for future protocol work and must not be guessed.
 CMD_LIGHT_HOLD_WRITE = b"\x2b\x92"
 CMD_LIGHT_HOLD_READ = b"\x2b\x93"
 CMD_UNKNOWN_2B53 = b"\x2b\x53"

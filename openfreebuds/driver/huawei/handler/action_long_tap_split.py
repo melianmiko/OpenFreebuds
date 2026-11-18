@@ -31,21 +31,28 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
     ]
 
     def __init__(self, w_left=True, w_right=False, w_in_call=False, w_anc=True, w_extra_options=False,
-                 w_agent_modes=False):
+                 w_agent_modes=False, options_map: dict[int, str] | None = None):
         self.w_left = w_left
         self.w_right = w_right
         self.w_in_call = w_in_call
         self.w_anc = w_anc
         self.w_agent_modes = w_agent_modes
 
-        self._options_lt = {
+        self._options_lt = dict(options_map) if options_map is not None else {
             -1: "tap_action_off",
             10: "tap_action_switch_anc"
         }
+        if options_map is not None:
+            # The caller supplied the exact action set exposed by this model.
+            # Do not add options inherited from other product families.
+            self.w_agent_modes = False
+            w_extra_options = False
+
         self._options_lt_call = {
             -1: "tap_action_off",
             0: "tap_action_answer"
         }
+
         self._options_anc = {
             1: "noise_control_off_on",
             2: "noise_control_off_on_aw",
@@ -69,8 +76,15 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
             self._options_lt[19] = "tap_action_vol_down"
 
     async def on_init(self):
-        # Base request
-        params = [1, 2, 9, 10] if self.w_agent_modes else [1, 2]
+        # Base request. p4 is the in-call action; ask for it explicitly so
+        # devices that do not push it on their own still report a value.
+        if self.w_agent_modes:
+            params = [1, 2, 9, 10]
+        else:
+            params = [1, 2]
+        if self.w_in_call:
+            params.append(4)
+
         resp = await self.driver.send_package(
             HuaweiSppPackage.read_rq(CMD_LONG_TAP_SPLIT_READ_BASE, params)
         )
@@ -157,7 +171,7 @@ class OfbHuaweiActionLongTapSplitHandler(OfbDriverHandlerHuawei):
                 await self.driver.put_property("action", "long_tap_right",
                                                self._options_lt.get(value, value))
             if len(in_call) == 1 and self.w_in_call:
-                value = int.from_bytes(right, byteorder="big", signed=True)
+                value = int.from_bytes(in_call, byteorder="big", signed=True)
                 await self.driver.put_property("action", "long_tap_in_call",
                                                self._options_lt_call.get(value, value))
                 await self.driver.put_property("action", "long_tap_in_call_options",

@@ -13,7 +13,7 @@ class OfbDriverHuaweiSe4(OfbDriverHuaweiGeneric):
             OfbHuaweiAncHandler(w_cancel_lvl=True, w_cancel_dynamic=True),
             OfbHuaweiActionDoubleTapHandler(w_in_call=True),
             OfbHuaweiActionTripleTapHandler(),
-            OfbHuaweiActionLongTapSplitHandler(w_right=True, w_extra_options=True),
+            OfbHuaweiActionLongTapSplitHandler(w_right=True, w_in_call=True, w_extra_options=True),
             OfbHuaweiEqualizerPresetHandler(w_presets={
                 1: "default",
                 2: "hardbass",

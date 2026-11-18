@@ -31,7 +31,7 @@ def _build_write_rq(enabled: bool):
 
 class OfbHuaweiDropReminderHandler(OfbDriverHandlerHuawei):
     """Drop-reminder handler (0x2BB4 MBB, featureId 7).
-    The official config declares drop_detection on FreeClip / FreeBuds 6 / FreeClip 2 / FreeBuds 7 / FreeBuds Neo; if the device does not respond, only supported=false is set, and the UI hides the whole group without affecting other features.
+    The official config declares drop_detection on FreeClip / FreeBuds 6 / FreeClip 2 / FreeClip 2 S / FreeBuds 7. If the device does not respond, only supported=false is set, and the UI hides the whole group without affecting other features. FreeBuds Neo declares the flag but is not exposed because it is not in the supported model list.
     """
 
     handler_id = "config_drop_reminder"

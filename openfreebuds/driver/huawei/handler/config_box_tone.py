@@ -99,9 +99,12 @@ class OfbHuaweiBoxToneHandler(OfbDriverHandlerHuawei):
         ("state", "headset_in_box"),
     ]
 
-    def __init__(self):
+    def __init__(self, w_lid_tone: bool = True):
         # Cache the last full payload reported by the device; write by patching fields while preserving devId and other invariants
         self._f16_payload: bytes | None = None
+        # Some models only expose the 0x2BB1 master switch: they have other case
+        # prompt tones but no writable lid-open tone page.
+        self.w_lid_tone = w_lid_tone
 
     async def on_init(self):
         await self.driver.put_property("config", "box_tone_lid_supported", "false")
@@ -114,7 +117,8 @@ class OfbHuaweiBoxToneHandler(OfbDriverHandlerHuawei):
         if resp is not None:
             await self.on_package(resp)
 
-        await self._refresh_f16()
+        if self.w_lid_tone:
+            await self._refresh_f16()
 
     async def _refresh_f16(self):
         """Read feature 16; silently skip when older firmware does not respond (keep lid_supported=false)."""
@@ -165,6 +169,8 @@ class OfbHuaweiBoxToneHandler(OfbDriverHandlerHuawei):
         await self.driver.put_property("state", "headset_in_box", json.dumps(is_in_box))
 
     async def _on_mbb_feature(self, package: HuaweiSppPackage):
+        if not self.w_lid_tone:
+            return
         feature = package.find_param(1)
         if len(feature) == 0 or feature[0] != MBB_FEATURE_BOX_TONE:
             return
@@ -207,6 +213,12 @@ class OfbHuaweiBoxToneHandler(OfbDriverHandlerHuawei):
         return await self.driver.get_property("state", "headset_in_box") == "true"
 
     async def set_property(self, group: str, prop: str, value: str):
+        if not self.w_lid_tone and prop in (
+                "box_tone_refresh", "box_tone_lid_enabled",
+                "box_tone_lid_volume", "box_tone_id", "box_tone_upload"):
+            log.warning(f"Device only supports the box tone master switch, ignoring {group}//{prop}")
+            return False
+
         if prop == "box_tone_refresh":
             # GUI triggers this when both earbuds just entered the case: re-read feature 16 (current tone id / lid-open settings)
             await self._refresh_f16()
@@ -327,6 +339,9 @@ class OfbHuaweiBoxToneHandler(OfbDriverHandlerHuawei):
         """Upload an existing PCM into an earbud slot: write feature16 toneId first, then stream the full package, matching the official App order (id first, then package).
         Input JSON: {"id": 151, "path": "...pcm", "name": "huawei_intelligence_ai1"}
         """
+        if not self.w_lid_tone:
+            await self._set_status("unsupported")
+            return False
         try:
             request = json.loads(value)
             tone_id = int(request["id"])

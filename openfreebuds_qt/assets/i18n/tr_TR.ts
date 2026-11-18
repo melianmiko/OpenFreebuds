@@ -1098,7 +1098,52 @@
             <source>Press to speak (release to stop)</source>
             <translation>Konuşmak için bas (durdurmak için bırak)</translation>
         </message>
-    </context>
+        <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch once</source>
+        <translation>Bir kez sıkıştır</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch once in call</source>
+        <translation>Arama sırasında bir kez sıkıştır</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch twice</source>
+        <translation>İki kez sıkıştır</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch twice in call</source>
+        <translation>Arama sırasında iki kez sıkıştır</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch three times</source>
+        <translation>Üç kez sıkıştır</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch &amp; hold</source>
+        <translation>Sıkıştır ve basılı tut</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Answer/end call</source>
+        <translation>Arama yanıtla/sonlandır</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Reject call</source>
+        <translation>Arama reddet</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Noise control</source>
+        <translation>Gürültü kontrolü</translation>
+    </message>
+</context>
     <context>
         <name>OfbQtHotkeysModule</name>
         <message>

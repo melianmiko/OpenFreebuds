@@ -1098,7 +1098,52 @@
             <source>Press to speak (release to stop)</source>
             <translation>Pulsar para hablar (soltar para parar)</translation>
         </message>
-    </context>
+        <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch once</source>
+        <translation>Pellizcar una vez</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch once in call</source>
+        <translation>Pellizcar una vez en llamada</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch twice</source>
+        <translation>Pellizcar dos veces</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch twice in call</source>
+        <translation>Pellizcar dos veces en llamada</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch three times</source>
+        <translation>Pellizcar tres veces</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch &amp; hold</source>
+        <translation>Pellizcar y mantener</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Answer/end call</source>
+        <translation>Responder/finalizar llamada</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Reject call</source>
+        <translation>Rechazar llamada</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Noise control</source>
+        <translation>Control de ruido</translation>
+    </message>
+</context>
     <context>
         <name>OfbQtHotkeysModule</name>
         <message>
