@@ -15,7 +15,11 @@ from qasync import asyncSlot
 
 from openfreebuds import OfbEventKind
 from openfreebuds.driver.huawei.prompt_tone import decode_audio
-from openfreebuds.driver.huawei.tone_library import ToneLibrary, ToneLibraryError
+from openfreebuds.driver.huawei.tone_library import (
+    EmptyTonePackageError,
+    ToneLibrary,
+    ToneLibraryError,
+)
 from openfreebuds_qt.app.dialog.tone_editor import OfbQtToneEditorDialog
 from openfreebuds_qt.qt_i18n import get_prompt_tone_name
 from openfreebuds_qt.utils.async_dialog import run_dialog_async
@@ -813,6 +817,9 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                 return
             try:
                 result = await asyncio.to_thread(self.tone_library.import_zip, Path(path))
+            except EmptyTonePackageError:
+                self._warn(self.tr("No custom sounds found in this ZIP."))
+                return
             except (ToneLibraryError, OSError, ValueError) as e:
                 self._warn(str(e))
                 return

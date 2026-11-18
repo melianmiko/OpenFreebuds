@@ -45,6 +45,10 @@ class ToneLibraryError(Exception):
     """Library operation failed (message can be shown to the user)."""
 
 
+class EmptyTonePackageError(ToneLibraryError):
+    """A ZIP has a valid catalog but no custom tone with usable audio."""
+
+
 @dataclass
 class RefreshResult:
     """Official-layer refresh result (compared with the previous official snapshot, so a repeated refresh should be 0/0)."""
@@ -820,7 +824,7 @@ class ToneLibrary:
             raise ToneLibraryError(f"无法读取 ZIP：{exc}") from exc
 
         if not pending and not result.failed:
-            raise ToneLibraryError("ZIP 中没有可导入的自定义提示音。")
+            raise EmptyTonePackageError("ZIP 中没有可导入的自定义提示音。")
 
         existing = set()
         for entry in self.custom_entries():

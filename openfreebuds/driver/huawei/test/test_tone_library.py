@@ -10,6 +10,7 @@ import openfreebuds.driver.huawei.tone_library as tone_library_module
 from openfreebuds.driver.huawei.prompt_tone import TONE_MAX_BYTES, is_custom_tone_id
 from openfreebuds.driver.huawei.tone_library import (
     CUSTOM_SUPPORT,
+    EmptyTonePackageError,
     ToneLibrary,
     ToneLibraryError,
 )
@@ -254,6 +255,19 @@ def test_import_zip_requires_tone_config(tmp_path):
         z.writestr("readme.txt", "not a tone package")
 
     with pytest.raises(ToneLibraryError, match="tone_config"):
+        lib.import_zip(archive)
+
+
+def test_import_zip_requires_custom_audio(tmp_path):
+    lib = make_library(tmp_path)
+    archive = tmp_path / "empty.zip"
+    config = {
+        "data": [{"id": 100, "name": "NoAudio", "zhCn": "无音频", "support": CUSTOM_SUPPORT}],
+    }
+    with zipfile.ZipFile(archive, "w") as z:
+        z.writestr("promptToneConfig/tone_config.json", json.dumps(config))
+
+    with pytest.raises(EmptyTonePackageError):
         lib.import_zip(archive)
 
 
