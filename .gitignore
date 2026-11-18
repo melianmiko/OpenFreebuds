@@ -22,6 +22,10 @@
 run_test.log
 gui_run.log
 
+# PyInstaller output under the Windows build scripts
+/scripts/windows/build/
+/scripts/windows/dist/
+
 # Local-only scratch files, logs and handoff documents (not for upstream)
 /_local/
 
