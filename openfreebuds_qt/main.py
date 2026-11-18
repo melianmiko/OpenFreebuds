@@ -20,7 +20,7 @@ from openfreebuds_qt.constants import IGNORED_LOG_TAGS, I18N_PATH
 from openfreebuds_qt.generic import IOfbQtApplication
 from openfreebuds_qt.tray.main import OfbTrayIcon
 from openfreebuds_qt.utils import OfbQtDeviceAutoSelect, OfbQtHotkeyService, list_available_locales
-from openfreebuds_qt.utils.i18n import resolve_locale
+from openfreebuds_qt.utils.i18n import list_qtbase_locales, resolve_locale
 from openfreebuds_qt.utils.async_dialog import run_dialog_async
 from openfreebuds_qt.utils.automation import OfbQtAutomationService
 from openfreebuds_qt.utils.mpris.service import OfbQtMPRISHelperService
@@ -102,8 +102,10 @@ class OfbQtApplication(IOfbQtApplication):
         self.translator.load(str(I18N_PATH / f"{locale}.qm"))
         self.installTranslator(self.translator)
         self.qt_translator = QTranslator()
-        self.qt_translator.load("qtbase_" + locale,
-                                QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath))
+        qt_translations_path = QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath)
+        qt_locale = resolve_locale(locale, list_qtbase_locales(qt_translations_path))
+        if not self.qt_translator.load(f"qtbase_{qt_locale}", qt_translations_path):
+            log.warning(f"Qt translations not found for {locale} (tried qtbase_{qt_locale})")
         self.installTranslator(self.qt_translator)
 
         # AsyncQt preparations

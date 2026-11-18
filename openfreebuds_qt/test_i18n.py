@@ -1,10 +1,11 @@
 import pytest
-from PyQt6.QtCore import QCoreApplication, QTranslator
+from PyQt6.QtCore import QCoreApplication, QLibraryInfo, QTranslator
 
 from openfreebuds_qt.constants import I18N_PATH
-from openfreebuds_qt.utils.i18n import resolve_locale
+from openfreebuds_qt.utils.i18n import list_qtbase_locales, resolve_locale
 
 SUPPORTED = ["de", "en", "es", "pt-BR", "ru", "tr_TR", "zh-CN"]
+QT_TRANSLATIONS_PATH = QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath)
 
 
 @pytest.mark.parametrize(("system_locale", "expected"), [
@@ -24,6 +25,37 @@ SUPPORTED = ["de", "en", "es", "pt-BR", "ru", "tr_TR", "zh-CN"]
 ])
 def test_system_locale_resolution(system_locale, expected):
     assert resolve_locale(system_locale, SUPPORTED) == expected
+
+
+@pytest.mark.parametrize(("app_locale", "qt_locale"), [
+    ("de", "de"),
+    ("en", "en"),
+    ("es", "es"),
+    ("pt-BR", "pt_BR"),
+    ("ru", "ru"),
+    ("tr_TR", "tr"),
+    ("zh-CN", "zh_CN"),
+])
+def test_qtbase_locale_uses_qt_file_names(app_locale, qt_locale):
+    available = list_qtbase_locales(QT_TRANSLATIONS_PATH)
+    assert qt_locale in available
+    assert resolve_locale(app_locale, available) == qt_locale
+
+
+def test_qtbase_translates_standard_text_control_menu():
+    app = QCoreApplication.instance() or QCoreApplication([])
+    available = list_qtbase_locales(QT_TRANSLATIONS_PATH)
+    qt_locale = resolve_locale("zh-CN", available)
+    translator = QTranslator()
+    assert translator.load(f"qtbase_{qt_locale}", QT_TRANSLATIONS_PATH)
+    app.installTranslator(translator)
+    try:
+        translated = translator.translate("QWidgetTextControl", "Copy &Link Location")
+        assert translated
+        assert "链接" in translated
+        assert translator.translate("QWidgetTextControl", "Select All") == "全选"
+    finally:
+        app.removeTranslator(translator)
 
 
 @pytest.mark.parametrize("locale", SUPPORTED)

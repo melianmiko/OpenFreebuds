@@ -1,9 +1,11 @@
 import functools
+from pathlib import Path
 
 from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.constants import I18N_PATH
 
 log = create_logger("OfbQtLocale")
+QT_BASE_PREFIX = "qtbase_"
 
 
 @functools.cache
@@ -13,6 +15,14 @@ def list_available_locales():
         if file.name.endswith(".qm"):
             locales.append(file.name.split(".")[0])
     return locales
+
+
+def list_qtbase_locales(translations_path: str) -> list[str]:
+    """List Qt's own translation names, which use underscores (zh_CN, pt_BR)."""
+    return [
+        file.stem[len(QT_BASE_PREFIX):]
+        for file in Path(translations_path).glob(f"{QT_BASE_PREFIX}*.qm")
+    ]
 
 
 def _normalize_locale(tag: str) -> str:
