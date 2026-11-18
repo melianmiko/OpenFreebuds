@@ -37,6 +37,11 @@ F16_PAYLOAD = bytes.fromhex("010107020000000000006d01")
 MBB_READ_RESP = HuaweiSppPackage.change_rq(
     CMD_MBB_FEATURE, [(1, b"\x10"), (2, F16_PAYLOAD)]
 ).to_bytes()
+# Out of case the firmware reports tone id 0x000F as a placeholder
+F16_PAYLOAD_OUT = bytes.fromhex("010107020000000000000f01")
+MBB_READ_RESP_OUT = HuaweiSppPackage.change_rq(
+    CMD_MBB_FEATURE, [(1, b"\x10"), (2, F16_PAYLOAD_OUT)]
+).to_bytes()
 # Payload shorter than 12 bytes -> lid-open tone not supported
 MBB_SHORT_RESP = HuaweiSppPackage.change_rq(
     CMD_MBB_FEATURE, [(1, b"\x10"), (2, b"\x01\x01")]
@@ -88,6 +93,41 @@ async def test_refresh_reads_feature16_from_device():
     assert ok is True
     assert driver.package_log[0] == ('send', MBB_READ_RQ)
     assert await driver.get_property("config", "box_tone_id") == "109"
+
+
+@pytest.mark.asyncio
+async def test_out_of_case_ignores_placeholder_tone_id():
+    model = base_model()
+    model[TONE_INFO_RQ] = [TONE_INFO_RESP_OUT]
+    model[MBB_READ_RQ] = [MBB_READ_RESP_OUT]
+    driver = await create_driver(model)
+
+    assert await driver.get_property("state", "headset_in_box") == "false"
+    assert await driver.get_property("config", "box_tone_id") is None
+    assert await driver.get_property("config", "box_tone_lid_volume") == "7"
+
+
+@pytest.mark.asyncio
+async def test_out_of_case_keeps_last_valid_tone_id():
+    driver = await create_driver(base_model())
+    assert await driver.get_property("config", "box_tone_id") == "109"
+
+    handler = driver.handlers[0]
+    await handler.on_package(HuaweiSppPackage.from_bytes(TONE_INFO_RESP_OUT))
+    await handler.on_package(HuaweiSppPackage.from_bytes(MBB_READ_RESP_OUT))
+
+    assert await driver.get_property("state", "headset_in_box") == "false"
+    assert await driver.get_property("config", "box_tone_id") == "109"
+
+
+@pytest.mark.asyncio
+async def test_in_case_accepts_real_tone_id_15():
+    model = base_model()
+    model[MBB_READ_RQ] = [MBB_READ_RESP_OUT]
+    driver = await create_driver(model)
+
+    assert await driver.get_property("state", "headset_in_box") == "true"
+    assert await driver.get_property("config", "box_tone_id") == "15"
 
 
 @pytest.mark.asyncio

@@ -475,23 +475,25 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
         self._hide_export_row()
         self.tone_entries = sorted(self.tone_library.entries(), key=lambda entry: entry.id)
 
-        current = 0
+        current: int | None = None
         try:
             raw = await self.ofb.get_property("config", "box_tone_id")
-            current = int(raw) if raw not in (None, "") else 0
+            if raw not in (None, ""):
+                current = int(raw)
         except (TypeError, ValueError):
-            current = 0
+            current = None
 
         with blocked_signals(self.box_tone_select):
             self.box_tone_select.clear()
             for entry in self.tone_entries:
                 name = get_prompt_tone_name(
                     entry, is_custom=not self.tone_library.is_editable(entry))
-                star = "★ " if entry.id == current else ""
+                star = "★ " if current is not None and entry.id == current else ""
                 self.box_tone_select.addItem(f"{entry.id}: {star}{name}", entry.id)
-            index = self.box_tone_select.findData(current)
-            if index >= 0:
-                self.box_tone_select.setCurrentIndex(index)
+            if current is not None:
+                index = self.box_tone_select.findData(current)
+                if index >= 0:
+                    self.box_tone_select.setCurrentIndex(index)
         self._refresh_tone_enabled()
 
     async def refresh_upload_status(self):

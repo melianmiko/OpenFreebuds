@@ -175,15 +175,21 @@ class OfbHuaweiBoxToneHandler(OfbDriverHandlerHuawei):
             await self.driver.put_property("config", "box_tone_lid_supported", "false")
             return
 
-        self._f16_payload = bytes(payload)
+        in_box = await self.driver.get_property("state", "headset_in_box") == "true"
+        tone_id = int.from_bytes(payload[_F16_TONE_ID], "big")
         new_props = {
             "box_tone_lid_supported": "true",
             "box_tone_enabled": json.dumps(payload[_F16_MASTER] != 0),
             "box_tone_lid_enabled": json.dumps(payload[_F16_LID] != 0),
             "box_tone_lid_volume": str(payload[_F16_VOLUME]),
-            "box_tone_id": str(int.from_bytes(payload[_F16_TONE_ID], "big")),
             "box_tone_device_id": payload[_F16_DEVID].hex(),
         }
+        if in_box:
+            self._f16_payload = bytes(payload)
+            new_props["box_tone_id"] = str(tone_id)
+        # Else feature 16 reports a placeholder tone id while the earbuds are outside
+        # the case (observed as 0x000F). It is not the selected tone, so keep the
+        # last valid id and payload until both earbuds are back in the case.
         await self.driver.put_property("config", None, new_props, extend_group=True)
 
     async def _refresh_in_box_state(self) -> bool:

@@ -23,6 +23,7 @@
 - [Change] Drop alert now says the other earbud plays a ringtone instead of implying an in-app notification.
 - [Change] Tone editor handles snap at the maximum length and carry the other handle; there is no minimum selection.
 - [Fix] Hide unsupported battery, ANC, EQ and dual-connect entries when switching devices, and refresh the tray menu every time it opens.
+- [Fix] Ignore the placeholder tone id reported while the earbuds are outside the charging case and keep the last valid selection.
 - [Fix] Tone editor fields stay in sync after clamping; only the waveform grows with the window while the start/end row fills the width.
 - [Fix] Closing the editor or main window stops preview playback and releases the temporary file.
 - [Fix] Long tone imports keep the full source; only the final selection is capped.
