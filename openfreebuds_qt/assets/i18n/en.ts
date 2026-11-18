@@ -372,6 +372,45 @@
         <source>Custom tone uploaded.</source>
         <translation type="unfinished" />
     </message>
+
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Drop alert</source>
+        <translation>Drop alert</translation>
+    </message>
+
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Enable drop alert</source>
+        <translation>Enable drop alert</translation>
+    </message>
+
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</source>
+        <translation>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</translation>
+    </message>
+
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Import ZIP</source>
+        <translation>Import ZIP</translation>
+    </message>
+
+    <message>
+        <source>Import sounds from ZIP</source>
+        <translation>Import sounds from ZIP</translation>
+    </message>
+
+    <message>
+        <source>Imported {0}, skipped {1}, failed {2}.</source>
+        <translation>Imported {0}, skipped {1}, failed {2}.</translation>
+    </message>
+
+    <message>
+        <source>No custom sounds found in this ZIP.</source>
+        <translation>No custom sounds found in this ZIP.</translation>
+    </message>
 </context><context>
     <name>OfbQtDeviceSelectModule</name>
     <message>

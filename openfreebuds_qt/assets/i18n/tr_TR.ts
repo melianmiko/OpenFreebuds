@@ -797,9 +797,13 @@
     <message><source>Stop preview</source><translation>Önizlemeyi durdur</translation></message>
     <message><source>Preview</source><translation>Önizleme</translation></message>
     <message><source>Built-in sound selected.</source><translation>Dahili ses seçildi</translation></message>
-    <message><source>Drop reminder</source><translation>Düşme hatırlatıcısı</translation></message>
-    <message><source>Enable drop reminder</source><translation>Düşme hatırlatıcısını etkinleştir</translation></message>
-    <message><source>Alerts you in the app if an earbud is dropped. Availability depends on the earbuds firmware.</source><translation>Bir kulaklık düşerse uygulamada sizi uyarır. Kullanılabilirlik kulaklık ürün yazılımına bağlıdır.</translation></message>
+    <message><source>Drop alert</source><translation>Düşme uyarısı</translation></message>
+    <message><source>Enable drop alert</source><translation>Düşme uyarısını etkinleştir</translation></message>
+    <message><source>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</source><translation>Bir kulaklık düşerse diğer kulaklık bir uyarı sesi çalar. Kullanılabilirlik kulaklık ürün yazılımına bağlıdır.</translation></message>
+    <message><source>Import ZIP</source><translation>ZIP içe aktar</translation></message>
+    <message><source>Import sounds from ZIP</source><translation>ZIP'ten sesleri içe aktar</translation></message>
+    <message><source>Imported {0}, skipped {1}, failed {2}.</source><translation>İçe aktarılan: {0}, atlanan: {1}, başarısız: {2}.</translation></message>
+    <message><source>No custom sounds found in this ZIP.</source><translation>Bu ZIP dosyasında özel ses bulunamadı.</translation></message>
 </context>
     <context>
         <name>OfbQtDeviceSelectModule</name>

@@ -798,9 +798,13 @@
     <message><source>Stop preview</source><translation>Остановить предпросмотр</translation></message>
     <message><source>Preview</source><translation>Предпросмотр</translation></message>
     <message><source>Built-in sound selected.</source><translation>Встроенный звук выбран</translation></message>
-    <message><source>Drop reminder</source><translation>Напоминание о падении</translation></message>
-    <message><source>Enable drop reminder</source><translation>Включить напоминание о падении</translation></message>
-    <message><source>Alerts you in the app if an earbud is dropped. Availability depends on the earbuds firmware.</source><translation>Приложение предупредит, если наушник упадёт. Доступность зависит от прошивки наушников.</translation></message>
+    <message><source>Drop alert</source><translation>Оповещение о падении</translation></message>
+    <message><source>Enable drop alert</source><translation>Включить оповещение о падении</translation></message>
+    <message><source>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</source><translation>Если один наушник упадёт, другой наушник воспроизведёт звуковой сигнал. Доступность зависит от прошивки наушников.</translation></message>
+    <message><source>Import ZIP</source><translation>Импортировать ZIP</translation></message>
+    <message><source>Import sounds from ZIP</source><translation>Импорт звуков из ZIP</translation></message>
+    <message><source>Imported {0}, skipped {1}, failed {2}.</source><translation>Импортировано: {0}, пропущено: {1}, ошибок: {2}.</translation></message>
+    <message><source>No custom sounds found in this ZIP.</source><translation>В этом ZIP-архиве не найдены пользовательские звуки.</translation></message>
 </context>
     <context>
         <name>OfbQtDeviceSelectModule</name>

@@ -798,9 +798,13 @@
     <message><source>Stop preview</source><translation>Parar prévia</translation></message>
     <message><source>Preview</source><translation>Prévia</translation></message>
     <message><source>Built-in sound selected.</source><translation>Som integrado selecionado</translation></message>
-    <message><source>Drop reminder</source><translation>Lembrete de queda</translation></message>
-    <message><source>Enable drop reminder</source><translation>Ativar lembrete de queda</translation></message>
-    <message><source>Alerts you in the app if an earbud is dropped. Availability depends on the earbuds firmware.</source><translation>Avisa você no app se um fone cair. A disponibilidade depende do firmware dos fones.</translation></message>
+    <message><source>Drop alert</source><translation>Alerta de queda</translation></message>
+    <message><source>Enable drop alert</source><translation>Ativar alerta de queda</translation></message>
+    <message><source>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</source><translation>Quando um fone cai, o outro fone toca um som. A disponibilidade depende do firmware dos fones.</translation></message>
+    <message><source>Import ZIP</source><translation>Importar ZIP</translation></message>
+    <message><source>Import sounds from ZIP</source><translation>Importar sons do ZIP</translation></message>
+    <message><source>Imported {0}, skipped {1}, failed {2}.</source><translation>Importados: {0}, ignorados: {1}, falharam: {2}.</translation></message>
+    <message><source>No custom sounds found in this ZIP.</source><translation>Nenhum som personalizado foi encontrado neste ZIP.</translation></message>
 </context>
     <context>
         <name>OfbQtDeviceSelectModule</name>

@@ -197,6 +197,66 @@ def test_export_zip_structure(tmp_path):
     assert mine["name"] == "Zip1"
 
 
+def test_import_export_round_trip(tmp_path):
+    source = make_library(tmp_path / "source")
+    source.add(PCM, "Zip1", "导出")
+    archive = source.export_zip(tmp_path / "share.zip")
+
+    target = make_library(tmp_path / "target")
+    result = target.import_zip(archive)
+
+    assert len(result.imported) == 1
+    imported = target.find(result.imported[0])
+    assert imported is not None
+    assert imported.name == "Zip1"
+    assert imported.display_name == "导出"
+    assert target.pcm_path(imported).read_bytes() == PCM
+    assert len(target.custom_entries()) == 2  # Bundled id 14 + imported tone
+
+
+def test_import_export_is_idempotent(tmp_path):
+    source = make_library(tmp_path / "source")
+    source.add(PCM, "Zip1", "导出")
+    archive = source.export_zip(tmp_path / "share.zip")
+
+    target = make_library(tmp_path / "target")
+    first = target.import_zip(archive)
+    second = target.import_zip(archive)
+
+    assert len(first.imported) == 1
+    assert second.imported == []
+    assert any(name == "导出" for name in second.skipped)
+
+
+def test_import_resolves_id_and_file_name_conflicts(tmp_path):
+    source = make_library(tmp_path / "source")
+    source.add(PCM, "Zip1", "导出")
+    archive = source.export_zip(tmp_path / "share.zip")
+
+    target = make_library(tmp_path / "target")
+    existing = target.add(bytes([0x20, 0x00] * 160), "Zip1", "本地同名")
+
+    result = target.import_zip(archive)
+
+    assert len(result.imported) == 1
+    imported = target.find(result.imported[0])
+    assert imported is not None
+    assert imported.id != existing.id
+    assert imported.name != "Zip1"
+    assert imported.name.startswith("Zip1 ")
+    assert imported.display_name == "导出"
+
+
+def test_import_zip_requires_tone_config(tmp_path):
+    lib = make_library(tmp_path)
+    archive = tmp_path / "bad.zip"
+    with zipfile.ZipFile(archive, "w") as z:
+        z.writestr("readme.txt", "not a tone package")
+
+    with pytest.raises(ToneLibraryError, match="tone_config"):
+        lib.import_zip(archive)
+
+
 def test_preset_custom_ids_migrate_to_custom(tmp_path):
     lib = make_library(tmp_path)
     builtin = json.loads(lib.builtin_config_path.read_text(encoding="utf-8"))

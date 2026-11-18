@@ -286,20 +286,20 @@
    <item>
     <widget class="QGroupBox" name="drop_reminder_root">
      <property name="title">
-      <string>Drop reminder</string>
+      <string>Drop alert</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_drop_reminder">
       <item>
        <widget class="QCheckBox" name="drop_reminder_toggle">
         <property name="text">
-         <string>Enable drop reminder</string>
+         <string>Enable drop alert</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="drop_reminder_hint">
         <property name="text">
-         <string>Alerts you in the app if an earbud is dropped. Availability depends on the earbuds firmware.</string>
+         <string>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -616,6 +616,13 @@
           <widget class="QPushButton" name="box_tone_export">
            <property name="text">
             <string>Export ZIP</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="box_tone_import">
+           <property name="text">
+            <string>Import ZIP</string>
            </property>
           </widget>
          </item>

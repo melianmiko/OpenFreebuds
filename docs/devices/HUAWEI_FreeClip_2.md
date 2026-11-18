@@ -25,7 +25,7 @@ Driver: `OfbDriverHuaweiFreeClip2`
 - Voice language: ✅
 - Head control (nod/shake to answer/reject): ✅
 - Adaptive volume: ✅
-- Drop reminder: ✅ (real-device verified)
+- Drop alert: ✅ (real-device verified)
 
 ## Not planned features
 

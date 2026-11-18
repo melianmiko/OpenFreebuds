@@ -6,11 +6,12 @@
 - [Device compatibility] Follow the official find-earbud matrix: all models except FreeBuds Pro (1st gen) and FreeBuds Studio.
 - [Feature] Add find-earbud with per-ear ringing state, status readback and a safety stop timeout.
 - [Feature] Split long-press and swipe actions per ear and align the official action values.
-- [Feature] Add adaptive volume, head control, spatial audio and drop reminder.
+- [Feature] Add adaptive volume, head control, spatial audio and drop alert.
 - [Feature] Rebuild charging-case tone settings so every option saves correctly; the built-in tone no longer streams audio.
 - [Feature] Add a three-layer prompt-tone library: bundled catalog, official cloud snapshot and custom tones with migration.
 - [Feature] Download missing official tone resources automatically, retrying at most once per six hours.
 - [Feature] Add a prompt-tone editor with waveform, two-handle trimming, preview, loudness gain and bilingual naming.
+- [Feature] Add ZIP import for shared prompt-tone packages; identical sounds are skipped and id/file-name conflicts are resolved without overwriting local data.
 - [Feature] The editor waveform zooms at the cursor with Ctrl+wheel, pans with the wheel and offers a full-track overview.
 - [Feature] Add a compact editor toolbar with reset, zoom out, logarithmic slider, zoom in and a zoom readout.
 - [Feature] Charging-case tone changes require both earbuds in the case, and the panel refreshes when both enter.
@@ -19,6 +20,7 @@
 - [Feature] Derive case power state from case charging only.
 - [Feature] Device info shows the localized model color without automatic row numbers.
 - [Change] Editor start/end fields apply on focus loss or Enter; the typed value wins and the other handle is clamped to the device limit.
+- [Change] Drop alert now says the other earbud plays a ringtone instead of implying an in-app notification.
 - [Change] Tone editor handles snap at the maximum length and carry the other handle; there is no minimum selection.
 - [Fix] Hide unsupported battery, ANC, EQ and dual-connect entries when switching devices, and refresh the tray menu every time it opens.
 - [Fix] Tone editor fields stay in sync after clamping; only the waveform grows with the window while the start/end row fills the width.

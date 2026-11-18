@@ -2,6 +2,7 @@
 Three-layer layout (second refactor, 2026-11-14: official config follows upstream, local additions are separate): builtin/promptToneConfig/tone_config.json is the APK built-in catalog (static, bundled, offline); official mirrors the cloud package; custom holds user edits.
 `ensure()` never performs network I/O. Call `sync_official_if_needed()` or `bootstrap()` to fill a missing official catalog or PCM set from the cloud; those calls are throttled and offline-tolerant.
 """
+import hashlib
 import io
 import json
 import logging
@@ -60,6 +61,14 @@ class SyncResult(RefreshResult):
     skipped: bool = False
     missing_config: bool = False
     missing_pcm_ids: list[int] = field(default_factory=list)
+
+
+@dataclass
+class ImportResult:
+    """Result of importing custom tones from a shared ZIP."""
+    imported: list[int] = field(default_factory=list)
+    skipped: list[str] = field(default_factory=list)
+    failed: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -723,3 +732,149 @@ class ToneLibrary:
                     seen.add(pcm.name)
                     z.write(pcm, f"promptTone/{pcm.name}")
         return dest
+
+    def import_zip(self, src: Path) -> ImportResult:
+        """Import custom tones from a shared ZIP without touching the official layers.
+
+        The accepted layout is the one written by :meth:`export_zip` (and the official
+        package layout is also tolerated): a ``tone_config.json`` plus ``*.pcm`` files.
+        Official entries in the archive are ignored; only custom entries are installed.
+        Existing identical custom tones are skipped, and conflicting ids/names are
+        reassigned so an import never overwrites local data.
+        """
+        self.ensure()
+        src = Path(src)
+        result = ImportResult()
+
+        try:
+            with zipfile.ZipFile(src) as z:
+                name_map = {name.replace("\\", "/"): name for name in z.namelist()}
+                members = list(name_map)
+                config_members = [name for name in members
+                                  if name.endswith("/tone_config.json") or name == "tone_config.json"]
+                if not config_members:
+                    raise ToneLibraryError("ZIP 中缺少 tone_config.json。")
+                config_member = next(
+                    (name for name in config_members if "promptToneConfig/" in name),
+                    config_members[0],
+                )
+                config_info = z.getinfo(name_map[config_member])
+                if config_info.file_size > 2_000_000:
+                    raise ToneLibraryError("ZIP 中的提示音目录文件过大。")
+                try:
+                    raw = json.loads(z.read(config_info).decode("utf-8"))
+                except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+                    raise ToneLibraryError(f"提示音目录解析失败：{exc}") from exc
+                if not isinstance(raw, dict):
+                    raise ToneLibraryError("提示音目录格式无效。")
+
+                pcm_members: dict[str, str] = {}
+                for member in members:
+                    if not member.lower().endswith(".pcm") or member.endswith("/"):
+                        continue
+                    base = member.rsplit("/", 1)[-1]
+                    pcm_members.setdefault(base.casefold(), member)
+
+                pending: list[tuple[int, str, str, bytes]] = []
+                custom_entries = raw.get("data", [])
+                if not isinstance(custom_entries, list):
+                    raise ToneLibraryError("提示音目录中的数据格式无效。")
+                for item in custom_entries:
+                    if not isinstance(item, dict):
+                        continue
+                    try:
+                        source_id = int(item.get("id"))
+                    except (TypeError, ValueError):
+                        result.failed.append(str(item.get("zhCn") or item.get("name") or "unknown"))
+                        continue
+                    if not (item.get("support") == CUSTOM_SUPPORT or is_custom_tone_id(source_id)):
+                        continue
+
+                    source_name = str(item.get("name") or "").strip()
+                    if source_name.lower().endswith(".pcm"):
+                        source_name = source_name[:-4]
+                    display = str(item.get("zhCn") or item.get("displayName")
+                                  or source_name).strip()
+                    if not source_name:
+                        result.failed.append(display or f"id {source_id}")
+                        continue
+                    member = pcm_members.get(f"{source_name}.pcm".casefold())
+                    if member is None:
+                        # The catalog can contain entries whose audio was never downloaded;
+                        # there is nothing to install, but the rest of the package is still valid.
+                        result.skipped.append(display or source_name)
+                        continue
+                    info = z.getinfo(name_map[member])
+                    if (info.file_size <= 0 or info.file_size % 2 != 0
+                            or info.file_size > TONE_MAX_BYTES):
+                        result.failed.append(display or source_name)
+                        continue
+                    pcm = z.read(name_map[member])
+                    if (len(pcm) <= 0 or len(pcm) % 2 != 0 or len(pcm) > TONE_MAX_BYTES):
+                        result.failed.append(display or source_name)
+                        continue
+                    pending.append((source_id, source_name, display or source_name, pcm))
+        except zipfile.BadZipFile as exc:
+            raise ToneLibraryError(f"ZIP 解析失败：{exc}") from exc
+        except OSError as exc:
+            raise ToneLibraryError(f"无法读取 ZIP：{exc}") from exc
+
+        if not pending and not result.failed:
+            raise ToneLibraryError("ZIP 中没有可导入的自定义提示音。")
+
+        existing = set()
+        for entry in self.custom_entries():
+            if not self.is_user_custom(entry):
+                continue
+            pcm_path = self.pcm_file(entry)
+            if pcm_path.is_file():
+                existing.add((entry.display_name.strip(),
+                              hashlib.sha256(pcm_path.read_bytes()).hexdigest()))
+
+        for source_id, source_name, display, pcm in pending:
+            digest = hashlib.sha256(pcm).hexdigest()
+            if (display.strip(), digest) in existing:
+                result.skipped.append(display)
+                continue
+
+            if (any(start <= source_id <= end for start, end in CUSTOM_ID_RANGES)
+                    and self.find(source_id) is None):
+                target_id = source_id
+            else:
+                target_id = self.allocate_id()
+            target_name = self._unique_import_name(source_name, target_id)
+            try:
+                entry = self.add(pcm, target_name, display, tone_id=target_id)
+            except ToneLibraryError as exc:
+                log.warning("Unable to import tone %s: %s", display, exc)
+                result.failed.append(display)
+                continue
+
+            result.imported.append(entry.id)
+            existing.add((display.strip(), digest))
+
+        return result
+
+    def _unique_import_name(self, name: str, tone_id: int) -> str:
+        """Return a valid, unused ASCII file name for an imported tone."""
+        base = (name or "").strip()
+        try:
+            return self.validate_name(base)
+        except ToneLibraryError:
+            pass
+
+        sanitized = re.sub(r"[^A-Za-z0-9 _-]", "", base).strip()
+        if not sanitized or not sanitized[0].isalnum():
+            sanitized = f"Imported {tone_id}"
+        sanitized = sanitized[:32]
+        candidate = sanitized
+        counter = 2
+        while True:
+            try:
+                return self.validate_name(candidate)
+            except ToneLibraryError:
+                suffix = f" {counter}"
+                candidate = sanitized[:32 - len(suffix)] + suffix
+                counter += 1
+                if counter > 999:
+                    raise ToneLibraryError("无法为导入的提示音生成可用的文件名。")

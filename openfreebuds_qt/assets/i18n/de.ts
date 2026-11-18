@@ -798,9 +798,13 @@
     <message><source>Stop preview</source><translation>Vorschau stoppen</translation></message>
     <message><source>Preview</source><translation>Vorschau</translation></message>
     <message><source>Built-in sound selected.</source><translation>Integrierter Ton ausgewählt</translation></message>
-    <message><source>Drop reminder</source><translation>Sturz-Erinnerung</translation></message>
-    <message><source>Enable drop reminder</source><translation>Sturz-Erinnerung aktivieren</translation></message>
-    <message><source>Alerts you in the app if an earbud is dropped. Availability depends on the earbuds firmware.</source><translation>Erinnert dich in der App, wenn ein Ohrhörer herunterfällt. Die Verfügbarkeit hängt von der Ohrhörer-Firmware ab.</translation></message>
+    <message><source>Drop alert</source><translation>Sturz-Warnung</translation></message>
+    <message><source>Enable drop alert</source><translation>Sturz-Warnung aktivieren</translation></message>
+    <message><source>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</source><translation>Wenn ein Ohrhörer herunterfällt, spielt der andere Ohrhörer einen Signalton. Die Verfügbarkeit hängt von der Ohrhörer-Firmware ab.</translation></message>
+    <message><source>Import ZIP</source><translation>ZIP importieren</translation></message>
+    <message><source>Import sounds from ZIP</source><translation>Töne aus ZIP importieren</translation></message>
+    <message><source>Imported {0}, skipped {1}, failed {2}.</source><translation>Importiert: {0}, übersprungen: {1}, fehlgeschlagen: {2}.</translation></message>
+    <message><source>No custom sounds found in this ZIP.</source><translation>In dieser ZIP-Datei wurden keine eigenen Töne gefunden.</translation></message>
 </context>
     <context>
         <name>OfbQtDeviceSelectModule</name>

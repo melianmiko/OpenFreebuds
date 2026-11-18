@@ -178,6 +178,7 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
         self.box_tone_edit.clicked.connect(self.on_tone_edit)
         self.box_tone_delete.clicked.connect(self.on_tone_delete)
         self.box_tone_export.clicked.connect(self.on_tone_export)
+        self.box_tone_import.clicked.connect(self.on_tone_import)
         self.box_tone_sync_config.clicked.connect(self.on_tone_sync_config)
         self.box_tone_sync_audio.clicked.connect(self.on_tone_sync_audio)
 
@@ -798,6 +799,29 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                 self._warn(str(e))
                 return
             self._show_export_result(target)
+
+    @asyncSlot()
+    async def on_tone_import(self):
+        async with qt_error_handler("OfbQtDeviceOtherSettingsModule_ImportTones", self.ctx):
+            path, _ = QFileDialog.getOpenFileName(
+                self,
+                self.tr("Import sounds from ZIP"),
+                "",
+                "ZIP (*.zip)",
+            )
+            if not path:
+                return
+            try:
+                result = await asyncio.to_thread(self.tone_library.import_zip, Path(path))
+            except (ToneLibraryError, OSError, ValueError) as e:
+                self._warn(str(e))
+                return
+
+            self._hide_export_row()
+            self.box_tone_status.setText(
+                self.tr("Imported {0}, skipped {1}, failed {2}.").format(
+                    len(result.imported), len(result.skipped), len(result.failed)))
+            await self.refresh_tone_list()
 
     def _show_export_result(self, target: Path):
         """Export complete: file name on the left, 'Open containing folder' on the right, single line."""

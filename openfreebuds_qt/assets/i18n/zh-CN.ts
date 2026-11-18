@@ -354,9 +354,13 @@
     <message><source>Stop preview</source><translation>停止预览</translation></message>
     <message><source>Preview</source><translation>预览</translation></message>
     <message><source>Built-in sound selected.</source><translation>已选择内置提示音</translation></message>
-    <message><source>Drop reminder</source><translation>掉落提醒</translation></message>
-    <message><source>Enable drop reminder</source><translation>开启掉落提醒</translation></message>
-    <message><source>Alerts you in the app if an earbud is dropped. Availability depends on the earbuds firmware.</source><translation>耳机掉落时在应用内提醒。是否可用取决于耳机固件。</translation></message>
+    <message><source>Drop alert</source><translation>掉落提示</translation></message>
+    <message><source>Enable drop alert</source><translation>开启掉落提示</translation></message>
+    <message><source>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</source><translation>一只耳机掉落时，另一只耳机会播放铃声。是否可用取决于耳机固件。</translation></message>
+    <message><source>Import ZIP</source><translation>导入 ZIP</translation></message>
+    <message><source>Import sounds from ZIP</source><translation>从 ZIP 导入提示音</translation></message>
+    <message><source>Imported {0}, skipped {1}, failed {2}.</source><translation>已导入 {0} 个，跳过 {1} 个，失败 {2} 个。</translation></message>
+    <message><source>No custom sounds found in this ZIP.</source><translation>这个 ZIP 中没有可导入的自定义提示音。</translation></message>
 </context>
 <context>
     <name>OfbQtDeviceSelectModule</name>
