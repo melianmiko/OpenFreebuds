@@ -64,8 +64,12 @@ def _build_room_rq(room: int):
 
 
 class OfbHuaweiSpatialAudioHandler(OfbDriverHandlerHuawei):
-    """Spatial audio handler (0x2BB4 MBB).
-    Only models with a standalone spatial audio algorithm on the earbuds return a valid response; other models do not answer the switch query and the property stays unknown.
+    """Independent (earbud-side) spatial audio handler (0x2BB4 MBB).
+
+    Only FreeBuds 7 / 7i / Neo, FreeBuds Pro 5 and FreeClip 2 / 2 S are on
+    Huawei's independent spatial audio list. Models whose ``spatialAudio``
+    widget is Huawei-phone-side HD spatial audio, or fixed-only spatial audio,
+    do not answer the switch query; do not mount this handler for them.
     """
 
     handler_id = "config_spatial_audio"

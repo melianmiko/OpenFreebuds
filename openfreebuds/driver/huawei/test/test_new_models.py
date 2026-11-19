@@ -80,11 +80,11 @@ COMMON_HANDLERS = [
                            "gesture_light_hold", "gesture_long_split", "gesture_swipe"]),
     (OfbDriverHuaweiPro3, ["device_info", "battery", "anc_global", "config_eq",
                            "gesture_light_hold", "gesture_long_split", "gesture_swipe",
-                           "config_spatial_audio", "config_box_tone"]),
+                           "config_box_tone"]),
     (OfbDriverHuaweiPro4, ["device_info", "battery", "anc_global", "config_eq",
                            "gesture_light_hold", "gesture_long_split", "gesture_swipe",
                            "gesture_double", "gesture_triple", "config_adaptive_volume",
-                           "config_spatial_audio", "config_box_tone", "config_head_control"]),
+                           "config_box_tone", "config_head_control"]),
     (OfbDriverHuaweiFreeClip, ["device_info", "battery", "anc_global", "config_eq",
                                "gesture_double", "gesture_triple",
                                "config_head_control", "config_drop_reminder",
@@ -96,6 +96,33 @@ def test_driver_handlers(driver_cls, expected):
     handler_ids = [h.handler_id for h in d.handlers]
     for handler_id in expected:
         assert handler_id in handler_ids, f"{driver_cls.__name__} missing handler: {handler_id}"
+
+
+@pytest.mark.parametrize("driver_cls,expected", [
+    # Independent (earbud-side) spatial audio, official list:
+    # FreeBuds 7 / 7i / Neo / Pro 5 and FreeClip 2 / 2 S.
+    (OfbDriverHuawei7, True),
+    (OfbDriverHuawei7I, True),
+    (OfbDriverHuaweiNeo, True),
+    (OfbDriverHuaweiPro5, True),
+    (OfbDriverHuaweiFreeClip2, True),
+    (OfbDriverHuaweiFreeClip2S, True),
+
+    # Huawei-phone-side HD spatial audio only; fixed-only for FreeBuds 5 /
+    # Lipstick 2, sound effects only for FreeBuds 6i. None of these may mount
+    # the independent earbud-side handler.
+    (OfbDriverHuawei5, False),
+    (OfbDriverHuawei6, False),
+    (OfbDriverHuawei6I, False),
+    (OfbDriverHuaweiPro2, False),
+    (OfbDriverHuaweiPro3, False),
+    (OfbDriverHuaweiPro4, False),
+    (OfbDriverHuaweiFreeClip, False),
+])
+def test_independent_spatial_audio_handler_mounts(driver_cls, expected):
+    d = driver_cls("00:11:22:33:44:55")
+    handler_ids = [h.handler_id for h in d.handlers]
+    assert ("config_spatial_audio" in handler_ids) == expected
 
 
 def test_freeclip2_in_call_double_tap_supported():
@@ -129,7 +156,8 @@ def test_pro3_gesture_set_replaces_double_tap():
     handler_ids = [h.handler_id for h in d.handlers]
     assert "gesture_light_hold" in handler_ids
     assert "gesture_double" not in handler_ids
-    assert "config_spatial_audio" in handler_ids
+    # Pro 3 has Huawei-phone-side HD spatial audio, not independent spatial audio
+    assert "config_spatial_audio" not in handler_ids
     assert "config_box_tone" in handler_ids
     assert _get_handler(OfbDriverHuaweiPro3, "config_box_tone").w_lid_tone is False
 
@@ -157,8 +185,10 @@ def test_pro4_gesture_set():
     d = OfbDriverHuaweiPro4("00:11:22:33:44:55")
     handler_ids = [h.handler_id for h in d.handlers]
     for handler_id in ("gesture_double", "gesture_triple", "gesture_light_hold",
-                       "config_adaptive_volume", "config_spatial_audio", "config_box_tone"):
+                       "config_adaptive_volume", "config_box_tone"):
         assert handler_id in handler_ids
+    # Pro 4 has Huawei-phone-side HD spatial audio, not independent spatial audio
+    assert "config_spatial_audio" not in handler_ids
     double = _get_handler(OfbDriverHuaweiPro4, "gesture_double")
     assert double.w_in_call is True
     assert double.w_read_in_call is True

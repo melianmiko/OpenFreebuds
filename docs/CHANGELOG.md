@@ -1,7 +1,8 @@
 # 0.19.0
 - [Device compatibility] Add full HUAWEI FreeBuds 5 support: dual-connect, L2HC, custom EQ, low-latency mode, half-in-ear detection, find-earbud, case battery, two ANC modes and level control. HD spatial audio remains Huawei-phone only.
 - [Device compatibility] Register FreeBuds Lipstick 2 as a FreeBuds 5 alias; the official command pages match and only shell/color assets differ.
-- [Device compatibility] Align gesture registration with the 2.0.7.321 touchsetting config: Pro 2 gains light-hold and custom EQ, Pro 3 gains light-hold, spatial audio and charging-box tone, Pro 4 gains double/triple tap and adaptive volume, FreeBuds 7 gains light-hold and in-call double-tap, and FreeClip 1st gen is limited to its official double/triple set.
+- [Device compatibility] Align gesture registration with the 2.0.7.321 touchsetting config: Pro 2 gains light-hold and custom EQ, Pro 3 gains light-hold and charging-box tone, Pro 4 gains double/triple tap and adaptive volume, FreeBuds 7 gains light-hold and in-call double-tap, and FreeClip 1st gen is limited to its official double/triple set.
+- [Device compatibility] Restrict independent spatial audio to FreeBuds 7 / 7i / Neo, FreeBuds Pro 5 and FreeClip 2 / 2 S. Pro 3 / Pro 4 keep Huawei-phone-side HD spatial audio only and no longer mount the independent handler.
 - [Device compatibility] Limit charging-case tone controls by model: FreeBuds Pro 3, Pro 4 and FreeClip 1 expose only the master switch; FreeClip 2/2 S, FreeBuds 6/7 and FreeBuds Pro 5 keep the full lid/tone controls.
 - [Device compatibility] Expose drop reminder only on FreeBuds 7, FreeBuds 6, FreeClip 2, FreeClip 2 S and FreeClip; FreeBuds Neo no longer mounts it.
 - [Change] FreeClip 1 now uses a standalone driver with an explicit handler list instead of inheriting the Pro 3 driver.

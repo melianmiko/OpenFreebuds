@@ -30,6 +30,5 @@ class OfbDriverHuaweiPro3(OfbDriverHuaweiGeneric):
             OfbHuaweiActionLongTapSplitHandler(w_right=True),
             OfbHuaweiActionSwipeGestureHandler(),
             OfbHuaweiLowLatencyPreferenceHandler(),
-            OfbHuaweiSpatialAudioHandler(),
             OfbHuaweiBoxToneHandler(w_lid_tone=False),
         ]
