@@ -1591,4 +1591,27 @@
     <message><source>Connection failed</source><translation type="unfinished" /></message>
     <message><source>Close</source><translation type="unfinished" /></message>
 </context>
+<context>
+    <name>OfbQtSystemNotificationService</name>
+    <message>
+        <source>Drop reminder</source>
+        <translation>Drop reminder</translation>
+    </message>
+    <message>
+        <source>Cleaning reminder</source>
+        <translation>Cleaning reminder</translation>
+    </message>
+    <message>
+        <source>Your {0} earbuds may have fallen. Please check whether they are lost.</source>
+        <translation>Your {0} earbuds may have fallen. Please check whether they are lost.</translation>
+    </message>
+    <message>
+        <source>The charging contacts of your {0} may be dirty. Please clean the charging case and the earbud contacts.</source>
+        <translation>The charging contacts of your {0} may be dirty. Please clean the charging case and the earbud contacts.</translation>
+    </message>
+    <message>
+        <source>The charging contacts of your {0} may be dirty, or an earbud is not seated correctly. Please clean the contacts and align the earbuds with the charging case slots.</source>
+        <translation>The charging contacts of your {0} may be dirty, or an earbud is not seated correctly. Please clean the contacts and align the earbuds with the charging case slots.</translation>
+    </message>
+</context>
 </TS>

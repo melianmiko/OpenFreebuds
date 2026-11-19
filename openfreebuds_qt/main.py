@@ -24,6 +24,7 @@ from openfreebuds_qt.utils.i18n import list_qtbase_locales, resolve_locale
 from openfreebuds_qt.utils.async_dialog import run_dialog_async
 from openfreebuds_qt.utils.automation import OfbQtAutomationService
 from openfreebuds_qt.utils.mpris.service import OfbQtMPRISHelperService
+from openfreebuds_qt.utils.notifications import OfbQtSystemNotificationService
 from openfreebuds_qt.utils.updater.service import OfbQtUpdaterService
 
 log = create_logger("OfbQtApplication")
@@ -59,6 +60,7 @@ class OfbQtApplication(IOfbQtApplication):
         self.hotkeys: Optional[OfbQtHotkeyService] = None
         self.mpris: Optional[OfbQtMPRISHelperService] = None
         self.tray: Optional[OfbTrayIcon] = None
+        self.notifications: Optional[OfbQtSystemNotificationService] = None
         self.main_window: Optional[OfbQtMainWindow] = None
         self.updater_service: Optional[OfbQtUpdaterService] = None
 
@@ -157,6 +159,8 @@ class OfbQtApplication(IOfbQtApplication):
             await self.automation.start()
             await self.mpris.start()
             await self.tray.boot()
+            self.notifications = OfbQtSystemNotificationService(self)
+            await self.notifications.start()
             await self.main_window.boot()
             await self.updater_service.boot()
 
@@ -184,6 +188,9 @@ class OfbQtApplication(IOfbQtApplication):
             log.exception("Boot failure")
 
     async def exit(self, ret_code: int = 0):
+        notifications = getattr(self, "notifications", None)
+        if notifications is not None:
+            await notifications.stop()
         await self.tray.close()
         self.main_window.hide()
 

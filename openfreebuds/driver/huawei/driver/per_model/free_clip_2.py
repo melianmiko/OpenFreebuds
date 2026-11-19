@@ -53,6 +53,7 @@ class OfbDriverHuaweiFreeClip2(OfbDriverHuaweiGeneric):
             OfbHuaweiDropReminderHandler(),
             OfbHuaweiSmartChargeHandler(),
             OfbHuaweiLeftRightAutoHandler(),
+            OfbHuaweiPromptEventsHandler(w_cleaning=True),
 
             # Not tested / unsupported on FreeClip 2:
             # - ANC (open-ear, no traditional ANC)

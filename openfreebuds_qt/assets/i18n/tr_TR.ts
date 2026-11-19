@@ -2228,4 +2228,27 @@
         <translation>Kapat</translation>
     </message>
 </context>
+<context>
+    <name>OfbQtSystemNotificationService</name>
+    <message>
+        <source>Drop reminder</source>
+        <translation>Düşme hatırlatıcısı</translation>
+    </message>
+    <message>
+        <source>Cleaning reminder</source>
+        <translation>Temizlik hatırlatıcısı</translation>
+    </message>
+    <message>
+        <source>Your {0} earbuds may have fallen. Please check whether they are lost.</source>
+        <translation>{0} kulaklığınız düşmüş olabilir. Kaybolup kaybolmadığını kontrol edin.</translation>
+    </message>
+    <message>
+        <source>The charging contacts of your {0} may be dirty. Please clean the charging case and the earbud contacts.</source>
+        <translation>{0} kulaklığınızın şarj kontakları kirli olabilir. Şarj kutusunu ve kulaklık şarj kontaklarını temizleyin.</translation>
+    </message>
+    <message>
+        <source>The charging contacts of your {0} may be dirty, or an earbud is not seated correctly. Please clean the contacts and align the earbuds with the charging case slots.</source>
+        <translation>{0} kulaklığınızın şarj kontakları kirli olabilir veya bir kulaklık yuvasına düzgün yerleşmemiş olabilir. Kontakları temizleyin ve kulaklıkları şarj kutusu yuvalarına hizalayın.</translation>
+    </message>
+</context>
 </TS>

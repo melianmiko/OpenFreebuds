@@ -671,4 +671,27 @@
     <message><source>Connection failed</source><translation>连接失败</translation></message>
     <message><source>Close</source><translation>关闭</translation></message>
 </context>
+<context>
+    <name>OfbQtSystemNotificationService</name>
+    <message>
+        <source>Drop reminder</source>
+        <translation>掉落提醒</translation>
+    </message>
+    <message>
+        <source>Cleaning reminder</source>
+        <translation>清洁提醒</translation>
+    </message>
+    <message>
+        <source>Your {0} earbuds may have fallen. Please check whether they are lost.</source>
+        <translation>您的 {0} 耳机疑似发生掉落，请检查您的耳机是否丢失？</translation>
+    </message>
+    <message>
+        <source>The charging contacts of your {0} may be dirty. Please clean the charging case and the earbud contacts.</source>
+        <translation>您的 {0} 充电触点可能有脏污，请您清洁充电盒及耳机充电触点。</translation>
+    </message>
+    <message>
+        <source>The charging contacts of your {0} may be dirty, or an earbud is not seated correctly. Please clean the contacts and align the earbuds with the charging case slots.</source>
+        <translation>您的 {0} 充电触点可能有脏污或盒内耳机未放置到位，请您清洁充电触点并将耳机对齐充电盒槽位放置。</translation>
+    </message>
+</context>
 </TS>

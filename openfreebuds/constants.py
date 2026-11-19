@@ -8,6 +8,7 @@ class OfbEventKind:
     STATE_CHANGED = "state_changed"
     DEVICE_CHANGED = "device_changed"
     PROPERTY_CHANGED = "prop_changed"
+    HUAWEI_PROMPT_EVENT = "huawei_prompt_event"
     QT_BRING_SETTINGS_UP = "qt::show_settings"
     QT_SETTINGS_CHANGED = "qt::settings_changed"
 

@@ -43,5 +43,6 @@ class OfbDriverHuaweiNeo(OfbDriverHuaweiGeneric):
             OfbHuaweiAdaptiveVolumeHandler(),
             OfbHuaweiHeadControlHandler(),
             OfbHuaweiDropReminderHandler(),
+            OfbHuaweiPromptEventsHandler(w_cleaning=False),
             OfbHuaweiSmartChargeHandler(),
         ]

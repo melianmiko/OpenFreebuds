@@ -2229,4 +2229,27 @@
         <translation>Fechar</translation>
     </message>
 </context>
+<context>
+    <name>OfbQtSystemNotificationService</name>
+    <message>
+        <source>Drop reminder</source>
+        <translation>Lembrete de queda</translation>
+    </message>
+    <message>
+        <source>Cleaning reminder</source>
+        <translation>Lembrete de limpeza</translation>
+    </message>
+    <message>
+        <source>Your {0} earbuds may have fallen. Please check whether they are lost.</source>
+        <translation>Seus fones {0} podem ter caído. Verifique se foram perdidos.</translation>
+    </message>
+    <message>
+        <source>The charging contacts of your {0} may be dirty. Please clean the charging case and the earbud contacts.</source>
+        <translation>Os contatos de carregamento dos seus {0} podem estar sujos. Limpe o estojo de carregamento e os contatos de carregamento dos fones.</translation>
+    </message>
+    <message>
+        <source>The charging contacts of your {0} may be dirty, or an earbud is not seated correctly. Please clean the contacts and align the earbuds with the charging case slots.</source>
+        <translation>Os contatos de carregamento dos seus {0} podem estar sujos ou um fone não está encaixado corretamente. Limpe os contatos e alinhe os fones com os compartimentos do estojo de carregamento.</translation>
+    </message>
+</context>
 </TS>

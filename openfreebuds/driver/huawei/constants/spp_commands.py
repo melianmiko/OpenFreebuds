@@ -23,6 +23,22 @@ CMD_MBB_FEATURE = b"\x2b\xb4"
 CMD_BOX_TONE = b"\x2b\xb1"
 CMD_BOX_TONE_INFO = b"\x2b\x25"
 
+# Prompt / device events (0x2B7F). The official general_prompt_config.json
+# encodes Type (TLV type) and value as:
+#   type 2, value 1   -> earphone cleaning
+#   type 5, value 1   -> drop reminder
+#   type 6, value 20  -> cleaning reminder cancelled
+#   type 6, value 21  -> earbud not seated correctly
+# Captured on IConnect; OpenFreebuds listens for the same TLV on SPP.
+CMD_PROMPT_EVENT = b"\x2b\x7f"
+PROMPT_TLV_CLEANING = 2
+PROMPT_TLV_DROP = 5
+PROMPT_TLV_CLEANING_STATE = 6
+PROMPT_CLEANING_ON = 1
+PROMPT_DROP_ON = 1
+PROMPT_CLEANING_CANCEL = 20
+PROMPT_CLEANING_MISPLACE = 21
+
 # Left/right auto-switch (0x2B9A), measured from the official
 # LeftRightEarRecognitionCard -> presenter -> Lq9/b chain:
 #   read  2b 9a 01 00

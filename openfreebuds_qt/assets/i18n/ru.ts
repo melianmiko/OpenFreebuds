@@ -2229,4 +2229,27 @@
         <translation>Закрыть</translation>
     </message>
 </context>
+<context>
+    <name>OfbQtSystemNotificationService</name>
+    <message>
+        <source>Drop reminder</source>
+        <translation>Напоминание о падении</translation>
+    </message>
+    <message>
+        <source>Cleaning reminder</source>
+        <translation>Напоминание о чистке</translation>
+    </message>
+    <message>
+        <source>Your {0} earbuds may have fallen. Please check whether they are lost.</source>
+        <translation>Ваши наушники {0} могли упасть. Проверьте, не потеряны ли они.</translation>
+    </message>
+    <message>
+        <source>The charging contacts of your {0} may be dirty. Please clean the charging case and the earbud contacts.</source>
+        <translation>Контакты зарядки ваших наушников {0} могут быть загрязнены. Очистите зарядный чехол и контакты зарядки наушников.</translation>
+    </message>
+    <message>
+        <source>The charging contacts of your {0} may be dirty, or an earbud is not seated correctly. Please clean the contacts and align the earbuds with the charging case slots.</source>
+        <translation>Контакты зарядки ваших наушников {0} могут быть загрязнены или наушник неправильно лежит в чехле. Очистите контакты и выровняйте наушники по слотам зарядного чехла.</translation>
+    </message>
+</context>
 </TS>

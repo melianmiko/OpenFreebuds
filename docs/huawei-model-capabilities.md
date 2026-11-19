@@ -141,6 +141,8 @@ FreeClip 1 uses a standalone driver with an explicit handler list; it does not i
 
 Drop reminder is exposed on FreeBuds 7, FreeBuds 6, FreeBuds Neo, FreeClip 2, FreeClip 2 S and FreeClip. FreeBuds Neo declares `drop_detection` but is not in Huawei's supported list; the handler is mounted because the config declares the feature, and runtime support depends on the device response.
 
+`0x2B7F` prompt events are read-only. `OfbHuaweiPromptEventsHandler` parses `2b7f020101` (cleaning), `2b7f050101` (drop), `2b7f060114` (cleaning cancel) and `2b7f060115` (earbud not seated), and ignores the `2b7f06020200` status packet. FreeClip / FreeClip 2 / 2 S receive cleaning + drop; FreeBuds 6 / 7 / Neo receive drop only. The captured IConnect TLV is assumed to arrive over SPP; no IConnect transport is implemented, SPP delivery is unverified, and real system notifications are not yet acceptance-tested.
+
 Left-right auto-switch (`0x2B9A`) is mounted on FreeClip, FreeClip 2, FreeClip 2 S and W Buds 1/2. The first three official configs declare `isLeftRightEarSupport: true`; W Buds has no settings profile and no such field, so its control is response-gated. Hardware read/write has not been verified: FreeClip 2 returned SPP `10048` during the 2026-11-19 attempt.
 
 ## Gesture coverage

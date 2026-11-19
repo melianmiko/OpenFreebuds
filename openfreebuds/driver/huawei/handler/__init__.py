@@ -12,6 +12,7 @@ from .config_adaptive_volume import OfbHuaweiAdaptiveVolumeHandler
 from .config_auto_pause import OfbHuaweiConfigAutoPauseHandler
 from .config_box_tone import OfbHuaweiBoxToneHandler
 from .config_drop_reminder import OfbHuaweiDropReminderHandler
+from .prompt_events import OfbHuaweiPromptEventsHandler
 from .config_left_right_auto import OfbHuaweiLeftRightAutoHandler
 from .config_smart_charge import OfbHuaweiSmartChargeHandler
 from .config_equalizer import OfbHuaweiEqualizerPresetHandler

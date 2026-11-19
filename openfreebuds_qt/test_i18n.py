@@ -81,6 +81,47 @@ def test_show_welcome_button_strings_are_translated(locale):
 
 
 @pytest.mark.parametrize("locale", SUPPORTED)
+def test_system_notification_strings_are_translated(locale):
+    expected = {
+        "de": ("Sturz-Erinnerung", "Reinigungserinnerung"),
+        "en": ("Drop reminder", "Cleaning reminder"),
+        "es": ("Recordatorio de caída", "Recordatorio de limpieza"),
+        "pt-BR": ("Lembrete de queda", "Lembrete de limpeza"),
+        "ru": ("Напоминание о падении", "Напоминание о чистке"),
+        "tr_TR": ("Düşme hatırlatıcısı", "Temizlik hatırlatıcısı"),
+        "zh-CN": ("掉落提醒", "清洁提醒"),
+    }
+
+    app = QCoreApplication.instance() or QCoreApplication([])
+    translator = QTranslator()
+    assert translator.load(str(I18N_PATH / f"{locale}.qm"))
+    app.installTranslator(translator)
+    try:
+        assert translator.translate(
+            "OfbQtSystemNotificationService", "Drop reminder") == expected[locale][0]
+        assert translator.translate(
+            "OfbQtSystemNotificationService", "Cleaning reminder") == expected[locale][1]
+        cleaning_body = translator.translate(
+            "OfbQtSystemNotificationService",
+            "The charging contacts of your {0} may be dirty. "
+            "Please clean the charging case and the earbud contacts.",
+        )
+        drop_body = translator.translate(
+            "OfbQtSystemNotificationService",
+            "Your {0} earbuds may have fallen. Please check whether they are lost.",
+        )
+        assert "{0}" in cleaning_body
+        assert "{0}" in drop_body
+        if locale != "en":
+            assert cleaning_body != (
+                "The charging contacts of your {0} may be dirty. "
+                "Please clean the charging case and the earbud contacts."
+            )
+    finally:
+        app.removeTranslator(translator)
+
+
+@pytest.mark.parametrize("locale", SUPPORTED)
 def test_tone_import_and_drop_alert_strings_are_translated(locale):
     expected = {
         "de": ("ZIP importieren", "Sturz-Warnung", "Importiert: {0}, übersprungen: {1}, fehlgeschlagen: {2}."),
