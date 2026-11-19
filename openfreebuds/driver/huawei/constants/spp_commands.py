@@ -23,6 +23,12 @@ CMD_MBB_FEATURE = b"\x2b\xb4"
 CMD_BOX_TONE = b"\x2b\xb1"
 CMD_BOX_TONE_INFO = b"\x2b\x25"
 
+# Left/right auto-switch (0x2B9A), measured from the official
+# LeftRightEarRecognitionCard -> presenter -> Lq9/b chain:
+#   read  2b 9a 01 00
+#   write 2b 9a 01 01 <0/1>
+CMD_LEFT_RIGHT_AUTO = b"\x2b\x9a"
+
 # Find-earbud command (measured 2026-11-14 on FreeClip 2 / COM26):
 #   start/stop 2b 5d 01 02 <side> <state>; query 2b 5e 01 01 <side>
 #   side: 0=left 1=right 2=both; state: 0=ringing 1=idle
@@ -36,6 +42,7 @@ FIND_EARBUD_STATE_STOP = 1
 
 # 0x2BB4 generic MBB featureId (matches the FeatureMbbState enum)
 MBB_FEATURE_ADAPTIVE_VOLUME = 2
+MBB_FEATURE_SMART_CHARGE = 4
 MBB_FEATURE_DROP_REMINDER = 7
 MBB_FEATURE_HEAD_CONTROL = 11
 MBB_FEATURE_BOX_TONE = 16

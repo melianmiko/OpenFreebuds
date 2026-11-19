@@ -41,4 +41,5 @@ class OfbDriverHuawei7I(OfbDriverHuaweiGeneric):
             # Device features
             OfbHuaweiSpatialAudioHandler(),
             OfbHuaweiHeadControlHandler(),
+            OfbHuaweiSmartChargeHandler(),
         ]

@@ -2,7 +2,8 @@ from openfreebuds.driver.huawei.driver.per_model.buds_pro_3 import OfbDriverHuaw
 from openfreebuds.driver.huawei.handler import (OfbHuaweiActionDoubleTapHandler,
                                                 OfbHuaweiActionTripleTapHandler,
                                                 OfbHuaweiAdaptiveVolumeHandler,
-                                                OfbHuaweiHeadControlHandler)
+                                                OfbHuaweiHeadControlHandler,
+                                                OfbHuaweiSmartChargeHandler)
 
 
 class OfbDriverHuaweiPro4(OfbDriverHuaweiPro3):
@@ -16,4 +17,5 @@ class OfbDriverHuaweiPro4(OfbDriverHuaweiPro3):
             OfbHuaweiActionTripleTapHandler(),
             OfbHuaweiAdaptiveVolumeHandler(),
             OfbHuaweiHeadControlHandler(),
+            OfbHuaweiSmartChargeHandler(),
         ])

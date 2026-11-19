@@ -25,6 +25,7 @@ from openfreebuds.driver.huawei.driver.per_model.buds_studio import OfbDriverHua
 from openfreebuds.driver.huawei.driver.per_model.free_clip import OfbDriverHuaweiFreeClip
 from openfreebuds.driver.huawei.driver.per_model.free_clip_2 import OfbDriverHuaweiFreeClip2
 from openfreebuds.driver.huawei.driver.per_model.free_clip_2_s import OfbDriverHuaweiFreeClip2S
+from openfreebuds.driver.huawei.driver.per_model.w_buds import OfbDriverHuaweiWBuds
 
 COMMON_HANDLERS = [
     "device_info",
@@ -53,27 +54,31 @@ COMMON_HANDLERS = [
     (OfbDriverHuawei7, COMMON_HANDLERS + [
         "anc_global", "gesture_triple", "gesture_light_hold",
         "config_spatial_audio", "config_adaptive_volume", "config_box_tone",
-        "config_drop_reminder",
+        "config_drop_reminder", "config_smart_charge",
     ]),
     (OfbDriverHuaweiNeo, COMMON_HANDLERS + [
         "anc_global", "gesture_triple", "config_spatial_audio", "config_adaptive_volume",
+        "config_drop_reminder", "config_smart_charge",
     ]),
     (OfbDriverHuawei7I, COMMON_HANDLERS + [
         "anc_global", "gesture_triple", "config_spatial_audio",
+        "config_smart_charge",
     ]),
     (OfbDriverHuawei6, COMMON_HANDLERS + [
         "gesture_triple", "config_adaptive_volume", "config_box_tone",
-        "config_drop_reminder",
+        "config_drop_reminder", "config_smart_charge",
     ]),
     (OfbDriverHuaweiFreeClip2S, [
         "device_info", "battery", "tws_auto_pause", "gesture_double", "gesture_triple",
         "gesture_long_split", "gesture_swipe", "config_eq", "config_sound_quality",
         "low_latency", "tws_in_ear", "voice_language", "dual_connect",
         "config_spatial_audio", "config_adaptive_volume", "config_box_tone",
-        "config_head_control", "config_drop_reminder",
+        "config_head_control", "config_drop_reminder", "config_smart_charge",
+        "config_left_right_auto",
     ]),
     (OfbDriverHuaweiPro5, ["config_adaptive_volume", "config_spatial_audio",
                            "config_head_control", "config_box_tone",
+                           "config_smart_charge",
                            "gesture_light_hold", "gesture_double", "gesture_triple",
                            "gesture_long_split", "gesture_swipe"]),
     (OfbDriverHuaweiPro2, ["device_info", "battery", "anc_global", "config_eq",
@@ -84,11 +89,11 @@ COMMON_HANDLERS = [
     (OfbDriverHuaweiPro4, ["device_info", "battery", "anc_global", "config_eq",
                            "gesture_light_hold", "gesture_long_split", "gesture_swipe",
                            "gesture_double", "gesture_triple", "config_adaptive_volume",
-                           "config_box_tone", "config_head_control"]),
+                           "config_box_tone", "config_head_control", "config_smart_charge"]),
     (OfbDriverHuaweiFreeClip, ["device_info", "battery", "anc_global", "config_eq",
                                "gesture_double", "gesture_triple",
                                "config_head_control", "config_drop_reminder",
-                               "config_box_tone"]),
+                               "config_box_tone", "config_left_right_auto"]),
 ])
 def test_driver_handlers(driver_cls, expected):
     d = driver_cls("00:11:22:33:44:55")
@@ -176,9 +181,11 @@ def test_box_tone_lid_control_scope(driver_cls, w_lid_tone):
     assert _get_handler(driver_cls, "config_box_tone").w_lid_tone is w_lid_tone
 
 
-def test_neo_has_no_drop_reminder():
+def test_neo_mounts_declared_config_handlers():
     d = OfbDriverHuaweiNeo("00:11:22:33:44:55")
-    assert "config_drop_reminder" not in [h.handler_id for h in d.handlers]
+    handler_ids = [h.handler_id for h in d.handlers]
+    assert "config_drop_reminder" in handler_ids
+    assert "config_smart_charge" in handler_ids
 
 
 def test_pro4_gesture_set():
@@ -271,6 +278,10 @@ def test_freebuds5_has_no_standalone_spatial_audio():
     ("HUAWEI FreeBuds Neo", OfbDriverHuaweiNeo),
     ("HUAWEI FreeClip 2 典藏版", OfbDriverHuaweiFreeClip2S),
     ("HUAWEI FreeClip 2 S", OfbDriverHuaweiFreeClip2S),
+    ("HUAWEI W Buds", OfbDriverHuaweiWBuds),
+    ("HUAWEI WATCH Buds", OfbDriverHuaweiWBuds),
+    ("HUAWEI W Buds 2", OfbDriverHuaweiWBuds),
+    ("HUAWEI WATCH Buds 2", OfbDriverHuaweiWBuds),
 ])
 def test_device_map(device_name, driver_cls):
     assert DEVICE_TO_DRIVER_MAP[device_name] is driver_cls
@@ -309,9 +320,9 @@ def test_find_earbud_excluded_models(driver_cls):
     key=lambda c: c.__name__,
 ))
 def test_find_earbud_matrix_all_huawei_drivers(driver_cls):
-    """Official capability matrix: only Pro 1st gen and Studio lack find-earbud; all other models have it."""
+    """Official capability matrix: only Pro 1st gen and Studio lack find-earbud; W Buds is left off because its protocol is unverified."""
     d = driver_cls("00:11:22:33:44:55")
     d._ensure_find_earbud_handler()
-    expected = driver_cls not in (OfbDriverHuaweiPro, OfbDriverHuaweiStudio)
+    expected = driver_cls not in (OfbDriverHuaweiPro, OfbDriverHuaweiStudio, OfbDriverHuaweiWBuds)
     actual = "find_earbud" in [h.handler_id for h in d.handlers]
     assert actual is expected, f"{driver_cls.__name__} find_earbud={actual}, expected={expected}"

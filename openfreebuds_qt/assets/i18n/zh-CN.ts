@@ -209,6 +209,8 @@
     <message><source>Interaction</source><translation>交互</translation></message>
     <message><source>Wear detection</source><translation>佩戴检测</translation></message>
     <message><source>Pause audio or switch device when earphones are removed</source><translation>取下耳机时暂停音频或切换设备</translation></message>
+    <message><source>Enable left-right auto-switch</source><translation>开启左右耳自适应</translation></message>
+    <message><source>The earbuds are interchangeable. After putting them in, dip your head slightly to auto-correct the channels.</source><translation>耳机不分左右，可随意佩戴。佩戴后微点头，耳机会自动校正声道。</translation></message>
     <message><source>Networking</source><translation>网络</translation></message>
     <message><source>Enable low-latency mode</source><translation>启用低延迟模式</translation></message>
     <message><source>Will try to reduce audio latency when using headphones in enviroments with high network load. This option is disabled when your earphones are disconnected. Applies only for current device.</source><translation>在网络负载较高的环境中使用耳机时，将尝试减少音频延迟。当耳机断开连接时，此选项将被禁用。仅适用于当前设备。</translation></message>
@@ -357,6 +359,9 @@
     <message><source>Drop alert</source><translation>掉落提示</translation></message>
     <message><source>Enable drop alert</source><translation>开启掉落提示</translation></message>
     <message><source>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</source><translation>一只耳机掉落时，另一只耳机会播放铃声。是否可用取决于耳机固件。</translation></message>
+    <message><source>Smart charging</source><translation>智能充电</translation></message>
+    <message><source>Enable smart charging</source><translation>开启智能充电</translation></message>
+    <message><source>Learns your usage habits and adjusts the maximum charge level to extend battery life.</source><translation>系统会学习您的使用习惯智能调节最大充电量，以延长电池使用寿命。</translation></message>
     <message><source>Import ZIP</source><translation>导入 ZIP</translation></message>
     <message><source>Import sounds from ZIP</source><translation>从 ZIP 导入提示音</translation></message>
     <message><source>Imported {0}, skipped {1}, failed {2}.</source><translation>已导入 {0} 个，跳过 {1} 个，失败 {2} 个。</translation></message>

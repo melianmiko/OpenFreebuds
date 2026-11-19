@@ -42,4 +42,6 @@ class OfbDriverHuaweiNeo(OfbDriverHuaweiGeneric):
             OfbHuaweiSpatialAudioHandler(),
             OfbHuaweiAdaptiveVolumeHandler(),
             OfbHuaweiHeadControlHandler(),
+            OfbHuaweiDropReminderHandler(),
+            OfbHuaweiSmartChargeHandler(),
         ]

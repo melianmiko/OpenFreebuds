@@ -342,6 +342,16 @@
         </message>
         <message>
             <location filename="../../designer/device_other.ui" line="0" />
+            <source>Enable left-right auto-switch</source>
+            <translation>Включить автоопределение левого/правого наушника</translation>
+        </message>
+        <message>
+            <location filename="../../designer/device_other.ui" line="0" />
+            <source>The earbuds are interchangeable. After putting them in, dip your head slightly to auto-correct the channels.</source>
+            <translation>Наушники взаимозаменяемы. После надевания слегка наклоните голову, чтобы автоматически исправить каналы.</translation>
+        </message>
+        <message>
+            <location filename="../../designer/device_other.ui" line="0" />
             <source>Networking</source>
             <translation>Связь</translation>
         </message>
@@ -801,6 +811,9 @@
     <message><source>Drop alert</source><translation>Оповещение о падении</translation></message>
     <message><source>Enable drop alert</source><translation>Включить оповещение о падении</translation></message>
     <message><source>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</source><translation>Если один наушник упадёт, другой наушник воспроизведёт звуковой сигнал. Доступность зависит от прошивки наушников.</translation></message>
+    <message><source>Smart charging</source><translation>Умная зарядка</translation></message>
+    <message><source>Enable smart charging</source><translation>Включить умную зарядку</translation></message>
+    <message><source>Learns your usage habits and adjusts the maximum charge level to extend battery life.</source><translation>Изучает ваши привычки и регулирует максимальный уровень заряда, чтобы продлить срок службы аккумулятора.</translation></message>
     <message><source>Import ZIP</source><translation>Импортировать ZIP</translation></message>
     <message><source>Import sounds from ZIP</source><translation>Импорт звуков из ZIP</translation></message>
     <message><source>Imported {0}, skipped {1}, failed {2}.</source><translation>Импортировано: {0}, пропущено: {1}, ошибок: {2}.</translation></message>

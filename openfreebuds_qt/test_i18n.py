@@ -108,6 +108,47 @@ def test_tone_import_and_drop_alert_strings_are_translated(locale):
 
 
 @pytest.mark.parametrize("locale", SUPPORTED)
+def test_left_right_auto_strings_are_translated(locale):
+    expected = {
+        "de": ("Links-rechts-Automatik aktivieren",
+               "Die Ohrhörer sind austauschbar. Setze sie ein und neige den Kopf leicht, "
+               "um die Kanäle automatisch zu korrigieren."),
+        "en": ("Enable left-right auto-switch",
+               "The earbuds are interchangeable. After putting them in, dip your head "
+               "slightly to auto-correct the channels."),
+        "es": ("Activar cambio automático izquierda-derecha",
+               "Los auriculares son intercambiables. Después de ponértelos, inclina "
+               "ligeramente la cabeza para corregir automáticamente los canales."),
+        "pt-BR": ("Ativar troca automática esquerda-direita",
+                  "Os fones são intercambiáveis. Depois de colocá-los, incline levemente "
+                  "a cabeça para corrigir os canais automaticamente."),
+        "ru": ("Включить автоопределение левого/правого наушника",
+               "Наушники взаимозаменяемы. После надевания слегка наклоните голову, "
+               "чтобы автоматически исправить каналы."),
+        "tr_TR": ("Sol-sağ otomatik geçişi etkinleştir",
+                  "Kulaklıklar birbirinin yerine kullanılabilir. Takdıktan sonra "
+                  "kanalların otomatik düzeltilmesi için başınızı hafifçe eğin."),
+        "zh-CN": ("开启左右耳自适应",
+                  "耳机不分左右，可随意佩戴。佩戴后微点头，耳机会自动校正声道。"),
+    }
+
+    app = QCoreApplication.instance() or QCoreApplication([])
+    translator = QTranslator()
+    assert translator.load(str(I18N_PATH / f"{locale}.qm"))
+    app.installTranslator(translator)
+    try:
+        assert translator.translate(
+            "OfbQtDeviceOtherSettingsModule", "Enable left-right auto-switch") == expected[locale][0]
+        assert translator.translate(
+            "OfbQtDeviceOtherSettingsModule",
+            "The earbuds are interchangeable. After putting them in, dip your head "
+            "slightly to auto-correct the channels.",
+        ) == expected[locale][1]
+    finally:
+        app.removeTranslator(translator)
+
+
+@pytest.mark.parametrize("locale", SUPPORTED)
 def test_pro_5_gesture_strings_are_translated(locale):
     expected = {
         "de": ("Einmal zusammendrücken", "Zusammengedrückt halten",

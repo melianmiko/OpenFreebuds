@@ -18,6 +18,7 @@ from .buds_se_4 import OfbDriverHuaweiSe4
 from .free_clip import OfbDriverHuaweiFreeClip
 from .free_clip_2 import OfbDriverHuaweiFreeClip2
 from .free_clip_2_s import OfbDriverHuaweiFreeClip2S
+from .w_buds import OfbDriverHuaweiWBuds
 from .lace_pro import OfbDriverHuaweiLacePro
 from .lace_pro_2 import OfbDriverHuaweiLacePro2
 from .buds_studio import OfbDriverHuaweiStudio

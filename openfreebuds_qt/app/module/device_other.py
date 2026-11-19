@@ -127,6 +127,8 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
         self.head_nod_box.currentIndexChanged.connect(self.on_head_nod_select)
         self.head_shake_box.currentIndexChanged.connect(self.on_head_shake_select)
         self.drop_reminder_toggle.toggled.connect(self.on_drop_reminder_toggle)
+        self.smart_charge_toggle.toggled.connect(self.on_smart_charge_toggle)
+        self.left_right_auto_toggle.toggled.connect(self.on_left_right_auto_toggle)
         self.box_tone_toggle.toggled.connect(self.on_box_tone_toggle)
         self.box_tone_lid_toggle.toggled.connect(self.on_box_tone_lid_toggle)
         self.box_tone_lid_volume_slider.valueChanged.connect(self.on_box_tone_lid_volume_changed)
@@ -202,6 +204,8 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
             if event.kind_match(OfbEventKind.DEVICE_CHANGED):
                 # Visibility setup
                 auto_pause_visible = await self.ofb.get_property("config", "auto_pause") is not None
+                left_right_auto_visible = await self.ofb.get_property(
+                    "config", "left_right_auto_supported") == "true"
                 low_latency_visible = await self.ofb.get_property("config", "low_latency") is not None
                 service_language_visible = await self.ofb.get_property("service", "language") is not None
                 spatial_audio_visible = await self.ofb.get_property(
@@ -212,6 +216,8 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                     "config", "head_control_supported") == "true"
                 drop_reminder_visible = await self.ofb.get_property(
                     "config", "drop_reminder_supported") == "true"
+                smart_charge_visible = await self.ofb.get_property(
+                    "config", "smart_charge_supported") == "true"
                 box_tone_lid_supported = await self.ofb.get_property(
                     "config", "box_tone_lid_supported") == "true"
                 box_tone_visible = (
@@ -219,19 +225,26 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                     or box_tone_lid_supported
                 )
 
-                self.auto_pause_root.setVisible(auto_pause_visible)
+                self.auto_pause_root.setVisible(auto_pause_visible or left_right_auto_visible)
+                self.auto_pause_toggle.setVisible(auto_pause_visible)
+                self.label.setVisible(auto_pause_visible)
+                self.left_right_auto_toggle.setVisible(left_right_auto_visible)
+                self.left_right_auto_hint.setVisible(left_right_auto_visible)
                 self.low_latency_root.setVisible(low_latency_visible)
                 self.service_language_root.setVisible(service_language_visible)
                 self.spatial_audio_root.setVisible(spatial_audio_visible)
                 self.adaptive_volume_root.setVisible(adaptive_volume_visible)
                 self.head_control_root.setVisible(head_control_visible)
                 self.drop_reminder_root.setVisible(drop_reminder_visible)
+                self.smart_charge_root.setVisible(smart_charge_visible)
                 self.box_tone_root.setVisible(box_tone_visible)
 
                 self.list_item.setVisible(
-                    auto_pause_visible or service_language_visible or low_latency_visible
+                    auto_pause_visible or left_right_auto_visible or service_language_visible
+                    or low_latency_visible
                     or spatial_audio_visible or adaptive_volume_visible
-                    or head_control_visible or drop_reminder_visible or box_tone_visible
+                    or head_control_visible or drop_reminder_visible
+                    or smart_charge_visible or box_tone_visible
                 )
 
                 if box_tone_visible and box_tone_lid_supported and not self._tone_bootstrap_started:
@@ -309,6 +322,18 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                 drop_enabled = await self.ofb.get_property("config", "drop_reminder") == "true"
                 with blocked_signals(self.drop_reminder_toggle):
                     self.drop_reminder_toggle.setChecked(drop_enabled)
+
+            if event.kind_match(OfbEventKind.DEVICE_CHANGED) or event.is_changed("config", "smart_charge"):
+                smart_charge_enabled = await self.ofb.get_property("config", "smart_charge") == "true"
+                with blocked_signals(self.smart_charge_toggle):
+                    self.smart_charge_toggle.setChecked(smart_charge_enabled)
+
+            if (event.kind_match(OfbEventKind.DEVICE_CHANGED)
+                    or event.is_changed("config", "left_right_auto")):
+                left_right_auto_enabled = await self.ofb.get_property(
+                    "config", "left_right_auto") == "true"
+                with blocked_signals(self.left_right_auto_toggle):
+                    self.left_right_auto_toggle.setChecked(left_right_auto_enabled)
 
             if (event.kind_match(OfbEventKind.DEVICE_CHANGED)
                     or event.is_changed("config", "box_tone_enabled")
@@ -446,6 +471,16 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
     async def on_drop_reminder_toggle(self, value: bool):
         async with qt_error_handler("OfbQtDeviceOtherSettingsModule_SetDropReminder", self.ctx):
             await self.ofb.set_property("config", "drop_reminder", json.dumps(value))
+
+    @asyncSlot(bool)
+    async def on_smart_charge_toggle(self, value: bool):
+        async with qt_error_handler("OfbQtDeviceOtherSettingsModule_SetSmartCharge", self.ctx):
+            await self.ofb.set_property("config", "smart_charge", json.dumps(value))
+
+    @asyncSlot(bool)
+    async def on_left_right_auto_toggle(self, value: bool):
+        async with qt_error_handler("OfbQtDeviceOtherSettingsModule_SetLeftRightAuto", self.ctx):
+            await self.ofb.set_property("config", "left_right_auto", json.dumps(value))
 
     @asyncSlot(bool)
     async def on_box_tone_toggle(self, value: bool):

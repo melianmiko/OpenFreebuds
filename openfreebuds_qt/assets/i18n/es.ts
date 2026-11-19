@@ -341,6 +341,16 @@
         </message>
         <message>
             <location filename="../../designer/device_other.ui" line="0" />
+            <source>Enable left-right auto-switch</source>
+            <translation>Activar cambio automático izquierda-derecha</translation>
+        </message>
+        <message>
+            <location filename="../../designer/device_other.ui" line="0" />
+            <source>The earbuds are interchangeable. After putting them in, dip your head slightly to auto-correct the channels.</source>
+            <translation>Los auriculares son intercambiables. Después de ponértelos, inclina ligeramente la cabeza para corregir automáticamente los canales.</translation>
+        </message>
+        <message>
+            <location filename="../../designer/device_other.ui" line="0" />
             <source>Networking</source>
             <translation>Conexiones</translation>
         </message>
@@ -800,6 +810,9 @@
     <message><source>Drop alert</source><translation>Alerta de caída</translation></message>
     <message><source>Enable drop alert</source><translation>Activar alerta de caída</translation></message>
     <message><source>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</source><translation>Cuando se cae un auricular, el otro auricular reproduce un tono. La disponibilidad depende del firmware de los auriculares.</translation></message>
+    <message><source>Smart charging</source><translation>Carga inteligente</translation></message>
+    <message><source>Enable smart charging</source><translation>Activar carga inteligente</translation></message>
+    <message><source>Learns your usage habits and adjusts the maximum charge level to extend battery life.</source><translation>Aprende sus hábitos de uso y ajusta la carga máxima para prolongar la vida útil de la batería.</translation></message>
     <message><source>Import ZIP</source><translation>Importar ZIP</translation></message>
     <message><source>Import sounds from ZIP</source><translation>Importar sonidos desde ZIP</translation></message>
     <message><source>Imported {0}, skipped {1}, failed {2}.</source><translation>Importados: {0}, omitidos: {1}, fallidos: {2}.</translation></message>

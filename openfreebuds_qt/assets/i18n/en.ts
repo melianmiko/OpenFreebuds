@@ -297,6 +297,16 @@
         <source>Pause audio or switch device when earphones are removed</source>
         <translation type="unfinished" />
     </message>
+        <message>
+            <location filename="../../designer/device_other.ui" line="0" />
+            <source>Enable left-right auto-switch</source>
+            <translation>Enable left-right auto-switch</translation>
+        </message>
+        <message>
+            <location filename="../../designer/device_other.ui" line="0" />
+            <source>The earbuds are interchangeable. After putting them in, dip your head slightly to auto-correct the channels.</source>
+            <translation>The earbuds are interchangeable. After putting them in, dip your head slightly to auto-correct the channels.</translation>
+        </message>
     <message>
         <location filename="../../designer/device_other.ui" line="0" />
         <source>Networking</source>
@@ -389,6 +399,24 @@
         <location filename="../../designer/device_other.ui" line="0" />
         <source>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</source>
         <translation>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</translation>
+    </message>
+
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Smart charging</source>
+        <translation>Smart charging</translation>
+    </message>
+
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Enable smart charging</source>
+        <translation>Enable smart charging</translation>
+    </message>
+
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Learns your usage habits and adjusts the maximum charge level to extend battery life.</source>
+        <translation>Learns your usage habits and adjusts the maximum charge level to extend battery life.</translation>
     </message>
 
     <message>

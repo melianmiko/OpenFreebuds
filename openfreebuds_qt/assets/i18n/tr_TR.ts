@@ -341,6 +341,16 @@
         </message>
         <message>
             <location filename="../../designer/device_other.ui" line="0" />
+            <source>Enable left-right auto-switch</source>
+            <translation>Sol-sağ otomatik geçişi etkinleştir</translation>
+        </message>
+        <message>
+            <location filename="../../designer/device_other.ui" line="0" />
+            <source>The earbuds are interchangeable. After putting them in, dip your head slightly to auto-correct the channels.</source>
+            <translation>Kulaklıklar birbirinin yerine kullanılabilir. Takdıktan sonra kanalların otomatik düzeltilmesi için başınızı hafifçe eğin.</translation>
+        </message>
+        <message>
+            <location filename="../../designer/device_other.ui" line="0" />
             <source>Networking</source>
             <translation>Ağ</translation>
         </message>
@@ -800,6 +810,9 @@
     <message><source>Drop alert</source><translation>Düşme uyarısı</translation></message>
     <message><source>Enable drop alert</source><translation>Düşme uyarısını etkinleştir</translation></message>
     <message><source>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</source><translation>Bir kulaklık düşerse diğer kulaklık bir uyarı sesi çalar. Kullanılabilirlik kulaklık ürün yazılımına bağlıdır.</translation></message>
+    <message><source>Smart charging</source><translation>Akıllı şarj</translation></message>
+    <message><source>Enable smart charging</source><translation>Akıllı şarjı etkinleştir</translation></message>
+    <message><source>Learns your usage habits and adjusts the maximum charge level to extend battery life.</source><translation>Kullanım alışkanlıklarınızı öğrenir ve pil ömrünü uzatmak için maksimum şarj seviyesini ayarlar.</translation></message>
     <message><source>Import ZIP</source><translation>ZIP içe aktar</translation></message>
     <message><source>Import sounds from ZIP</source><translation>ZIP'ten sesleri içe aktar</translation></message>
     <message><source>Imported {0}, skipped {1}, failed {2}.</source><translation>İçe aktarılan: {0}, atlanan: {1}, başarısız: {2}.</translation></message>

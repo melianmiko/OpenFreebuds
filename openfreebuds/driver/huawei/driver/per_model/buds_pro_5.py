@@ -52,4 +52,5 @@ class OfbDriverHuaweiPro5(OfbDriverHuaweiGeneric):
             OfbHuaweiAdaptiveVolumeHandler(),
             OfbHuaweiBoxToneHandler(),
             OfbHuaweiHeadControlHandler(),
+            OfbHuaweiSmartChargeHandler(),
         ]

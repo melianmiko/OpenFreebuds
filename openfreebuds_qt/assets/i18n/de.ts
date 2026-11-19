@@ -342,6 +342,16 @@
         </message>
         <message>
             <location filename="../../designer/device_other.ui" line="0" />
+            <source>Enable left-right auto-switch</source>
+            <translation>Links-rechts-Automatik aktivieren</translation>
+        </message>
+        <message>
+            <location filename="../../designer/device_other.ui" line="0" />
+            <source>The earbuds are interchangeable. After putting them in, dip your head slightly to auto-correct the channels.</source>
+            <translation>Die Ohrhörer sind austauschbar. Setze sie ein und neige den Kopf leicht, um die Kanäle automatisch zu korrigieren.</translation>
+        </message>
+        <message>
+            <location filename="../../designer/device_other.ui" line="0" />
             <source>Networking</source>
             <translation>Netzwerk</translation>
         </message>
@@ -801,6 +811,9 @@
     <message><source>Drop alert</source><translation>Sturz-Warnung</translation></message>
     <message><source>Enable drop alert</source><translation>Sturz-Warnung aktivieren</translation></message>
     <message><source>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</source><translation>Wenn ein Ohrhörer herunterfällt, spielt der andere Ohrhörer einen Signalton. Die Verfügbarkeit hängt von der Ohrhörer-Firmware ab.</translation></message>
+    <message><source>Smart charging</source><translation>Intelligentes Laden</translation></message>
+    <message><source>Enable smart charging</source><translation>Intelligentes Laden aktivieren</translation></message>
+    <message><source>Learns your usage habits and adjusts the maximum charge level to extend battery life.</source><translation>Erlernt Ihre Nutzungsgewohnheiten und passt die maximale Ladekapazität an, um die Akkulebensdauer zu verlängern.</translation></message>
     <message><source>Import ZIP</source><translation>ZIP importieren</translation></message>
     <message><source>Import sounds from ZIP</source><translation>Töne aus ZIP importieren</translation></message>
     <message><source>Imported {0}, skipped {1}, failed {2}.</source><translation>Importiert: {0}, übersprungen: {1}, fehlgeschlagen: {2}.</translation></message>

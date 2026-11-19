@@ -43,6 +43,23 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QCheckBox" name="left_right_auto_toggle">
+        <property name="text">
+         <string>Enable left-right auto-switch</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="left_right_auto_hint">
+        <property name="text">
+         <string>The earbuds are interchangeable. After putting them in, dip your head slightly to auto-correct the channels.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -300,6 +317,32 @@
        <widget class="QLabel" name="drop_reminder_hint">
         <property name="text">
          <string>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="smart_charge_root">
+     <property name="title">
+      <string>Smart charging</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_smart_charge">
+      <item>
+       <widget class="QCheckBox" name="smart_charge_toggle">
+        <property name="text">
+         <string>Enable smart charging</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="smart_charge_hint">
+        <property name="text">
+         <string>Learns your usage habits and adjusts the maximum charge level to extend battery life.</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>

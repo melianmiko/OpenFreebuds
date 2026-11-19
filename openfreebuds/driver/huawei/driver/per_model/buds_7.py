@@ -45,4 +45,5 @@ class OfbDriverHuawei7(OfbDriverHuaweiGeneric):
             OfbHuaweiBoxToneHandler(),
             OfbHuaweiHeadControlHandler(),
             OfbHuaweiDropReminderHandler(),
+            OfbHuaweiSmartChargeHandler(),
         ]
