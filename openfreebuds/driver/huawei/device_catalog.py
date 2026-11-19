@@ -716,12 +716,23 @@ for _model, _colors in MARKETING_COLORS.items():
             _entry["colors"][_code] = _name
 
 
+# The cloud catalog sometimes stores an internal codename in marketing_name.
+# Keep the raw MODELS entry intact, but show the user-facing market name.
+MARKETING_MODEL_NAMES = {
+    # 00014B: cloud config has "Dove"; the product is HUAWEI FreeClip.
+    "00014B": "HUAWEI FreeClip",
+}
+
+
 def describe_model(code: str) -> str | None:
     """Return a human-readable model name for a model id."""
     info = MODELS.get(code)
-    if not info or not info["marketing_name"]:
+    if not info:
         return None
-    return f"{info['marketing_name']} ({code})"
+    name = MARKETING_MODEL_NAMES.get(code) or info["marketing_name"]
+    if not name:
+        return None
+    return f"{name} ({code})"
 
 
 def describe_color(model: str, code: str) -> str | None:

@@ -76,7 +76,9 @@ class OfbQtDeviceInfoModule(Ui_OfbQtDeviceInfoModule, OfbQtCommonModule):
                     )
 
                 self.device_address.setText(device_address)
-                self.device_name.setText(device_name)
+                self.device_name.setText(
+                    translate_model_name(_clean_model_name(device_name))
+                )
                 self.all_data_table.clearContents()
 
                 if info is None:
@@ -87,7 +89,9 @@ class OfbQtDeviceInfoModule(Ui_OfbQtDeviceInfoModule, OfbQtCommonModule):
                 self.device_product_id.setText(info.get("_product_id") or "--")
 
                 title = _device_title(info)
-                self.device_name.setText(title or _clean_model_name(device_name))
+                self.device_name.setText(
+                    title or translate_model_name(_clean_model_name(device_name))
+                )
 
                 rows = sorted(
                     ((code, value) for code, value in info.items() if not code.startswith("_")),
@@ -131,7 +135,7 @@ def _device_title(info: dict) -> str:
     """Build the "HUAWEI FreeClip 2 (Denim Blue)" title: localized model name plus the localized color from field_25. Chinese uses full-width brackets. The title contains no modelId or internal code, only the product name (color)."""
     color_value = info.get("field_25") or ""
     raw_model = info.get("field_2") or info.get("field_15") or info.get("device_model") or ""
-    model_name = _clean_model_name(translate_model_name(raw_model))
+    model_name = translate_model_name(_clean_model_name(raw_model))
     if not model_name:
         return ""
 

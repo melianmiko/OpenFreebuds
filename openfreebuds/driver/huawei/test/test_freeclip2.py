@@ -52,7 +52,7 @@ async def test_device_supported():
     assert "HUAWEI FreeClip 2" in DEVICE_TO_DRIVER_MAP
     assert DEVICE_TO_DRIVER_MAP["HUAWEI FreeClip 2"] == OfbDriverHuaweiFreeClip2
     assert is_device_supported("HUAWEI FreeClip 2") is True
-    # Original FreeClip should still be on Pro3 driver
+    # Original FreeClip has its own standalone driver; it is not FreeClip 2.
     assert DEVICE_TO_DRIVER_MAP["HUAWEI FreeClip"] is not OfbDriverHuaweiFreeClip2
 
 

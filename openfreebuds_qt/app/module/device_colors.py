@@ -32,6 +32,11 @@ LEGACY_COLOR_ALIASES = {
     "黄蓝混色": "Yellow-blue",
 }
 
+# Internal Bluetooth aliases that should never reach the user-facing UI.
+MODEL_NAME_ALIASES = {
+    "dove": "HUAWEI FreeClip",
+}
+
 
 def translate_color_name(name: str) -> str:
     """
@@ -60,8 +65,9 @@ def translate_model_name(name: str) -> str:
     """
     if not name:
         return ""
-    translated = QCoreApplication.translate("DeviceModel", name)
-    return translated or name
+    source = MODEL_NAME_ALIASES.get(name.casefold(), name)
+    translated = QCoreApplication.translate("DeviceModel", source)
+    return translated or source
 
 
 def format_device_title(model_id: str, code: str, fallback: str) -> str:

@@ -160,3 +160,14 @@ def test_first_run_dialog_strings_are_translated():
         assert translator.translate("OfbQtFirstRunDialog", "Get started") == "开始使用"
     finally:
         app.removeTranslator(translator)
+
+
+def test_internal_freeclip_codename_is_not_user_visible():
+    from openfreebuds_qt.app.module.device_colors import translate_model_name
+    from openfreebuds_qt.app.module.device_info import _device_title
+
+    assert translate_model_name("Dove") == "HUAWEI FreeClip"
+    assert translate_model_name("DOVE") == "HUAWEI FreeClip"
+    assert translate_model_name("HUAWEI FreeClip") == "HUAWEI FreeClip"
+    assert _device_title({"field_2": "Dove (00014B)"}) == "HUAWEI FreeClip"
+    assert _device_title({"field_2": "HUAWEI FreeClip (00014B)"}) == "HUAWEI FreeClip"

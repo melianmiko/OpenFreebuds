@@ -180,6 +180,11 @@ def test_freeclip_gesture_set():
     assert box_tone.w_lid_tone is False
 
 
+def test_freeclip_driver_is_standalone():
+    """Clip 1 has its own handler list; it must not inherit Pro 3."""
+    assert not issubclass(OfbDriverHuaweiFreeClip, OfbDriverHuaweiPro3)
+
+
 def test_neo_double_tap_in_call():
     double = _get_handler(OfbDriverHuaweiNeo, "gesture_double")
     assert double.w_in_call is True

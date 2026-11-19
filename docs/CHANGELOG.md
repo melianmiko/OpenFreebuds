@@ -4,6 +4,8 @@
 - [Device compatibility] Align gesture registration with the 2.0.7.321 touchsetting config: Pro 2 gains light-hold and custom EQ, Pro 3 gains light-hold, spatial audio and charging-box tone, Pro 4 gains double/triple tap and adaptive volume, FreeBuds 7 gains light-hold and in-call double-tap, and FreeClip 1st gen is limited to its official double/triple set.
 - [Device compatibility] Limit charging-case tone controls by model: FreeBuds Pro 3, Pro 4 and FreeClip 1 expose only the master switch; FreeClip 2/2 S, FreeBuds 6/7 and FreeBuds Pro 5 keep the full lid/tone controls.
 - [Device compatibility] Expose drop reminder only on FreeBuds 7, FreeBuds 6, FreeClip 2, FreeClip 2 S and FreeClip; FreeBuds Neo no longer mounts it.
+- [Change] FreeClip 1 now uses a standalone driver with an explicit handler list instead of inheriting the Pro 3 driver.
+- [Fix] Device info shows the market name `HUAWEI FreeClip` for model `00014B` instead of the internal codename `Dove`.
 - [Docs] Correct FreeClip 1 gesture documentation: it has no swipe; its lab click-and-hold / five-tap volume modes are not modeled yet. The APK lab page lists `00014B`, and its MBB `0x2BB2` backend exists, so this is a handler gap rather than a missing protocol.
 - [Feature] Enable in-call long-press for FreeBuds 5, 5i, 6, 6i, 7i, Neo and SE 4 where the official page provides it.
 - [Fix] Read the long-press in-call value from parameter 4 instead of the right-ear value.
