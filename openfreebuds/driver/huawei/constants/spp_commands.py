@@ -39,11 +39,12 @@ PROMPT_DROP_ON = 1
 PROMPT_CLEANING_CANCEL = 20
 PROMPT_CLEANING_MISPLACE = 21
 
-# Left/right auto-switch (0x2B9A), measured from the official
+# Left/right auto-switch, measured from the official
 # LeftRightEarRecognitionCard -> presenter -> Lq9/b chain:
 #   read  2b 9a 01 00
-#   write 2b 9a 01 01 <0/1>
+#   write 2b 99 01 01 <0/1>
 CMD_LEFT_RIGHT_AUTO = b"\x2b\x9a"
+CMD_LEFT_RIGHT_AUTO_WRITE = b"\x2b\x99"
 
 # Find-earbud command (measured 2026-11-14 on FreeClip 2 / COM26):
 #   start/stop 2b 5d 01 02 <side> <state>; query 2b 5e 01 01 <side>

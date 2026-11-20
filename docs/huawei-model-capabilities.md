@@ -143,7 +143,7 @@ Drop reminder is exposed on FreeBuds 7, FreeBuds 6, FreeBuds Neo, FreeClip 2, Fr
 
 `0x2B7F` prompt events are read-only. `OfbHuaweiPromptEventsHandler` parses `2b7f020101` (cleaning), `2b7f050101` (drop), `2b7f060114` (cleaning cancel) and `2b7f060115` (earbud not seated), and ignores the `2b7f06020200` status packet. FreeClip / FreeClip 2 / 2 S receive cleaning + drop; FreeBuds 6 / 7 / Neo receive drop only. The captured IConnect TLV is assumed to arrive over SPP; no IConnect transport is implemented, SPP delivery is unverified, and real system notifications are not yet acceptance-tested.
 
-Left-right auto-switch (`0x2B9A`) is mounted on FreeClip, FreeClip 2, FreeClip 2 S and W Buds 1/2. The first three official configs declare `isLeftRightEarSupport: true`; W Buds has no settings profile and no such field, so its control is response-gated. Hardware read/write has not been verified: FreeClip 2 returned SPP `10048` during the 2026-11-19 attempt.
+Left-right auto-switch uses `0x2B9A` for reads and `0x2B99` for writes, and is mounted on FreeClip, FreeClip 2, FreeClip 2 S and W Buds 1/2. The first three official configs declare `isLeftRightEarSupport: true`; W Buds has no settings profile and no such field, so its control is response-gated. FreeClip 2 read/write is verified: after `2b 99 01 01 01/00`, a fresh SPP connection returned the new state from `0x2B9A` in both directions. FreeClip 1/2 S and W Buds 1/2 remain code/config-only.
 
 ## Gesture coverage
 
@@ -267,9 +267,8 @@ Reference: [Huawei setup guide, tables 1-3](https://consumer.huawei.com/cn/suppo
 
   does not define an in-call option and therefore does not expose one.
 
-* FreeClip / FreeClip 2 / FreeClip 2 S: added left-right auto-switch (`0x2B9A`)
-
-  with the official response-gated visibility rule.
+* FreeClip / FreeClip 2 / FreeClip 2 S: added left-right auto-switch (read
+  `0x2B9A`, write `0x2B99`) with the official response-gated visibility rule.
 
 * W Buds / W Buds 2: added a minimal driver for info, battery and the
 
