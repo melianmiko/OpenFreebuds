@@ -8,7 +8,13 @@ class OfbDriverHuaweiPro5(OfbDriverHuaweiGeneric):
         self._spp_service_port = 1
         self.handlers = [
             OfbHuaweiInfoHandler(),
-            OfbHuaweiAncHandler(w_cancel_lvl=True, w_cancel_dynamic=True, w_voice_boost=True),
+            OfbHuaweiAncHandler(
+                w_cancel_lvl=True,
+                w_cancel_dynamic=True,
+                w_voice_boost=True,
+                # Pro 5 may apply 2b04 without acknowledging it.
+                w_change_readback=True,
+            ),
             OfbHuaweiBatteryHandler(),
             OfnHuaweiSoundQualityPreferenceHandler(),
             OfbHuaweiEqualizerPresetHandler(w_presets={
