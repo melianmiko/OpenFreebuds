@@ -284,6 +284,5 @@ Reference: [Huawei setup guide, tables 1-3](https://consumer.huawei.com/cn/suppo
 
 ## Long-term work
 
-See [TODO.md](TODO.md) for unsupported product IDs, missing feature handlers and
-
-hardware validation items.
+Unsupported product IDs, missing feature handlers and hardware validation items
+are tracked in the repository issue tracker.

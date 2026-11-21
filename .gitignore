@@ -29,6 +29,11 @@ gui_run.log
 # Local-only scratch files, logs and handoff documents (not for upstream)
 /_local/
 
+# Local-only TODO notes containing private device information
+/docs/TODO.md
+/docs/todo.md
+/todo.md
+
 # Local Windows launchers and generated/broken translation backups
 /run.ps1
 /run.bat
