@@ -60,6 +60,7 @@ If your device isn't listed here, you could try to use it with profile for other
 - [HUAWEI FreeBuds 4i](./docs/devices/HUAWEI_FreeBuds_4i.md)
   - **HONOR Earbuds 2 / 2 SE / 2 Lite** is same
 - [HUAWEI FreeBuds 5](./docs/devices/HUAWEI_FreeBuds_5.md)
+- [HONOR Earbuds S2](./docs/devices/HONOR_Earbuds_S2.md)
 - [HUAWEI FreeBuds 5i](./docs/devices/HUAWEI_FreeBuds_5i.md)
 - [HUAWEI FreeBuds 6i](./docs/devices/HUAWEI_FreeBuds_6i.md)
 - [HUAWEI FreeBuds Pro](./docs/devices/HUAWEI_FreeBuds_Pro.md)
