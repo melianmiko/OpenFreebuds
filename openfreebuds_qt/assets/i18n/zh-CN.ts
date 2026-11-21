@@ -20,6 +20,7 @@
     <message><source>Coral orange</source><translation>珊瑚橙</translation></message>
     <message><source>Cosmic blue</source><translation>穹宇蓝</translation></message>
     <message><source>Dawn gold</source><translation>晨曦金</translation></message>
+    <message><source>Dawn white</source><translation>晨曦白</translation></message>
     <message><source>Deep space grey</source><translation>深空灰</translation></message>
     <message><source>Denim blue</source><translation>丹宁蓝</translation></message>
     <message><source>Earth gold</source><translation>大地金</translation></message>
@@ -35,6 +36,7 @@
     <message><source>Flux colorway yellow-blue</source><translation>潮玩拼色（黄蓝）</translation></message>
     <message><source>Flux colorway yellow-red</source><translation>潮玩拼色（黄红）</translation></message>
     <message><source>Football edition</source><translation>足球联名款</translation></message>
+    <message><source>Frost</source><translation>冰霜</translation></message>
     <message><source>Frost silver</source><translation>冰霜银</translation></message>
     <message><source>Gilded black</source><translation>鎏金黑</translation></message>
     <message><source>Gold</source><translation>金色</translation></message>
@@ -45,11 +47,13 @@
     <message><source>Gunmetal</source><translation>星空黑</translation></message>
     <message><source>Ice blue</source><translation>冰晶蓝</translation></message>
     <message><source>Ice white</source><translation>零度白</translation></message>
+    <message><source>Ink white</source><translation>墨韵白</translation></message>
     <message><source>Interstellar black</source><translation>星际黑</translation></message>
     <message><source>Island blue</source><translation>海岛蓝</translation></message>
     <message><source>Khaki</source><translation>卡其色</translation></message>
     <message><source>Light purple</source><translation>浅紫色</translation></message>
     <message><source>Midsummer purple</source><translation>仲夏紫</translation></message>
+    <message><source>Mint blue</source><translation>薄荷蓝</translation></message>
     <message><source>Mint green</source><translation>薄荷绿</translation></message>
     <message><source>Modern black</source><translation>摩登黑</translation></message>
     <message><source>Moonlight white</source><translation>月光白</translation></message>
@@ -58,6 +62,7 @@
     <message><source>Obsidian black</source><translation>曜石黑</translation></message>
     <message><source>Off-white</source><translation>米白</translation></message>
     <message><source>Orange</source><translation>橙色</translation></message>
+    <message><source>Osmanthus yellow</source><translation>木樨黄</translation></message>
     <message><source>Pearlescent silver</source><translation>珠光银</translation></message>
     <message><source>Phantom black</source><translation>魅影黑</translation></message>
     <message><source>Phantom night black</source><translation>幻夜黑</translation></message>
@@ -82,10 +87,12 @@
     <message><source>Taro purple</source><translation>香芋紫</translation></message>
     <message><source>Warm cloud white</source><translation>暖云白</translation></message>
     <message><source>Warm nebula</source><translation>暖星云</translation></message>
+    <message><source>Whisper</source><translation>蜜语</translation></message>
     <message><source>Whisper red</source><translation>蜜语红</translation></message>
     <message><source>White</source><translation>白色</translation></message>
     <message><source>Wilderness green</source><translation>原野绿</translation></message>
     <message><source>Yachuan green</source><translation>雅川青</translation></message>
+    <message><source>Yadan black</source><translation>雅丹黑</translation></message>
     <message><source>Year of Dragon edition</source><translation>龙年典藏版</translation></message>
     <message><source>Year of Horse edition</source><translation>马年典藏版</translation></message>
     <message><source>Year of Snake limited black</source><translation>蛇年限定黑色</translation></message>

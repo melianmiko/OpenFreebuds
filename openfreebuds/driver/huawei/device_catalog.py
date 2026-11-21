@@ -705,6 +705,76 @@ MARKETING_COLORS = {
         '13': 'Chord white',
         '12': 'Phantom black',
     },
+    # FreeBuds 3: Ceramic White / Carbon Crystal Black / Whisper Red
+    "000027": {
+        '00': 'Ceramic white',
+        '01': 'Carbon crystal black',
+        '02': 'Whisper red',
+    },
+    # FreeBuds 3i: Ceramic White / Carbon Crystal Black
+    "000039": {
+        '01': 'Ceramic white',
+        '02': 'Carbon crystal black',
+    },
+    # FreeBuds Studio: Dawn Gold / Obsidian Black
+    "00003B": {
+        '02': 'Obsidian black',
+        '0D': 'Dawn gold',
+    },
+    # FreeBuds Pro: Frost Silver / Ceramic White / Carbon Crystal Black / Ink White
+    "00003C": {
+        '00': 'Frost silver',
+        '01': 'Ceramic white',
+        '02': 'Carbon crystal black',
+        '0F': 'Ink white',
+    },
+    # FreeLace Pro: Sakura Pink / Obsidian Black / Spruce Green / Dawn White
+    "000117": {
+        '01': 'Cherry pink',
+        '02': 'Obsidian black',
+        '04': 'Spruce green',
+        '06': 'Dawn white',
+    },
+    # FreeBuds 4: Ceramic White / Frost Silver / Whisper Red
+    "000129": {
+        '00': 'Ceramic white',
+        '01': 'Frost silver',
+        '02': 'Whisper red',
+    },
+    # FreeBuds Lipstick: Whisper / Frost (official labels omit the colour suffix)
+    "00012A": {
+        '03': 'Whisper',
+        '04': 'Frost',
+    },
+    # FreeLace Lite: Obsidian Black / Spruce Green / Mint Blue / Osmanthus Yellow
+    "00012F": {
+        '02': 'Obsidian black',
+        '04': 'Spruce green',
+        '05': 'Mint blue',
+        '08': 'Osmanthus yellow',
+    },
+    # FreeBuds 4E: Ceramic White / Frost Silver / Whisper Red
+    "000135": {
+        '00': 'Ceramic white',
+        '01': 'Frost silver',
+        '02': 'Whisper red',
+    },
+    # FreeBuds 4E (2024, no ANC): Ceramic White / Frost Silver; config 00/01 is white/silver
+    "000159": {
+        '00': 'Ceramic white',
+        '01': 'Frost silver',
+    },
+    # FreeLace Pro 2: Yadan Black / Yachuan Green; 05 is the international Blue resource
+    "00014D": {
+        '02': 'Yadan black',
+        '04': 'Yachuan green',
+        '05': 'Blue',
+    },
+    # FreeBuds Pro 2+: Feather White; 01 and 11 are base and gold-rim resources of the same colour
+    "00013F": {
+        '01': 'Feather white',
+        '11': 'Feather white',
+    },
 }
 
 for _model, _colors in MARKETING_COLORS.items():
