@@ -10,6 +10,7 @@ from .anc import OfbHuaweiAncHandler, OfbHuaweiAncLegacyChangeHandler
 from .battery import OfbHuaweiBatteryHandler
 from .config_adaptive_volume import OfbHuaweiAdaptiveVolumeHandler
 from .config_auto_pause import OfbHuaweiConfigAutoPauseHandler
+from .config_big_volume import OfbHuaweiBigVolumeHandler
 from .config_box_tone import OfbHuaweiBoxToneHandler
 from .config_drop_reminder import OfbHuaweiDropReminderHandler
 from .prompt_events import OfbHuaweiPromptEventsHandler

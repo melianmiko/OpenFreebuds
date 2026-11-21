@@ -47,6 +47,7 @@ class OfbDriverHuaweiFreeClip2(OfbDriverHuaweiGeneric):
             OfbHuaweiDualConnectHandler(),
             OfbHuaweiSpatialAudioHandler(),
             OfbHuaweiAdaptiveVolumeHandler(),
+            OfbHuaweiBigVolumeHandler(),
             OfbHuaweiBoxToneHandler(),
             OfbHuaweiFindEarbudHandler(),
             OfbHuaweiHeadControlHandler(),

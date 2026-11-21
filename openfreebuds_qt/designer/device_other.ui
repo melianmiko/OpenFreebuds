@@ -183,6 +183,32 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="big_volume_root">
+     <property name="title">
+      <string>Noisy environment volume</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_big_volume">
+      <item>
+       <widget class="QCheckBox" name="big_volume_toggle">
+        <property name="text">
+         <string>Increase media volume in noisy environments</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="big_volume_hint">
+        <property name="text">
+         <string>Raises media volume further in noisy environments. May affect sound quality; not recommended for prolonged use.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="adaptive_volume_root">
      <property name="title">
       <string>Adaptive volume</string>

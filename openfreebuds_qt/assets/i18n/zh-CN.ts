@@ -225,6 +225,9 @@
     <message><source>Device language:</source><translation>设备语言：</translation></message>
     <message><source>Due to technical restrictions, current language can't be readden from device and this field will be empty.</source><translation>受技术限制，当前语言无法从设备读取，此字段将留空。</translation></message>
     <message><source>Adaptive volume</source><translation>自适应音量</translation></message>
+    <message><source>Noisy environment volume</source><translation>嘈杂环境音量</translation></message>
+    <message><source>Increase media volume in noisy environments</source><translation>嘈杂环境增大媒体音量</translation></message>
+    <message><source>Raises media volume further in noisy environments. May affect sound quality; not recommended for prolonged use.</source><translation>在嘈杂环境中播放媒体时进一步增大音量（可能影响音质），不建议长时间使用。</translation></message>
     <message><source>Answer call</source><translation>接听电话</translation></message>
     <message><source>Answer or reject calls by nodding or shaking your head.</source><translation>通过点头或摇头接听或拒接电话。</translation></message>
     <message><source>Audio files (*.wav *.mp3 *.flac *.ogg *.m4a *.aac);;All files (*)</source><translation>音频文件 (*.wav *.mp3 *.flac *.ogg *.m4a *.aac);;所有文件 (*)</translation></message>

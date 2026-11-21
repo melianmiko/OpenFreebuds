@@ -73,6 +73,7 @@ COMMON_HANDLERS = [
         "gesture_long_split", "gesture_swipe", "config_eq", "config_sound_quality",
         "low_latency", "tws_in_ear", "voice_language", "dual_connect",
         "config_spatial_audio", "config_adaptive_volume", "config_box_tone",
+        "config_big_volume",
         "config_head_control", "config_drop_reminder", "config_smart_charge",
         "config_left_right_auto",
     ]),
@@ -93,7 +94,8 @@ COMMON_HANDLERS = [
     (OfbDriverHuaweiFreeClip, ["device_info", "battery", "anc_global", "config_eq",
                                "gesture_double", "gesture_triple",
                                "config_head_control", "config_drop_reminder",
-                               "config_box_tone", "config_left_right_auto"]),
+                               "config_box_tone", "config_big_volume",
+                               "config_left_right_auto"]),
 ])
 def test_driver_handlers(driver_cls, expected):
     d = driver_cls("00:11:22:33:44:55")

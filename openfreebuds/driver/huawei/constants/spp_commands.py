@@ -46,6 +46,18 @@ PROMPT_CLEANING_MISPLACE = 21
 CMD_LEFT_RIGHT_AUTO = b"\x2b\x9a"
 CMD_LEFT_RIGHT_AUTO_WRITE = b"\x2b\x99"
 
+# Noisy-environment media volume boost ("big volume"), from the official
+# BigVolumeRepository and config tags big_volume / big_volume_new:
+#   new support query  2b 88 02 00
+#   new state query    2b 88 01 00
+#   new state write    2b 87 01 01 <0/1>
+#   legacy state query 2b 80 01 00
+#   legacy state write 2b 7f 01 01 <0/1>
+CMD_BIG_VOLUME_QUERY = b"\x2b\x88"
+CMD_BIG_VOLUME_WRITE = b"\x2b\x87"
+CMD_BIG_VOLUME_LEGACY_QUERY = b"\x2b\x80"
+CMD_BIG_VOLUME_LEGACY_WRITE = b"\x2b\x7f"
+
 # Find-earbud command (measured 2026-11-14 on FreeClip 2 / COM26):
 #   start/stop 2b 5d 01 02 <side> <state>; query 2b 5e 01 01 <side>
 #   side: 0=left 1=right 2=both; state: 0=ringing 1=idle

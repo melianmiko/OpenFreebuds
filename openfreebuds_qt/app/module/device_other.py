@@ -121,6 +121,7 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
         self.spatial_audio_toggle.toggled.connect(self.on_spatial_audio_toggle)
         self.spatial_audio_mode_box.currentIndexChanged.connect(self.on_spatial_mode_select)
         self.spatial_audio_room_box.currentIndexChanged.connect(self.on_spatial_room_select)
+        self.big_volume_toggle.toggled.connect(self.on_big_volume_toggle)
         self.adaptive_volume_toggle.toggled.connect(self.on_adaptive_volume_toggle)
         self.adaptive_volume_level_box.currentIndexChanged.connect(self.on_adaptive_volume_level_select)
         self.head_control_toggle.toggled.connect(self.on_head_control_toggle)
@@ -212,6 +213,8 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                     "sound", "spatial_audio_supported") == "true"
                 adaptive_volume_visible = await self.ofb.get_property(
                     "sound", "adaptive_volume_supported") == "true"
+                big_volume_visible = await self.ofb.get_property(
+                    "sound", "big_volume_supported") == "true"
                 head_control_visible = await self.ofb.get_property(
                     "config", "head_control_supported") == "true"
                 drop_reminder_visible = await self.ofb.get_property(
@@ -233,6 +236,7 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                 self.low_latency_root.setVisible(low_latency_visible)
                 self.service_language_root.setVisible(service_language_visible)
                 self.spatial_audio_root.setVisible(spatial_audio_visible)
+                self.big_volume_root.setVisible(big_volume_visible)
                 self.adaptive_volume_root.setVisible(adaptive_volume_visible)
                 self.head_control_root.setVisible(head_control_visible)
                 self.drop_reminder_root.setVisible(drop_reminder_visible)
@@ -243,6 +247,7 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
                     auto_pause_visible or left_right_auto_visible or service_language_visible
                     or low_latency_visible
                     or spatial_audio_visible or adaptive_volume_visible
+                    or big_volume_visible
                     or head_control_visible or drop_reminder_visible
                     or smart_charge_visible or box_tone_visible
                 )
@@ -287,6 +292,11 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
             if event.kind_match(OfbEventKind.DEVICE_CHANGED) or event.is_changed("sound", "spatial_audio_room"):
                 current = await self.ofb.get_property("sound", "spatial_audio_room")
                 fill_combo_box(self.spatial_audio_room_box, SPATIAL_ROOMS, self.spatial_room_names, current)
+
+            if event.kind_match(OfbEventKind.DEVICE_CHANGED) or event.is_changed("sound", "big_volume"):
+                big_volume_enabled = await self.ofb.get_property("sound", "big_volume") == "true"
+                with blocked_signals(self.big_volume_toggle):
+                    self.big_volume_toggle.setChecked(big_volume_enabled)
 
             if event.kind_match(OfbEventKind.DEVICE_CHANGED) or event.is_changed("sound", "adaptive_volume"):
                 adaptive_enabled = await self.ofb.get_property("sound", "adaptive_volume") == "true"
@@ -434,6 +444,11 @@ class OfbQtDeviceOtherSettingsModule(Ui_OfbQtDeviceOtherSettingsModule, OfbQtCom
             value = self.spatial_audio_room_box.itemData(index)
             if value is not None:
                 await self.ofb.set_property("sound", "spatial_audio_room", value)
+
+    @asyncSlot(bool)
+    async def on_big_volume_toggle(self, value: bool):
+        async with qt_error_handler("OfbQtDeviceOtherSettingsModule_SetBigVolume", self.ctx):
+            await self.ofb.set_property("sound", "big_volume", json.dumps(value))
 
     @asyncSlot(bool)
     async def on_adaptive_volume_toggle(self, value: bool):

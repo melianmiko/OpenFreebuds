@@ -4,6 +4,7 @@ from openfreebuds.driver.huawei.handler import (
     OfbHuaweiActionTripleTapHandler,
     OfbHuaweiAncHandler,
     OfbHuaweiBatteryHandler,
+    OfbHuaweiBigVolumeHandler,
     OfbHuaweiBoxToneHandler,
     OfbHuaweiConfigAutoPauseHandler,
     OfbHuaweiDropReminderHandler,
@@ -64,6 +65,7 @@ class OfbDriverHuaweiFreeClip(OfbDriverHuaweiGeneric):
             OfbHuaweiStateInEarHandler(),
             OfbHuaweiVoiceLanguageHandler(),
             OfbHuaweiLowLatencyPreferenceHandler(),
+            OfbHuaweiBigVolumeHandler(),
             OfbHuaweiBoxToneHandler(w_lid_tone=False),
             OfbHuaweiActionDoubleTapHandler(
                 w_in_call=True,
