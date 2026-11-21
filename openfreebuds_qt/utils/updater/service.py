@@ -1,4 +1,6 @@
+import os
 import sys
+from pathlib import Path
 
 from PyQt6.QtWidgets import QWidget
 
@@ -25,7 +27,14 @@ class OfbQtUpdaterService:
         is_win32 = sys.platform == "win32"
         mode = self.config.get("updater", "mode", "show")
 
-        if UpdateCheckerConfig is not None and MmkUpdaterQt is not None:
+        appimage = os.environ.get("APPIMAGE", "")
+        appimage_repo = os.environ.get("OFB_APPIMAGE_REPO", "")
+        if appimage and appimage_repo:
+            # AppImage updates itself from the GitHub releases it was built for
+            from openfreebuds_qt.utils.appimage import OfbAppImageUpdater
+            self.updater_config = None
+            self.updater = OfbAppImageUpdater(parent, appimage_repo, VERSION, Path(appimage))
+        elif UpdateCheckerConfig is not None and MmkUpdaterQt is not None:
             self.updater_config = UpdateCheckerConfig(
                 server_url="https://st.mmk.pw/openfreebuds",
                 current_version=VERSION,
@@ -41,7 +50,7 @@ class OfbQtUpdaterService:
             self.updater = None                                         # type: MmkUpdaterQt
 
     async def boot(self):
-        if UpdateCheckerConfig is None:
+        if self.updater is None:
             log.info("Skip, unavailable")
             return
 

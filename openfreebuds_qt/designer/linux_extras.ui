@@ -15,6 +15,32 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
+    <widget class="QGroupBox" name="appimage_root">
+     <property name="title">
+      <string>AppImage</string>
+     </property>
+     <layout class="QVBoxLayout" name="appimage_layout">
+      <item>
+       <widget class="QLabel" name="appimage_status">
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="appimage_button">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>Compatibility</string>
@@ -119,6 +145,12 @@
  <resources/>
  <connections>
   <connection>
+   <sender>appimage_button</sender>
+   <signal>clicked()</signal>
+   <receiver>OfbQtLinuxExtrasModule</receiver>
+   <slot>on_appimage_button()</slot>
+  </connection>
+  <connection>
    <sender>pushButton</sender>
    <signal>clicked()</signal>
    <receiver>OfbQtLinuxExtrasModule</receiver>
@@ -152,6 +184,7 @@
   </connection>
  </connections>
  <slots>
+  <slot>on_appimage_button()</slot>
   <slot>on_hotkeys_doc()</slot>
   <slot>on_mpris_toggle(bool)</slot>
   <slot>on_force_x11_toggle(bool)</slot>

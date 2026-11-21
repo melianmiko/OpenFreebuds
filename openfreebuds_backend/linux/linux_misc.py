@@ -10,7 +10,8 @@ from openfreebuds_backend.linux.dbus.xdg_background import XdgDesktopBackgroundP
 log = logging.getLogger("OfbLinuxBackend")
 
 AUTOSTART_AVAILABLE = True
-AUTOUPDATE_AVAILABLE = False            # Delegated to system package managers
+# Delegated to system package managers, except for the AppImage build
+AUTOUPDATE_AVAILABLE = bool(os.environ.get("APPIMAGE") and os.environ.get("OFB_APPIMAGE_REPO"))
 GLOBAL_HOTKEYS_AVAILABLE = os.environ.get("XDG_SESSION_TYPE", "") != "wayland"
 
 
@@ -36,7 +37,7 @@ async def set_run_at_boot(val):
     data = (f"[Desktop Entry]\n"
             f"Name=OpenFreebuds\n"
             f"Categories=GNOME;GTK;Utility;\n"
-            f"Exec=openfreebuds_qt\n"
+            f"Exec={_exec_command()}\n"
             f"Icon=pw.mmk.OpenFreebuds\n"
             f"Terminal=false\n"
             f"Type=Application\n"
@@ -62,6 +63,18 @@ async def set_run_at_boot(val):
         log.debug(f"Enable autostart through portal success")
     except (AttributeError, AssertionError, DBusError):
         log.debug("Sync with portal failed")
+
+
+def quote_exec(path: str) -> str:
+    """Quote a path for the Exec key of a desktop entry"""
+    for char in ("\\", '"', "`", "$"):
+        path = path.replace(char, "\\" + char)
+    return f'"{path}"'
+
+
+def _exec_command():
+    appimage = os.environ.get("APPIMAGE")
+    return quote_exec(appimage) if appimage else "openfreebuds_qt"
 
 
 def _get_autostart_file_path():
