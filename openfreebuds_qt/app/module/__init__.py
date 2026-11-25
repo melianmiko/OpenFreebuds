@@ -1,5 +1,6 @@
 from .about import OfbQtAboutModule
 from .automation import OfbQtAutomationModule
+from .battery_logger import OfbQtBatteryLoggerModule
 from .choose_device import OfbQtChooseDeviceModule
 from .common import OfbQtCommonModule
 from .device_info import OfbQtDeviceInfoModule

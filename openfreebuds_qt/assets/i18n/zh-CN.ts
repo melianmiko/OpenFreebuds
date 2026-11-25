@@ -381,7 +381,9 @@
     <name>OfbQtDeviceSelectModule</name>
     <message><source>Select device automatically</source><translation>自动选择设备</translation></message>
     <message><source>OpenFreebuds will automatically detect currently connected headset and switch to them.</source><translation>OpenFreebuds 将自动检测当前连接的耳机并切换到它们。</translation></message>
-    <message><source>List bellow shows all Bluetooth devices paired with your device. Select appropriate device that you want to use with OpenFreebuds:</source><translation>以下列表显示了与您的设备配对的所有蓝牙设备。选择您想要与 OpenFreebuds 一起使用的适当设备：</translation></message>
+    <message><source>List below shows compatible Huawei devices paired with your device. Enable the checkbox to list other Bluetooth audio devices.</source><translation>以下列表显示与您的设备配对的兼容华为设备。勾选「显示可能不支持的设备」可列出其他蓝牙音频设备。</translation></message>
+    <message><source>Show unsupported</source><translation>显示可能不支持的设备</translation></message>
+    <message><source>Also show paired Bluetooth audio devices that may not be supported.</source><translation>同时显示可能不受支持的已配对蓝牙音频设备。</translation></message>
     <message><source>Device isn't listed here</source><translation>设备不在列表中</translation></message>
     <message><source>Refresh list</source><translation>刷新列表</translation></message>
 </context>
@@ -493,6 +495,7 @@
     <message><source>User interface</source><translation>用户界面</translation></message>
     <message><source>Tray battery</source><translation>托盘电量显示</translation></message>
     <message><source>Automation</source><translation>自动化</translation></message>
+    <message><source>Battery logger</source><translation>电量记录</translation></message>
     <message><source>Keyboard shortcuts</source><translation>键盘快捷键</translation></message>
     <message><source>Linux-related</source><translation>Linux 相关</translation></message>
     <message><source>About…</source><translation>关于...</translation></message>
@@ -703,5 +706,53 @@
         <source>The charging contacts of your {0} may be dirty, or an earbud is not seated correctly. Please clean the contacts and align the earbuds with the charging case slots.</source>
         <translation>您的 {0} 充电触点可能有脏污或盒内耳机未放置到位，请您清洁充电触点并将耳机对齐充电盒槽位放置。</translation>
     </message>
+</context>
+<context>
+    <name>OfbQtBatteryLoggerModule</name>
+    <message><source>Recording controls</source><translation>记录控制</translation></message>
+    <message><source>Start recording</source><translation>开始记录</translation></message>
+    <message><source>Stop recording</source><translation>停止记录</translation></message>
+    <message><source>Sampling interval</source><translation>采样间隔</translation></message>
+    <message><source>Custom…</source><translation>自定义...</translation></message>
+    <message><source>Export CSV</source><translation>导出 CSV</translation></message>
+    <message><source>Clear</source><translation>清空</translation></message>
+    <message><source>Channels</source><translation>记录通道</translation></message>
+    <message><source>Left earbud</source><translation>左耳机</translation></message>
+    <message><source>Right earbud</source><translation>右耳机</translation></message>
+    <message><source>Charging case</source><translation>充电盒</translation></message>
+    <message><source>Battery curve</source><translation>电量曲线</translation></message>
+    <message><source>Fit</source><translation>全览</translation></message>
+    <message><source>Follow</source><translation>跟随</translation></message>
+    <message><source>Zoom +</source><translation>放大</translation></message>
+    <message><source>Zoom -</source><translation>缩小</translation></message>
+    <message><source>Recording | {interval} s | {count} samples | {duration}</source><translation>记录中 | {interval} 秒 | {count} 个样本 | {duration}</translation></message>
+    <message><source>Recording | device disconnected - logging 0%</source><translation>记录中 | 设备已断开，正在记录 0%</translation></message>
+    <message><source>Recording stopped: device changed.</source><translation>记录已停止：设备已变化。</translation></message>
+    <message><source>Stopped | {count} samples | {duration}</source><translation>已停止 | {count} 个样本 | {duration}</translation></message>
+    <message><source>Ready to record.</source><translation>可以开始记录。</translation></message>
+    <message><source>Waiting for battery data…</source><translation>正在等待电量数据...</translation></message>
+    <message><source>Waiting for device…</source><translation>正在等待设备...</translation></message>
+    <message><source>This device does not report separate left/right/case levels.</source><translation>此设备不上报独立的左耳/右耳/充电盒电量。</translation></message>
+    <message><source>Device: {name}</source><translation>设备：{name}</translation></message>
+    <message><source>Last: 0% / 0% / 0% (disconnected)</source><translation>最近：0% / 0% / 0%（已断开）</translation></message>
+    <message><source>Last: L {left} | R {right} | C {case}</source><translation>最近：左 {left} | 右 {right} | 盒 {case}</translation></message>
+    <message><source>No device</source><translation>未连接设备</translation></message>
+    <message><source>Connect a device before recording.</source><translation>请先连接设备再开始记录。</translation></message>
+    <message><source>Select at least one channel.</source><translation>请至少选择一个通道。</translation></message>
+    <message><source>A recording already exists. Clear it and start a new one?</source><translation>已有记录。是否清空并开始新记录？</translation></message>
+    <message><source>Could not start recording: {error}</source><translation>无法开始记录：{error}</translation></message>
+    <message><source>Export battery log</source><translation>导出电量记录</translation></message>
+    <message><source>CSV files (*.csv)</source><translation>CSV 文件 (*.csv)</translation></message>
+    <message><source>Exported {count} samples to {path}</source><translation>已导出 {count} 个样本到 {path}</translation></message>
+    <message><source>Failed to export: {error}</source><translation>导出失败：{error}</translation></message>
+    <message><source>Clear the current recording?</source><translation>清空当前记录？</translation></message>
+    <message><source>Recording is large; consider exporting and clearing.</source><translation>记录较大，建议导出 CSV 后清空。</translation></message>
+</context>
+<context>
+    <name>OfbQtBatteryChart</name>
+    <message><source>Left earbud</source><translation>左耳机</translation></message>
+    <message><source>Right earbud</source><translation>右耳机</translation></message>
+    <message><source>Charging case</source><translation>充电盒</translation></message>
+    <message><source>No data yet. Start recording to draw a curve.</source><translation>暂无数据。开始记录后将绘制曲线。</translation></message>
 </context>
 </TS>

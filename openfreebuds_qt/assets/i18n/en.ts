@@ -453,8 +453,18 @@
     </message>
     <message>
         <location filename="../../designer/module_device_select.ui" line="0" />
-        <source>List bellow shows all Bluetooth devices paired with your device. Select appropriate device that you want to use with OpenFreebuds:</source>
-        <translation type="unfinished" />
+        <source>List below shows compatible Huawei devices paired with your device. Enable the checkbox to list other Bluetooth audio devices.</source>
+        <translation>List below shows compatible Huawei devices paired with your device. Enable the checkbox to list other Bluetooth audio devices.</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_device_select.ui" line="0" />
+        <source>Show unsupported</source>
+        <translation>Show unsupported</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_device_select.ui" line="0" />
+        <source>Also show paired Bluetooth audio devices that may not be supported.</source>
+        <translation>Also show paired Bluetooth audio devices that may not be supported.</translation>
     </message>
     <message>
         <location filename="../../designer/module_device_select.ui" line="0" />
@@ -901,6 +911,11 @@
         <location filename="../../app/main.py" line="87" />
         <source>Automation</source>
         <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../app/main.py" line="88" />
+        <source>Battery logger</source>
+        <translation>Battery logger</translation>
     </message>
     <message>
         <location filename="../../app/main.py" line="89" />
@@ -1613,5 +1628,53 @@
         <source>The charging contacts of your {0} may be dirty, or an earbud is not seated correctly. Please clean the contacts and align the earbuds with the charging case slots.</source>
         <translation>The charging contacts of your {0} may be dirty, or an earbud is not seated correctly. Please clean the contacts and align the earbuds with the charging case slots.</translation>
     </message>
+</context>
+<context>
+    <name>OfbQtBatteryLoggerModule</name>
+    <message><source>Recording controls</source><translation>Recording controls</translation></message>
+    <message><source>Start recording</source><translation>Start recording</translation></message>
+    <message><source>Stop recording</source><translation>Stop recording</translation></message>
+    <message><source>Sampling interval</source><translation>Sampling interval</translation></message>
+    <message><source>Custom…</source><translation>Custom…</translation></message>
+    <message><source>Export CSV</source><translation>Export CSV</translation></message>
+    <message><source>Clear</source><translation>Clear</translation></message>
+    <message><source>Channels</source><translation>Channels</translation></message>
+    <message><source>Left earbud</source><translation>Left earbud</translation></message>
+    <message><source>Right earbud</source><translation>Right earbud</translation></message>
+    <message><source>Charging case</source><translation>Charging case</translation></message>
+    <message><source>Battery curve</source><translation>Battery curve</translation></message>
+    <message><source>Fit</source><translation>Fit</translation></message>
+    <message><source>Follow</source><translation>Follow</translation></message>
+    <message><source>Zoom +</source><translation>Zoom +</translation></message>
+    <message><source>Zoom -</source><translation>Zoom -</translation></message>
+    <message><source>Recording | {interval} s | {count} samples | {duration}</source><translation>Recording | {interval} s | {count} samples | {duration}</translation></message>
+    <message><source>Recording | device disconnected - logging 0%</source><translation>Recording | device disconnected - logging 0%</translation></message>
+    <message><source>Recording stopped: device changed.</source><translation>Recording stopped: device changed.</translation></message>
+    <message><source>Stopped | {count} samples | {duration}</source><translation>Stopped | {count} samples | {duration}</translation></message>
+    <message><source>Ready to record.</source><translation>Ready to record.</translation></message>
+    <message><source>Waiting for battery data…</source><translation>Waiting for battery data…</translation></message>
+    <message><source>Waiting for device…</source><translation>Waiting for device…</translation></message>
+    <message><source>This device does not report separate left/right/case levels.</source><translation>This device does not report separate left/right/case levels.</translation></message>
+    <message><source>Device: {name}</source><translation>Device: {name}</translation></message>
+    <message><source>Last: 0% / 0% / 0% (disconnected)</source><translation>Last: 0% / 0% / 0% (disconnected)</translation></message>
+    <message><source>Last: L {left} | R {right} | C {case}</source><translation>Last: L {left} | R {right} | C {case}</translation></message>
+    <message><source>No device</source><translation>No device</translation></message>
+    <message><source>Connect a device before recording.</source><translation>Connect a device before recording.</translation></message>
+    <message><source>Select at least one channel.</source><translation>Select at least one channel.</translation></message>
+    <message><source>A recording already exists. Clear it and start a new one?</source><translation>A recording already exists. Clear it and start a new one?</translation></message>
+    <message><source>Could not start recording: {error}</source><translation>Could not start recording: {error}</translation></message>
+    <message><source>Export battery log</source><translation>Export battery log</translation></message>
+    <message><source>CSV files (*.csv)</source><translation>CSV files (*.csv)</translation></message>
+    <message><source>Exported {count} samples to {path}</source><translation>Exported {count} samples to {path}</translation></message>
+    <message><source>Failed to export: {error}</source><translation>Failed to export: {error}</translation></message>
+    <message><source>Clear the current recording?</source><translation>Clear the current recording?</translation></message>
+    <message><source>Recording is large; consider exporting and clearing.</source><translation>Recording is large; consider exporting and clearing.</translation></message>
+</context>
+<context>
+    <name>OfbQtBatteryChart</name>
+    <message><source>Left earbud</source><translation>Left earbud</translation></message>
+    <message><source>Right earbud</source><translation>Right earbud</translation></message>
+    <message><source>Charging case</source><translation>Charging case</translation></message>
+    <message><source>No data yet. Start recording to draw a curve.</source><translation>No data yet. Start recording to draw a curve.</translation></message>
 </context>
 </TS>

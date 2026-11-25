@@ -253,3 +253,50 @@ def test_internal_freeclip_codename_is_not_user_visible():
     assert translate_model_name("HUAWEI FreeClip") == "HUAWEI FreeClip"
     assert _device_title({"field_2": "Dove (00014B)"}) == "HUAWEI FreeClip"
     assert _device_title({"field_2": "HUAWEI FreeClip (00014B)"}) == "HUAWEI FreeClip"
+
+
+def test_battery_logger_strings_are_translated():
+    app = QCoreApplication.instance() or QCoreApplication([])
+    translator = QTranslator()
+    assert translator.load(str(I18N_PATH / "zh-CN.qm"))
+    app.installTranslator(translator)
+    try:
+        assert translator.translate("OfbQtMainWindow", "Battery logger") == "电量记录"
+        assert translator.translate("OfbQtBatteryLoggerModule", "Recording controls") == "记录控制"
+        assert translator.translate("OfbQtBatteryLoggerModule", "Start recording") == "开始记录"
+        assert translator.translate("OfbQtBatteryLoggerModule", "Export CSV") == "导出 CSV"
+        assert translator.translate("OfbQtBatteryLoggerModule", "Charging case") == "充电盒"
+        assert translator.translate("OfbQtBatteryLoggerModule", "Battery curve") == "电量曲线"
+        assert translator.translate(
+            "OfbQtBatteryLoggerModule", "Recording | device disconnected - logging 0%"
+        ) == "记录中 | 设备已断开，正在记录 0%"
+        assert translator.translate(
+            "OfbQtBatteryChart", "No data yet. Start recording to draw a curve."
+        ) == "暂无数据。开始记录后将绘制曲线。"
+        assert translator.translate(
+            "OfbQtBatteryLoggerModule", "Recording is large; consider exporting and clearing."
+        ) == "记录较大，建议导出 CSV 后清空。"
+    finally:
+        app.removeTranslator(translator)
+
+
+def test_device_filter_strings_are_translated():
+    app = QCoreApplication.instance() or QCoreApplication([])
+    translator = QTranslator()
+    assert translator.load(str(I18N_PATH / "zh-CN.qm"))
+    app.installTranslator(translator)
+    try:
+        assert translator.translate(
+            "OfbQtDeviceSelectModule", "Show unsupported"
+        ) == "显示可能不支持的设备"
+        assert translator.translate(
+            "OfbQtDeviceSelectModule",
+            "Also show paired Bluetooth audio devices that may not be supported.",
+        ) == "同时显示可能不受支持的已配对蓝牙音频设备。"
+        assert translator.translate(
+            "OfbQtDeviceSelectModule",
+            "List below shows compatible Huawei devices paired with your device. "
+            "Enable the checkbox to list other Bluetooth audio devices.",
+        ) == "以下列表显示与您的设备配对的兼容华为设备。勾选「显示可能不支持的设备」可列出其他蓝牙音频设备。"
+    finally:
+        app.removeTranslator(translator)

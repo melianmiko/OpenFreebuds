@@ -833,8 +833,18 @@
         </message>
         <message>
             <location filename="../../designer/module_device_select.ui" line="0" />
-            <source>List bellow shows all Bluetooth devices paired with your device. Select appropriate device that you want to use with OpenFreebuds:</source>
-            <translation>A lista abaixo mostra todos os dispositivos Bluetooth emparelhados com o seu dispositivo. Selecione o dispositivo apropriado que deseja usar com OpenFreebuds:</translation>
+            <source>List below shows compatible Huawei devices paired with your device. Enable the checkbox to list other Bluetooth audio devices.</source>
+            <translation>A lista mostra dispositivos Huawei compatíveis pareados com o seu dispositivo. Marque a caixa para mostrar outros dispositivos de áudio Bluetooth.</translation>
+        </message>
+        <message>
+            <location filename="../../designer/module_device_select.ui" line="0" />
+            <source>Show unsupported</source>
+            <translation>Mostrar não suportados</translation>
+        </message>
+        <message>
+            <location filename="../../designer/module_device_select.ui" line="0" />
+            <source>Also show paired Bluetooth audio devices that may not be supported.</source>
+            <translation>Também mostra dispositivos de áudio Bluetooth pareados que podem não ser suportados.</translation>
         </message>
         <message>
             <location filename="../../designer/module_device_select.ui" line="0" />
