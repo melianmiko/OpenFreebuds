@@ -833,8 +833,8 @@
         </message>
         <message>
             <location filename="../../designer/module_device_select.ui" line="0" />
-            <source>List below shows compatible Huawei devices paired with your device. Enable the checkbox to list other Bluetooth audio devices.</source>
-            <translation>A lista mostra dispositivos Huawei compatíveis pareados com o seu dispositivo. Marque a caixa para mostrar outros dispositivos de áudio Bluetooth.</translation>
+            <source>List below shows compatible Huawei devices paired with your device. Enable the checkbox to list all other paired Bluetooth devices.</source>
+            <translation>A lista mostra dispositivos Huawei compatíveis pareados com o seu dispositivo. Marque a caixa para mostrar todos os outros dispositivos Bluetooth pareados.</translation>
         </message>
         <message>
             <location filename="../../designer/module_device_select.ui" line="0" />
@@ -843,8 +843,8 @@
         </message>
         <message>
             <location filename="../../designer/module_device_select.ui" line="0" />
-            <source>Also show paired Bluetooth audio devices that may not be supported.</source>
-            <translation>Também mostra dispositivos de áudio Bluetooth pareados que podem não ser suportados.</translation>
+            <source>Also show all other paired Bluetooth devices that may not be supported.</source>
+            <translation>Também mostra todos os outros dispositivos Bluetooth pareados que podem não ser suportados.</translation>
         </message>
         <message>
             <location filename="../../designer/module_device_select.ui" line="0" />

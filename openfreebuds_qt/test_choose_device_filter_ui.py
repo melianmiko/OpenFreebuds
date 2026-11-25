@@ -21,11 +21,11 @@ class FakeModule:
         self.show_unsupported_checkbox = QCheckBox()
         self._current_device_addr = ""
         self._device_rows = [
-            {"name": "HUAWEI FreeClip 2", "address": "AA:BB:CC:DD:EE:01", "major_class": 4},
-            {"name": "HUAWEI FreeClip 2", "address": "AA:BB:CC:DD:EE:02", "major_class": 0},
-            {"name": "HUAWEI FreeBuds 5", "address": "AA:BB:CC:DD:EE:03", "major_class": 4},
-            {"name": "AirPods Pro", "address": "AA:BB:CC:DD:EE:04", "major_class": 4},
-            {"name": "Keyboard K380", "address": "AA:BB:CC:DD:EE:05", "major_class": 5},
+            {"name": "HUAWEI FreeClip 2", "address": "AA:BB:CC:DD:EE:01"},
+            {"name": "HUAWEI FreeClip 2", "address": "AA:BB:CC:DD:EE:02"},
+            {"name": "HUAWEI FreeBuds 5", "address": "AA:BB:CC:DD:EE:03"},
+            {"name": "AirPods Pro", "address": "AA:BB:CC:DD:EE:04"},
+            {"name": "Keyboard K380", "address": "AA:BB:CC:DD:EE:05"},
         ]
 
 
@@ -53,7 +53,7 @@ def test_default_filter_and_duplicate_mac_labels(app):
     ]
 
 
-def test_unsupported_toggle_reveals_audio_but_not_keyboard(app):
+def test_unsupported_toggle_restores_all_paired_devices(app):
     module = FakeModule()
     module.show_unsupported_checkbox.setChecked(True)
     module._render_list()
@@ -63,4 +63,5 @@ def test_unsupported_toggle_reveals_audio_but_not_keyboard(app):
         "HUAWEI FreeClip 2 [AA:BB:CC:DD:EE:02]",
         "HUAWEI FreeBuds 5",
         "AirPods Pro",
+        "Keyboard K380",
     ]

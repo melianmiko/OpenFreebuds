@@ -70,25 +70,16 @@ def is_default_visible_device(name: str) -> bool:
     return is_huawei_audio_device(name) or is_device_supported(name)
 
 
-def is_bluetooth_audio_device(device: dict) -> bool:
-    """Filter Windows paired devices by Bluetooth major device class."""
-    major_class = device.get("major_class")
-
-    # BlueZ/macOS don't expose a class here, and Windows reports 0 for some
-    # Huawei earbuds. Treat these as unknown instead of hiding a valid headset.
-    if major_class is None or int(major_class) == 0:
-        return True
-
-    return int(major_class) == 4
-
-
 def filter_paired_devices(
     devices: list[dict],
     show_unsupported: bool = False,
     current_address: str | None = None,
 ) -> list[dict]:
-    """Keep the current device, known Huawei-family devices, and optionally
-    other Bluetooth audio devices."""
+    """Keep the current device and known Huawei-family devices. When unsupported
+    devices are enabled, restore the original list of all paired devices."""
+    if show_unsupported:
+        return list(devices)
+
     current = (current_address or "").lower()
     results = []
 
@@ -98,9 +89,6 @@ def filter_paired_devices(
 
         keep = is_default_visible_device(name)
         if current and address.lower() == current:
-            keep = True
-
-        if not keep and show_unsupported and is_bluetooth_audio_device(device):
             keep = True
 
         if keep:

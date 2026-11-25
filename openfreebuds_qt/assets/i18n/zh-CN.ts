@@ -381,9 +381,9 @@
     <name>OfbQtDeviceSelectModule</name>
     <message><source>Select device automatically</source><translation>自动选择设备</translation></message>
     <message><source>OpenFreebuds will automatically detect currently connected headset and switch to them.</source><translation>OpenFreebuds 将自动检测当前连接的耳机并切换到它们。</translation></message>
-    <message><source>List below shows compatible Huawei devices paired with your device. Enable the checkbox to list other Bluetooth audio devices.</source><translation>以下列表显示与您的设备配对的兼容华为设备。勾选「显示可能不支持的设备」可列出其他蓝牙音频设备。</translation></message>
+    <message><source>List below shows compatible Huawei devices paired with your device. Enable the checkbox to list all other paired Bluetooth devices.</source><translation>以下列表显示与您的设备配对的兼容华为设备。勾选「显示可能不支持的设备」可列出其他已配对蓝牙设备。</translation></message>
     <message><source>Show unsupported</source><translation>显示可能不支持的设备</translation></message>
-    <message><source>Also show paired Bluetooth audio devices that may not be supported.</source><translation>同时显示可能不受支持的已配对蓝牙音频设备。</translation></message>
+    <message><source>Also show all other paired Bluetooth devices that may not be supported.</source><translation>同时显示其他可能不受支持的已配对蓝牙设备。</translation></message>
     <message><source>Device isn't listed here</source><translation>设备不在列表中</translation></message>
     <message><source>Refresh list</source><translation>刷新列表</translation></message>
 </context>

@@ -2,7 +2,6 @@ import pytest
 
 from openfreebuds_qt.utils.device_filter import (
     filter_paired_devices,
-    is_bluetooth_audio_device,
     is_default_visible_device,
     is_huawei_audio_device,
 )
@@ -44,26 +43,15 @@ def test_supported_honor_family_is_visible_by_default():
     assert is_default_visible_device("HONOR Earbuds 2 SE") is True
 
 
-@pytest.mark.parametrize(("major_class", "expected"), [
-    (4, True),
-    (0, True),
-    (None, True),
-    (2, False),
-    (5, False),
-])
-def test_bluetooth_audio_class_filter(major_class, expected):
-    assert is_bluetooth_audio_device({"major_class": major_class}) is expected
-
-
 def _devices():
     return [
-        {"name": "HUAWEI FreeClip 2", "address": "C0:E5:79:45:6C:95", "major_class": 4},
-        {"name": "HUAWEI FreeBuds Pro", "address": "A4:C7:4B:2C:A3:07", "major_class": 0},
-        {"name": "HONOR Earbuds 2", "address": "11:22:33:44:55:66", "major_class": 4},
-        {"name": "AirPods Pro", "address": "22:33:44:55:66:77", "major_class": 4},
-        {"name": "Keyboard K380", "address": "34:88:5D:9D:F1:57", "major_class": 5},
-        {"name": "Poulo 17 Ama Min", "address": "74:14:D0:5C:FE:7E", "major_class": 2},
-        {"name": "Unknown Speaker", "address": "77:66:55:44:33:22", "major_class": None},
+        {"name": "HUAWEI FreeClip 2", "address": "C0:E5:79:45:6C:95"},
+        {"name": "HUAWEI FreeBuds Pro", "address": "A4:C7:4B:2C:A3:07"},
+        {"name": "HONOR Earbuds 2", "address": "11:22:33:44:55:66"},
+        {"name": "AirPods Pro", "address": "22:33:44:55:66:77"},
+        {"name": "Keyboard K380", "address": "34:88:5D:9D:F1:57"},
+        {"name": "Poulo 17 Ama Min", "address": "74:14:D0:5C:FE:7E"},
+        {"name": "Unknown Speaker", "address": "77:66:55:44:33:22"},
     ]
 
 
@@ -77,7 +65,7 @@ def test_default_filter_keeps_huawei_family_only():
     ]
 
 
-def test_unsupported_toggle_keeps_bluetooth_audio_only():
+def test_unsupported_toggle_restores_all_paired_devices():
     rows = filter_paired_devices(_devices(), show_unsupported=True)
 
     assert [row["name"] for row in rows] == [
@@ -85,6 +73,8 @@ def test_unsupported_toggle_keeps_bluetooth_audio_only():
         "HUAWEI FreeBuds Pro",
         "HONOR Earbuds 2",
         "AirPods Pro",
+        "Keyboard K380",
+        "Poulo 17 Ama Min",
         "Unknown Speaker",
     ]
 

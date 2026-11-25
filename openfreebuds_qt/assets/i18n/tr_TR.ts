@@ -832,8 +832,8 @@
         </message>
         <message>
             <location filename="../../designer/module_device_select.ui" line="0" />
-            <source>List below shows compatible Huawei devices paired with your device. Enable the checkbox to list other Bluetooth audio devices.</source>
-            <translation>Liste, cihazınızla eşleştirilmiş uyumlu Huawei cihazlarını gösterir. Diğer Bluetooth ses cihazlarını göstermek için onay kutusunu işaretleyin.</translation>
+            <source>List below shows compatible Huawei devices paired with your device. Enable the checkbox to list all other paired Bluetooth devices.</source>
+            <translation>Liste, cihazınızla eşleştirilmiş uyumlu Huawei cihazlarını gösterir. Diğer tüm eşleştirilmiş Bluetooth cihazlarını göstermek için onay kutusunu işaretleyin.</translation>
         </message>
         <message>
             <location filename="../../designer/module_device_select.ui" line="0" />
@@ -842,8 +842,8 @@
         </message>
         <message>
             <location filename="../../designer/module_device_select.ui" line="0" />
-            <source>Also show paired Bluetooth audio devices that may not be supported.</source>
-            <translation>Desteklenmeyebilecek eşleştirilmiş Bluetooth ses cihazlarını da göster.</translation>
+            <source>Also show all other paired Bluetooth devices that may not be supported.</source>
+            <translation>Desteklenmeyebilecek diğer tüm eşleştirilmiş Bluetooth cihazlarını da göster.</translation>
         </message>
         <message>
             <location filename="../../designer/module_device_select.ui" line="0" />

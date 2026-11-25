@@ -83,21 +83,10 @@ async def bt_list_devices():
             # Some virtual adapters/unpaired devices return None or an empty host_name; do not let one entry break the whole enumeration
             if bt_device is None or bt_device.host_name is None or bt_device.name is None:
                 continue
-
-            try:
-                class_of_device = bt_device.class_of_device
-                class_raw = int(class_of_device.raw_value)
-                major_class = int(class_of_device.major_class)
-            except (AttributeError, OSError):
-                class_raw = None
-                major_class = None
-
             out.append({
                 "name": bt_device.name,
                 "address": bt_device.host_name.raw_name[1:-1],
-                "connected": bt_device.connection_status,
-                "class_of_device": class_raw,
-                "major_class": major_class,
+                "connected": bt_device.connection_status
             })
         except (OSError, AttributeError):
             pass
