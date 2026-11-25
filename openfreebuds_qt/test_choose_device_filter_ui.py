@@ -21,7 +21,7 @@ class FakeModule:
         self.show_unsupported_checkbox = QCheckBox()
         self._current_device_addr = ""
         self._device_rows = [
-            {"name": "HUAWEI FreeClip 2", "address": "AA:BB:CC:DD:EE:01"},
+            {"name": "HUAWEI FreeClip 2", "address": "aa:bb:cc:dd:ee:01"},
             {"name": "HUAWEI FreeClip 2", "address": "AA:BB:CC:DD:EE:02"},
             {"name": "HUAWEI FreeBuds 5", "address": "AA:BB:CC:DD:EE:03"},
             {"name": "AirPods Pro", "address": "AA:BB:CC:DD:EE:04"},
