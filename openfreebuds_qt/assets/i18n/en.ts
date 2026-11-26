@@ -297,6 +297,16 @@
         <source>Pause audio or switch device when earphones are removed</source>
         <translation type="unfinished" />
     </message>
+        <message>
+            <location filename="../../designer/device_other.ui" line="0" />
+            <source>Enable left-right auto-switch</source>
+            <translation>Enable left-right auto-switch</translation>
+        </message>
+        <message>
+            <location filename="../../designer/device_other.ui" line="0" />
+            <source>The earbuds are interchangeable. After putting them in, dip your head slightly to auto-correct the channels.</source>
+            <translation>The earbuds are interchangeable. After putting them in, dip your head slightly to auto-correct the channels.</translation>
+        </message>
     <message>
         <location filename="../../designer/device_other.ui" line="0" />
         <source>Networking</source>
@@ -327,6 +337,108 @@
         <source>Due to technical restrictions, current language can't be readden from device and this field will be empty.</source>
         <translation type="unfinished" />
     </message>
+
+    <message>
+        <source>Converting audio…</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>Uploading…</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>Uploading to earbuds…</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>This firmware doesn't support lid notification sounds; custom tones can't be uploaded.</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>Audio file not found: {0}</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>The device refused the upload (code {0}). Make sure both earbuds are in the open charging case.</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>Upload failed: {0}</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>Conversion or upload failed: {0}</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>Custom tone uploaded.</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Drop alert</source>
+        <translation>Drop alert</translation>
+    </message>
+
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Enable drop alert</source>
+        <translation>Enable drop alert</translation>
+    </message>
+
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</source>
+        <translation>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</translation>
+    </message>
+
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Smart charging</source>
+        <translation>Smart charging</translation>
+    </message>
+
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Enable smart charging</source>
+        <translation>Enable smart charging</translation>
+    </message>
+
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Learns your usage habits and adjusts the maximum charge level to extend battery life.</source>
+        <translation>Learns your usage habits and adjusts the maximum charge level to extend battery life.</translation>
+    </message>
+
+    <message>
+        <location filename="../../designer/device_other.ui" line="0" />
+        <source>Import ZIP</source>
+        <translation>Import ZIP</translation>
+    </message>
+
+    <message>
+        <source>Import sounds from ZIP</source>
+        <translation>Import sounds from ZIP</translation>
+    </message>
+
+    <message>
+        <source>Imported {0}, skipped {1}, failed {2}.</source>
+        <translation>Imported {0}, skipped {1}, failed {2}.</translation>
+    </message>
+
+    <message>
+        <source>No custom sounds found in this ZIP.</source>
+        <translation>No custom sounds found in this ZIP.</translation>
+    </message>
 </context><context>
     <name>OfbQtDeviceSelectModule</name>
     <message>
@@ -341,8 +453,18 @@
     </message>
     <message>
         <location filename="../../designer/module_device_select.ui" line="0" />
-        <source>List bellow shows all Bluetooth devices paired with your device. Select appropriate device that you want to use with OpenFreebuds:</source>
-        <translation type="unfinished" />
+        <source>List below shows compatible Huawei devices paired with your device. Enable the checkbox to list all other paired Bluetooth devices.</source>
+        <translation>List below shows compatible Huawei devices paired with your device. Enable the checkbox to list all other paired Bluetooth devices.</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_device_select.ui" line="0" />
+        <source>Show unsupported</source>
+        <translation>Show unsupported</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_device_select.ui" line="0" />
+        <source>Also show all other paired Bluetooth devices that may not be supported.</source>
+        <translation>Also show all other paired Bluetooth devices that may not be supported.</translation>
     </message>
     <message>
         <location filename="../../designer/module_device_select.ui" line="0" />
@@ -604,6 +726,51 @@
         <source>Long-tap in call</source>
         <translation type="unfinished" />
     </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch once</source>
+        <translation>Pinch once</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch once in call</source>
+        <translation>Pinch once in call</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch twice</source>
+        <translation>Pinch twice</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch twice in call</source>
+        <translation>Pinch twice in call</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch three times</source>
+        <translation>Pinch three times</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Pinch &amp; hold</source>
+        <translation>Pinch &amp; hold</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Answer/end call</source>
+        <translation>Answer/end call</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Reject call</source>
+        <translation>Reject call</translation>
+    </message>
+    <message>
+        <location filename="../../designer/module_geatures.ui" line="0" />
+        <source>Noise control</source>
+        <translation>Noise control</translation>
+    </message>
 </context><context>
     <name>OfbQtHotkeysModule</name>
     <message>
@@ -744,6 +911,11 @@
         <location filename="../../app/main.py" line="87" />
         <source>Automation</source>
         <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../../app/main.py" line="88" />
+        <source>Battery logger</source>
+        <translation>Battery logger</translation>
     </message>
     <message>
         <location filename="../../app/main.py" line="89" />
@@ -1230,6 +1402,11 @@
         <source>Preview low battery popup</source>
         <translation>Preview low battery popup</translation>
     </message>
+    <message>
+        <location filename="../../designer/ui_settings.ui" line="0" />
+        <source>Show welcome screen</source>
+        <translation>Show welcome screen</translation>
+    </message>
 </context><context>
     <name>OfbTrayIcon</name>
     <message>
@@ -1299,4 +1476,205 @@
         <source>Enable low-latency mode</source>
         <translation type="unfinished" />
     </message>
-</context></TS>
+</context><context>
+    <name>PromptToneName</name>
+    <message>
+        <source>Unfold</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Whistle</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Bongo</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Chess</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Dewdrop</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Doorbell</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Drip</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Emerging</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Fountain</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Huawei_Cascade</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Leap</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Lit</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Little_Wish</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Meditation</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Pixies</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Play</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Pursue</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Rise</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Shine</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Chopin</source>
+        <translation type="unfinished" />
+    </message>
+</context>
+<context>
+    <name>OfbQtToneEditorDialog</name>
+    <message>
+        <source>File Name</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Display Name</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>Volume</source>
+        <translation type="unfinished" />
+    </message>
+
+    <message>
+        <source>Set to the best volume</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Reset view</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Zoom out</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Zoom in</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Zoom</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <source>Full track overview. Click or drag to move the view.</source>
+        <translation type="unfinished" />
+    </message>
+</context>
+<context>
+    <name>OfbQtDeviceErrors</name>
+    <message><source>Connection failed. Check whether another app is occupying the Bluetooth port (such as Huawei PC Manager, Huawei Control Center or MagicPods).</source><translation type="unfinished" /></message>
+    <message><source>Connection failed</source><translation type="unfinished" /></message>
+    <message><source>Close</source><translation type="unfinished" /></message>
+</context>
+<context>
+    <name>OfbQtSystemNotificationService</name>
+    <message>
+        <source>Drop reminder</source>
+        <translation>Drop reminder</translation>
+    </message>
+    <message>
+        <source>Cleaning reminder</source>
+        <translation>Cleaning reminder</translation>
+    </message>
+    <message>
+        <source>Your {0} earbuds may have fallen. Please check whether they are lost.</source>
+        <translation>Your {0} earbuds may have fallen. Please check whether they are lost.</translation>
+    </message>
+    <message>
+        <source>The charging contacts of your {0} may be dirty. Please clean the charging case and the earbud contacts.</source>
+        <translation>The charging contacts of your {0} may be dirty. Please clean the charging case and the earbud contacts.</translation>
+    </message>
+    <message>
+        <source>The charging contacts of your {0} may be dirty, or an earbud is not seated correctly. Please clean the contacts and align the earbuds with the charging case slots.</source>
+        <translation>The charging contacts of your {0} may be dirty, or an earbud is not seated correctly. Please clean the contacts and align the earbuds with the charging case slots.</translation>
+    </message>
+</context>
+<context>
+    <name>OfbQtBatteryLoggerModule</name>
+    <message><source>Recording controls</source><translation>Recording controls</translation></message>
+    <message><source>Start recording</source><translation>Start recording</translation></message>
+    <message><source>Stop recording</source><translation>Stop recording</translation></message>
+    <message><source>Sampling interval</source><translation>Sampling interval</translation></message>
+    <message><source>Custom…</source><translation>Custom…</translation></message>
+    <message><source>Export CSV</source><translation>Export CSV</translation></message>
+    <message><source>Clear</source><translation>Clear</translation></message>
+    <message><source>Channels</source><translation>Channels</translation></message>
+    <message><source>Left earbud</source><translation>Left earbud</translation></message>
+    <message><source>Right earbud</source><translation>Right earbud</translation></message>
+    <message><source>Charging case</source><translation>Charging case</translation></message>
+    <message><source>Battery curve</source><translation>Battery curve</translation></message>
+    <message><source>Fit</source><translation>Fit</translation></message>
+    <message><source>Follow</source><translation>Follow</translation></message>
+    <message><source>Zoom +</source><translation>Zoom +</translation></message>
+    <message><source>Zoom -</source><translation>Zoom -</translation></message>
+    <message><source>Recording | {interval} s | {count} samples | {duration}</source><translation>Recording | {interval} s | {count} samples | {duration}</translation></message>
+    <message><source>Recording | device disconnected - logging 0%</source><translation>Recording | device disconnected - logging 0%</translation></message>
+    <message><source>Recording stopped: device changed.</source><translation>Recording stopped: device changed.</translation></message>
+    <message><source>Stopped | {count} samples | {duration}</source><translation>Stopped | {count} samples | {duration}</translation></message>
+    <message><source>Ready to record.</source><translation>Ready to record.</translation></message>
+    <message><source>Waiting for battery data…</source><translation>Waiting for battery data…</translation></message>
+    <message><source>Waiting for device…</source><translation>Waiting for device…</translation></message>
+    <message><source>This device does not report separate left/right/case levels.</source><translation>This device does not report separate left/right/case levels.</translation></message>
+    <message><source>Device: {name}</source><translation>Device: {name}</translation></message>
+    <message><source>Last: 0% / 0% / 0% (disconnected)</source><translation>Last: 0% / 0% / 0% (disconnected)</translation></message>
+    <message><source>Last: L {left} | R {right} | C {case}</source><translation>Last: L {left} | R {right} | C {case}</translation></message>
+    <message><source>No device</source><translation>No device</translation></message>
+    <message><source>Connect a device before recording.</source><translation>Connect a device before recording.</translation></message>
+    <message><source>Select at least one channel.</source><translation>Select at least one channel.</translation></message>
+    <message><source>A recording already exists. Clear it and start a new one?</source><translation>A recording already exists. Clear it and start a new one?</translation></message>
+    <message><source>Could not start recording: {error}</source><translation>Could not start recording: {error}</translation></message>
+    <message><source>Export battery log</source><translation>Export battery log</translation></message>
+    <message><source>CSV files (*.csv)</source><translation>CSV files (*.csv)</translation></message>
+    <message><source>Exported {count} samples to {path}</source><translation>Exported {count} samples to {path}</translation></message>
+    <message><source>Failed to export: {error}</source><translation>Failed to export: {error}</translation></message>
+    <message><source>Clear the current recording?</source><translation>Clear the current recording?</translation></message>
+    <message><source>Recording is large; consider exporting and clearing.</source><translation>Recording is large; consider exporting and clearing.</translation></message>
+</context>
+<context>
+    <name>OfbQtBatteryChart</name>
+    <message><source>Left earbud</source><translation>Left earbud</translation></message>
+    <message><source>Right earbud</source><translation>Right earbud</translation></message>
+    <message><source>Charging case</source><translation>Charging case</translation></message>
+    <message><source>No data yet. Start recording to draw a curve.</source><translation>No data yet. Start recording to draw a curve.</translation></message>
+</context>
+</TS>

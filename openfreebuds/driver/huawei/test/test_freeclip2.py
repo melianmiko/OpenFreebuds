@@ -35,6 +35,10 @@ async def test_driver_creation():
         "tws_in_ear",
         "voice_language",
         "dual_connect",
+        "config_spatial_audio",
+        "config_adaptive_volume",
+        "config_box_tone",
+        "config_head_control",
     ]
     for handler_id in expected_handlers:
         assert handler_id in handler_ids, f"Missing handler: {handler_id}"
@@ -48,5 +52,14 @@ async def test_device_supported():
     assert "HUAWEI FreeClip 2" in DEVICE_TO_DRIVER_MAP
     assert DEVICE_TO_DRIVER_MAP["HUAWEI FreeClip 2"] == OfbDriverHuaweiFreeClip2
     assert is_device_supported("HUAWEI FreeClip 2") is True
-    # Original FreeClip should still be on Pro3 driver
+    # Original FreeClip has its own standalone driver; it is not FreeClip 2.
     assert DEVICE_TO_DRIVER_MAP["HUAWEI FreeClip"] is not OfbDriverHuaweiFreeClip2
+
+
+@pytest.mark.asyncio
+async def test_freeclip2_has_find_earbud_handler():
+    """Find-earbud must be attached to the real device driver, otherwise the UI shows 'No handler' when clicked."""
+    from openfreebuds.driver import DEVICE_TO_DRIVER_MAP
+
+    driver = DEVICE_TO_DRIVER_MAP["HUAWEI FreeClip 2"]("00:00:00:00:00:00")
+    assert "find_earbud" in [h.handler_id for h in driver.handlers]

@@ -1,4 +1,5 @@
 import asyncio
+from contextlib import asynccontextmanager
 
 from openfreebuds.driver.generic import OfbDriverHandlerGeneric, OfbDriverSppGeneric
 from openfreebuds.driver.huawei.package import HuaweiSppPackage
@@ -6,6 +7,12 @@ from openfreebuds.exceptions import FbNotReadyError, OfbPackageChecksumError
 from openfreebuds.utils.logger import create_logger
 
 log = create_logger("OfbDriverHuaweiGeneric")
+
+# FreeClip 2 EQ writes (0x2B49) sometimes skip the ACK and return a 0x2B4A state notification instead.
+# Wake the pending 0x2B49 caller on 0x2B4A so the UI does not wait five seconds for a timeout.
+_RESPONSE_ALIASES = {
+    b"\x2b\x4a": b"\x2b\x49",
+}
 
 
 class OfbHuaweiResponseReceiver(asyncio.Event):
@@ -15,18 +22,38 @@ class OfbHuaweiResponseReceiver(asyncio.Event):
 
 
 class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
+    # Official App findHeadset capability matrix: only FreeBuds Pro (1st gen) and
+    # FreeBuds Studio do not support find-earbud; all other models do.
+    supports_find_earbud = True
+
     def __init__(self, address):
         super().__init__(address)
         self.__pending_responses: dict[bytes, OfbHuaweiResponseReceiver] = {}
-        self.__on_package_handlers: dict[bytes, OfbDriverHandlerHuawei] = {}
+        self.__on_package_handlers: dict[bytes, list[OfbDriverHandlerHuawei]] = {}
+        self.__raw_sessions: dict[bytes, asyncio.Queue] = {}
+        self._raw_all_queue: asyncio.Queue | None = None
 
         # self._spp_service_uuid = "00001101-0000-1000-8000-00805f9b34fb"
 
         self.handlers: list[OfbDriverHandlerHuawei] = []
 
     async def start(self):
+        self._ensure_find_earbud_handler()
         await super().start()
         await self._start_all_handlers()
+
+    def _ensure_find_earbud_handler(self):
+        """Attach the find-earbud handler according to the official capability matrix.
+        Subclasses replace self.handlers in __init__, so appending in the base __init__ would be lost; inject before start() binds handlers, which covers every model without breaking each model's own handler list.
+        """
+        if not self.supports_find_earbud:
+            return
+        if any(h.handler_id == "find_earbud" for h in self.handlers):
+            return
+        from openfreebuds.driver.huawei.handler.find_earbud import (
+            OfbHuaweiFindEarbudHandler,
+        )
+        self.handlers.append(OfbHuaweiFindEarbudHandler())
 
     async def get_health_report(self):
         return {
@@ -85,6 +112,36 @@ class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
         self._writer.write(pkg.to_bytes())
         await self._writer.drain()
 
+    async def send_raw_recv(self, cmd: bytes, framed: bytes, timeout: int = 5) -> HuaweiSppPackage | None:
+        """Send a raw frame (including the 0x5A header and CRC) and wait for the next response with the same command.
+        Used by prompt-tone upload and other non-standard TLV paths: register the receiver before sending to avoid a response race.
+        """
+        async with self.raw_session(cmd) as session:
+            await session.send_framed(framed)
+            return await session.recv(timeout)
+
+    @asynccontextmanager
+    async def raw_session(self, cmd: bytes):
+        """Open a raw-frame session for one command; inbound frames for that command go to the queue instead of being dispatched to handlers."""
+        queue: asyncio.Queue = asyncio.Queue()
+        self.__raw_sessions[cmd] = queue
+        try:
+            yield _RawSession(self, queue)
+        finally:
+            self.__raw_sessions.pop(cmd, None)
+
+    @asynccontextmanager
+    async def raw_session_all(self):
+        """Capture **all** inbound frames regardless of command.
+        Prompt-tone proto2 upload watches 09 01/09 0a/09 02/09 03/09 05 at the same time, so command-filtered raw_session would miss frames; use this instead.
+        """
+        queue: asyncio.Queue = asyncio.Queue()
+        self._raw_all_queue = queue
+        try:
+            yield _RawSession(self, queue)
+        finally:
+            self._raw_all_queue = None
+
     async def _handle_raw_pkg(self, pkg):
         try:
             pkg = HuaweiSppPackage.from_bytes(pkg)
@@ -93,13 +150,31 @@ class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
             log.info(f"Got non-parsable package {pkg.hex()}, ignoring")
             return
 
-        if pkg.command_id in self.__pending_responses:
+        if self._raw_all_queue is not None:
+            self._raw_all_queue.put_nowait(pkg)
+        elif pkg.command_id in self.__raw_sessions:
+            self.__raw_sessions[pkg.command_id].put_nowait(pkg)
+        elif pkg.command_id in self.__pending_responses:
             self.__pending_responses[pkg.command_id].package = pkg
             self.__pending_responses[pkg.command_id].set()
         elif pkg.command_id in self.__on_package_handlers:
-            await self.__on_package_handlers[pkg.command_id].on_package(pkg)
+            # Notifications such as 0x2B4A can also complete a pending write command
+            self._resolve_response_alias(pkg)
+            for handler in self.__on_package_handlers[pkg.command_id]:
+                await handler.on_package(pkg)
         else:
             log.warn(f"Got unsupported package\n{str(pkg)}")
+
+    def _resolve_response_alias(self, pkg: HuaweiSppPackage):
+        alias = _RESPONSE_ALIASES.get(pkg.command_id)
+        if alias is None:
+            return
+        receiver = self.__pending_responses.get(alias)
+        if receiver is None:
+            return
+        log.debug(f"Resolve pending {alias!r} with alias notification {pkg.command_id!r}")
+        receiver.package = pkg
+        receiver.set()
 
     async def _loop_recv(self, reader: asyncio.StreamReader):
         while True:
@@ -127,9 +202,9 @@ class OfbDriverHuaweiGeneric(OfbDriverSppGeneric):
 
     def _add_on_package_handler(self, handler):
         for pkg_id in handler.commands:
-            self.__on_package_handlers[pkg_id] = handler
+            self.__on_package_handlers.setdefault(pkg_id, []).append(handler)
         for pkg_id in handler.ignore_commands:
-            self.__on_package_handlers[pkg_id] = _empty_handler
+            self.__on_package_handlers.setdefault(pkg_id, []).append(_empty_handler)
 
 
 class OfbDriverHandlerHuawei(OfbDriverHandlerGeneric):
@@ -177,3 +252,22 @@ class OfbDriverHandlerHuawei(OfbDriverHandlerGeneric):
 
 
 _empty_handler = OfbDriverHandlerHuawei()
+
+
+class _RawSession:
+    def __init__(self, driver: OfbDriverHuaweiGeneric, queue: asyncio.Queue):
+        self._driver = driver
+        self._queue = queue
+
+    async def send_framed(self, framed: bytes):
+        if not self._driver._writer:
+            raise FbNotReadyError("Can't send package before SPP start")
+        self._driver._writer.write(framed)
+        await self._driver._writer.drain()
+
+    async def recv(self, timeout: int = 5) -> HuaweiSppPackage | None:
+        try:
+            async with asyncio.timeout(timeout):
+                return await self._queue.get()
+        except TimeoutError:
+            return None

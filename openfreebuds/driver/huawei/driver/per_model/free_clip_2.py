@@ -20,9 +20,15 @@ class OfbDriverHuaweiFreeClip2(OfbDriverHuaweiGeneric):
             OfbHuaweiConfigAutoPauseHandler(),
 
             # Gesture handlers
-            OfbHuaweiActionDoubleTapHandler(),
+            OfbHuaweiActionDoubleTapHandler(
+                w_in_call=True, w_read_in_call=True,
+                options_call_map={
+                    0: "tap_action_answer_end",
+                    -1: "tap_action_off",
+                },
+            ),
             OfbHuaweiActionTripleTapHandler(),
-            OfbHuaweiActionLongTapSplitHandler(w_extra_options=True),
+            OfbHuaweiActionLongTapSplitHandler(w_agent_modes=True, w_anc=False),
             OfbHuaweiActionSwipeGestureHandler(),
 
             # Sound & audio quality
@@ -30,8 +36,8 @@ class OfbDriverHuaweiFreeClip2(OfbDriverHuaweiGeneric):
                 1: "default",
                 2: "hardbass",
                 3: "treble",
-                9: "voice",
-            }),
+                9: "voices",
+            }, w_custom=True, w_custom_rows=10, w_custom_max_count=3),
             OfnHuaweiSoundQualityPreferenceHandler(),
             OfbHuaweiLowLatencyPreferenceHandler(),
 
@@ -39,10 +45,17 @@ class OfbDriverHuaweiFreeClip2(OfbDriverHuaweiGeneric):
             OfbHuaweiStateInEarHandler(),
             OfbHuaweiVoiceLanguageHandler(),
             OfbHuaweiDualConnectHandler(),
+            OfbHuaweiSpatialAudioHandler(),
+            OfbHuaweiAdaptiveVolumeHandler(),
+            OfbHuaweiBigVolumeHandler(),
+            OfbHuaweiBoxToneHandler(),
+            OfbHuaweiFindEarbudHandler(),
+            OfbHuaweiHeadControlHandler(),
+            OfbHuaweiDropReminderHandler(),
+            OfbHuaweiSmartChargeHandler(),
+            OfbHuaweiLeftRightAutoHandler(),
+            OfbHuaweiPromptEventsHandler(w_cleaning=True),
 
             # Not tested / unsupported on FreeClip 2:
             # - ANC (open-ear, no traditional ANC)
-            # - Head motion controls (nod/shake to answer) - needs SPP research
-            # - Adaptive volume in noisy environments - needs SPP research
-            # - Drop reminder - needs SPP research
         ]

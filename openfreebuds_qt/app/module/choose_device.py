@@ -1,4 +1,5 @@
 import asyncio
+from collections import Counter
 from typing import Optional
 
 from PyQt6.QtCore import Qt
@@ -8,6 +9,8 @@ from qasync import asyncSlot
 from openfreebuds import is_device_supported, OfbEventKind
 from openfreebuds_backend import bt_list_devices
 from openfreebuds_qt.utils.device_auto_select import OfbQtDeviceAutoSelect
+from openfreebuds_qt.utils.device_labels import format_device_label
+from openfreebuds_qt.utils.device_filter import filter_paired_devices
 from openfreebuds_qt.app.dialog.manual_connect import OfbQtManualConnectDialog
 from openfreebuds_qt.app.dialog.porifle_picker import OfbQtProfilePickerDialog
 from openfreebuds_qt.utils.core_event import OfbCoreEvent
@@ -15,6 +18,8 @@ from openfreebuds_qt.app.module.common import OfbQtCommonModule
 from openfreebuds_qt.utils.qt_utils import qt_error_handler
 from openfreebuds_qt.config.main import OfbQtConfigParser
 from openfreebuds_qt.designer.module_device_select import Ui_OfbQtDeviceSelectModule
+
+DEVICE_NAME_ROLE = int(Qt.ItemDataRole.UserRole) + 1
 
 
 class OfbQtChooseDeviceModule(Ui_OfbQtDeviceSelectModule, OfbQtCommonModule):
@@ -24,6 +29,8 @@ class OfbQtChooseDeviceModule(Ui_OfbQtDeviceSelectModule, OfbQtCommonModule):
         self.setupUi(self)
 
         self._connect_task: Optional[asyncio.Task] = None
+        self._device_rows: list[dict] = []
+        self._current_device_addr = ""
 
     async def update_ui(self, event: OfbCoreEvent):
         async with qt_error_handler("OfbQtChooseDeviceModule_UpdateUi", self.ctx):
@@ -39,15 +46,30 @@ class OfbQtChooseDeviceModule(Ui_OfbQtDeviceSelectModule, OfbQtCommonModule):
         async with qt_error_handler("OfbQtChooseDeviceModule_ManualRefresh", self.ctx):
             await self._update_list()
 
+    def on_show_unsupported_toggle(self, _checked: bool):
+        self._render_list()
+
     async def _update_list(self):
-        device_name, device_addr = await self.ofb.get_device_tags()
-        results = await bt_list_devices()
+        _, self._current_device_addr = await self.ofb.get_device_tags()
+        self._device_rows = await bt_list_devices()
+        self._render_list()
+
+    def _render_list(self):
+        results = filter_paired_devices(
+            self._device_rows,
+            self.show_unsupported_checkbox.isChecked(),
+            self._current_device_addr,
+        )
+        name_counts = Counter(row["name"] for row in results)
         self.paired_list.clear()
         for row in results:
-            entry = QListWidgetItem(row["name"], self.paired_list)
-            checked = row["address"] == device_addr
+            address = row["address"]
+            name = row["name"]
+            entry = QListWidgetItem(format_device_label(name, address, name_counts), self.paired_list)
+            checked = address == self._current_device_addr
             entry.setCheckState(Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked)
-            entry.setData(Qt.ItemDataRole.UserRole, row["address"])
+            entry.setData(Qt.ItemDataRole.UserRole, address)
+            entry.setData(DEVICE_NAME_ROLE, name)
 
             self.paired_list.addItem(entry)
 
@@ -55,7 +77,7 @@ class OfbQtChooseDeviceModule(Ui_OfbQtDeviceSelectModule, OfbQtCommonModule):
     async def on_device_select(self, item: QListWidgetItem):
         async with qt_error_handler("OfbQtChooseDeviceModule_SelectDevice", self.ctx):
             address = item.data(Qt.ItemDataRole.UserRole)
-            name = item.text()
+            name = item.data(DEVICE_NAME_ROLE) or item.text()
 
             if not is_device_supported(name):
                 result, name = await OfbQtProfilePickerDialog(self).get_user_response()

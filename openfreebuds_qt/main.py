@@ -6,6 +6,7 @@ from contextlib import suppress
 from typing import Optional
 
 from PyQt6.QtCore import QLibraryInfo, QLocale, QTranslator, QT_VERSION_STR
+from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QMenu, QMenuBar, QMessageBox, QSystemTrayIcon
 from qasync import QEventLoop
 
@@ -19,12 +20,26 @@ from openfreebuds_qt.constants import IGNORED_LOG_TAGS, I18N_PATH
 from openfreebuds_qt.generic import IOfbQtApplication
 from openfreebuds_qt.tray.main import OfbTrayIcon
 from openfreebuds_qt.utils import OfbQtDeviceAutoSelect, OfbQtHotkeyService, list_available_locales
+from openfreebuds_qt.utils.i18n import list_qtbase_locales, resolve_locale
 from openfreebuds_qt.utils.async_dialog import run_dialog_async
 from openfreebuds_qt.utils.automation import OfbQtAutomationService
 from openfreebuds_qt.utils.mpris.service import OfbQtMPRISHelperService
+from openfreebuds_qt.utils.notifications import OfbQtSystemNotificationService
 from openfreebuds_qt.utils.updater.service import OfbQtUpdaterService
 
 log = create_logger("OfbQtApplication")
+EXIT_SHUTDOWN_TIMEOUT = 6.0
+
+
+def configure_application(app):
+    """Keep a tray-resident app alive when its last window closes.
+
+    OpenFreebuds runs in background with only a tray icon and a hidden main
+    window. Dialogs opened from the tray (error or missing dependency prompts)
+    are then the only visible windows; with Qt's default policy closing them
+    would quit the whole process.
+    """
+    app.setQuitOnLastWindowClosed(False)
 
 
 class OfbQtApplication(IOfbQtApplication):
@@ -45,6 +60,7 @@ class OfbQtApplication(IOfbQtApplication):
         self.hotkeys: Optional[OfbQtHotkeyService] = None
         self.mpris: Optional[OfbQtMPRISHelperService] = None
         self.tray: Optional[OfbTrayIcon] = None
+        self.notifications: Optional[OfbQtSystemNotificationService] = None
         self.main_window: Optional[OfbQtMainWindow] = None
         self.updater_service: Optional[OfbQtUpdaterService] = None
 
@@ -68,14 +84,30 @@ class OfbQtApplication(IOfbQtApplication):
         self.setApplicationName("OpenFreebuds")
         self.setDesktopFileName("pw.mmk.OpenFreebuds")
 
+        # This app lives in the system tray, so closing the last visible window
+        # (for example a standalone tray dialog) must not terminate it.
+        configure_application(self)
+
+        # Global font rendering: light vertical hinting + forced antialiasing (size/family keep system defaults).
+        # Do not apply this override on the FreeType engine; keep Qt's default hinting (looks better in user testing);
+        # to fully restore the default DirectWrite look, set OFB_FONT_DEFAULT=1.
+        using_freetype = "fontengine=freetype" in os.environ.get("QT_QPA_PLATFORM", "")
+        if not using_freetype and os.environ.get("OFB_FONT_DEFAULT", "") != "1":
+            base_font = self.font()
+            base_font.setHintingPreference(QFont.HintingPreference.PreferVerticalHinting)
+            base_font.setStyleStrategy(QFont.StyleStrategy.PreferAntialias)
+            self.setFont(base_font)
+
         # Qt i18n
         locale = self._detect_locale()
         self.translator = QTranslator()
         self.translator.load(str(I18N_PATH / f"{locale}.qm"))
         self.installTranslator(self.translator)
         self.qt_translator = QTranslator()
-        self.qt_translator.load("qtbase_" + locale,
-                                QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath))
+        qt_translations_path = QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath)
+        qt_locale = resolve_locale(locale, list_qtbase_locales(qt_translations_path))
+        if not self.qt_translator.load(f"qtbase_{qt_locale}", qt_translations_path):
+            log.warning(f"Qt translations not found for {locale} (tried qtbase_{qt_locale})")
         self.installTranslator(self.qt_translator)
 
         # AsyncQt preparations
@@ -127,6 +159,8 @@ class OfbQtApplication(IOfbQtApplication):
             await self.automation.start()
             await self.mpris.start()
             await self.tray.boot()
+            self.notifications = OfbQtSystemNotificationService(self)
+            await self.notifications.start()
             await self.main_window.boot()
             await self.updater_service.boot()
 
@@ -154,11 +188,27 @@ class OfbQtApplication(IOfbQtApplication):
             log.exception("Boot failure")
 
     async def exit(self, ret_code: int = 0):
+        notifications = getattr(self, "notifications", None)
+        if notifications is not None:
+            await notifications.stop()
         await self.tray.close()
         self.main_window.hide()
 
-        if self.ofb.role == "standalone":
-            await self.ofb.destroy()
+        # Exit must stop the manager even when this Qt process connected to an
+        # existing daemon as a client; otherwise the background process survives.
+        if self.ofb is not None:
+            destroy_task = asyncio.create_task(self.ofb.destroy())
+            done, pending = await asyncio.wait({destroy_task}, timeout=EXIT_SHUTDOWN_TIMEOUT)
+            if pending:
+                destroy_task.cancel()
+                log.warning("Manager did not stop in time, exiting anyway")
+            else:
+                try:
+                    destroy_task.result()
+                except Exception:
+                    # destroy() tears down the RPC server before it can answer the
+                    # request; a connection error here is expected.
+                    log.exception("Failed to stop manager on exit")
 
         return self._exit(ret_code)
 
@@ -168,11 +218,8 @@ class OfbQtApplication(IOfbQtApplication):
 
         if locale == "auto":
             locale = QLocale.system().name()
-        if locale not in available_locales:
-            locale = locale.split("_")[0]
-            if locale not in available_locales:
-                locale = "en"
 
+        locale = resolve_locale(locale, available_locales)
         log.info(f"Going to use {locale} from {available_locales}")
         return locale
 

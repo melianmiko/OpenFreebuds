@@ -48,7 +48,15 @@ async def main():
 
     log.info("Ready to accept connections")
     try:
-        await asyncio.Event().wait()
+        # The RPC server task is the lifetime of the daemon. When destroy() cancels
+        # it, return here so the process exits instead of waiting forever.
+        if openfreebuds.server_task is not None:
+            done, pending = await asyncio.wait(
+                {openfreebuds.server_task}, timeout=5)
+            if pending:
+                log.warning("RPC server did not stop in time, exiting anyway")
+        else:
+            await asyncio.Event().wait()
     except (KeyboardInterrupt, asyncio.CancelledError):
         log.info("Gracefully leaving...")
         await openfreebuds.destroy()

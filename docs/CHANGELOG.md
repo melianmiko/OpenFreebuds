@@ -1,3 +1,66 @@
+# 0.19.0
+- [Device compatibility] Add full HUAWEI FreeBuds 5 support: dual-connect, L2HC, custom EQ, low-latency mode, half-in-ear detection, find-earbud, case battery, two ANC modes and level control. HD spatial audio remains Huawei-phone only.
+- [Device compatibility] Register FreeBuds Lipstick 2 as a FreeBuds 5 alias; the official command pages match and only shell/color assets differ.
+- [Device compatibility] Align gesture registration with the 2.0.7.321 touchsetting config: Pro 2 gains light-hold and custom EQ, Pro 3 gains light-hold and charging-box tone, Pro 4 gains double/triple tap and adaptive volume, FreeBuds 7 gains light-hold and in-call double-tap, and FreeClip 1st gen is limited to its official double/triple set.
+- [Device compatibility] Restrict independent spatial audio to FreeBuds 7 / 7i / Neo, FreeBuds Pro 5 and FreeClip 2 / 2 S. Pro 3 / Pro 4 keep Huawei-phone-side HD spatial audio only and no longer mount the independent handler.
+- [Device compatibility] Limit charging-case tone controls by model: FreeBuds Pro 3, Pro 4 and FreeClip 1 expose only the master switch; FreeClip 2/2 S, FreeBuds 6/7 and FreeBuds Pro 5 keep the full lid/tone controls.
+- [Device compatibility] Expose drop reminder on FreeBuds 7, FreeBuds 6, FreeClip 2, FreeClip 2 S, FreeClip and FreeBuds Neo; Neo mounts because its official config declares `drop_detection`, and runtime support is decided by the device response.
+- [Feature] Add a smart-charging switch (`config.smart_charge`, MBB feature 4) with readback, GUI group and translations; mounted for FreeBuds 6/7/7i/Neo, FreeBuds Pro 4/5 and FreeClip 2/2 S. Verified read/write on FreeClip 2.
+- [Feature] Add a battery logger under Application: choose left/right/case channels and a 1 s-1 h interval, inspect a zoomable/pannable curve, keep sampling while the window is in the tray, record 0% for all three channels on disconnect, and export a UTF-8 CSV.
+- [Feature] Device selection now lists paired Huawei-family devices even when disconnected, using the official 2.0.7.321 `btDevNameReg` whitelist. A "Show unsupported" checkbox restores the full list of all other paired Bluetooth devices; duplicate names include their uppercase MAC address.
+- [Feature] Add a left-right auto-switch (`config.left_right_auto`, read `0x2B9A`, write `0x2B99`) with readback, GUI group and translations; mounted for FreeClip, FreeClip 2/2 S and the new W Buds 1/2 minimal driver. W Buds support is response-gated; FreeClip 2 read/write is hardware-verified, with a fresh SPP connection confirming both directions.
+- [Feature] Add the official noisy-environment media volume boost (`big_volume_new`, probe `0x2B88`, write `0x2B87`, legacy `0x2B80` / `0x2B7F` fallback) as a separate switch from adaptive volume. Mounted for FreeClip 1, FreeClip 2 and FreeClip 2 S; support and state are response-gated, and read-back still needs hardware verification.
+- [Device compatibility] Expand the official Chinese color catalog from 23 models / 96 codes to 35 models / 130 codes, adding 12 legacy models and 34 marketing color codes without changing existing entries.
+- [Fix] Send left-right auto-switch writes on `0x2B99` (`2b 99 01 01 <0/1>`) instead of reusing the read-only `0x2B9A`; the previous write only returned the current state and never changed the device.
+- [Feature] Listen for HUAWEI `0x2B7F` prompt events: cleaning reminder, cleaning cancelled, earbud not seated and drop. The parser is read-only and is mounted on FreeClip 1/2/2 S (cleaning + drop) and FreeBuds 6/7/Neo (drop only). Frames are assumed to arrive over SPP from the captured IConnect TLV; IConnect transport is not implemented and SPP delivery is still unverified.
+- [Feature] Show prompt events as cross-platform system notifications. Drop uses a high-priority notification, cleaning and misplacement use normal priority, and cleaning cancellation clears the existing notification where the platform supports it. Windows/macOS use the Qt system tray; Linux prefers freedesktop D-Bus notifications and falls back to Qt.
+- [Change] FreeClip 1 now uses a standalone driver with an explicit handler list instead of inheriting the Pro 3 driver.
+- [Fix] Device info shows the market name `HUAWEI FreeClip` for model `00014B` instead of the internal codename `Dove`.
+- [Docs] Correct FreeClip 1 gesture documentation: it has no swipe; its lab click-and-hold / five-tap volume modes are not modeled yet. The APK lab page lists `00014B`, and its MBB `0x2BB2` backend exists, so this is a handler gap rather than a missing protocol.
+- [Feature] Enable in-call long-press for FreeBuds 5, 5i, 6, 6i, 7i, Neo and SE 4 where the official page provides it.
+- [Fix] Read the long-press in-call value from parameter 4 instead of the right-ear value.
+- [Fix] Do not expose an in-call long-press option for FreeClip 2 / 2 S; its AI-key page has no such field.
+- [Docs] Add the HUAWEI model capability matrix and long-term driver TODO.
+- [Device compatibility] Add FreeBuds 6, FreeBuds 7, FreeBuds 7i, FreeBuds Neo, first-gen FreeClip, FreeBuds Pro 4 and FreeClip 2 S / Collector's Edition.
+- [Device compatibility] FreeClip 2 S shares FreeClip 2 behavior; FreeBuds Pro 4 and first-gen FreeClip gain read-only head control.
+- [Device compatibility] Add a device catalog with capability, feature and official Chinese color data.
+- [Device compatibility] Follow the official find-earbud matrix: all models except FreeBuds Pro (1st gen) and FreeBuds Studio.
+- [Feature] Add find-earbud with per-ear ringing state, status readback and a safety stop timeout.
+- [Feature] Split long-press and swipe actions per ear and align the official action values.
+- [Feature] FreeBuds Pro 5 gains the official pinch, tap, long-press, pinch-and-hold and swipe gesture set from the 2.0.7.321 touchsetting config.
+- [Feature] FreeClip 2 and FreeClip 2 S gain the official in-call double-tap setting: answer/end the call or disable it.
+- [Feature] Add adaptive volume, head control, spatial audio and drop alert.
+- [Feature] Rebuild charging-case tone settings so every option saves correctly; the built-in tone no longer streams audio.
+- [Feature] Add a three-layer prompt-tone library: bundled catalog, official cloud snapshot and custom tones with migration.
+- [Feature] Download missing official tone resources automatically, retrying at most once per six hours.
+- [Feature] Add a prompt-tone editor with waveform, two-handle trimming, preview, loudness gain and bilingual naming.
+- [Feature] Add ZIP import for shared prompt-tone packages; identical sounds are skipped and id/file-name conflicts are resolved without overwriting local data.
+- [Feature] The editor waveform zooms at the cursor with Ctrl+wheel, pans with the wheel and offers a full-track overview.
+- [Feature] Add a compact editor toolbar with reset, zoom out, logarithmic slider, zoom in and a zoom readout.
+- [Feature] Charging-case tone changes require both earbuds in the case, and the panel refreshes when both enter.
+- [Feature] Show wearing state in the battery header; disconnected earbuds no longer show 0%.
+- [Feature] Add a "Show welcome screen" button to UI settings; reopening it preloads the saved tray and autostart choices.
+- [Feature] Derive case power state from case charging only.
+- [Feature] Device info shows the localized model color without automatic row numbers.
+- [Change] Editor start/end fields apply on focus loss or Enter; the typed value wins and the other handle is clamped to the device limit.
+- [Change] Drop alert now says the other earbud plays a ringtone instead of implying an in-app notification.
+- [Change] Tone editor handles snap at the maximum length and carry the other handle; there is no minimum selection.
+- [Fix] Hide unsupported battery, ANC, EQ and dual-connect entries when switching devices, and refresh the tray menu every time it opens.
+- [Fix] FreeBuds Pro 5 gesture pages no longer show unsupported actions; in-call double-tap and triple-tap now use their official value sets.
+- [Fix] Ignore the placeholder tone id reported while the earbuds are outside the charging case and keep the last valid selection.
+- [Fix] Load Qt's own translations with Qt's underscore locale names, so standard context-menu actions such as "Copy Link Location" are localized.
+- [Fix] Tone editor fields stay in sync after clamping; only the waveform grows with the window while the start/end row fills the width.
+- [Fix] Closing the editor or main window stops preview playback and releases the temporary file.
+- [Fix] Long tone imports keep the full source; only the final selection is capped.
+- [Fix] Fix a false equalizer timeout on FreeClip 2.
+- [Fix] Fix Bluetooth port conflicts when reconnecting.
+- [Fix] Fix prompt-tone uploads failing on some devices.
+- [Fix] Connect/disconnect failures stay in dialogs and no longer terminate the tray app.
+- [Fix] "Leave application" stops the manager in both roles and exits the daemon cleanly.
+- [Fix] Show a dedicated warning when another Bluetooth app holds the port, once per outage.
+- [Fix] Follow the system language on systems that report locale names such as `zh_CN`, so Chinese UI and the first-run welcome screen no longer start in English.
+- [i18n] Update English, Simplified Chinese, German, Spanish, Brazilian Portuguese, Russian and Turkish strings.
+
 # 0.18.1
 - [Device compatibility] Initial Freebuds 3 support (thx @qiushixiang)
 - [Feature] Configurable per-earbud and case battery tray indicators (thx @sinanakyazici)

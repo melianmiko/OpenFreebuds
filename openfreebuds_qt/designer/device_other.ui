@@ -43,6 +43,23 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QCheckBox" name="left_right_auto_toggle">
+        <property name="text">
+         <string>Enable left-right auto-switch</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="left_right_auto_hint">
+        <property name="text">
+         <string>The earbuds are interchangeable. After putting them in, dip your head slightly to auto-correct the channels.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -92,6 +109,679 @@
        <widget class="QLabel" name="label_4">
         <property name="text">
          <string>Due to technical restrictions, current language can't be readden from device and this field will be empty.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="spatial_audio_root">
+     <property name="title">
+      <string>Spatial audio</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_5">
+      <item>
+       <widget class="QCheckBox" name="spatial_audio_toggle">
+        <property name="text">
+         <string>Enable spatial audio</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="spatial_audio_options" native="true">
+        <layout class="QGridLayout" name="gridLayout_2">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="spatial_audio_mode_label">
+           <property name="text">
+            <string>Mode:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="spatial_audio_mode_box"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="spatial_audio_room_label">
+           <property name="text">
+            <string>Sound stage:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QComboBox" name="spatial_audio_room_box"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="spatial_audio_hint">
+        <property name="text">
+         <string>Head tracking fixes the sound stage in space. Availability depends on the earbuds firmware.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="big_volume_root">
+     <property name="title">
+      <string>Noisy environment volume</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_big_volume">
+      <item>
+       <widget class="QCheckBox" name="big_volume_toggle">
+        <property name="text">
+         <string>Increase media volume in noisy environments</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="big_volume_hint">
+        <property name="text">
+         <string>Raises media volume further in noisy environments. May affect sound quality; not recommended for prolonged use.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="adaptive_volume_root">
+     <property name="title">
+      <string>Adaptive volume</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_6">
+      <item>
+       <widget class="QCheckBox" name="adaptive_volume_toggle">
+        <property name="text">
+         <string>Enable adaptive volume</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="adaptive_volume_level_options" native="true">
+        <layout class="QGridLayout" name="gridLayout_4">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="adaptive_volume_level_label">
+           <property name="text">
+            <string>Sensitivity:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="adaptive_volume_level_box"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="adaptive_volume_hint">
+        <property name="text">
+         <string>Automatically adjusts playback volume to the ambient noise level.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="head_control_root">
+     <property name="title">
+      <string>Head control</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_7">
+      <item>
+       <widget class="QCheckBox" name="head_control_toggle">
+        <property name="text">
+         <string>Enable head controls</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="head_control_options" native="true">
+        <layout class="QGridLayout" name="gridLayout_3">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="head_nod_label">
+           <property name="text">
+            <string>Nod:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="head_nod_box"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="head_shake_label">
+           <property name="text">
+            <string>Shake:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QComboBox" name="head_shake_box"/>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="head_control_hint">
+        <property name="text">
+         <string>Answer or reject calls by nodding or shaking your head.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="drop_reminder_root">
+     <property name="title">
+      <string>Drop alert</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_drop_reminder">
+      <item>
+       <widget class="QCheckBox" name="drop_reminder_toggle">
+        <property name="text">
+         <string>Enable drop alert</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="drop_reminder_hint">
+        <property name="text">
+         <string>When one earbud is dropped, the other earbud plays a ringtone. Availability depends on the earbuds firmware.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="smart_charge_root">
+     <property name="title">
+      <string>Smart charging</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_smart_charge">
+      <item>
+       <widget class="QCheckBox" name="smart_charge_toggle">
+        <property name="text">
+         <string>Enable smart charging</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="smart_charge_hint">
+        <property name="text">
+         <string>Learns your usage habits and adjusts the maximum charge level to extend battery life.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="box_tone_root">
+     <property name="title">
+      <string>Charging case</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_8">
+      <item>
+       <widget class="QCheckBox" name="box_tone_toggle">
+        <property name="text">
+         <string>Case notification sounds</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="box_tone_hint">
+        <property name="text">
+         <string>Manage all charging-case sounds: charging, low battery, pairing and lid.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="box_tone_lid_options" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout_9">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QCheckBox" name="box_tone_lid_toggle">
+           <property name="text">
+            <string>Lid notification sound</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="box_tone_lid_hint">
+           <property name="text">
+            <string>Play a sound when the charging case is opened or closed.</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="box_tone_lid_volume_row" native="true">
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="box_tone_lid_volume_label">
+              <property name="text">
+               <string>Volume:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSlider" name="box_tone_lid_volume_slider">
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="maximum">
+               <number>15</number>
+              </property>
+              <property name="singleStep">
+               <number>1</number>
+              </property>
+              <property name="pageStep">
+               <number>5</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="box_tone_lid_volume_value">
+              <property name="minimumSize">
+               <size>
+                <width>32</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>0</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="box_tone_lid_box_hint">
+           <property name="text">
+            <string>Put both earbuds into the charging case to change these settings.</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="box_tone_pick_row" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <property name="spacing">
+          <number>2</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="box_tone_pick_label">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Prompt tone:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="box_tone_select"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="box_tone_preview">
+           <property name="maximumSize">
+            <size>
+             <width>84</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Preview</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="box_tone_apply">
+           <property name="maximumSize">
+            <size>
+             <width>100</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Apply sound</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="box_tone_status">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="box_tone_export_row" native="true">
+        <property name="visible">
+         <bool>false</bool>
+        </property>
+        <layout class="QHBoxLayout" name="box_tone_export_layout">
+         <property name="spacing">
+          <number>4</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="box_tone_export_left">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>1</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="box_tone_export_right">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QProgressBar" name="box_tone_progress">
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>0</number>
+        </property>
+        <property name="textVisible">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="box_tone_buttons_row" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="box_tone_add">
+           <property name="text">
+            <string>Add custom…</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="box_tone_edit">
+           <property name="text">
+            <string>Edit…</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="box_tone_delete">
+           <property name="text">
+            <string>Delete</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="box_tone_export">
+           <property name="text">
+            <string>Export ZIP</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="box_tone_import">
+           <property name="text">
+            <string>Import ZIP</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="box_tone_sync_config">
+           <property name="text">
+            <string>Sync official catalog</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="box_tone_sync_audio">
+           <property name="text">
+            <string>Sync official audio</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="find_earbud_root">
+     <property name="title">
+      <string>Find my earbuds</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_10">
+      <item>
+       <widget class="QLabel" name="find_earbud_wear_hint">
+        <property name="text">
+         <string>Make sure the earbuds are not being worn before ringing. Loud sound at close range may damage your hearing.</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="find_earbud_status">
+        <property name="text">
+         <string>Not ringing</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="find_earbud_buttons" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="find_earbud_left">
+           <property name="text">
+            <string>Left earbud ring</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="find_earbud_right">
+           <property name="text">
+            <string>Right earbud ring</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="find_earbud_both">
+           <property name="text">
+            <string>Both earbuds ring</string>
+           </property>
+          </widget>
+         </item>
+         
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="find_earbud_hint">
+        <property name="text">
+         <string>Earbuds will ring at maximum volume. Stop the ring as soon as you find them.</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>

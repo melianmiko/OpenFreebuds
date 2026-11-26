@@ -34,7 +34,35 @@ class OfbFileDeviceDriver(OfbDriverGeneric):
 
     async def set_property(self, group: str, prop: str, value: str):
         log.info(f"SET {group}//{prop} -> {value}")
-        return await self.put_property(group, prop, value)
+        result = await self.put_property(group, prop, value)
+
+        # Keep the ringing state in sync so the find-earbud buttons behave like a real device
+        if group == "config" and prop == "find_earbud" and isinstance(value, str):
+            await self._emulate_find_earbud(value)
+
+        return result
+
+    async def _emulate_find_earbud(self, value: str):
+        verb, _, side = value.strip().lower().partition(":")
+        side = side or "both"
+        target = {
+            "left": {"left"},
+            "right": {"right"},
+            "both": {"left", "right"},
+        }.get(side)
+        if target is None:
+            return
+
+        current = await self.get_property("state", "find_earbud_ringing") or ""
+        ringing = {part for part in current.split(",") if part}
+        if verb == "ring":
+            ringing |= target
+        elif verb == "stop":
+            ringing -= target
+        else:
+            return
+
+        await self.put_property("state", "find_earbud_ringing", ",".join(sorted(ringing)))
 
     async def is_device_online(self):
         return True

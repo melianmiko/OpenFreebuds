@@ -19,6 +19,7 @@ class RemoteError(Exception):
         super().__init__(data)
         self.rpc_trace = data["trace"]
         self.args = data["args"]
+        self.class_name = data.get("class", "")
 
     def __str__(self):
         return f"Got server-side error:\n\n{self.rpc_trace}"

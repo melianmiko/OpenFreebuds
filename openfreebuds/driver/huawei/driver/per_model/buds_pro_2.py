@@ -15,6 +15,7 @@ class OfbDriverHuaweiPro2(OfbDriverHuaweiGeneric):
             OfbHuaweiBatteryHandler(),
             OfbHuaweiAncHandler(w_cancel_lvl=True),
             OfbHuaweiActionLongTapSplitHandler(w_right=True),
+            OfbHuaweiActionLightHoldHandler(w_light_hold=True, w_pinch_hold=False),
             OfbHuaweiActionSwipeGestureHandler(),
             OfbHuaweiConfigAutoPauseHandler(),
             OfnHuaweiSoundQualityPreferenceHandler(),
@@ -22,7 +23,7 @@ class OfbDriverHuaweiPro2(OfbDriverHuaweiGeneric):
                 1: "default",
                 2: "hardbass",
                 3: "treble",
-            }),
+            }, w_custom=True),
             OfbHuaweiDualConnectHandler(),
             OfbHuaweiVoiceLanguageHandler(),
         ]

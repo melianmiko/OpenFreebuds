@@ -16,6 +16,7 @@ from openfreebuds.utils.logger import create_logger, get_full_log
 from openfreebuds.utils.stupid_rpc import rpc
 
 log = create_logger("OfbManager")
+SHUTDOWN_TIMEOUT = 3.0
 
 
 class OfbManager(IOpenFreebuds):
@@ -28,6 +29,7 @@ class OfbManager(IOpenFreebuds):
         self._shortcuts = OfbShortcuts(self)
 
         self._state = IOpenFreebuds.STATE_STOPPED  # type: int
+        self._last_start_error: str = ""
         self.role: str = "standalone"
         self.rpc_config: dict = {}
         self.server_task: Task | None = None
@@ -35,6 +37,11 @@ class OfbManager(IOpenFreebuds):
     @rpc
     async def get_state(self) -> int:
         return self._state
+
+    @rpc
+    async def get_last_start_error(self) -> str:
+        """Reason for the latest driver start failure, exposed for user-facing hints."""
+        return self._last_start_error
 
     @rpc
     async def get_logs(self) -> str:
@@ -63,6 +70,7 @@ class OfbManager(IOpenFreebuds):
         self.include_subscription("inner_driver", self._driver.changes)
         self._task = asyncio.create_task(self._mainloop())
         self._device_tags = device_name, device_address
+        self._last_start_error = ""
 
     @rpc
     async def destroy(self):
@@ -70,7 +78,9 @@ class OfbManager(IOpenFreebuds):
         await self.stop(IOpenFreebuds.STATE_DESTROYED)
         if self.server_task is not None:
             self.server_task.cancel("stop() requested")
-            await self.server_task
+            done, pending = await asyncio.wait({self.server_task}, timeout=SHUTDOWN_TIMEOUT)
+            if pending:
+                log.warning("RPC server did not stop in time")
         log.info("Bye-bye")
 
     @rpc
@@ -81,11 +91,23 @@ class OfbManager(IOpenFreebuds):
 
         log.debug("Stopping core...")
         self._task.cancel("stop() requested")
-        await self._task
+        done, pending = await asyncio.wait({self._task}, timeout=SHUTDOWN_TIMEOUT)
+        if pending:
+            # A driver init/recv call may ignore cancellation; do not block exit forever.
+            log.warning("Main loop did not stop in time")
 
         if self._driver is not None:
             log.debug("Stopping driver...")
-            await self._driver.stop()
+            stop_task = asyncio.create_task(self._driver.stop())
+            done, pending = await asyncio.wait({stop_task}, timeout=SHUTDOWN_TIMEOUT)
+            if pending:
+                log.warning("Driver did not stop in time")
+                stop_task.cancel()
+            else:
+                try:
+                    stop_task.result()
+                except Exception:
+                    log.exception("Driver stop failed")
 
         self._driver = None
         self._task = None
@@ -106,7 +128,9 @@ class OfbManager(IOpenFreebuds):
     async def set_property(self, group: str, prop: str, value: str):
         if self._driver is None:
             raise OfbNoDeviceError("Attempt to write prop without device")
-        await self._driver.set_property(group, prop, value)
+        # The driver return value (True on success / False on rejection) must be passed through,
+        # otherwise the caller (for example prompt-tone upload) cannot tell whether the device accepted the write
+        return await self._driver.set_property(group, prop, value)
 
     @rpc
     async def run_shortcut(self, *args, no_catch: bool = False):
@@ -155,12 +179,14 @@ class OfbManager(IOpenFreebuds):
                 await self._set_state(IOpenFreebuds.STATE_WAIT)
                 try:
                     await self._driver.start()
+                    self._last_start_error = ""
                     await self._set_state(IOpenFreebuds.STATE_CONNECTED)
                     if last_device_address != self._device_tags[1]:
                         await self.send_message(OfbEventKind.DEVICE_CHANGED)
                         last_device_address = self._device_tags[1]
                 except OfbDriverError as e:
                     log.error(f"Driver start failure: {e}, will retry in 5s")
+                    self._last_start_error = str(e)
                     await self._set_state(IOpenFreebuds.STATE_FAILED)
                     await asyncio.sleep(5)
                     continue

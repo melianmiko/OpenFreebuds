@@ -6,12 +6,16 @@ from openfreebuds.utils import reverse_dict
 
 
 class OfbHuaweiAbstractTapActionHandler(OfbDriverHandlerHuawei):
-    def __init__(self, w_in_call=False, options_map: dict[int, str] | None = None):
+    def __init__(self, w_in_call=False, options_map: dict[int, str] | None = None,
+                 options_call_map: dict[int, str] | None = None, w_read_in_call=False,
+                 w_both_ears=False):
         self.prop_prefix = ""
         self.cmd_read = b""
         self.cmd_write = b""
 
         self.w_in_call = w_in_call
+        self.w_read_in_call = w_read_in_call
+        self.w_both_ears = w_both_ears
         self._raw_available_codes: list[int] = []
         self._left_code: int | None = None
         self._right_code: int | None = None
@@ -22,7 +26,7 @@ class OfbHuaweiAbstractTapActionHandler(OfbDriverHandlerHuawei):
             7: "tap_action_prev",
             0: "tap_action_assistant"
         }
-        self._options_call = {
+        self._options_call = dict(options_call_map) if options_call_map is not None else {
             -1: "tap_action_off",
             0: "tap_action_answer",
         }
@@ -30,6 +34,14 @@ class OfbHuaweiAbstractTapActionHandler(OfbDriverHandlerHuawei):
     async def on_init(self):
         resp = await self.driver.send_package(HuaweiSppPackage.read_rq(self.cmd_read, [1, 2]))
         await self.on_package(resp)
+        if self.w_read_in_call:
+            # Some models store the in-call mapping in parameter 4 and do not
+            # return it from the [1, 2] request above. Send the extra query
+            # without blocking handler init if the model does not answer it.
+            await self.driver.send_package(
+                HuaweiSppPackage.change_rq_nowait(self.cmd_read, [(4, b"")])
+            )
+
 
     async def on_package(self, package: HuaweiSppPackage):
         if package.command_id != self.cmd_read:
@@ -39,14 +51,28 @@ class OfbHuaweiAbstractTapActionHandler(OfbDriverHandlerHuawei):
         right = package.find_param(2)
         in_call = package.find_param(4)
         available_options = package.find_param(3)
+        left_value = None
+        right_value = None
         if len(left) == 1:
             self._left_code = int.from_bytes(left, byteorder="big", signed=True)
-            await self.driver.put_property("action", f"{self.prop_prefix}_left",
-                                           self._options.get(self._left_code, self._left_code))
+            left_value = self._options.get(self._left_code, self._left_code)
         if len(right) == 1:
             self._right_code = int.from_bytes(right, byteorder="big", signed=True)
-            await self.driver.put_property("action", f"{self.prop_prefix}_right",
-                                           self._options.get(self._right_code, self._right_code))
+            right_value = self._options.get(self._right_code, self._right_code)
+
+        if self.w_both_ears:
+            value = left_value if left_value is not None else right_value
+            if value is not None:
+                code = self._left_code if left_value is not None else self._right_code
+                self._left_code = code
+                self._right_code = code
+                await self.driver.put_property("action", f"{self.prop_prefix}_left", value)
+                await self.driver.put_property("action", f"{self.prop_prefix}_right", value)
+        else:
+            if left_value is not None:
+                await self.driver.put_property("action", f"{self.prop_prefix}_left", left_value)
+            if right_value is not None:
+                await self.driver.put_property("action", f"{self.prop_prefix}_right", right_value)
         if len(available_options) > 0:
             value = list(struct.unpack(f'{len(available_options)}b', available_options))
             self._raw_available_codes = value
@@ -82,22 +108,32 @@ class OfbHuaweiAbstractTapActionHandler(OfbDriverHandlerHuawei):
         raise KeyError(f"Unknown action {value}")
 
     async def set_property(self, group: str, prop: str, value):
+        both_ears = False
         if prop == f"{self.prop_prefix}_left":
             self._left_code = self._resolve_action_code(self._options, value)
             p_type = 1
             code = self._left_code
+            both_ears = self.w_both_ears
         elif prop == f"{self.prop_prefix}_right":
             self._right_code = self._resolve_action_code(self._options, value)
             p_type = 2
             code = self._right_code
+            both_ears = self.w_both_ears
         elif prop == f"{self.prop_prefix}_in_call":
             code = self._resolve_action_code(self._options_call, value)
             p_type = 4
         else:
             return
 
-        pkg = HuaweiSppPackage.change_rq(self.cmd_write, [
-            (p_type, code),
-        ])
+        parameters = [(p_type, code)]
+        if both_ears:
+            self._left_code = code
+            self._right_code = code
+            parameters = [(1, code), (2, code)]
+
+        pkg = HuaweiSppPackage.change_rq(self.cmd_write, parameters)
         await self.driver.send_package(pkg)
         await self.driver.put_property(group, prop, value)
+        if both_ears:
+            other = f"{self.prop_prefix}_right" if p_type == 1 else f"{self.prop_prefix}_left"
+            await self.driver.put_property(group, other, value)

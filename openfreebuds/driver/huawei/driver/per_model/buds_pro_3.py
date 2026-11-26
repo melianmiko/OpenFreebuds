@@ -20,15 +20,15 @@ class OfbDriverHuaweiPro3(OfbDriverHuaweiGeneric):
                 1: "hardbass",
                 2: "treble",
                 9: "voice",
-            }),
+            }, w_custom=True),
             OfbHuaweiConfigAutoPauseHandler(),
             # Not tested, no research data
             OfbHuaweiDualConnectHandler(),
             OfbHuaweiStateInEarHandler(),
             OfbHuaweiVoiceLanguageHandler(),
-            OfbHuaweiActionDoubleTapHandler(),
+            OfbHuaweiActionLightHoldHandler(w_light_hold=True, w_pinch_hold=False),
             OfbHuaweiActionLongTapSplitHandler(w_right=True),
             OfbHuaweiActionSwipeGestureHandler(),
             OfbHuaweiLowLatencyPreferenceHandler(),
-            OfbHuaweiEqualizerPresetHandler(w_custom=True),
+            OfbHuaweiBoxToneHandler(w_lid_tone=False),
         ]

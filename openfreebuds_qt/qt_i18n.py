@@ -1,4 +1,14 @@
+from PyQt6.QtCore import QLocale
 from PyQt6.QtWidgets import QApplication
+
+from openfreebuds_qt.config import OfbQtConfigParser
+
+
+def _ui_language_code() -> str:
+    language = OfbQtConfigParser.get_instance().get("ui", "language", "auto")
+    if language == "auto":
+        language = QLocale.system().name()
+    return language.split("_")[0].split("-")[0].lower()
 
 
 def get_anc_level_names():
@@ -34,3 +44,16 @@ def get_shortcut_names():
         "mode_awareness": QApplication.translate("ShortcutName", "Enable awareness mode"),
         "enable_low_latency": QApplication.translate("ShortcutName", "Enable low-latency mode"),
     }
+
+
+def get_prompt_tone_name(entry, *, is_custom: bool) -> str:
+    """Single UI output for display names.
+    - User custom entries: show exactly what the user wrote, never translated.
+    - Official entries: Chinese reads zhCn from the official config; other languages use the PromptToneName dictionary.
+    """
+    if is_custom:
+        return entry.display_name or entry.name
+    if _ui_language_code() == "zh":
+        return entry.zh_cn or entry.name
+    translated = QApplication.translate("PromptToneName", entry.name)
+    return translated or entry.name

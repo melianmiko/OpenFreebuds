@@ -53,8 +53,18 @@ class OfbTrayIcon(IOfbTrayIcon):
 
         self.menu = OfbQtTrayMenu(self, self.ctx, self.ofb)
         self.setContextMenu(self.menu)
+        # Re-check the active device every time the menu is opened, so a missed
+        # device event cannot leave the previous device's features in the menu.
+        self.menu.aboutToShow.connect(self._on_menu_about_to_show)
         self._battery_icons = {}
         self._battery_icon_values = {}
+
+    def _on_menu_about_to_show(self):
+        asyncio.create_task(self._refresh_menu())
+
+    async def _refresh_menu(self):
+        async with qt_error_handler("OfbTrayIcon_MenuRefresh", self.ctx):
+            await self.menu.refresh()
 
     @asyncSlot(QSystemTrayIcon.ActivationReason)
     async def _on_click(self, reason):
@@ -153,7 +163,9 @@ class OfbTrayIcon(IOfbTrayIcon):
             if self._battery_icon_values.get(key) != appearance:
                 icon.setIcon(percentage_icon(*appearance))
                 self._battery_icon_values[key] = appearance
-            icon.setToolTip(f"{device_name} — {labels[key]}: {level}%")
+            icon.setToolTip(f"{device_name} — {labels[key]}: "
+                            f"{level}%" if not isinstance(level, str) else
+                            f"{device_name} — {labels[key]}: {level}")
             icon.show()
 
     def _on_battery_click(self, reason):

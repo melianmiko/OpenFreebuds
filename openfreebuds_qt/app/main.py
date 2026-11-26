@@ -17,7 +17,8 @@ from openfreebuds_qt.app.helper.device_control_view_helper import OfbQtDeviceCon
 from openfreebuds_qt.app.helper.update_widget_helper import OfbQtUpdateWidgetHelper
 from openfreebuds_qt.app.module import OfbQtAboutModule, OfbQtSoundQualityModule, OfbQtLinuxExtrasModule, \
     OfbQtHotkeysModule, OfbQtGesturesModule, OfbQtDualConnectModule, OfbQtDeviceOtherSettingsModule, \
-    OfbQtDeviceInfoModule, OfbQtCommonModule, OfbQtChooseDeviceModule, OfbQtUiSettingsModule, OfbQtAutomationModule
+    OfbQtDeviceInfoModule, OfbQtCommonModule, OfbQtChooseDeviceModule, OfbQtUiSettingsModule, OfbQtAutomationModule, \
+    OfbQtBatteryLoggerModule
 from openfreebuds_qt.config import ConfigLock, OfbQtConfigParser
 from openfreebuds_qt.app.module.tray_battery import OfbQtTrayBatteryModule
 from openfreebuds_qt.constants import ASSETS_PATH, LINK_RPC_HELP, LINK_WEBSITE_HELP, WIN32_BODY_STYLE
@@ -85,6 +86,7 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
             self._attach_module(self.tr("User interface"), OfbQtUiSettingsModule(self.tabs.root, self.ctx))
             self._attach_module(self.tr("Tray battery"), OfbQtTrayBatteryModule(self.tabs.root, self.ctx))
             self._attach_module(self.tr("Automation"), OfbQtAutomationModule(self.tabs.root, self.ctx))
+        self._attach_module(self.tr("Battery logger"), OfbQtBatteryLoggerModule(self.tabs.root, self.ctx))
         if OfbQtHotkeysModule.available():
             self._attach_module(self.tr("Keyboard shortcuts"), OfbQtHotkeysModule(self.tabs.root, self.ctx))
         if sys.platform == "linux":
@@ -239,5 +241,11 @@ class OfbQtMainWindow(Ui_OfbMainWindowDesign, IOfbMainWindow):
 
     def hideEvent(self, e):
         e.accept()
+        for mod in self._ui_modules:
+            mod.stop_preview_audio()
+        # The tone editor is a modal child; stop its preview too when the main window hides.
+        from openfreebuds_qt.app.dialog.tone_editor import OfbQtToneEditorDialog
+        for dialog in self.findChildren(OfbQtToneEditorDialog):
+            dialog.cleanup()
         if self._ui_update_task is not None:
             self._ui_update_task.cancel()

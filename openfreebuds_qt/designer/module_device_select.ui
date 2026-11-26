@@ -115,7 +115,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>List bellow shows all Bluetooth devices paired with your device. Select appropriate device that you want to use with OpenFreebuds:</string>
+         <string>List below shows compatible Huawei devices paired with your device. Enable the checkbox to list all other paired Bluetooth devices.</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -151,6 +151,19 @@
          </sizepolicy>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QCheckBox" name="show_unsupported_checkbox">
+           <property name="focusPolicy">
+            <enum>Qt::TabFocus</enum>
+           </property>
+           <property name="text">
+            <string>Show unsupported</string>
+           </property>
+           <property name="toolTip">
+            <string>Also show all other paired Bluetooth devices that may not be supported.</string>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QPushButton" name="manual_setup_button">
            <property name="focusPolicy">
@@ -194,6 +207,22 @@
  </widget>
  <resources/>
  <connections>
+  <connection>
+   <sender>show_unsupported_checkbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OfbQtDeviceSelectModule</receiver>
+   <slot>on_show_unsupported_toggle(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>84</x>
+     <y>571</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>268</x>
+     <y>300</y>
+    </hint>
+   </hints>
+  </connection>
   <connection>
    <sender>manual_setup_button</sender>
    <signal>clicked()</signal>
@@ -262,6 +291,7 @@
  <slots>
   <slot>on_manual_config()</slot>
   <slot>on_auto_config_toggle(bool)</slot>
+  <slot>on_show_unsupported_toggle(bool)</slot>
   <slot>on_refresh_list()</slot>
   <slot>on_device_select(QListWidgetItem*)</slot>
  </slots>

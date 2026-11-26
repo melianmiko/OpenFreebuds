@@ -254,9 +254,11 @@ class OfbHuaweiEqualizerPresetHandler(OfbDriverHandlerHuawei):
             offset = 0
             while offset < len(custom_modes):
                 mode_id, mode_label, mode_data = _parse_custom_mode(custom_modes[offset:offset + 36])
+                offset += 36
+                if mode_id is None:
+                    continue
                 self.preset_data.append((mode_id, mode_label, mode_data))
                 # log.info(f"Read custom mode id={mode_id}, label={mode_label}, data={mode_data}")
-                offset += 36
 
         log.info(self.preset_data)
 
@@ -275,6 +277,7 @@ class OfbHuaweiEqualizerPresetHandler(OfbDriverHandlerHuawei):
                         new_props["equalizer_rows"] = json.dumps(_eq_bytes_to_array(data))
                     break
             new_props["equalizer_preset"] = value
+            new_props["equalizer_preset_id"] = str(current_mode)
 
         await self.driver.put_property("sound", None, new_props,
                                        extend_group=True)
@@ -287,9 +290,16 @@ def _eq_bytes_to_array(data: bytes | str):
 
 
 def _parse_custom_mode(data: bytes):
+    if len(data) < 3:
+        return None, None, None
+
     count_lines = data[1]
     data_lines = data[2:2 + count_lines].hex()
-    label = data[2 + count_lines:].split(b"\x00", 1)[0].decode("utf8")
+    raw_label = data[2 + count_lines:].split(b"\x00", 1)[0]
+    try:
+        label = raw_label.decode("utf8")
+    except UnicodeDecodeError:
+        label = raw_label.hex()
     return data[0], label, data_lines
 
 

@@ -1,0 +1,107 @@
+{
+  "version": 3,
+  "data": [
+    {
+      "id": 0,
+      "name": "Unfold",
+      "zhCn": "舒展"
+    },
+    {
+      "id": 43,
+      "name": "Whistle",
+      "zhCn": "口哨"
+    },
+    {
+      "id": 4,
+      "name": "Bongo",
+      "zhCn": "邦戈手鼓"
+    },
+    {
+      "id": 7,
+      "name": "Chess",
+      "zhCn": "棋"
+    },
+    {
+      "id": 10,
+      "name": "Dewdrop",
+      "zhCn": "晶莹"
+    },
+    {
+      "id": 11,
+      "name": "Doorbell",
+      "zhCn": "门铃"
+    },
+    {
+      "id": 12,
+      "name": "Drip",
+      "zhCn": "嘀嗒"
+    },
+    {
+      "id": 14,
+      "name": "Emerging",
+      "zhCn": "新发现",
+      "support": "custom"
+    },
+    {
+      "id": 15,
+      "name": "Fountain",
+      "zhCn": "喷泉"
+    },
+    {
+      "id": 18,
+      "name": "Huawei_Cascade",
+      "zhCn": "华为经典"
+    },
+    {
+      "id": 22,
+      "name": "Leap",
+      "zhCn": "跃动"
+    },
+    {
+      "id": 25,
+      "name": "Lit",
+      "zhCn": "点亮"
+    },
+    {
+      "id": 26,
+      "name": "Little_Wish",
+      "zhCn": "如愿以偿"
+    },
+    {
+      "id": 28,
+      "name": "Meditation",
+      "zhCn": "冥想"
+    },
+    {
+      "id": 31,
+      "name": "Pixies",
+      "zhCn": "精灵"
+    },
+    {
+      "id": 32,
+      "name": "Play",
+      "zhCn": "游戏"
+    },
+    {
+      "id": 34,
+      "name": "Pursue",
+      "zhCn": "追逐"
+    },
+    {
+      "id": 35,
+      "name": "Rise",
+      "zhCn": "昂扬"
+    },
+    {
+      "id": 36,
+      "name": "Shine",
+      "zhCn": "照耀"
+    },
+    {
+      "id": 200,
+      "name": "Chopin",
+      "zhCn": "肖邦"
+    }
+  ],
+  "officialData": []
+}

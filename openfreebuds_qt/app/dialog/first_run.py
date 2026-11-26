@@ -7,7 +7,7 @@ from qasync import asyncSlot
 
 import openfreebuds_backend
 from openfreebuds import OfbEventKind
-from openfreebuds_backend import AUTOSTART_AVAILABLE
+from openfreebuds_backend import AUTOSTART_AVAILABLE, is_run_at_boot
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.constants import LINK_WEBSITE_HELP
 from openfreebuds_qt.constants import WIN32_BODY_STYLE
@@ -21,15 +21,27 @@ class OfbQtFirstRunDialog(Ui_OfbQtFirstRunDialog, QDialog):
 
         self.ctx = ctx
         self.config = OfbQtConfigParser.get_instance()
+        self.is_first_run = not self.config.get("ui", "first_run_finished", False)
 
         self.setupUi(self)
         if sys.platform == "win32":
             self.setStyleSheet(WIN32_BODY_STYLE)
 
-        self.background_checkbox.setChecked(QSystemTrayIcon.isSystemTrayAvailable())
-        self.background_checkbox.setEnabled(QSystemTrayIcon.isSystemTrayAvailable())
+        tray_available = QSystemTrayIcon.isSystemTrayAvailable()
+        if self.is_first_run:
+            background_enabled = tray_available
+            autostart_enabled = AUTOSTART_AVAILABLE
+        else:
+            background_enabled = tray_available and self.config.get("ui", "background", True)
+            try:
+                autostart_enabled = AUTOSTART_AVAILABLE and is_run_at_boot()
+            except Exception:
+                autostart_enabled = False
 
-        self.autostart_checkbox.setChecked(AUTOSTART_AVAILABLE)
+        self.background_checkbox.setChecked(background_enabled)
+        self.background_checkbox.setEnabled(tray_available)
+
+        self.autostart_checkbox.setChecked(autostart_enabled)
         self.autostart_checkbox.setEnabled(AUTOSTART_AVAILABLE)
 
         preview_fn = "ofb_win32_preview" if sys.platform == "win32" else "ofb_linux_preview"

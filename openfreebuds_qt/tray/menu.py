@@ -4,16 +4,27 @@ from PyQt6.QtGui import QAction
 from qasync import asyncSlot
 
 from openfreebuds import IOpenFreebuds, OfbEventKind
+from openfreebuds.utils.stupid_rpc import RemoteError
 from openfreebuds_backend.exception import OfbBackendDependencyMissingError
+from openfreebuds_qt.app.dialog.error_dialog import OfbQtErrorDialog
 from openfreebuds_qt.config import OfbQtConfigParser
 from openfreebuds_qt.generic import IOfbTrayIcon, IOfbQtApplication
+from openfreebuds_qt.tray.battery import battery_levels, battery_menu_text
 from openfreebuds_qt.tray.dialogs import OfbQtDependencyMissingDialog
 from openfreebuds_qt.tray.menu_anc_level import OfbDeviceAncLevelTrayMenu
 from openfreebuds_qt.tray.menu_dual_connect import OfbDeviceDualConnectTrayMenu
 from openfreebuds_qt.tray.menu_equalizer import OfbDeviceEqualizerTrayMenu
 from openfreebuds_qt.tray.menu_generic import OfbQtTrayMenuCommon
+from openfreebuds.utils.logger import create_logger
 from openfreebuds_qt.utils.core_event import OfbCoreEvent
+from openfreebuds_qt.utils.device_errors import (
+    SPP_PORT_BUSY,
+    show_spp_port_busy_dialog,
+    startup_error_code,
+)
 from openfreebuds_qt.utils.report_tool import OfbQtReportTool
+
+log = create_logger("OfbQtTrayMenu")
 
 
 class OfbQtTrayMenu(OfbQtTrayMenuCommon):
@@ -26,6 +37,7 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
         self.is_connected: bool = False
         self.first_time_render: bool = True
         self.device_mac_address: str = ""
+        self._start_failure_reported: bool = False
 
         # Translation data
         self.battery_option_names = {
@@ -86,8 +98,29 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
         self.add_item(self.tr("Bugreport…"), callback=self.do_bugreport)
         self.add_item(self.tr("Leave application"), callback=self.do_exit)
 
-    async def on_core_event(self, event: OfbCoreEvent, state: int):
-        if event.kind_in([OfbEventKind.STATE_CHANGED, OfbEventKind.QT_SETTINGS_CHANGED]):
+    async def refresh(self):
+        """Re-evaluate device-specific items from the current manager state.
+
+        Called right before the context menu is displayed, so a device switch cannot
+        leave the cached menu contents behind even if an event was missed. Opening the
+        menu must not repeat the start-failure notice that was already shown.
+        """
+        state = await self.ofb.get_state()
+        reported = self._start_failure_reported
+        await self.on_core_event(OfbCoreEvent(None), state, report_start_failure=False)
+        self._start_failure_reported = reported
+
+    async def on_core_event(self, event: OfbCoreEvent, state: int, report_start_failure: bool = True):
+        device_changed = event.kind_match(OfbEventKind.DEVICE_CHANGED)
+        if device_changed:
+            self._reset_device_state()
+            self.first_time_render = True
+            self._start_failure_reported = False
+
+        if state == IOpenFreebuds.STATE_CONNECTED:
+            self._start_failure_reported = False
+
+        if device_changed or event.kind_in([OfbEventKind.STATE_CHANGED, OfbEventKind.QT_SETTINGS_CHANGED]):
             self.is_connected = state == IOpenFreebuds.STATE_CONNECTED
 
             device_name, device_addr = await self.ofb.get_device_tags()
@@ -122,6 +155,10 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
                 self.set_section_visible(self.anc_section, anc is not None)
                 if anc is not None:
                     await self._update_anc(anc)
+                else:
+                    self.anc_level_action.setVisible(False)
+                    for action in self.anc_mode_actions.values():
+                        action.setVisible(False)
 
             if event.is_changed("sound") or self.first_time_render:
                 await self.equalizer_submenu.update_ui()
@@ -131,6 +168,36 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
 
             self.first_time_render = False
 
+        if report_start_failure:
+            await self._report_start_failure(state)
+
+    async def _report_start_failure(self, state: int):
+        """Explain a known driver start failure once per failure episode."""
+        if state != IOpenFreebuds.STATE_FAILED or self._start_failure_reported:
+            return
+        try:
+            reason = await self.ofb.get_last_start_error()
+        except Exception:
+            log.exception("Failed to read driver start error")
+            return
+        if reason != SPP_PORT_BUSY:
+            return
+        self._start_failure_reported = True
+        await show_spp_port_busy_dialog(self.ctx.main_window)
+
+    def _reset_device_state(self):
+        """Hide cached device-specific actions before the next device is read."""
+        self.first_time_render = True
+        self.set_section_visible(self.battery_section, False)
+        self.set_section_visible(self.anc_section, False)
+        self.equalizer_action.setVisible(False)
+        self.dual_connect_action.setVisible(False)
+        self.anc_level_action.setVisible(False)
+        for action in self.anc_mode_actions.values():
+            action.setVisible(False)
+        self.equalizer_submenu.clear()
+        self.dual_connect_submenu.clear()
+
     async def _update_battery(self, battery: dict):
         battery_is_tws = "case" in battery
         self.battery_actions["left"].setVisible(battery_is_tws)
@@ -139,10 +206,12 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
         self.battery_actions["global"].setVisible(not battery_is_tws)
 
         # Update menu items
-        for code in battery:
+        levels = battery_levels(battery)
+        for code, level in levels.items():
             if code in self.battery_actions:
                 self.battery_actions[code].setText(
-                    f"{self.battery_option_names[code]} {battery[code]}%"
+                    f"{self.battery_option_names[code]} "
+                    f"{battery_menu_text(level, self.tr('Not connected'))}"
                 )
 
         # Update last charged config field
@@ -175,19 +244,40 @@ class OfbQtTrayMenu(OfbQtTrayMenuCommon):
                                                     visible=False,
                                                     checked=False)
 
+    async def _handle_shortcut_error(self, error: Exception):
+        """Report a tray action failure without tearing down the application.
+
+        RPC calls wrap server exceptions in RemoteError, so a dependency missing on
+        the manager side arrives as RemoteError(class_name=...). Match that too.
+        """
+        if startup_error_code(error) == SPP_PORT_BUSY:
+            await show_spp_port_busy_dialog(self.ctx.main_window)
+            return
+
+        dependency = isinstance(error, OfbBackendDependencyMissingError) or (
+            isinstance(error, RemoteError)
+            and error.class_name == "OfbBackendDependencyMissingError"
+        )
+        if dependency and len(error.args) >= 2:
+            await OfbQtDependencyMissingDialog(self, list(error.args)).get_user_response()
+            return
+
+        log.exception("Tray shortcut failed", exc_info=error)
+        await OfbQtErrorDialog(self.ctx.main_window).get_user_response(str(error))
+
     @asyncSlot()
     async def do_disconnect(self):
         try:
             await self.ofb.run_shortcut("disconnect", no_catch=True)
-        except OfbBackendDependencyMissingError as e:
-            await OfbQtDependencyMissingDialog(self, list(e.args)).get_user_response()
+        except Exception as e:
+            await self._handle_shortcut_error(e)
 
     @asyncSlot()
     async def do_connect(self):
         try:
             await self.ofb.run_shortcut("connect", no_catch=True)
-        except OfbBackendDependencyMissingError as e:
-            await OfbQtDependencyMissingDialog(self, list(e.args)).get_user_response()
+        except Exception as e:
+            await self._handle_shortcut_error(e)
 
     def do_settings(self):
         if self.ctx.main_window.isVisible():

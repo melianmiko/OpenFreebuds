@@ -54,11 +54,14 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
 
         self.gesture_names = {
             "tap_action_answer": self.tr("Answer call"),
+            "tap_action_answer_end": self.tr("Answer/end call"),
+            "tap_action_reject": self.tr("Reject call"),
             "tap_action_change_volume": self.tr("Adjust volume"),
             "tap_action_vol_up": self.tr("Increase volume"),
             "tap_action_vol_down": self.tr("Decrease volume"),
             "tap_action_assistant": self.tr("Voice assistant"),
             "tap_action_next": self.tr("Next track"),
+            "tap_action_noise_control": self.tr("Noise control"),
             "tap_action_off": self.tr("Disabled"),
             "tap_action_pause": self.tr("Play/pause"),
             "tap_action_prev": self.tr("Prev track"),
@@ -74,9 +77,44 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
             "noise_control_off_aw": self.tr("Off and awareness"),
         }
 
+        self.long_tap_mode_names = {
+            "ptt": self.tr("Press to speak (release to stop)"),
+            "hold": self.tr("Continuous conversation (stay active after release)"),
+        }
+
         self._ui_rows: list[_UiRow] = []
 
         self.setupUi(self)
+        self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
+                                     settings_prefix="light_hold_once",
+                                     ui_names_map=self.gesture_names,
+                                     label=self.pinch_once_label,
+                                     left_combo=self.pinch_once,
+                                     is_separate=False))
+        self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
+                                     settings_prefix="light_hold_once_in_call",
+                                     ui_names_map=self.gesture_names,
+                                     label=self.pinch_once_in_call_label,
+                                     left_combo=self.pinch_once_in_call,
+                                     is_separate=False))
+        self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
+                                     settings_prefix="light_hold_twice",
+                                     ui_names_map=self.gesture_names,
+                                     label=self.pinch_twice_label,
+                                     left_combo=self.pinch_twice,
+                                     is_separate=False))
+        self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
+                                     settings_prefix="light_hold_twice_in_call",
+                                     ui_names_map=self.gesture_names,
+                                     label=self.pinch_twice_in_call_label,
+                                     left_combo=self.pinch_twice_in_call,
+                                     is_separate=False))
+        self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
+                                     settings_prefix="light_hold_three_times",
+                                     ui_names_map=self.gesture_names,
+                                     label=self.pinch_three_times_label,
+                                     left_combo=self.pinch_three_times,
+                                     is_separate=False))
         self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
                                      settings_prefix="double_tap",
                                      ui_names_map=self.gesture_names,
@@ -108,6 +146,12 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
                                      left_combo=self.long_left,
                                      right_combo=self.long_right))
         self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
+                                     settings_prefix="long_tap_mode",
+                                     ui_names_map=self.long_tap_mode_names,
+                                     label=self.long_mode_label,
+                                     left_combo=self.long_mode,
+                                     is_separate=False))
+        self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
                                      settings_prefix="noise_control",
                                      ui_names_map=self.anc_pref_names,
                                      label=self.long_anc_label,
@@ -119,11 +163,17 @@ class OfbQtGesturesModule(Ui_OfbQtGesturesModule, OfbQtCommonModule):
                                      left_combo=self.power_left,
                                      is_separate=False))
         self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
+                                     settings_prefix="pinch_hold",
+                                     ui_names_map=self.gesture_names,
+                                     label=self.pinch_hold_label,
+                                     left_combo=self.pinch_hold_left,
+                                     right_combo=self.pinch_hold_right))
+        self.setup_gesture_ui(_UiRow(grid=self.gridLayout,
                                      settings_prefix="swipe_gesture",
                                      ui_names_map=self.gesture_names,
                                      label=self.swipe_label,
                                      left_combo=self.swipe_left,
-                                     is_separate=False))
+                                     right_combo=self.swipe_right))
 
     async def update_ui(self, event: OfbCoreEvent):
         if not event.is_changed("action") and not event.kind_match(OfbEventKind.DEVICE_CHANGED):
