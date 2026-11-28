@@ -10,15 +10,21 @@ class OfbDriverHuaweiSe4(OfbDriverHuaweiGeneric):
             OfbHuaweiLogsHandler(),
             OfbHuaweiInfoHandler(),
             OfbHuaweiBatteryHandler(),
-            OfbHuaweiAncHandler(w_cancel_lvl=True, w_cancel_dynamic=True),
+            OfbHuaweiStateInEarHandler(),
+            OfbHuaweiAncHandler(w_cancel_lvl=True, w_cancel_dynamic=True, w_voice_boost=True),
             OfbHuaweiActionDoubleTapHandler(w_in_call=True),
             OfbHuaweiActionTripleTapHandler(),
             OfbHuaweiActionLongTapSplitHandler(w_right=True, w_extra_options=True),
-            OfbHuaweiEqualizerPresetHandler(w_presets={
-                1: "default",
-                2: "hardbass",
-                3: "treble",
-                9: "voices",
-            }),
+            OfbHuaweiConfigAutoPauseHandler(),
+            OfbHuaweiVoiceLanguageHandler(),
+            OfbHuaweiEqualizerPresetHandler(
+                w_presets={
+                    1: "default",
+                    2: "hardbass",
+                    3: "treble",
+                    9: "voices",
+                },
+                w_custom=True
+            ),
             OfbHuaweiLowLatencyPreferenceHandler(),
         ]
